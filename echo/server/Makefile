@@ -11,7 +11,7 @@ CONTAINER_BASE := /opt/cartesi/echo
 BINARIES := rootfs.ext2 linux-5.5.19-ctsi-3.bin rom.bin
 MACHINE_DIR := ..
 
-.PHONY: clean
+.PHONY: console clean
 
 $(MACHINE_DIR)/machine: $(DAPP_FS_BIN) $(BINARIES)
 	docker run --hostname server-manager-env -it --rm \
@@ -19,6 +19,12 @@ $(MACHINE_DIR)/machine: $(DAPP_FS_BIN) $(BINARIES)
 		-w $(CONTAINER_BASE) \
 		$(DAPP_SERVER_MANAGER_IMG) $(CONTAINER_BASE)/build-machine.sh
 	mv machine $(MACHINE_DIR)
+
+console: $(DAPP_FS_BIN) $(BINARIES)
+	@docker run --hostname server-manager-env -it --rm \
+		-v `pwd`:$(CONTAINER_BASE) \
+		-w $(CONTAINER_BASE) \
+		$(DAPP_SERVER_MANAGER_IMG) $(CONTAINER_BASE)/run-machine-console.sh
 
 $(BINARIES) &:
 	wget -nc -i dependencies -P .
