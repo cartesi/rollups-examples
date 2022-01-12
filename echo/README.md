@@ -8,15 +8,17 @@ The goal of this example is to show how to send inputs to the DApp and check if 
 To run the echo example, clone the repository as follows:
 
 ```shell
-$ git clone --recurse-submodules git@github.com:cartesi/rollups-examples.git
+$ git clone https://github.com/cartesi/rollups-examples.git
 ```
 
 Then, build the backend for the echo example:
 
 ```shell
 $ cd rollups-examples/echo
-$ make -C server
+$ make machine
 ```
+
+_Note:_ The backend implements the API specified by the [Cartesi OpenAPI interface](https://github.com/cartesi/openapi-interfaces/blob/master/dapp.yaml).
 
 ## Running the Environment
 

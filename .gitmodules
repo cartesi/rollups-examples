@@ -1,6 +1,0 @@
-[submodule "openapi-interfaces"]
-	path = openapi-interfaces
-	url = ../openapi-interfaces.git
-[submodule "echo/server/tools"]
-	path = echo/server/tools
-	url = ../machine-emulator-tools.git
