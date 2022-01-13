@@ -43,7 +43,7 @@ services:
       - ./config:/opt/cartesi/share/config/
 
   server_manager:
-    image: cartesi/host-server-manager:0.1.0
+    image: cartesi/host-server-manager:0.2.0
     environment:
       - DAPP_HTTP_ADDRESS=host.docker.internal
     ports:
