@@ -2,8 +2,9 @@ version: '3'
 
 services:
   hardhat:
-    image: cartesi/hardhat:0.1.0
-    command: ["node", "--write", "true", "--network", "hardhat"]
+    build: ./contracts
+    command: ["node", "--write", "true", "--network", "hardhat", "--export", "/opt/cartesi/share/blockchain/dapp.json"]
+    init: true
     volumes:
       - blockchain_data:/opt/cartesi/share/blockchain
 

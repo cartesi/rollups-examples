@@ -25,29 +25,10 @@ _Note:_ The backend implements the API specified by the [Cartesi OpenAPI interfa
 In order to start the containers, simply run:
 
 ```shell
-$ docker-compose up
+$ docker-compose up --build
 ```
 
 _Note:_ If you decide to use [Docker Compose V2](https://docs.docker.com/compose/cli-command/), make sure you set the [compatibility flag](https://docs.docker.com/compose/cli-command-compatibility/) when executing the command (e.g., `docker compose --compatibility up`).
-
-Wait for the hardhat container to start.
-Then, on another terminal window, create the Rollups onchain infrastructure:
-
-```shell
-$ docker exec echo_hardhat_1 npx hardhat --network localhost rollups:create --export dapp.json
-```
-
-After the creation of the infrastructure has been triggered, the following information should be displayed:
-
-```shell
-Rollups Impl address: 0xa513E6E4b8f2a923D98304ec87F64353C4D5C853
-Rollups Impl getCurrentEpoch: 0
-Rollups accumulation start: 1640643011
-Input address 0x9bd03768a7DCc129555dE410FF8E85528A4F88b5
-Output address 0x440C0fCDC317D69606eabc35C0F676D1a8251Ee1
-Ether Portal address 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
-ERC20 Portal address 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6
-```
 
 Allow some time for the infrastructure to be ready.
 How much will depend on your machine, but after some time showing the error `"concurrent call in session"`, eventually the container logs will show the following:
@@ -82,7 +63,7 @@ server_manager_1      | Received GetEpochStatus for session default_rollups_id e
 With the infrastructure in place, go to the second terminal window and send an input as follows:
 
 ```shell
-$ docker exec echo_hardhat_1 npx hardhat --network localhost input:addInput --input "0x636172746573690D0A"
+$ docker exec echo_hardhat_1 npx hardhat --network localhost echo:addInput --input "0x636172746573690D0A"
 ```
 
 The input will have been accepted when you receive a response similar to:
