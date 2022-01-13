@@ -3,34 +3,39 @@
 This example shows how to interact through the Cartesi Rollups with a Simple Echo DApp written in Python that is running inside a Cartesi Machine.
 The goal of this example is to show how to send inputs to the DApp and check if they were processed.
 
-## Echo
+## Building the Environment
 
-To run the echo example, clone the repo as follows:
+To run the echo example, clone the repository as follows:
 
 ```shell
 $ git clone --recurse-submodules git@github.com:cartesi/rollups-examples.git
 ```
 
-Then, run a script to generate the binaries for the echo example:
+Then, build the backend for the echo example:
 
 ```shell
 $ cd rollups-examples/echo
 $ make -C server
 ```
 
-Start the containers:
+## Running the Environment
+
+In order to start the containers, simply run:
 
 ```shell
 $ docker-compose up
 ```
 
-Wait for the hardhat container to start and create the rollup onchain infrastructure:
+_Note:_ If you decide to use [Docker Compose V2](https://docs.docker.com/compose/cli-command/), make sure you set the [compatibility flag](https://docs.docker.com/compose/cli-command-compatibility/) when executing the command (e.g., `docker compose --compatibility up`).
+
+Wait for the hardhat container to start.
+Then, on another terminal window, create the Rollups onchain infrastructure:
 
 ```shell
 $ docker exec echo_hardhat_1 npx hardhat --network localhost rollups:create --export dapp.json
 ```
 
-You'll know this was created when this command shows you the following reply:
+After the creation of the infrastructure has been triggered, the following information should be displayed:
 
 ```shell
 Rollups Impl address: 0xa513E6E4b8f2a923D98304ec87F64353C4D5C853
@@ -42,13 +47,43 @@ Ether Portal address 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
 ERC20 Portal address 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6
 ```
 
-To send an input, open a new terminal window and run:
+Allow some time for the infrastructure to be ready.
+How much will depend on your machine, but after some time showing the error `"concurrent call in session"`, eventually the container logs will show the following:
+
+```shell
+state_server_1        | Got a request from Some(172.25.0.7:33636), initial state: ["0x0","0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"]
+server_manager_1      | Received GetVersion
+server_manager_1      | Received GetStatus
+server_manager_1      |   default_rollups_id
+server_manager_1      | Received GetSessionStatus for session default_rollups_id
+server_manager_1      |   0
+hardhat_1             | eth_getBlockByNumber
+eth_getBlockByHash (2)
+hardhat_1             | eth_getBlockByNumber
+hardhat_1             | eth_getBlockByHash
+eth_getBlockByHash (2)
+hardhat_1             | eth_getBlockByNumber
+eth_getBlockByHash (2)
+hardhat_1             | eth_getBlockByNumber
+eth_getBlockByHash (2)
+hardhat_1             | eth_getLogs
+hardhat_1             | eth_getBlockByNumber
+eth_getBlockByHash (2)
+server_manager_1      | Received GetVersion
+server_manager_1      | Received GetStatus
+server_manager_1      |   default_rollups_id
+server_manager_1      | Received GetSessionStatus for session default_rollups_id
+server_manager_1      |   0
+server_manager_1      | Received GetEpochStatus for session default_rollups_id epoch 0
+```
+
+With the infrastructure in place, go to the second terminal window and send an input as follows:
 
 ```shell
 $ docker exec echo_hardhat_1 npx hardhat --network localhost input:addInput --input "0x636172746573690D0A"
 ```
 
-You'll know the input was accepted when the terminal shows you something like following reply:
+The input will have been accepted when you receive a response similar to:
 
 ```shell
 Added input '0x636172746573690D0A' to epoch '0' (timestamp: 1640643170, signer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, tx: 0x31d7e9e810d8702196623837b8512097786b544a4b5ffb52f693b9ff7d424147)
@@ -63,36 +98,44 @@ $ curl -v http://localhost:4000/graphql -H 'Content-Type: application/json' -d '
 The response should be something like:
 
 ```shell
-*   Trying 127.0.0.1:4000...
-* TCP_NODELAY set
-* Connected to localhost (127.0.0.1) port 4000 (#0)
+*   Trying ::1:4000...
+* Connected to localhost (::1) port 4000 (#0)
 > POST /graphql HTTP/1.1
 > Host: localhost:4000
-> User-Agent: curl/7.68.0
+> User-Agent: curl/7.77.0
 > Accept: */*
 > Content-Type: application/json
-> Content-Length: 251
+> Content-Length: 194
 >
-* upload completely sent off: 251 out of 251 bytes
 * Mark bundle as not supporting multiuse
 < HTTP/1.1 200 OK
 < X-Powered-By: Express
 < Access-Control-Allow-Origin: *
 < Content-Type: application/json; charset=utf-8
-< Content-Lengt
+< Content-Length: 145
+< ETag: W/"91-Ytz8k2Lai9is2Ku9K4YyRu1zLAw"
+< Date: Thu, 13 Jan 2022 21:46:19 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+<
+{"data":{"GetNotice":[{"session_id":"default_rollups_id","epoch_index":"0","input_index":"0","notice_index":"0","payload":"63617274657369da"}]}}
+* Connection #0 to host localhost left intact
 ```
 
-To stop the containers, first end the process with `Ctrl + C`, then remove the volumes as follows:
+To stop the containers, first end the process with `Ctrl + C`.
+Then, remove the volumes as follows:
 
 ```shell
 $ docker-compose down --volumes
 ```
 
-The HTTP API uses two different ports, to receive and send information.
+_Note_: The HTTP API uses two different ports, to receive and send information.
 They're respectively: `5002` and `5003`.
+
+## Advancing Time
 
 To advance time, in order to simulate the passing of epochs, run:
 
 ```shell
-$ docker exec echo_hardhat_1 npx hardhat --network localhostutil:advanceTime --seconds 864010
+$ docker exec echo_hardhat_1 npx hardhat --network localhost util:advanceTime --seconds 864010
 ```
