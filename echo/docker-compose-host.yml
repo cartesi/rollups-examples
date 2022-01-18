@@ -2,8 +2,9 @@ version: '3'
 
 services:
   hardhat:
-    image: cartesi/hardhat:0.1.0
-    command: ["node", "--write", "true", "--network", "hardhat"]
+    build: ./contracts
+    command: ["node", "--write", "true", "--network", "hardhat", "--export", "/opt/cartesi/share/blockchain/dapp.json"]
+    init: true
     volumes:
       - blockchain_data:/opt/cartesi/share/blockchain
 
@@ -24,7 +25,7 @@ services:
       - STATE_SERVER_HOSTNAME=state_server
       - STATE_SERVER_PORT=50051
       - SERVER_MANAGER_HOSTNAME=server_manager
-      - SERVER_MANAGER_PORT=5000
+      - SERVER_MANAGER_PORT=5001
       - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/dapp.json
     volumes:
       - blockchain_data:/opt/cartesi/share/blockchain:ro
@@ -47,7 +48,7 @@ services:
     environment:
       - DAPP_HTTP_ADDRESS=host.docker.internal
     ports:
-      - "5001:5001"
+      - "5004:5004"
     restart: always
 
   rollups_indexer:
@@ -60,7 +61,7 @@ services:
       - STATE_SERVER_HOSTNAME=state_server
       - STATE_SERVER_PORT=50051
       - SERVER_MANAGER_HOSTNAME=server_manager
-      - SERVER_MANAGER_PORT=5000
+      - SERVER_MANAGER_PORT=5001
       - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/dapp.json
       - POSTGRES_HOSTNAME=database
       - POSTGRES_PORT=5432

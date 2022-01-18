@@ -122,3 +122,11 @@ To advance time, in order to simulate the passing of epochs, run:
 ```shell
 $ docker exec echo_hardhat_1 npx hardhat --network localhost util:advanceTime --seconds 864010
 ```
+
+## Running the Environment in Host mode
+
+TODO: Add description
+
+```shell
+docker-compose -f docker-compose-host.yml up --build
+```
