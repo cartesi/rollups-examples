@@ -14,8 +14,8 @@
 # Start the Cartesi HTTP-Dispatcher and the echo-dapp.
 # This script must run inside the cartesi machine
 
-HTTP_DISPATCHER_PORT=5001
-DAPP_PORT=5002
+DAPP_PORT=5003
+HTTP_DISPATCHER_PORT=5004
 
 # Change dir to echo-dapp root
 cd /mnt/echo-dapp
@@ -27,7 +27,7 @@ gunicorn --preload --workers 1 --bind 127.0.0.1:$DAPP_PORT echo:app &
 
 # Wait for the echo dapp to start up
 RETRY=0
-while ! netstat -ntl 2&>1 | grep 5002 > /dev/null
+while ! netstat -ntl 2&>1 | grep $DAPP_PORT > /dev/null
 do
     echo -n "."
     sleep 1

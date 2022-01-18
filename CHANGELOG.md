@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplify echo-dapp implementation to use dependecies directly from Cartesi rootfs
 - Bump image-rootfs to 0.9.0
 - Bump host-server-manager to 0.2.0
+- Change dapp and http-dispatcher ports in echo server run.sh script
 
 ### Removed
 - Remove machine-emulator-tools submodule
