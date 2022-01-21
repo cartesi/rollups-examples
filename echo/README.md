@@ -84,13 +84,47 @@ $ docker exec echo_hardhat_1 npx hardhat --network localhost util:advanceTime --
 
 When developing an application, it is often important to easily test and debug it. For that matter, it is possible to run the Cartesi Rollups environment in [host mode](../README.md#host-mode), so that the DApp's back-end can be executed directly on the host machine, allowing it to be debugged using regular development tools such as an IDE.
 
-To start the Cartesi Rollups containers in host mode, type the following command:
+The first step is to run the environment in host mode using the following command:
 
 ```shell
 docker-compose -f docker-compose-host.yml up --build
 ```
 
-Conversely, to stop the containers removing any associated volumes, execute:
+The next step is to run the echo server in your machine. The application is written in Python, so you need to have `python3` installed.
+
+In order to start the echo server, run the following commands in a dedicated terminal:
+
+```shell
+cd echo/server/
+python3 -m venv .env
+. .env/bin/activate
+pip install -r requirements.txt
+HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --preload --workers 1 --bind 0.0.0.0:5003 echo:app
+```
+
+The echo server will run on port `5003` and send the corresponding notices to port `5004`. After it's successfully started, it should print an output like the following:
+
+```
+[2022-01-21 12:38:23,971] INFO in echo: HTTP dispatcher url is http://127.0.0.1:5004
+[2022-01-21 12:38:23 -0500] [79032] [INFO] Starting gunicorn 19.9.0
+[2022-01-21 12:38:23 -0500] [79032] [INFO] Listening at: http://0.0.0.0:5003 (79032)
+[2022-01-21 12:38:23 -0500] [79032] [INFO] Using worker: sync
+[2022-01-21 12:38:23 -0500] [79035] [INFO] Booting worker with pid: 79035
+```
+
+After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
+
+When you add an input, you should see it being processed by the echo server as follows:
+
+```shell
+[2022-01-21 15:58:39,555] INFO in echo: Received advance request body {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 11, 'time_stamp': 1642791522}, 'payload': '0x636172746573690d0a'}
+[2022-01-21 15:58:39,556] INFO in echo: Adding notice
+[2022-01-21 15:58:39,650] INFO in echo: Received notice status 201 body b'{"index":0}'
+[2022-01-21 15:58:39,651] INFO in echo: Finishing
+[2022-01-21 15:58:39,666] INFO in echo: Received finish status 202
+```
+
+Finally, to stop the containers, removing any associated volumes, execute:
 
 ```shell
 docker-compose -f docker-compose-host.yml down -v
