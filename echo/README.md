@@ -99,10 +99,14 @@ cd echo/server/
 python3 -m venv .env
 . .env/bin/activate
 pip install -r requirements.txt
-HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --preload --workers 1 --bind 0.0.0.0:5003 echo:app
+HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --reload --workers 1 --bind 0.0.0.0:5003 echo:app
 ```
 
-The echo server will run on port `5003` and send the corresponding notices to port `5004`. After it's successfully started, it should print an output like the following:
+This will run the echo server on port `5003` and send the corresponding notices to port `5004`. The server will also automatically reload if there is a change in the source code, enabling fast development iterations.
+
+The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints. In that case, it may be interesting to add the parameter `--timeout 0` to gunicorn, to avoid having it time out when the debugger stops at a breakpoint.
+
+After the server successfully starts, it should print an output like the following:
 
 ```
 [2022-01-21 12:38:23,971] INFO in echo: HTTP dispatcher url is http://127.0.0.1:5004
