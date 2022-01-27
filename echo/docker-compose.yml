@@ -7,12 +7,14 @@ services:
     init: true
     ports:
       - '8545:8545'
+    platform: linux/amd64
     volumes:
       - ./contracts/export/abi:/opt/cartesi/share/blockchain
 
   rollups_dispatcher:
     depends_on: [hardhat]
     image: cartesi/rollups-dispatcher:0.1.0
+    platform: linux/amd64
     restart: always
     environment:
       # TODO: currently hardhat's default mnemonic
@@ -36,6 +38,7 @@ services:
   state_server:
     depends_on: [hardhat]
     image: cartesi/delegate-server:0.1.0
+    platform: linux/amd64
     restart: always
     environment:
       - STATE_FOLD_CONFIG_PATH=/opt/cartesi/share/config/sf-config.toml
@@ -47,6 +50,7 @@ services:
 
   server_manager:
     image: cartesi/server-manager:0.1.0
+    platform: linux/amd64
     restart: always
     volumes:
       - ./machine:/opt/cartesi/share/dapp-bin
@@ -54,6 +58,7 @@ services:
   rollups_indexer:
     depends_on: [hardhat]
     image: cartesi/rollups-indexer:0.1.0
+    platform: linux/amd64
     restart: always
     environment:
       - URL=http://hardhat:8545
@@ -71,6 +76,7 @@ services:
 
   query_server:
     image: cartesi/query-server:0.1.0
+    platform: linux/amd64
     ports:
       - '4000:4000'
     links:
@@ -87,6 +93,7 @@ services:
 
   database:
     image: postgres:12
+    platform: linux/amd64
     ports:
       - 5432:5432
     environment:

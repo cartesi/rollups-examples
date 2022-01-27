@@ -4,6 +4,7 @@ services:
   hardhat:
     build: ./contracts
     command: ["node", "--write", "true", "--network", "hardhat", "--export", "/opt/cartesi/share/blockchain/localhost.json"]
+    platform: linux/amd64
     init: true
     ports:
       - '8545:8545'
@@ -14,6 +15,7 @@ services:
     depends_on: [hardhat]
     image: cartesi/rollups-dispatcher:0.1.0
     restart: always
+    platform: linux/amd64
     environment:
       # TODO: currently hardhat's default mnemonic
       # this should become a secret
@@ -37,6 +39,7 @@ services:
     depends_on: [hardhat]
     image: cartesi/delegate-server:0.1.0
     restart: always
+    platform: linux/amd64
     environment:
       - STATE_FOLD_CONFIG_PATH=/opt/cartesi/share/config/sf-config.toml
       - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
@@ -47,6 +50,7 @@ services:
 
   server_manager:
     image: cartesi/host-server-manager:0.2.1
+    platform: linux/amd64
     environment:
       - DAPP_HTTP_ADDRESS=host.docker.internal
     ports:
@@ -59,6 +63,7 @@ services:
     depends_on: [hardhat]
     image: cartesi/rollups-indexer:0.1.0
     restart: always
+    platform: linux/amd64
     environment:
       - URL=http://hardhat:8545
       - INDEXER_CONFIG_PATH=/opt/cartesi/share/config/indexer-config.toml
@@ -75,6 +80,7 @@ services:
 
   query_server:
     image: cartesi/query-server:0.1.0
+    platform: linux/amd64
     ports:
       - '4000:4000'
     links:
@@ -91,6 +97,7 @@ services:
 
   database:
     image: postgres:12
+    platform: linux/amd64
     ports:
       - 5432:5432
     environment:

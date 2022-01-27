@@ -32,6 +32,7 @@ $(MACHINE_DIR): $(DAPP_FS_BIN) $(BINARIES)
 	@docker run \
 		--name $(CONTAINER_NAME) \
 		--hostname server-manager-env \
+		--platform linux/amd64 \
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
 		$(DAPP_SERVER_MANAGER_IMG) $(CONTAINER_BASE)/build-machine.sh
@@ -44,6 +45,7 @@ console: $(DAPP_FS_BIN) $(BINARIES)
 	@docker run --hostname server-manager-env --rm \
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
+		--platform linux/amd64 \
 		$(DAPP_SERVER_MANAGER_IMG) $(CONTAINER_BASE)/run-machine-console.sh
 
 $(BINARIES) &:
@@ -61,6 +63,7 @@ $(DAPP_FS_BIN): echo.py run.sh
 		--hostname server-manager-env \
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
+		--platform linux/amd64 \
 		$(DAPP_SERVER_MANAGER_IMG) $(CONTAINER_BASE)/build-dapp-fs.sh
 	@docker cp $(CONTAINER_NAME):$(CONTAINER_DAPP_FS_BIN) $@
 	@docker rm -f $(CONTAINER_NAME) > /dev/null
