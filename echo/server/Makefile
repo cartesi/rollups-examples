@@ -29,7 +29,7 @@ $(MACHINE_DIR): $(DAPP_FS_BIN) $(BINARIES)
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi
-	@docker run -it \
+	@docker run \
 		--name $(CONTAINER_NAME) \
 		--hostname server-manager-env \
 		-v `pwd`:$(CONTAINER_BASE) \
@@ -41,7 +41,7 @@ $(MACHINE_DIR): $(DAPP_FS_BIN) $(BINARIES)
 
 console: $(DAPP_FS_BIN) $(BINARIES)
 	@echo "Running cartesi-machine console..."
-	@docker run --hostname server-manager-env -it --rm \
+	@docker run --hostname server-manager-env --rm \
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
 		$(DAPP_SERVER_MANAGER_IMG) $(CONTAINER_BASE)/run-machine-console.sh
@@ -56,7 +56,7 @@ $(DAPP_FS_BIN): echo.py run.sh
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi
-	@docker run -it \
+	@docker run \
 		--name $(CONTAINER_NAME) \
 		--hostname server-manager-env \
 		-v `pwd`:$(CONTAINER_BASE) \
