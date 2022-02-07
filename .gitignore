@@ -1,2 +1,5 @@
 *.bin
 *.tar.gz
+/.vs
+/echo/.vs/echo/v16
+/echo/.vs
