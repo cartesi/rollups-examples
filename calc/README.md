@@ -1,6 +1,6 @@
-# Simple Calculator DApp With Cartesi Rollups
+# Simple Echo DApp
 
-This example shows how to build and interact with a minimalistic Cartesi Rollups application that simply copies (or "echoes") each input received as a corresponding output notice. This DApp's back-end is written in Python3.
+This example shows how to build and interact with a minimalistic Cartesi Rollups application that simply copies (or "echoes") each input received as a corresponding output notice. This DApp's back-end is written in Python.
 
 ## Building the environment
 

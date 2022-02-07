@@ -11,21 +11,21 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-# Start the Cartesi HTTP-Dispatcher and the calculator-dapp.
+# Start the Cartesi HTTP-Dispatcher and the calc-dapp.
 # This script must run inside the cartesi machine
 
 DAPP_PORT=5003
 HTTP_DISPATCHER_PORT=5004
 
-# Change dir to calculator-dapp root
-cd /mnt/calculator-dapp
+# Change dir to calc-dapp root
+cd /mnt/calc-dapp
 
-# Start echo dapp
-echo -n "Starting calculator-dapp: "
+# Start calc dapp
+echo -n "Starting calc-dapp: "
 HTTP_DISPATCHER_URL="http://127.0.0.1:$HTTP_DISPATCHER_PORT" \
-gunicorn --preload --workers 1 --bind 127.0.0.1:$DAPP_PORT calculator:app &
+gunicorn --preload --workers 1 --bind 127.0.0.1:$DAPP_PORT calc:app &
 
-# Wait for the calculator dapp to start up
+# Wait for the echo dapp to start up
 RETRY=0
 while ! netstat -ntl 2&>1 | grep $DAPP_PORT > /dev/null
 do
@@ -34,7 +34,7 @@ do
     RETRY=$(echo $RETRY + 1 | bc)
     if [ "$RETRY" == "100" ]
     then
-        echo "calculator dapp timed out"
+        echo "calc dapp timed out"
         return 1
     fi
 done

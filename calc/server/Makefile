@@ -13,19 +13,19 @@
 DAPP_SERVER_MANAGER_TAG := 0.1.0
 DAPP_SERVER_MANAGER_IMG := cartesi/server-manager:$(DAPP_SERVER_MANAGER_TAG)
 
-CONTAINER_NAME := cartesi-calculator-dapp
-CONTAINER_BASE := /opt/cartesi/calculator
-CONTAINER_DAPP_FS_BIN := /opt/cartesi/calculator-dapp-fs/calculator-dapp.ext2
-CONTAINER_MACHINE_DIR := /opt/cartesi/calculator-machine
+CONTAINER_NAME := cartesi-calc-dapp
+CONTAINER_BASE := /opt/cartesi/calc
+CONTAINER_DAPP_FS_BIN := /opt/cartesi/calc-dapp-fs/calc-dapp.ext2
+CONTAINER_MACHINE_DIR := /opt/cartesi/calc-machine
 
-DAPP_FS_BIN := calculator-dapp.ext2
+DAPP_FS_BIN := calc-dapp.ext2
 BINARIES := rootfs.ext2 linux-5.5.19-ctsi-3.bin rom.bin
 MACHINE_DIR := machine
 
 .PHONY: console clean
 
 $(MACHINE_DIR): $(DAPP_FS_BIN) $(BINARIES)
-	@echo "Building cartesi-machine calculator-dapp instance..."
+	@echo "Building cartesi-machine calc-dapp instance..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi
@@ -51,8 +51,8 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): calculator.py run.sh
-	@echo "Building calculator-dapp filesystem..."
+$(DAPP_FS_BIN): calc.py run.sh
+	@echo "Building calc-dapp filesystem..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi

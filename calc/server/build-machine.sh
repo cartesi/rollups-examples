@@ -11,11 +11,14 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-DAPP_FS=/opt/cartesi/calculator-dapp-fs/calculator-dapp
-DAPP_FS_BIN=/opt/cartesi/calculator-dapp-fs/calculator-dapp.ext2
+MACHINE_DIR=/opt/cartesi/calc-machine
 
-mkdir -p $DAPP_FS
-cp ./calculator.py $DAPP_FS
-cp ./run.sh $DAPP_FS
-genext2fs -f -i 512 -b 16 -d $DAPP_FS $DAPP_FS_BIN
-truncate -s %4096 $DAPP_FS_BIN
+cartesi-machine \
+    --ram-length=128Mi \
+    --rollup \
+    --flash-drive=label:calc-dapp,filename:calc-dapp.ext2 \
+    --flash-drive=label:root,filename:rootfs.ext2 \
+    --ram-image=linux-5.5.19-ctsi-3.bin \
+    --rom-image=rom.bin \
+    --store=$MACHINE_DIR \
+    -- "/mnt/calc-dapp/run.sh"
