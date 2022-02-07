@@ -1,7 +1,7 @@
 {
-    "name": "echo",
+    "name": "calc",
     "version": "0.2.0",
-    "description": "Echo DApp",
+    "description": "Calc DApp",
     "main": "index.ts",
     "license": "Apache-2.0",
     "scripts": {
