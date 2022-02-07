@@ -1,0 +1,6 @@
+cache
+coverage
+deployments/localhost
+deployments/*/solcInputs/*.json
+dist
+node_modules
