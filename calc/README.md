@@ -93,7 +93,8 @@ The response should be something like this:
 ```
 You can also run those commands in the playground graphql host at "http://localhost:4000/graphql". It is easier to understand and manipulate the structures defined in (https://github.com/cartesi/rollups/blob/main/src/reader/src/graphql/typeDefs/typeDefs.graphql). For example, the GetNotice query can be run in the localhost as shown bellow
 
-![image](https://user-images.githubusercontent.com/4421825/152855480-43ed4806-4ad1-458f-a55d-19d50091389c.png)
+![image](https://user-images.githubusercontent.com/4421825/152856704-c0c33c13-f695-4d43-bec3-9b6e6cfb9d07.png)
+
 
 where you can see the payload result of the calculation in the "payload" attribute. In this example, every input generates only one notice, so you can get the result of calculation checking the notices of an input by the index.
 
@@ -112,7 +113,9 @@ The results will be shown like the image bellow.
 ![image](https://user-images.githubusercontent.com/4421825/152856017-ac301f70-0dd6-42f2-af55-1312ce17ddd8.png)
 
 
-### Sending inputs with the front-end
+### Sending inputs with the front-end 
+
+To simplify, we can also send inputs with the simply front end inside the front folder. It's a simply scritp which do the converting the operation into a proper input. 
 
 
 ## Advancing time
