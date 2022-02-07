@@ -70,7 +70,7 @@ In the next section, you can see how to interact the DApp to send inputs and to 
 With the infrastructure in place, go to a separate terminal window and send an input as follows:
 
 ```shell
-$ docker exec calc_hardhat_1 npx hardhat --network localhost echo:addInput --input "0x7b226f70223a20222b222c20226f706466223a20223336222c20226f706473223a20223639227d"
+$ docker exec calc_hardhat_1 npx hardhat --network localhost calc:addInput --input "0x7b226f70223a20222b222c20226f706466223a20223336222c20226f706473223a20223639227d"
 ```
 
 The input will have been accepted when you receive a response similar to the following one:
@@ -91,7 +91,7 @@ The response should be something like this:
 ```shell
 {"data":{"GetNotice":[{"session_id":"default_rollups_id","epoch_index":"0","input_index":"0","notice_index":"0","payload":"63617274657369da"}]}}
 ```
-You can also run those commands in the playground graphql host at "http://localhost:4000/graphql". It is easier to understand and manipulate the structures defined in (https://github.com/cartesi/rollups/blob/main/src/reader/src/graphql/typeDefs/typeDefs.graphql). For example, the GetNotice query can be run in the localhost as shown bellow
+You can also run those commands in the playground graphql host at "http://localhost:4000/graphql", it is easier to understand and manipulate the structures defined in (https://github.com/cartesi/rollups/blob/main/src/reader/src/graphql/typeDefs/typeDefs.graphql). For example, the GetNotice query can be run in the localhost as shown bellow
 
 ![image](https://user-images.githubusercontent.com/4421825/152856704-c0c33c13-f695-4d43-bec3-9b6e6cfb9d07.png)
 
@@ -115,7 +115,14 @@ The results will be shown like the image bellow.
 
 ### Sending inputs with the front-end 
 
-To simplify, we can also send inputs with the simply front end inside the front folder. It's a simply scritp which do the converting the operation into a proper input. 
+To simplify, we can also send inputs with the simply front end inside the front folder. It's a simply scritp which do the converting the operation into a proper input. With the infrastructure ready, run the script.
+
+```
+calculatorfront.py
+```
+The script shoudl run expecting the user inputs, as shown in the following picture
+
+![image](https://user-images.githubusercontent.com/4421825/152860785-b0c6a3c6-dade-4ca1-ae12-54482a39c287.png)
 
 
 ## Advancing time
