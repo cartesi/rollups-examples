@@ -138,7 +138,7 @@ cd echo/server/
 python3 -m venv .env
 . .env/bin/activate
 pip install -r requirements.txt
-HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --preload --workers 1 --bind 0.0.0.0:5003 echo:app
+HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --preload --workers 1 --bind 0.0.0.0:5003 echo-extended:app
 ```
 
 The echo server will run on port `5003` and send the corresponding notices to port `5004`. After it's successfully started, it should print an output like the following:
