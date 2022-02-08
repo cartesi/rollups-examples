@@ -48,8 +48,7 @@ $ docker-compose down -v
 ```
 ## Undestanding the application
 
-![cartesi drawio](https://user-images.githubusercontent.com/4421825/152856411-85dfdecc-97f6-4269-b9f2-004fc3aae7bb.png)
-
+![extended png](https://user-images.githubusercontent.com/28971291/153052821-84464852-92df-458d-b846-f5c5e23d1055.png)
 
 The echo extended application is a simply text transform application who transforms texts inside the cartesi machine. For that, the input is expected as a JSON string with the one message and one transform method. For instance:
 ```
