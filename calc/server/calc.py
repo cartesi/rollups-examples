@@ -23,7 +23,7 @@ app.logger.setLevel(logging.INFO)
 dispatcher_url = environ["HTTP_DISPATCHER_URL"]
 app.logger.info(f"HTTP dispatcher url is {dispatcher_url}")
 
-#Calculator simply functions
+#Calculator simple functions
 
 # This function adds two numbers
 def add(x, y):
