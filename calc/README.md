@@ -26,6 +26,7 @@ $ docker-compose up --build
 ```
 
 _Note:_ If you decide to use [Docker Compose V2](https://docs.docker.com/compose/cli-command/), make sure you set the [compatibility flag](https://docs.docker.com/compose/cli-command-compatibility/) when executing the command (e.g., `docker-compose --compatibility up`).
+
 _Note:_ If running the make files or docker causes permission failed error, run as superuser.
 
 Allow some time for the infrastructure to be ready.
