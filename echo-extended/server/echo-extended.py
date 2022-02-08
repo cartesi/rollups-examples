@@ -11,10 +11,10 @@
 # specific language governing permissions and limitations under the License.
 
 
-from os import environ
 import logging
+from os import environ
+
 import requests
-import json
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -24,31 +24,51 @@ dispatcher_url = environ["HTTP_DISPATCHER_URL"]
 app.logger.info(f"HTTP dispatcher url is {dispatcher_url}")
 
 
+def unserialize(data):
+    return bytes.fromhex(data).decode("utf-8")
+
+
+def serialize(data):
+    return "0x" + data.encode("utf-8").hex()
+
+
 @app.route("/advance", methods=["POST"])
 def advance():
+    transformations = {
+        "upper": str.upper,
+        "lower": str.lower,
+    }
+
     body = request.get_json()
-    app.logger.info(f"Received advance request body {body}")
-    app.logger.info("Printing Body Payload : "+ body["payload"])
 
-    partial = body["payload"][2:]
-    app.logger.info("Hex Without 0x : "+ partial)
+    payload = unserialize(body["payload"][2:])
+    app.logger.info("[APP] Unserialized payload: " + payload)
 
-    content = (bytes.fromhex(hex).decode("utf-8"))
+    transform = payload["transform"]
+    message = payload["message"]
 
-    app.logger.info("Message before conversion: " + content)    
-    content_upper = content.upper()
-    app.logger.info("Message after conversion: " + content_upper)
+    # Error path
+    if transform not in transformations:
+        error_message = "Cannot do the '" + transform + "' transformation"
+        error_serialize = serialize(error_message)
+        requests.post(dispatcher_url + "/notice", json={"payload": error_message})
+        requests.post(dispatcher_url + "/finish", json={"status": "accept"})
 
-    newpayload = "0x" + content_upper.encode("utf-8").hex()
-    app.logger.info("Operation Result in Hex: " + newpayload)
-    body["payload"] = newpayload
-    app.logger.info("New PayLoad Added: "+body["payload"])
-    app.logger.info("Adding notice")
-    response = requests.post(dispatcher_url + "/notice", json={"payload": body["payload"]})
-    app.logger.info(f"Received notice status {response.status_code} body {response.content}")
-    app.logger.info("Finishing")
-    response = requests.post(dispatcher_url + "/finish", json={"status": "accept"})
-    app.logger.info(f"Received finish status {response.status_code}")
+        app.logger.info("[ERROR PATH] Error message: " + error_message)
+        app.logger.info("[APP] Error message serialized: " + error_serialize)
+
+        return "", 202
+
+    # Happy path
+    message_tranformed = transformations[transform](message)
+
+    message_serialized = serialize(message_tranformed)
+    requests.post(dispatcher_url + "/notice", json={"payload": message_serialized})
+    requests.post(dispatcher_url + "/finish", json={"status": "accept"})
+
+    app.logger.info("[HAPPY PATH] Tranformed message: " + message_tranformed)
+    app.logger.info("[APP] Serialized message: " + message_serialized)
+
     return "", 202
 
 
