@@ -11,6 +11,7 @@
 # specific language governing permissions and limitations under the License.
 
 
+import json
 import logging
 from os import environ
 
@@ -25,7 +26,10 @@ app.logger.info(f"HTTP dispatcher url is {dispatcher_url}")
 
 
 def unserialize(data):
-    return bytes.fromhex(data).decode("utf-8")
+    raw_data = bytes.fromhex(data).decode("utf-8")
+    data = json.loads(raw_data)
+
+    return data
 
 
 def serialize(data):
