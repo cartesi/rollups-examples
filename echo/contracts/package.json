@@ -28,7 +28,8 @@
         "solhint": "solhint contracts/**/*.sol",
         "start": "hardhat node",
         "test": "hardhat test",
-        "test:coverage": "hardhat coverage"
+        "test:coverage": "hardhat coverage",
+        "tsc": "tsc"
     },
     "scripts-info": {
         "build": "Build contracts and typescript code",
@@ -85,6 +86,7 @@
         "deployments/*/.chainid",
         "dist/src/types",
         "dist/deploy/*.js",
-        "export"
+        "export",
+        "!export/abi/localhost.json"
     ]
 }
