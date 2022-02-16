@@ -97,6 +97,12 @@ services:
     volumes:
       - database-data:/var/lib/postgresql/data
 
+  provy_server:
+    build: ./proxy
+    working_dir: /var/www/
+    volumes:
+      - ./proxy:/var/www
+
 volumes:
   blockchain_data:
   database-data: {}

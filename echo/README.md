@@ -89,6 +89,20 @@ The first step is to run the environment in host mode using the following comman
 ```shell
 docker-compose -f docker-compose-host.yml up --build
 ```
+---
+### Proxy HTTP Server (only host mode)
+
+#### Requirements
+
+- Running docker containers
+- `php v8.1.*`
+- Hardhat docker image should be named `echo-hardhat-1`
+
+```shell
+cd proxy && ./run.sh
+```
+
+---
 
 The next step is to run the echo server in your machine. The application is written in Python, so you need to have `python3` installed.
 
