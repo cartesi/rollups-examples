@@ -13,7 +13,7 @@ services:
 
   rollups_dispatcher:
     depends_on: [hardhat]
-    image: cartesi/rollups-dispatcher:0.1.0
+    image: cartesi/rollups-dispatcher:0.1.2
     platform: linux/amd64
     restart: always
     environment:
@@ -37,7 +37,7 @@ services:
 
   state_server:
     depends_on: [hardhat]
-    image: cartesi/delegate-server:0.1.0
+    image: cartesi/delegate-server:0.1.2
     platform: linux/amd64
     restart: always
     environment:
@@ -49,7 +49,7 @@ services:
       - ./config:/opt/cartesi/share/config/
 
   server_manager:
-    image: cartesi/server-manager:0.1.0
+    image: cartesi/server-manager:0.1.2
     platform: linux/amd64
     restart: always
     volumes:
@@ -57,7 +57,7 @@ services:
 
   rollups_indexer:
     depends_on: [hardhat]
-    image: cartesi/rollups-indexer:0.1.0
+    image: cartesi/rollups-indexer:0.1.2
     platform: linux/amd64
     restart: always
     environment:
@@ -75,7 +75,7 @@ services:
       - ./config:/opt/cartesi/share/config/
 
   query_server:
-    image: cartesi/query-server:0.1.0
+    image: cartesi/query-server:0.1.2
     platform: linux/amd64
     ports:
       - '4000:4000'
