@@ -36,7 +36,6 @@ $closure = function (Request $request) use ($web3): JsonResponse {
             'path' => '/' . ltrim($request->getRequestUri(), '/'),
             'method' => strtoupper($request->getMethod()),
             'payload' => $request->all(),
-            'headers' => $request->header(),
         ], JSON_THROW_ON_ERROR)
     );
 

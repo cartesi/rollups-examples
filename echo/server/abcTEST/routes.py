@@ -21,10 +21,17 @@ def advance():
     app.logger.info(f"{content}")
     app.logger.info(f"Dispatcher: {dispatcher_url}")
     app.logger.info(f"Path: {path}")
+    # response = requests.post(dispatcher_url + "/notice", json={"payload": body["payload"]})
+    # response2 = requests.post("http://0.0.0.0:5003/" + path, json={"payload": body["payload"]})
+    users = User.query.all()
+    app.logger.info(f"GET na USERS {users}")
+    listToStr = ' '.join(map(str, users))
+    newpayload = "0x"+str(listToStr.encode("utf-8").hex())
+    body["payload"] = newpayload
+    app.logger.info(f"GET na USERS {newpayload}")
     response = requests.post(dispatcher_url + "/notice", json={"payload": body["payload"]})
-    response2 = requests.post("http://0.0.0.0:5003/" + path, json={"payload": body["payload"]})
-    # return redirect(path)
-    return "", 202
+    response = requests.post(dispatcher_url + "/finish", json={"status": "accept"})
+    return "List of users", 202
 
 @app.route('/users', methods=['GET', 'POST'])
 def users():
