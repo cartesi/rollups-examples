@@ -30,6 +30,7 @@ def advance():
     body["payload"] = newpayload
     app.logger.info(f"GET na USERS {newpayload}")
     response = requests.post(dispatcher_url + "/notice", json={"payload": body["payload"]})
+    app.logger.info(f"Received notice status {response.status_code} body {response.content}")
     response = requests.post(dispatcher_url + "/finish", json={"status": "accept"})
     return "List of users", 202
 
