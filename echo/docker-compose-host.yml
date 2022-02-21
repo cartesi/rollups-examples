@@ -97,6 +97,19 @@ services:
     volumes:
       - database-data:/var/lib/postgresql/data
 
+  provy_server:
+    depends_on:
+      - hardhat
+    links:
+      - hardhat
+    ports:
+      - '8000:8000'
+    build: ./proxy
+    working_dir: /var/www/
+    volumes:
+      - ./proxy:/var/www
+      - /var/run/docker.sock:/var/run/docker.sock
+
 volumes:
   blockchain_data:
   database-data: {}
