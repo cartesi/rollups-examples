@@ -6,9 +6,9 @@
     "type": "project",
     "require": {
         "php": "^8.0",
-        "laravel/lumen-framework": "^9.0"
+        "laravel/lumen-framework": "^9.0",
+        "web3-php/web3": "dev-master"
     },
-    "require-dev": {},
     "autoload-dev": {
         "psr-4": {}
     },

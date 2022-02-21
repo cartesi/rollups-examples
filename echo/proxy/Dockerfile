@@ -8,10 +8,15 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip
+    unzip \
+    docker.io
+
+RUN docker-php-ext-install bcmath
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-CMD composer install --no-interaction --no-scripts --prefer-dist
+CMD composer install --no-interaction --no-scripts --prefer-dist && php -S 0.0.0.0:8000 -t public
 
 WORKDIR /var/www
+
+EXPOSE 8000

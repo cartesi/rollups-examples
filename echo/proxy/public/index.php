@@ -3,6 +3,8 @@
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Web3\ValueObjects\Transaction;
+use Web3\Web3;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +28,9 @@ $app = new Laravel\Lumen\Application(
 $app->configure('app');
 
 
-$closure = function (Request $request): JsonResponse {
+$web3 = new Web3('http://hardhat:8545');
+
+$closure = function (Request $request) use ($web3): JsonResponse {
     $hexJsonData = bin2hex(
         json_encode([
             'path' => '/' . ltrim($request->getRequestUri(), '/'),
@@ -47,7 +51,11 @@ $closure = function (Request $request): JsonResponse {
         'tx' => Str::before($commandOutput[6], ')'),
     ];
 
-    return response()->json($data);
+    return response()->json([
+        'command_result' => $data,
+        'transaction' => $web3->eth()->getTransactionByHash($data['tx']),
+        'transaction_receipt' => $web3->eth()->getTransactionReceipt($data['tx']),
+    ]);
 };
 
 $pattern = '/{any:.*}';
