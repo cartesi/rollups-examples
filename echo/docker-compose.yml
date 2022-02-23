@@ -89,7 +89,6 @@ services:
       - DB_PASSWORD=password
       - DB_HOST=database
       - DB_TEST_NAME=postgres
-      - URL=http://hardhat:8545
 
   database:
     image: postgres:12
