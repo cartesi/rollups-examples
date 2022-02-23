@@ -49,7 +49,8 @@ $ docker-compose down -v
 ```
 ## Understanding the application
 
-![cartesi drawio](https://user-images.githubusercontent.com/4421825/152856411-85dfdecc-97f6-4269-b9f2-004fc3aae7bb.png)
+![ml](https://user-images.githubusercontent.com/4421825/155430654-2afcf003-35f7-46a2-9709-af258b33a970.png)
+
 
 
 The ml application is a Knn dapp who loads the Iris dataset and uses a KNN to solve the problem. It also receives an input to calculate new predictions. The Iris dataset is a classic problem where The data set contains 3 classes of 50 instances each, where each class refers to a type of iris plant. One class is linearly separable from the other 2; the latter are NOT linearly separable from each other.
