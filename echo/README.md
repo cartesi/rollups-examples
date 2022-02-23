@@ -87,7 +87,7 @@ When developing an application, it is often important to easily test and debug i
 The first step is to run the environment in host mode using the following command:
 
 ```shell
-docker-compose -f docker-compose-host.yml up --build
+docker-compose -f docker-compose.yml -f docker-compose-host.yml up --build
 ```
 
 The next step is to run the echo server in your machine. The application is written in Python, so you need to have `python3` installed.
@@ -131,5 +131,5 @@ When you add an input, you should see it being processed by the echo server as f
 Finally, to stop the containers, removing any associated volumes, execute:
 
 ```shell
-docker-compose -f docker-compose-host.yml down -v
+docker-compose -f docker-compose.yml -f docker-compose-host.yml down -v
 ```
