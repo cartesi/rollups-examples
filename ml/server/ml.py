@@ -10,6 +10,7 @@ import requests
 from random import randrange
 from random import seed
 import time
+import json
 
 # Your API definition
 app = Flask(__name__)
@@ -140,7 +141,7 @@ def k_nearest_neighbors(train, test, num_neighbors):
 
 @app.route('/advance', methods=['POST'])
 def predict():
-    start = time.time()
+    
     # Make a prediction with KNN on Iris Dataset
     seed(1)
     app.logger.info("Loading model")
@@ -155,8 +156,11 @@ def predict():
     # evaluate algorithm
     n_folds = 5
     num_neighbors = 5
+    start = time.time()
     scores = evaluate_algorithm(dataset, k_nearest_neighbors, n_folds, num_neighbors)
-    
+    end = time.time()
+    app.logger.info("The time of execution of evaluation algorithm is :" +  str(end-start))
+
     app.logger.info("Current Scores for Knn: " + str(scores))
     app.logger.info("Current Mean Accuracy for Knn in this dataset is : " + str((sum(scores)/float(len(scores)))))
     app.logger.info("Getting input")
@@ -170,7 +174,7 @@ def predict():
     
     #json input should be like this {"sl": "2.0", "sw": "3.0", "pl": "4.0", "pw": "3.5"}
     s_json = json.loads(content)
-    sl = s_json["sl"]
+    sl = float(s_json["sl"])
     app.logger.info("This should be the sepal lenght " + str(sl))
     sw = float(s_json["sw"])
     app.logger.info("This should be the sepal width " + str(sw))
@@ -183,8 +187,10 @@ def predict():
     floats_list = [sl,sw,pl,pw]
     app.logger.info("The received input is: " + str(floats_list))
     
-
+    start = time.time()
     predicted = str(predict_classification(dataset, floats_list, num_neighbors))
+    end = time.time()
+    app.logger.info("The time of execution of prediction is :"+ str(end-start))
     app.logger.info(f"Data={content}, Predicted: {predicted}")
     
 
@@ -199,9 +205,6 @@ def predict():
     app.logger.info("Finishing")
     response = requests.post(dispatcher_url + "/finish", json={"status": "accept"})
     app.logger.info(f"Received finish status {response.status_code}")
-    end = time.time()
-
-    app.logger.info("The time of execution of above program is :", str(end-start))
     return "", 202
 
 @app.route("/inspect/<payload>", methods=["GET"])
