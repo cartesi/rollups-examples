@@ -67,7 +67,7 @@ Following this, the input should bem a string as follows:
 ```
 Where "sl" represents the sepal lenght, "sw" is the sepal width,  "pl" is the petal lenght and the "pw" is the petal width. Note that this JSON string should necessarily be in hexadecimal. In the example above, the hexadecimal should be like below. 
 ```
-0x7b226f70223a20222b222c20226f706466223a20223336222c20226f706473223a20223639227d
+0x7b22736c223a2022322e30222c20227377223a2022332e30222c2022706c223a2022342e30222c20227077223a2022332e35227d
 ```
 
 In the next section, you can see how to interact with the DApp to send inputs and see the notices array.
@@ -79,13 +79,13 @@ In the next section, you can see how to interact with the DApp to send inputs an
 With the infrastructure in place, go to a separate terminal window and send an input as follows:
 
 ```shell
-$ docker exec ml_hardhat_1 npx hardhat --network localhost ml:addInput --input "0x352e372c322e392c342e322c312e33"
+$ docker exec ml_hardhat_1 npx hardhat --network localhost ml:addInput --input "0x7b22736c223a2022322e30222c20227377223a2022332e30222c2022706c223a2022342e30222c20227077223a2022332e35227d"
 ```
 
 When you receive a response similar to the one below, you know your input was accepted.
 
 ```shell
-Added input '0x7b226f70223a20222b222c20226f706466223a20223336222c20226f706473223a20223639227d' to epoch '0' (timestamp: 1643998586, signer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, tx: 0x765a93faa7acc2a15cb2e577c16ffd0c7d106599c62b0b5c9be9dfc7fc9ee03f)
+Added input '0x7b22736c223a2022322e30222c20227377223a2022332e30222c2022706c223a2022342e30222c20227077223a2022332e35227d' to epoch '0' (timestamp: 1643998586, signer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, tx: 0x765a93faa7acc2a15cb2e577c16ffd0c7d106599c62b0b5c9be9dfc7fc9ee03f)
 ```
 ### Seeing Results, notices, and more
 
@@ -168,11 +168,30 @@ After that, you can interact with the application typically [as explained above]
 When you add an input, you should see it being processed by the ml server as follows:
 
 ```shell
-[2022-01-21 15:58:39,555] INFO in ml: Received advance request body {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 11, 'time_stamp': 1642791522}, 'payload': '0x636172746573690d0a'}
-[2022-01-21 15:58:39,556] INFO in ml: Adding notice
-[2022-01-21 15:58:39,650] INFO in ml: Received notice status 201 body b'{"index":0}'
-[2022-01-21 15:58:39,651] INFO in ml: Finishing
-[2022-01-21 15:58:39,666] INFO in ml: Received finish status 202
+[2022-02-23 20:45:17,230] INFO in ml: Loading model
+[Iris-versicolor] => 0
+[Iris-virginica] => 1
+[Iris-setosa] => 2
+[2022-02-23 20:45:17,247] INFO in ml: The time of execution of evaluation algorithm is :0.016093730926513672
+[2022-02-23 20:45:17,247] INFO in ml: Current Scores for Knn: [96.66666666666667, 96.66666666666667, 100.0, 90.0, 100.0]
+[2022-02-23 20:45:17,248] INFO in ml: Current Mean Accuracy for Knn in this dataset is : 96.66666666666667
+[2022-02-23 20:45:17,248] INFO in ml: Getting input
+[2022-02-23 20:45:17,248] INFO in ml: Received advance request body {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 2, 'block_number': 13, 'time_stamp': 1645659925}, 'payload': '0x7b22736c223a2022322e30222c20227377223a2022332e30222c2022706c223a2022342e30222c20227077223a2022332e35227d'}
+[2022-02-23 20:45:17,248] INFO in ml: Printing Body Payload : 0x7b22736c223a2022322e30222c20227377223a2022332e30222c2022706c223a2022342e30222c20227077223a2022332e35227d
+[2022-02-23 20:45:17,248] INFO in ml: This should be the sepal lenght 2.0
+[2022-02-23 20:45:17,248] INFO in ml: This should be the sepal width 3.0
+[2022-02-23 20:45:17,248] INFO in ml: This should be the petal lenght 4.0
+[2022-02-23 20:45:17,248] INFO in ml: This should be the petal width 3.5
+[2022-02-23 20:45:17,249] INFO in ml: The received input is: [2.0, 3.0, 4.0, 3.5]
+[2022-02-23 20:45:17,249] INFO in ml: The time of execution of prediction is :0.00011968612670898438
+[2022-02-23 20:45:17,249] INFO in ml: Data={"sl": "2.0", "sw": "3.0", "pl": "4.0", "pw": "3.5"}, Predicted: 0
+[2022-02-23 20:45:17,249] INFO in ml: Predicted in Hex: 0x30
+[2022-02-23 20:45:17,249] INFO in ml: New PayLoad Added: 0x30
+[2022-02-23 20:45:17,250] INFO in ml: Adding notice
+[2022-02-23 20:45:17,254] INFO in ml: Received notice status 201 body b'{"index":0}'
+[2022-02-23 20:45:17,255] INFO in ml: Finishing
+[2022-02-23 20:45:17,259] INFO in ml: Received finish status 202
+
 ```
 
 Finally, to stop the containers, removing any associated volumes, execute:
