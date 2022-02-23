@@ -1,6 +1,6 @@
 # MLearning KNN DApp
 
-This example shows how to use an Machine Learning technique integrated with Cartesi Rollups. For this example we will use K-nn with the euclidian distance. Moreover, we solve the classic Iris dataset (https://archive.ics.uci.edu/ml/datasets/iris) problem. The Dapp also can predict an new input give by the user.
+This example shows how to use an Machine Learning technique integrated with Cartesi Rollups. For this example we will use K-nn with the euclidian distance. Moreover, we solve the classic Iris dataset (https://archive.ics.uci.edu/ml/datasets/iris) problem. The Dapp also can predict an new input given by the user.
 
 ## Building the environment
 
