@@ -1,19 +1,19 @@
-# Simple Calc DApp
+# MLearning KNN DApp
 
-This example shows how to build and interact with a Cartesi Rollups Dapp called "calc" that performs a two-operand calculation for each input received as a corresponding output notice. The operands and operator inputs are sent to the application as a hexadecimal JSON string. The back-end of this DApp is written in Python. Before we can understand how to use the DApp, we must first build it properly, as shown in the Building section.
+This example shows how to use an Machine Learning technique integrated with Cartesi Rollups. For this example we will use K-nn with the euclidian distance. Moreover, we solve the classic Iris dataset (https://archive.ics.uci.edu/ml/datasets/iris) problem. The Dapp also can predict an new input give by the user.
 
 ## Building the environment
 
-To run the calc DApp example, clone the repository as follows:
+To run the ml DApp example, clone the repository as follows:
 
 ```shell
 $ git clone https://github.com/cartesi/rollups-examples.git
 ```
 
-Then, build the back-end for the calc example:
+Then, build the back-end for the ml example:
 
 ```shell
-$ cd rollups-examples/calc
+$ cd rollups-examples/ml
 $ make machine
 ```
 
@@ -52,15 +52,23 @@ $ docker-compose down -v
 ![cartesi drawio](https://user-images.githubusercontent.com/4421825/152856411-85dfdecc-97f6-4269-b9f2-004fc3aae7bb.png)
 
 
-The calc application is a simple math calculator that performs two operands' operations inside the cartesi machine. The input expected is a JSON string with the operands and the operator. For instance
+The ml application is a Knn dapp who loads the Iris dataset and uses a KNN to solve the problem. It also receives an input to calculate new predictions. The Iris dataset is a classic problem where The data set contains 3 classes of 50 instances each, where each class refers to a type of iris plant. One class is linearly separable from the other 2; the latter are NOT linearly separable from each other.
+
+For this base, we have the attribute Information:
+
+1. sepal length in cm
+2. sepal width in cm
+3. petal length in cm
+4. petal width in cm
+
+Following this, the input should bem a string as follows:  
 ```
-{"op": "+", "opdf": "36", "opds": "69"}
+{"sl": "2.0", "sw": "3.0", "pl": "4.0", "pw": "3.5"}
 ```
-Where "op" represents the operation (+-\*/), "opdf" is the first operand, and "opds" is the second operand. Note that this JSON string should necessarily be in hexadecimal. In the example above, the hexadecimal should be like below. 
+Where "sl" represents the sepal lenght, "sw" is the sepal width,  "pl" is the petal lenght and the "pw" is the petal width. Note that this JSON string should necessarily be in hexadecimal. In the example above, the hexadecimal should be like below. 
 ```
 0x7b226f70223a20222b222c20226f706466223a20223336222c20226f706473223a20223639227d
 ```
-You can use the calc front-end in this project which does the conversion of the operations in a simple way for users. It is also a python script in the .calc/front folder.
 
 In the next section, you can see how to interact with the DApp to send inputs and see the notices array.
 
@@ -71,7 +79,7 @@ In the next section, you can see how to interact with the DApp to send inputs an
 With the infrastructure in place, go to a separate terminal window and send an input as follows:
 
 ```shell
-$ docker exec calc_hardhat_1 npx hardhat --network localhost calc:addInput --input "0x7b226f70223a20222b222c20226f706466223a20223336222c20226f706473223a20223639227d"
+$ docker exec ml_hardhat_1 npx hardhat --network localhost ml:addInput --input "0x352e372c322e392c342e322c312e33"
 ```
 
 When you receive a response similar to the one below, you know your input was accepted.
@@ -97,7 +105,7 @@ You can also run those commands in the "playground graphql" host at "http://loca
 ![image](https://user-images.githubusercontent.com/4421825/152856704-c0c33c13-f695-4d43-bec3-9b6e6cfb9d07.png)
 
 
-We can see the calculation's payload result in the "payload" attribute. In this example, every input generates only one notice, so you can get the calculation result by checking the notices of an input by the index.
+We can see the prediction's payload result in the "payload" attribute. In this example, every input generates only one notice, so you can get the prediction result by checking the notices of an input by the index.
 
 We can also see the full array of notices with the GetEpochStatus query with the command below.
 
@@ -114,24 +122,13 @@ The results will be displayed as shown in the image below.
 ![image](https://user-images.githubusercontent.com/4421825/152856017-ac301f70-0dd6-42f2-af55-1312ce17ddd8.png)
 
 
-### Sending inputs with the front-end 
-
-We can also send inputs with the simple front end inside the front folder to simplify. It's a simple script that converts the operation information into a proper input. With the infrastructure ready, run the script.
-
-```
-calculatorfront.py
-```
-The script should run expecting the user inputs, as shown in the following picture.
-
-![image](https://user-images.githubusercontent.com/4421825/152860785-b0c6a3c6-dade-4ca1-ae12-54482a39c287.png)
-
 
 ## Advancing time
 
 To advance time, to simulate the passing of epochs, run:
 
 ```shell
-$ docker exec calc_hardhat_1 npx hardhat --network localhost util:advanceTime --seconds 864010
+$ docker exec ml_hardhat_1 npx hardhat --network localhost util:advanceTime --seconds 864010
 ```
 
 ## Running the environment in host mode
@@ -144,22 +141,22 @@ The first step is to run the environment in host mode using the following comman
 docker-compose -f docker-compose-host.yml up --build
 ```
 
-The next step is to run the calc server in your machine. The application is written in Python, so you need to have `python3` installed.
+The next step is to run the ml server in your machine. The application is written in Python, so you need to have `python3` installed.
 
-To start the calc server, run the following commands in a dedicated terminal:
+To start the ml server, run the following commands in a dedicated terminal:
 
 ```shell
-cd calc/server/
+cd ml/server/
 python3 -m venv .env
 . .env/bin/activate
 pip install -r requirements.txt
-HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --preload --workers 1 --bind 0.0.0.0:5003 calc:app
+HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --preload --workers 1 --bind 0.0.0.0:5003 ml:app
 ```
 
-The calc server will run on port `5003` and send the corresponding notices to port `5004`. After it's successfully started, it should print an output like the following:
+The ml server will run on port `5003` and send the corresponding notices to port `5004`. After it's successfully started, it should print an output like the following:
 
 ```
-[2022-01-21 12:38:23,971] INFO in calc: HTTP dispatcher url is http://127.0.0.1:5004
+[2022-01-21 12:38:23,971] INFO in ml: HTTP dispatcher url is http://127.0.0.1:5004
 [2022-01-21 12:38:23 -0500] [79032] [INFO] Starting gunicorn 19.9.0
 [2022-01-21 12:38:23 -0500] [79032] [INFO] Listening at: http://0.0.0.0:5003 (79032)
 [2022-01-21 12:38:23 -0500] [79032] [INFO] Using worker: sync
@@ -168,14 +165,14 @@ The calc server will run on port `5003` and send the corresponding notices to po
 
 After that, you can interact with the application typically [as explained above](#interacting-with-the-application).
 
-When you add an input, you should see it being processed by the calc server as follows:
+When you add an input, you should see it being processed by the ml server as follows:
 
 ```shell
-[2022-01-21 15:58:39,555] INFO in calc: Received advance request body {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 11, 'time_stamp': 1642791522}, 'payload': '0x636172746573690d0a'}
-[2022-01-21 15:58:39,556] INFO in calc: Adding notice
-[2022-01-21 15:58:39,650] INFO in calc: Received notice status 201 body b'{"index":0}'
-[2022-01-21 15:58:39,651] INFO in calc: Finishing
-[2022-01-21 15:58:39,666] INFO in calc: Received finish status 202
+[2022-01-21 15:58:39,555] INFO in ml: Received advance request body {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 11, 'time_stamp': 1642791522}, 'payload': '0x636172746573690d0a'}
+[2022-01-21 15:58:39,556] INFO in ml: Adding notice
+[2022-01-21 15:58:39,650] INFO in ml: Received notice status 201 body b'{"index":0}'
+[2022-01-21 15:58:39,651] INFO in ml: Finishing
+[2022-01-21 15:58:39,666] INFO in ml: Received finish status 202
 ```
 
 Finally, to stop the containers, removing any associated volumes, execute:
@@ -183,3 +180,4 @@ Finally, to stop the containers, removing any associated volumes, execute:
 ```shell
 docker-compose -f docker-compose-host.yml down -v
 ```
+

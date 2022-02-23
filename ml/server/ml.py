@@ -9,6 +9,7 @@ import logging
 import requests
 from random import randrange
 from random import seed
+import time
 
 # Your API definition
 app = Flask(__name__)
@@ -139,7 +140,7 @@ def k_nearest_neighbors(train, test, num_neighbors):
 
 @app.route('/advance', methods=['POST'])
 def predict():
-    
+    start = time.time()
     # Make a prediction with KNN on Iris Dataset
     seed(1)
     app.logger.info("Loading model")
@@ -165,17 +166,26 @@ def predict():
     app.logger.info("Printing Body Payload : "+ body["payload"])
     partial = body["payload"][2:]
     
-    row = (bytes.fromhex(partial).decode("utf-8"))
-    floats_list = []
-    #implement error codes
-    for item in row.split(","):
-        floats_list.append(float(item))
-    # predict the label
+    content = (bytes.fromhex(partial).decode("utf-8"))
+    
+    #json input should be like this {"sl": "2.0", "sw": "3.0", "pl": "4.0", "pw": "3.5"}
+    s_json = json.loads(content)
+    sl = s_json["sl"]
+    app.logger.info("This should be the sepal lenght " + str(sl))
+    sw = float(s_json["sw"])
+    app.logger.info("This should be the sepal width " + str(sw))
+    pl = float(s_json["pl"])
+    app.logger.info("This should be the petal lenght " + str(pl))
+    pw = float(s_json["pw"])
+    app.logger.info("This should be the petal width " + str(pw))
+    
+    
+    floats_list = [sl,sw,pl,pw]
     app.logger.info("The received input is: " + str(floats_list))
     
 
     predicted = str(predict_classification(dataset, floats_list, num_neighbors))
-    app.logger.info(f"Data={row}, Predicted: {predicted}")
+    app.logger.info(f"Data={content}, Predicted: {predicted}")
     
 
     #Encode back to Hex to add in the notice
@@ -189,6 +199,9 @@ def predict():
     app.logger.info("Finishing")
     response = requests.post(dispatcher_url + "/finish", json={"status": "accept"})
     app.logger.info(f"Received finish status {response.status_code}")
+    end = time.time()
+
+    app.logger.info("The time of execution of above program is :", str(end-start))
     return "", 202
 
 @app.route("/inspect/<payload>", methods=["GET"])
