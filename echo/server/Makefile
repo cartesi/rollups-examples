@@ -42,7 +42,7 @@ $(MACHINE_DIR): $(DAPP_FS_BIN) $(BINARIES)
 
 console: $(DAPP_FS_BIN) $(BINARIES)
 	@echo "Running cartesi-machine console..."
-	@docker run --hostname server-manager-env --rm \
+	@docker run --hostname server-manager-env -it --rm \
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
 		--platform linux/amd64 \
