@@ -10,9 +10,9 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-
 import json
 import logging
+import random
 from os import environ
 
 import requests
@@ -36,17 +36,38 @@ def serialize(data):
     return "0x" + data.encode("utf-8").hex()
 
 
+# Custom transformations
+def reversed_transformation(text):
+    return text[::-1]
+
+
+def alternated_transformation(text):
+    return "".join(
+        [char.lower() if index % 2 else char.upper() for index, char in enumerate(text)]
+    )
+
+
+def random_transformation(text):
+    return "".join(
+        [char.upper() if random.randint(0, 1) == 1 else char.lower() for char in text]
+    )
+
+
 @app.route("/advance", methods=["POST"])
 def advance():
     transformations = {
         "upper": str.upper,
         "lower": str.lower,
+        "capitalize": str.capitalize,
+        "reversed": reversed_transformation,
+        "alternated": alternated_transformation,
+        "random": random_transformation,
     }
 
     body = request.get_json()
 
     payload = unserialize(body["payload"][2:])
-    app.logger.info("[APP] Unserialized payload: " + payload)
+    app.logger.info("[APP] Unserialized payload: " + str(payload))
 
     transform = payload["transform"]
     message = payload["message"]
@@ -55,8 +76,8 @@ def advance():
     if transform not in transformations:
         error_message = "Cannot do the '" + transform + "' transformation"
         error_serialize = serialize(error_message)
-        requests.post(dispatcher_url + "/notice", json={"payload": error_message})
-        requests.post(dispatcher_url + "/finish", json={"status": "accept"})
+        requests.post(dispatcher_url + "/report", json={"payload": error_message})
+        requests.post(dispatcher_url + "/finish", json={"status": "reject"})
 
         app.logger.info("[ERROR PATH] Error message: " + error_message)
         app.logger.info("[APP] Error message serialized: " + error_serialize)

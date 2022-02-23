@@ -46,4 +46,6 @@ _Note_: when running in host mode, localhost ports `5003` and `5004` will be use
 
 A basic "hello world" application, this DApp's back-end simply copies each input received as a corresponding output notice.
 
+### 2. [Echo Extended DApp](./echo-extended)
 
+An extended version of the [Simple Echo DApp](./echo) that allows you to perform text transformations such as _upper_, _lower_, _reversed_ and more.
