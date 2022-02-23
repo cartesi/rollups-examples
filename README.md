@@ -46,6 +46,9 @@ _Note_: when running in host mode, localhost ports `5003` and `5004` will be use
 A basic "hello world" application, this DApp's back-end simply copies each input received as a corresponding output notice.
 ### 2. [Simple Calculator DApp](./calc)
 Following the Echo Dapp concepts, this DApp's back-end do math calculations of two operands sent by json, each input received as a corresponding output notice.
+### 3. [MLearning KNN DApp](./ml)
+Extending the concepts of the two simple dapps, we reproduce an KNN to solve the classic Iris dataset integrated with cartesi rollups
+
 
 
 
