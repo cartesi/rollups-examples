@@ -150,14 +150,16 @@ def k_nearest_neighbors(train, test, num_neighbors):
 
 # Error handling
 def raise_error(error_message):
-    app.logger.info("Adding rerport")
+    app.logger.info("Error while processing: "+ error_message)
+    app.logger.info("Adding report")
     response = requests.post(
         dispatcher_url + "/report",
         json={"payload": "0x" + error_message.encode("utf-8").hex()},
     )
     app.logger.info(
-        f"Received rerport status {response.status_code} body {response.content}"
+        f"Received report status {response.status_code} body {response.content}"
     )
+    
 
     app.logger.info("Finishing")
     response = requests.post(dispatcher_url + "/finish", json={"status": "reject"})
