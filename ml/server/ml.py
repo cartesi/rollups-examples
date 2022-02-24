@@ -148,6 +148,22 @@ def k_nearest_neighbors(train, test, num_neighbors):
     return predictions
 
 
+# Error handling
+def raise_error(error_message):
+    app.logger.info("Adding rerport")
+    response = requests.post(
+        dispatcher_url + "/report",
+        json={"payload": "0x" + error_message.encode("utf-8").hex()},
+    )
+    app.logger.info(
+        f"Received rerport status {response.status_code} body {response.content}"
+    )
+
+    app.logger.info("Finishing")
+    response = requests.post(dispatcher_url + "/finish", json={"status": "reject"})
+    app.logger.info(f"Received finish status {response.status_code}")
+
+
 # Cartesi Endpoint
 @app.route("/advance", methods=["POST"])
 def predict():
@@ -187,17 +203,25 @@ def predict():
     content = bytes.fromhex(partial).decode("utf-8")
 
     # json input should be like this {"sl": "2.0", "sw": "3.0", "pl": "4.0", "pw": "3.5"}
-    s_json = json.loads(content)
-    sl = float(s_json["sl"])
-    app.logger.info("This should be the sepal lenght " + str(sl))
-    sw = float(s_json["sw"])
-    app.logger.info("This should be the sepal width " + str(sw))
-    pl = float(s_json["pl"])
-    app.logger.info("This should be the petal lenght " + str(pl))
-    pw = float(s_json["pw"])
-    app.logger.info("This should be the petal width " + str(pw))
+    try:
+        s_json = json.loads(content)
+        sl = float(s_json["sl"])
+        app.logger.info("This should be the sepal lenght " + str(sl))
+        sw = float(s_json["sw"])
+        app.logger.info("This should be the sepal width " + str(sw))
+        pl = float(s_json["pl"])
+        app.logger.info("This should be the petal lenght " + str(pl))
+        pw = float(s_json["pw"])
+        app.logger.info("This should be the petal width " + str(pw))
+    except KeyError:
+        raise_error("Invalid payload")
+        return "", 202
 
     floats_list = [sl, sw, pl, pw]
+    if any([True if item <= 0 else False for item in floats_list]):
+        raise_error("Values must be greater than zero")
+        return "", 202
+
     app.logger.info("The received input is: " + str(floats_list))
 
     start = time.time()
