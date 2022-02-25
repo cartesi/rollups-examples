@@ -1,6 +1,6 @@
 {
     "name": "echo",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "Echo DApp",
     "main": "index.ts",
     "license": "Apache-2.0",
