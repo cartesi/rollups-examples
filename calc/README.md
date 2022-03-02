@@ -127,7 +127,7 @@ When developing an application, it is often essential to quickly test and debug 
 The first step is to run the environment in host mode using the following command:
 
 ```shell
-docker-compose -f docker-compose-host.yml up --build
+docker-compose -f docker-compose.yml -f docker-compose-host.yml up --build
 ```
 
 The next step is to run the calc server in your machine. The application is written in Python, so you need to have `python3` installed.
