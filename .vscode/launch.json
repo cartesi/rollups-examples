@@ -1,0 +1,20 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "env": {
+                "HTTP_DISPATCHER_URL": "http://127.0.0.1:5004"
+            },
+            "cwd": "${workspaceFolder}/echo/server",
+            "name": "Simple Echo DApp",
+            "type": "python",
+            "request": "launch",
+            "program": ".env/bin/gunicorn",
+            "gevent": true,
+            "args": ["--timeout", "0", "--reload", "--workers", "1", "--bind=0.0.0.0:5003", "echo:app"],
+        }
+    ]
+}

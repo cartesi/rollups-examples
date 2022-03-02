@@ -56,7 +56,7 @@ const config: HardhatUserConfig = {
         kovan: infuraNetwork("kovan", 42, 6283185),
         goerli: infuraNetwork("goerli", 5, 6283185),
         mainnet: infuraNetwork("mainnet", 1, 6283185),
-        matic_testnet: infuraNetwork("polygon-mumbai", 80001),
+        polygon_mumbai: infuraNetwork("polygon-mumbai", 80001),
         bsc_testnet: {
             url: "https://data-seed-prebsc-1-s1.binance.org:8545",
             chainId: 97,
@@ -80,14 +80,21 @@ const config: HardhatUserConfig = {
             rinkeby: ["node_modules/@cartesi/util/deployments/rinkeby"],
             kovan: ["node_modules/@cartesi/util/deployments/kovan"],
             goerli: ["node_modules/@cartesi/util/deployments/goerli"],
-            matic_testnet: [
+            polygon_mumbai: [
                 "node_modules/@cartesi/util/deployments/matic_testnet",
             ],
             bsc_testnet: ["node_modules/@cartesi/util/deployments/bsc_testnet"],
         },
     },
     etherscan: {
-        apiKey: process.env.ETHERSCAN_API_KEY,
+        apiKey: {
+            polygonMumbai: process.env.ETHERSCAN_API_KEY_POLYGON,
+        },
+    },
+    verify: {
+        etherscan: {
+            apiKey: process.env.ETHERSCAN_API_KEY,
+        },
     },
     namedAccounts: {
         deployer: {

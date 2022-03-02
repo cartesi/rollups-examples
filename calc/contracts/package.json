@@ -17,10 +17,10 @@
         "deploy:goerli": "hardhat deploy --network goerli --export export/abi/goerli.json",
         "deploy:kovan": "hardhat deploy --network kovan --export export/abi/kovan.json",
         "deploy:mainnet": "hardhat deploy --network mainnet --export export/abi/mainnet.json",
-        "deploy:matic_testnet": "hardhat deploy --network matic_testnet --export export/abi/matic_testnet.json",
+        "deploy:polygon_mumbai": "hardhat deploy --network polygon_mumbai --export export/abi/polygon_mumbai.json",
         "deploy:rinkeby": "hardhat deploy --network rinkeby --export export/abi/rinkeby.json",
         "deploy:ropsten": "hardhat deploy --network ropsten --export export/abi/ropsten.json",
-        "deploy:testnet": "run-s deploy:rinkeby deploy:ropsten deploy:kovan deploy:goerli deploy:matic_testnet deploy:bsc_testnet",
+        "deploy:testnet": "run-s deploy:rinkeby deploy:ropsten deploy:kovan deploy:goerli deploy:polygon_mumbai deploy:bsc_testnet",
         "export": "hardhat export-artifacts export/artifacts",
         "info": "npm-scripts-info",
         "prepack": "run-s export tsc copy-dts",
@@ -28,7 +28,8 @@
         "solhint": "solhint contracts/**/*.sol",
         "start": "hardhat node",
         "test": "hardhat test",
-        "test:coverage": "hardhat coverage"
+        "test:coverage": "hardhat coverage",
+        "tsc": "tsc"
     },
     "scripts-info": {
         "build": "Build contracts and typescript code",
@@ -40,7 +41,7 @@
         "deploy:goerli": "Deploy contracts to goerli. Requires two environment variables: PROJECT_ID and MNEMONIC.",
         "deploy:kovan": "Deploy contracts to kovan. Requires two environment variables: PROJECT_ID and MNEMONIC.",
         "deploy:mainnet": "Deploy contracts to mainnet.",
-        "deploy:matic_testnet": "Deploy contracts to matic_testnet.",
+        "deploy:polygon_mumbai": "Deploy contracts to polygon_mumbai.",
         "deploy:rinkeby": "Deploy contracts to rinkeby. Requires two environment variables: PROJECT_ID and MNEMONIC.",
         "deploy:ropsten": "Deploy contracts to ropsten. Requires two environment variables: PROJECT_ID and MNEMONIC.",
         "deploy:testnet": "Deploy contracts to all supported testnets. Requires two environment variables: PROJECT_ID and MNEMONIC.",
@@ -55,7 +56,7 @@
     "devDependencies": {
         "@cartesi/rollups": "^0.1.1",
         "@nomiclabs/hardhat-ethers": "^2.0.3",
-        "@nomiclabs/hardhat-etherscan": "^2.1.8",
+        "@nomiclabs/hardhat-etherscan": "^3.0.0",
         "@nomiclabs/hardhat-waffle": "^2.0.1",
         "@typechain/ethers-v5": "^8.0.5",
         "@typechain/hardhat": "^3.1.0",
@@ -66,7 +67,7 @@
         "ethereum-waffle": "^3.4.0",
         "ethers": "^5.5.2",
         "hardhat": "^2.8.0",
-        "hardhat-deploy": "^0.9.24",
+        "hardhat-deploy": "^0.10.0",
         "npm-run-all": "^4.1.5",
         "npm-scripts-info": "^0.3.9",
         "prettier": "^2.5.1",
@@ -85,6 +86,7 @@
         "deployments/*/.chainid",
         "dist/src/types",
         "dist/deploy/*.js",
-        "export"
+        "export",
+        "!export/abi/localhost.json"
     ]
 }

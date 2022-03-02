@@ -14,9 +14,9 @@ import { cosmiconfig } from "cosmiconfig";
 
 const explorer = cosmiconfig("dapp");
 
-const func: DeployFunction = async ({ run }) => {
-    // search for DApp configuration
-    const configResult = await explorer.search();
+const func: DeployFunction = async ({ network, run }) => {
+    // search for DApp configuration, starting from 'config/{network}' and traversing up
+    const configResult = await explorer.search(`config/${network.name}`);
 
     // bail out if we don't find a config
     if (!configResult || configResult.isEmpty) {

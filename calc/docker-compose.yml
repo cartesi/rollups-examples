@@ -3,14 +3,18 @@ version: '3'
 services:
   hardhat:
     build: ./contracts
-    command: ["node", "--write", "true", "--network", "hardhat", "--export", "/opt/cartesi/share/blockchain/dapp.json"]
+    command: ["node", "--write", "true", "--network", "hardhat", "--export", "/opt/cartesi/share/blockchain/localhost.json"]
     init: true
+    ports:
+      - '8545:8545'
+    platform: linux/amd64
     volumes:
-      - blockchain_data:/opt/cartesi/share/blockchain
+      - ./contracts/export/abi:/opt/cartesi/share/blockchain
 
   rollups_dispatcher:
     depends_on: [hardhat]
-    image: cartesi/rollups-dispatcher:0.1.0
+    image: cartesi/rollups-dispatcher:0.1.2
+    platform: linux/amd64
     restart: always
     environment:
       # TODO: currently hardhat's default mnemonic
@@ -26,32 +30,35 @@ services:
       - STATE_SERVER_PORT=50051
       - SERVER_MANAGER_HOSTNAME=server_manager
       - SERVER_MANAGER_PORT=5001
-      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/dapp.json
+      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
     volumes:
-      - blockchain_data:/opt/cartesi/share/blockchain:ro
+      - ./contracts/export/abi:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
 
   state_server:
     depends_on: [hardhat]
-    image: cartesi/delegate-server:0.1.0
+    image: cartesi/delegate-server:0.1.2
+    platform: linux/amd64
     restart: always
     environment:
       - STATE_FOLD_CONFIG_PATH=/opt/cartesi/share/config/sf-config.toml
-      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/dapp.json
+      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
       - URL=http://hardhat:8545
     volumes:
-      - blockchain_data:/opt/cartesi/share/blockchain:ro
+      - ./contracts/export/abi:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
 
   server_manager:
     image: cartesi/server-manager:0.1.0
+    platform: linux/amd64
     restart: always
     volumes:
       - ./machine:/opt/cartesi/share/dapp-bin
 
   rollups_indexer:
     depends_on: [hardhat]
-    image: cartesi/rollups-indexer:0.1.0
+    image: cartesi/rollups-indexer:0.1.2
+    platform: linux/amd64
     restart: always
     environment:
       - URL=http://hardhat:8545
@@ -60,15 +67,16 @@ services:
       - STATE_SERVER_PORT=50051
       - SERVER_MANAGER_HOSTNAME=server_manager
       - SERVER_MANAGER_PORT=5001
-      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/dapp.json
+      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
       - POSTGRES_HOSTNAME=database
       - POSTGRES_PORT=5432
     volumes:
-      - blockchain_data:/opt/cartesi/share/blockchain
+      - ./contracts/export/abi:/opt/cartesi/share/blockchain
       - ./config:/opt/cartesi/share/config/
 
   query_server:
-    image: cartesi/query-server:0.1.0
+    image: cartesi/query-server:0.1.2
+    platform: linux/amd64
     ports:
       - '4000:4000'
     links:
@@ -81,10 +89,10 @@ services:
       - DB_PASSWORD=password
       - DB_HOST=database
       - DB_TEST_NAME=postgres
-      - URL=http://hardhat:8545
 
   database:
     image: postgres:12
+    platform: linux/amd64
     ports:
       - 5432:5432
     environment:
@@ -94,5 +102,4 @@ services:
       - database-data:/var/lib/postgresql/data
 
 volumes:
-  blockchain_data:
   database-data: {}
