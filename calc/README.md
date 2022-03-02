@@ -60,7 +60,6 @@ Where "op" represents the operation (+-\*/), "opdf" is the first operand, and "o
 ```
 0x7b226f70223a20222b222c20226f706466223a20223336222c20226f706473223a20223639227d
 ```
-You can use the calc front-end in this project which does the conversion of the operations in a simple way for users. It is also a python script in the .calc/front folder.
 
 In the next section, you can see how to interact with the DApp to send inputs and see the notices array.
 
@@ -112,19 +111,6 @@ query{ GetEpochStatus(query:{session_id: "default_rollups_id", epoch_index:"0"})
 The results will be displayed as shown in the image below.
 
 ![image](https://user-images.githubusercontent.com/4421825/152856017-ac301f70-0dd6-42f2-af55-1312ce17ddd8.png)
-
-
-### Sending inputs with the front-end 
-
-We can also send inputs with the simple front end inside the front folder to simplify. It's a simple script that converts the operation information into a proper input. With the infrastructure ready, run the script.
-
-```
-calculatorfront.py
-```
-The script should run expecting the user inputs, as shown in the following picture.
-
-![image](https://user-images.githubusercontent.com/4421825/152860785-b0c6a3c6-dade-4ca1-ae12-54482a39c287.png)
-
 
 ## Advancing time
 
