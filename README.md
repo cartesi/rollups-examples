@@ -46,4 +46,8 @@ _Note_: when running in host mode, localhost ports `5003` and `5004` will be use
 
 A basic "hello world" application, this DApp's back-end simply copies each input received as a corresponding output notice.
 
+### 2. [Simple Calc DApp](./calc)
+
+Based on the Echo Dapp, The Calc DApp is a simple expression calcultator using rollups.
+
 
