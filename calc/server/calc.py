@@ -16,6 +16,7 @@ import logging
 import requests
 import json
 from flask import Flask, request
+from py_exp_eval import Parser
 
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
@@ -52,34 +53,17 @@ def advance():
     partial = body["payload"][2:]
     app.logger.info("Hex Without 0x : "+ partial)
     content = (bytes.fromhex(partial).decode("utf-8"))
+    
+    
     #Extracts operands and operator, calls the function and gets result
-    s_json = json.loads(content)
-    operator = s_json["op"]
-    app.logger.info("This should be operator " + str(operator))
-    f_operand = float(s_json["opdf"])
-    app.logger.info("This should be the first operand " + str(f_operand))
-    s_operand = float(s_json["opds"])
-    app.logger.info("This should be the second operand " + str(s_operand))
+    
+    parser = Parser()
 
-    if operator == "+":
-        result = add(f_operand,s_operand)
-    elif operator == "-":
-        result = subtract(f_operand,s_operand)
-    elif operator == "*":
-        result = multiply(f_operand,s_operand)
-    elif operator == "/":
-        if s_operand == "0":
-            result = "cannot divide by 0"
-        else:
-            result = divide(f_operand,s_operand)
-    else:
-        result = "The operation is invalid"
-
-    app.logger.info("This should be the calculation result : " + result)
-
-
+    result = parser.parse(content).evaluate({})
+    app.logger.info("This should be the result using parser " + str(result))
+    
     #Encode back to Hex to add in the notice
-    newpayload = "0x"+str(result.encode("utf-8").hex())
+    newpayload = "0x"+str(str(result).encode("utf-8").hex())
     app.logger.info("Operation Result in Hex: " + newpayload)
     body["payload"] = newpayload
     app.logger.info("New PayLoad Added: "+body["payload"])
