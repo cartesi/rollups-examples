@@ -59,8 +59,8 @@ def advance():
     except Exception as e:
         msg = f"Error executing statement '{statement}': {e}"
         app.logger.error(msg)
-        payload = str2hex(msg)
-        # TODO: report error
+        response = requests.post(dispatcher_url + "/report", json={"payload": str2hex(msg)})
+        app.logger.info(f"Received report status {response.status_code} body {response.content}")
 
     # closes connection to database
     con.commit()
