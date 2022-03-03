@@ -52,15 +52,14 @@ $ docker-compose down -v
 ![cartesi drawio](https://user-images.githubusercontent.com/4421825/152856411-85dfdecc-97f6-4269-b9f2-004fc3aae7bb.png)
 
 
-The calc application is a simple math calculator that performs two operands' operations inside the cartesi machine. The input expected is a JSON string with the operands and the operator. For instance
+The calc application is a simple math calculator that performs two operands' operations inside the cartesi machine. The input expected is a string with mathematic expression. For instance
 ```
-{"op": "+", "opdf": "36", "opds": "69"}
+3 + 2 + 5 - 9
 ```
-Where "op" represents the operation (+-\*/), "opdf" is the first operand, and "opds" is the second operand. Note that this JSON string should necessarily be in hexadecimal. In the example above, the hexadecimal should be like below. 
+And this string should necessarily be in hexadecimal. In the example above, the hexadecimal should be like below. 
 ```
-0x7b226f70223a20222b222c20226f706466223a20223336222c20226f706473223a20223639227d
+0x332b322b352d39
 ```
-You can use the calc front-end in this project which does the conversion of the operations in a simple way for users. It is also a python script in the .calc/front folder.
 
 In the next section, you can see how to interact with the DApp to send inputs and see the notices array.
 
@@ -71,13 +70,13 @@ In the next section, you can see how to interact with the DApp to send inputs an
 With the infrastructure in place, go to a separate terminal window and send an input as follows:
 
 ```shell
-$ docker exec calc_hardhat_1 npx hardhat --network localhost calc:addInput --input "0x7b226f70223a20222b222c20226f706466223a20223336222c20226f706473223a20223639227d"
+$ docker exec calc_hardhat_1 npx hardhat --network localhost calc:addInput --input "0x332b322b352d39"
 ```
 
 When you receive a response similar to the one below, you know your input was accepted.
 
 ```shell
-Added input '0x7b226f70223a20222b222c20226f706466223a20223336222c20226f706473223a20223639227d' to epoch '0' (timestamp: 1643998586, signer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, tx: 0x765a93faa7acc2a15cb2e577c16ffd0c7d106599c62b0b5c9be9dfc7fc9ee03f)
+Added input '0x332b322b352d39' to epoch '0' (timestamp: 1643998586, signer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, tx: 0x765a93faa7acc2a15cb2e577c16ffd0c7d106599c62b0b5c9be9dfc7fc9ee03f)
 ```
 ### Seeing Results, notices, and more
 
@@ -112,18 +111,6 @@ query{ GetEpochStatus(query:{session_id: "default_rollups_id", epoch_index:"0"})
 The results will be displayed as shown in the image below.
 
 ![image](https://user-images.githubusercontent.com/4421825/152856017-ac301f70-0dd6-42f2-af55-1312ce17ddd8.png)
-
-
-### Sending inputs with the front-end 
-
-We can also send inputs with the simple front end inside the front folder to simplify. It's a simple script that converts the operation information into a proper input. With the infrastructure ready, run the script.
-
-```
-calculatorfront.py
-```
-The script should run expecting the user inputs, as shown in the following picture.
-
-![image](https://user-images.githubusercontent.com/4421825/152860785-b0c6a3c6-dade-4ca1-ae12-54482a39c287.png)
 
 
 ## Advancing time
