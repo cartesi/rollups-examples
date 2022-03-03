@@ -11,13 +11,13 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-# Start the Cartesi HTTP-Dispatcher and the echo-dapp.
+# Start the Cartesi HTTP-Dispatcher and the sqlite-dapp.
 # This script must run inside the cartesi machine
 
 DAPP_PORT=5003
 HTTP_DISPATCHER_PORT=5004
 
-# Change dir to echo-dapp root
+# Change dir to sqlite-dapp root
 cd /mnt/sqlite-dapp
 
 # Start sqlite dapp
