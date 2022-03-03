@@ -46,4 +46,6 @@ _Note_: when running in host mode, localhost ports `5003` and `5004` will be use
 
 A basic "hello world" application, this DApp's back-end simply copies each input received as a corresponding output notice.
 
+### 2. [Simple SQLite DApp](./sqlite)
 
+Demonstrates how a DApp can easily leverage standard mainstream capabilities by building a minimalistic "decentralized SQL database" just by using the Cartesi Machine's built-in support for [SQLite](https://www.sqlite.org/index.html). This application will receive arbitrary SQL commands as input and execute them in an internal database, allowing users to insert data and query them later on. This example also highlights how errors should be handled, in the case of invalid SQL statements.
