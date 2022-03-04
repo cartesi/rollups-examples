@@ -50,21 +50,24 @@ def advance():
     con = sqlite3.connect("data.db")
     cur = con.cursor()
 
-    result = None;
+    result = None
+    status = "accept"
     try:
         # attempts to execute the statement and fetch any results
         cur.execute(statement)
         result = cur.fetchall()
 
     except Exception as e:
+        status = "reject"
         msg = f"Error executing statement '{statement}': {e}"
         app.logger.error(msg)
         response = requests.post(dispatcher_url + "/report", json={"payload": str2hex(msg)})
         app.logger.info(f"Received report status {response.status_code} body {response.content}")
 
-    # closes connection to database
-    con.commit()
-    con.close()
+    finally:
+        # closes connection to database
+        con.commit()
+        con.close()
 
     if (result):
         # if there is a result, converts it to JSON and posts it as a notice
@@ -76,7 +79,7 @@ def advance():
 
     # finishes processing of the input
     app.logger.info("Finishing")
-    response = requests.post(dispatcher_url + "/finish", json={"status": "accept"})
+    response = requests.post(dispatcher_url + "/finish", json={"status": status})
     app.logger.info(f"Received finish status {response.status_code}")
     return "", 202
 
