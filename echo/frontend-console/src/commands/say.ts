@@ -10,7 +10,7 @@
 // specific language governing permissions and limitations under the License.
 
 import { ContractReceipt, ethers } from "ethers";
-import prompts from "prompts";
+import prompts, { PromptObject } from "prompts";
 import { Argv } from "yargs";
 import { NoticeKeys } from "../../generated-src/graphql";
 import { InputAddedEvent } from "../../generated-src/rollups/Input";
@@ -25,6 +25,9 @@ interface Args {
 
 export const command = "say [message]";
 export const describe = "Say something to echo DApp";
+
+const HARDHAT_DEFAULT_MNEMONIC =
+    "test test test test test test test test test test test junk";
 
 export const builder = (yargs: Argv) => {
     return yargs
@@ -79,49 +82,42 @@ export const findNoticeKeys = (receipt: ContractReceipt): NoticeKeys => {
 };
 
 export const handler = async (args: Args) => {
-    // use provider from command line option, or ask the user
-    const network =
-        args.network ||
-        (
-            await prompts({
-                type: "select",
-                name: "network",
-                choices: networks.map((n) => ({
-                    title: n.name,
-                    value: n.name,
-                    description: n.rpc,
-                })),
-                message: "Select a network",
-            })
-        ).network;
+    // default values from args
+    prompts.override(args);
 
-    // use MNEMONIC from command line option, or get from environment variable MNEMONIC, or ask the user
-    const mnemonic =
-        args.mnemonic ||
-        process.env.MNEMONIC ||
-        (await (
-            await prompts({
-                type: "password",
-                name: "mnemonic",
-                message: "Enter your wallet mnemonic words",
-                validate: mnemonicValidator,
-            })
-        ).mnemonic);
+    const questions: PromptObject[] = [
+        {
+            type: "select",
+            name: "network",
+            choices: networks.map((n) => ({
+                title: n.name,
+                value: n.name,
+                description: n.rpc,
+            })),
+            message: "Select a network",
+        },
+        {
+            type: (network: string) =>
+                network == "localhost" ? "text" : "password", // if localhost is selected, we can show as plain text
+            name: "mnemonic",
+            message: "Enter your wallet mnemonic words",
+            validate: mnemonicValidator,
+            initial: (network: string) =>
+                network == "localhost" ? HARDHAT_DEFAULT_MNEMONIC : "", // if localhost is selected, suggest default mnemonic
+        },
+        {
+            type: "text",
+            name: "message",
+            message: "Enter message to send",
+        },
+    ];
+    const { network, message, mnemonic } = await prompts<string>(questions);
 
     // connect to provider, use deployment address based on returned chain id of provider
     console.log(`connecting to ${network}`);
     const { chain, inputContract } = await connect(network, mnemonic);
 
-    // use message from command line option, or ask the user
-    const message =
-        args.message ||
-        (
-            await prompts({
-                type: "text",
-                name: "message",
-                message: "Enter message to send",
-            })
-        ).message;
+    // use message from command line option, or from user prompt
     console.log(`saying "${message}"`);
 
     // convert string to input bytes
