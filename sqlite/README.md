@@ -74,6 +74,8 @@ The response should be something like this:
 {"data":{"GetNotice":[{"session_id":"default_rollups_id","epoch_index":"0","input_index":"2","notice_index":"0","payload":"5b5b227465737431222c20227465737432225d5d"}]}}
 ```
 
+In this particular case, the resulting hex string in the payload corresponds to the JSON value `[["test1", "test2"]]`, which is the final result obtained after submitting the three SQL commands listed below.
+
 ### Sample SQL commands in hex
 
 ```sql
