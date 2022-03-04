@@ -43,6 +43,20 @@ export const builder = (yargs: Argv) => {
 };
 
 /**
+ * Validator for mnemonic value
+ * @param value mnemonic words separated by space
+ * @returns true if valid, false if invalid
+ */
+const mnemonicValidator = (value: string) => {
+    try {
+        ethers.Wallet.fromMnemonic(value);
+        return true;
+    } catch (e) {
+        return "Invalid mnemonic";
+    }
+};
+
+/**
  * Translate a InputAddedEvent into a NoticeKeys
  * @param event Blockchain event of input added
  * @returns NoticeKeys to find notice in GraphQL server
@@ -90,6 +104,7 @@ export const handler = async (args: Args) => {
                 type: "password",
                 name: "mnemonic",
                 message: "Enter your wallet mnemonic words",
+                validate: mnemonicValidator,
             })
         ).mnemonic);
 
