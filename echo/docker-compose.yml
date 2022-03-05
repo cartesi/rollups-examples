@@ -10,6 +10,7 @@ services:
     platform: linux/amd64
     volumes:
       - ./contracts/export/abi:/opt/cartesi/share/blockchain
+      - ./contracts/deployments:/app/deployments
 
   rollups_dispatcher:
     depends_on: [hardhat]
