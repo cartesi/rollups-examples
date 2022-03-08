@@ -9,7 +9,7 @@ services:
       - '8545:8545'
     platform: linux/amd64
     volumes:
-      - ./contracts/export/abi:/opt/cartesi/share/blockchain
+      - blockchain-data:/opt/cartesi/share/blockchain
       - ./contracts/deployments:/app/deployments
 
   rollups_dispatcher:
@@ -33,7 +33,7 @@ services:
       - SERVER_MANAGER_PORT=5001
       - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
     volumes:
-      - ./contracts/export/abi:/opt/cartesi/share/blockchain:ro
+      - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
 
   state_server:
@@ -46,7 +46,7 @@ services:
       - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
       - URL=http://hardhat:8545
     volumes:
-      - ./contracts/export/abi:/opt/cartesi/share/blockchain:ro
+      - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
 
   server_manager:
@@ -72,7 +72,7 @@ services:
       - POSTGRES_HOSTNAME=database
       - POSTGRES_PORT=5432
     volumes:
-      - ./contracts/export/abi:/opt/cartesi/share/blockchain
+      - blockchain-data:/opt/cartesi/share/blockchain
       - ./config:/opt/cartesi/share/config/
 
   query_server:
@@ -103,4 +103,5 @@ services:
       - database-data:/var/lib/postgresql/data
 
 volumes:
+  blockchain-data: {}
   database-data: {}
