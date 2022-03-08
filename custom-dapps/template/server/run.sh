@@ -11,21 +11,21 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-# Start the Cartesi HTTP-Dispatcher and the echo-dapp.
+# Start the Cartesi HTTP-Dispatcher and the template-dapp.
 # This script must run inside the cartesi machine
 
 DAPP_PORT=5003
 HTTP_DISPATCHER_PORT=5004
 
-# Change dir to echo-dapp root
-cd /mnt/echo-dapp
+# Change dir to template-dapp root
+cd /mnt/template-dapp
 
-# Start echo dapp
-echo -n "Starting echo-dapp: "
+# Start template dapp
+echo -n "Starting template-dapp: "
 HTTP_DISPATCHER_URL="http://127.0.0.1:$HTTP_DISPATCHER_PORT" \
-gunicorn --preload --workers 1 --bind 127.0.0.1:$DAPP_PORT echo:app &
+gunicorn --preload --workers 1 --bind 127.0.0.1:$DAPP_PORT template:app &
 
-# Wait for the echo dapp to start up
+# Wait for the template dapp to start up
 RETRY=0
 while ! netstat -ntl 2&>1 | grep $DAPP_PORT > /dev/null
 do
@@ -34,7 +34,7 @@ do
     RETRY=$(echo $RETRY + 1 | bc)
     if [ "$RETRY" == "100" ]
     then
-        echo "echo dapp timed out"
+        echo "template dapp timed out"
         return 1
     fi
 done

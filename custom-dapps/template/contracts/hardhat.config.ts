@@ -25,7 +25,7 @@ import { appTasks } from "@cartesi/rollups";
 import { name } from "./package.json";
 
 // define app tasks that calls rollups tasks, resolving rollups contract address
-// i.e. echo:addInput -> rollups:addInput
+// i.e. template:addInput -> rollups:addInput
 appTasks(name);
 
 // read MNEMONIC from file or from env variable

@@ -1,1 +1,4 @@
-machine
+*
+!.gitignore
+!template
+!README.md

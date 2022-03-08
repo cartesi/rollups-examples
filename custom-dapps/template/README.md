@@ -1,19 +1,21 @@
-# Simple Echo DApp
+# Template DApp
 
-This example shows how to build and interact with a minimalistic Cartesi Rollups application that simply copies (or "echoes") each input received as a corresponding output notice. This DApp's back-end is written in Python.
+Template is a customized DApp written in Python, which originally resembles the one provided by the sample [Echo DApp](https://github.com/cartesi/rollups-examples/tree/main/echo).
+
+The documentation below is simply a copy of the one provided there and should be used to both run the original template code and as a basis for the documentation of any DApp created based on this template.
 
 ## Building the environment
 
-To run the echo example, clone the repository as follows:
+To run the template example, clone the repository as follows:
 
 ```shell
 $ git clone https://github.com/cartesi/rollups-examples.git
 ```
 
-Then, build the back-end for the echo example:
+Then, build the back-end for the template example:
 
 ```shell
-$ cd rollups-examples/echo
+$ cd rollups-examples/template
 $ make machine
 ```
 
@@ -51,7 +53,7 @@ $ docker-compose down -v
 With the infrastructure in place, go to a separate terminal window and send an input as follows:
 
 ```shell
-$ docker exec echo_hardhat_1 npx hardhat --network localhost echo:addInput --input "0x636172746573690D0A"
+$ docker exec template_hardhat_1 npx hardhat --network localhost template:addInput --input "0x636172746573690D0A"
 ```
 
 The input will have been accepted when you receive a response similar to the following one:
@@ -77,7 +79,7 @@ The response should be something like this:
 To advance time, in order to simulate the passing of epochs, run:
 
 ```shell
-$ docker exec echo_hardhat_1 npx hardhat --network localhost util:advanceTime --seconds 864010
+$ docker exec template_hardhat_1 npx hardhat --network localhost util:advanceTime --seconds 864010
 ```
 
 ## Running the environment in host mode
@@ -90,26 +92,26 @@ The first step is to run the environment in host mode using the following comman
 docker-compose -f docker-compose.yml -f docker-compose-host.yml up --build
 ```
 
-The next step is to run the echo server in your machine. The application is written in Python, so you need to have `python3` installed.
+The next step is to run the template server in your machine. The application is written in Python, so you need to have `python3` installed.
 
-In order to start the echo server, run the following commands in a dedicated terminal:
+In order to start the template server, run the following commands in a dedicated terminal:
 
 ```shell
-cd echo/server/
+cd template/server/
 python3 -m venv .env
 . .env/bin/activate
 pip install -r requirements.txt
-HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --reload --workers 1 --bind 0.0.0.0:5003 echo:app
+HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --reload --workers 1 --bind 0.0.0.0:5003 template:app
 ```
 
-This will run the echo server on port `5003` and send the corresponding notices to port `5004`. The server will also automatically reload if there is a change in the source code, enabling fast development iterations.
+This will run the template server on port `5003` and send the corresponding notices to port `5004`. The server will also automatically reload if there is a change in the source code, enabling fast development iterations.
 
 The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints. In that case, it may be interesting to add the parameter `--timeout 0` to gunicorn, to avoid having it time out when the debugger stops at a breakpoint.
 
 After the server successfully starts, it should print an output like the following:
 
 ```
-[2022-01-21 12:38:23,971] INFO in echo: HTTP dispatcher url is http://127.0.0.1:5004
+[2022-01-21 12:38:23,971] INFO in template: HTTP dispatcher url is http://127.0.0.1:5004
 [2022-01-21 12:38:23 -0500] [79032] [INFO] Starting gunicorn 19.9.0
 [2022-01-21 12:38:23 -0500] [79032] [INFO] Listening at: http://0.0.0.0:5003 (79032)
 [2022-01-21 12:38:23 -0500] [79032] [INFO] Using worker: sync
@@ -118,14 +120,14 @@ After the server successfully starts, it should print an output like the followi
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
 
-When you add an input, you should see it being processed by the echo server as follows:
+When you add an input, you should see it being processed by the template server as follows:
 
 ```shell
-[2022-01-21 15:58:39,555] INFO in echo: Received advance request body {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 11, 'time_stamp': 1642791522}, 'payload': '0x636172746573690d0a'}
-[2022-01-21 15:58:39,556] INFO in echo: Adding notice
-[2022-01-21 15:58:39,650] INFO in echo: Received notice status 201 body b'{"index":0}'
-[2022-01-21 15:58:39,651] INFO in echo: Finishing
-[2022-01-21 15:58:39,666] INFO in echo: Received finish status 202
+[2022-01-21 15:58:39,555] INFO in template: Received advance request body {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 11, 'time_stamp': 1642791522}, 'payload': '0x636172746573690d0a'}
+[2022-01-21 15:58:39,556] INFO in template: Adding notice
+[2022-01-21 15:58:39,650] INFO in template: Received notice status 201 body b'{"index":0}'
+[2022-01-21 15:58:39,651] INFO in template: Finishing
+[2022-01-21 15:58:39,666] INFO in template: Received finish status 202
 ```
 
 Finally, to stop the containers, removing any associated volumes, execute:

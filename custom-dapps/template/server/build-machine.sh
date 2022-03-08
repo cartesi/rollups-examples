@@ -11,14 +11,14 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-MACHINE_DIR=/opt/cartesi/echo-machine
+MACHINE_DIR=/opt/cartesi/template-machine
 
 cartesi-machine \
     --ram-length=128Mi \
     --rollup \
-    --flash-drive=label:echo-dapp,filename:echo-dapp.ext2 \
+    --flash-drive=label:template-dapp,filename:template-dapp.ext2 \
     --flash-drive=label:root,filename:rootfs.ext2 \
     --ram-image=linux-5.5.19-ctsi-3.bin \
     --rom-image=rom.bin \
     --store=$MACHINE_DIR \
-    -- "/mnt/echo-dapp/run.sh"
+    -- "/mnt/template-dapp/run.sh"

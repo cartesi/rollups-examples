@@ -1,7 +1,7 @@
 {
-    "name": "echo",
+    "name": "template",
     "version": "0.2.2",
-    "description": "Echo DApp",
+    "description": "Template DApp",
     "main": "index.ts",
     "license": "Apache-2.0",
     "scripts": {

@@ -11,11 +11,11 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-DAPP_FS=/opt/cartesi/echo-dapp-fs/echo-dapp
-DAPP_FS_BIN=/opt/cartesi/echo-dapp-fs/echo-dapp.ext2
+DAPP_FS=/opt/cartesi/template-dapp-fs/template-dapp
+DAPP_FS_BIN=/opt/cartesi/template-dapp-fs/template-dapp.ext2
 
 mkdir -p $DAPP_FS
-cp ./echo.py $DAPP_FS
+cp ./template.py $DAPP_FS
 cp ./run.sh $DAPP_FS
 genext2fs -f -i 512 -b 16 -d $DAPP_FS $DAPP_FS_BIN
 truncate -s %4096 $DAPP_FS_BIN
