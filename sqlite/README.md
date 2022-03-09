@@ -79,7 +79,7 @@ In this particular case, the resulting hex string in the payload corresponds to 
 ### Sample SQL commands in hex
 
 ```sql
-CREATE TABLE test (test text, test2 text)   # 0x435245415445205441424c45207465737420287465737420746578742c20746573743220746578742
+CREATE TABLE test (test text, test2 text)   # 0x435245415445205441424c45207465737420287465737420746578742c207465737432207465787429
 ```
 
 ```sql
