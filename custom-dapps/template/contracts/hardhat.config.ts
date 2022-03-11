@@ -19,14 +19,19 @@ import "@nomiclabs/hardhat-etherscan";
 import "@typechain/hardhat";
 import "hardhat-deploy";
 import "@cartesi/rollups";
-import { appTasks } from "@cartesi/rollups";
+import { appTasks, GraphQLConfig } from "@cartesi/rollups";
 
 // get app name
 import { name } from "./package.json";
 
-// define app tasks that calls rollups tasks, resolving rollups contract address
+// GraphQL endpoint configuration per network
+const graphqlConfig: GraphQLConfig = {
+    localhost: "http://localhost:4000/graphql"
+}
+
+// define app tasks that calls rollups tasks, resolving rollups contract address and GraphQL server address
 // i.e. template:addInput -> rollups:addInput
-appTasks(name);
+appTasks(name, graphqlConfig);
 
 // read MNEMONIC from file or from env variable
 let mnemonic = process.env.MNEMONIC;
