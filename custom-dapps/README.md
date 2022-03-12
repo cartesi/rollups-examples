@@ -12,11 +12,11 @@ $ git clone https://github.com/cartesi/rollups-examples.git
 
 ## Customizing the DApp
 
-Then, use `custom-dapp.sh` to create a customized DApp (`DAPP_NAME` is the name of the DApp to be created):
+Then, use `create-dapp.sh` to create a customized DApp (`DAPP_NAME` is the name of the DApp to be created):
 
 ```shell
-cd template
-./custom-dapp.sh $DAPP_NAME
+cd custom-dapps
+./create-dapp.sh $DAPP_NAME
 ```
 
 A new directory, `$DAPP_NAME`, will be created with all the boiler plate infrastructure needed by the new DApp.
@@ -29,6 +29,6 @@ For instructions about how to setup the environment and run the original DApp, p
 
 The back-end logic may be found at `$DAPP_NAME/server/$DAPP_NAME.py`.
 
-The script comes with some reference code, which may be helful during development.
+The script comes with some reference code, which may be helpful during development.
 It may be replaced or extended according to the use case needs.
 
