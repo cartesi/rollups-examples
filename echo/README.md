@@ -84,7 +84,7 @@ The response should be something like this:
 You can also send inputs as regular strings. For example:
 
 ```shell
-$ npx hardhat --network localhost echo:addInput --input "Hello there!"
+$ npx hardhat --network localhost echo:addInput --input 'Hello there!'
 ```
 
 To retrieve notices interpreting the payload as a UTF-8 string, you can use the `--payload string` option:
