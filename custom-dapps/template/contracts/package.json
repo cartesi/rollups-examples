@@ -1,6 +1,6 @@
 {
     "name": "template",
-    "version": "0.2.2",
+    "version": "0.3.0",
     "description": "Template DApp",
     "main": "index.ts",
     "license": "Apache-2.0",

@@ -1,6 +1,6 @@
 {
     "name": "sqlite",
-    "version": "0.2.2",
+    "version": "0.3.0",
     "description": "Sqlite DApp",
     "main": "index.ts",
     "license": "Apache-2.0",
