@@ -28,7 +28,7 @@ import { name } from "./package.json";
 const graphqlConfig: GraphQLConfig = {
     localhost: "http://localhost:4000/graphql",
     polygon_mumbai: "https://echo.rollups.dev.cartesi.io/graphql",
-}
+};
 
 // define app tasks that calls rollups tasks, resolving rollups contract address and GraphQL server address
 // i.e. echo:addInput -> rollups:addInput
@@ -62,7 +62,11 @@ const config: HardhatUserConfig = {
         kovan: infuraNetwork("kovan", 42, 6283185),
         goerli: infuraNetwork("goerli", 5, 6283185),
         mainnet: infuraNetwork("mainnet", 1, 6283185),
-        polygon_mumbai: infuraNetwork("polygon-mumbai", 80001),
+        polygon_mumbai: {
+            url: "https://matic-mumbai.chainstacklabs.com",
+            chainId: 80001,
+            accounts: mnemonic ? { mnemonic } : undefined,
+        },
         bsc_testnet: {
             url: "https://data-seed-prebsc-1-s1.binance.org:8545",
             chainId: 97,
