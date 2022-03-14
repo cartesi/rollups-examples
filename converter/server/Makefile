@@ -13,19 +13,19 @@
 DAPP_SERVER_MANAGER_TAG := 0.1.0
 DAPP_SERVER_MANAGER_IMG := cartesi/server-manager:$(DAPP_SERVER_MANAGER_TAG)
 
-CONTAINER_NAME := cartesi-echo-extended-dapp
-CONTAINER_BASE := /opt/cartesi/echo-extended
-CONTAINER_DAPP_FS_BIN := /opt/cartesi/echo-extended-dapp-fs/echo-extended-dapp.ext2
-CONTAINER_MACHINE_DIR := /opt/cartesi/echo-extended-machine
+CONTAINER_NAME := cartesi-converter-dapp
+CONTAINER_BASE := /opt/cartesi/converter
+CONTAINER_DAPP_FS_BIN := /opt/cartesi/converter-dapp-fs/converter-dapp.ext2
+CONTAINER_MACHINE_DIR := /opt/cartesi/converter-machine
 
-DAPP_FS_BIN := echo-extended-dapp.ext2
+DAPP_FS_BIN := converter-dapp.ext2
 BINARIES := rootfs.ext2 linux-5.5.19-ctsi-3.bin rom.bin
 MACHINE_DIR := machine
 
 .PHONY: console clean
 
 $(MACHINE_DIR): $(DAPP_FS_BIN) $(BINARIES)
-	@echo "Building cartesi-machine echo-extended-dapp instance..."
+	@echo "Building cartesi-machine converter-dapp instance..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi
@@ -53,7 +53,7 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): echo.py run.sh
+$(DAPP_FS_BIN): converter.py run.sh
 	@echo "Building echo-dapp filesystem..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \

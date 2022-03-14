@@ -1,7 +1,7 @@
 {
-    "name": "echo-extended",
+    "name": "converter",
     "version": "0.2.0",
-    "description": "Echo Extended DApp",
+    "description": "Converter DApp",
     "main": "index.ts",
     "license": "Apache-2.0",
     "scripts": {

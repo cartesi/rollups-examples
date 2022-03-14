@@ -11,21 +11,21 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-# Start the Cartesi HTTP-Dispatcher and the echo-extended-dapp.
+# Start the Cartesi HTTP-Dispatcher and the converter-dapp.
 # This script must run inside the cartesi machine
 
 DAPP_PORT=5003
 HTTP_DISPATCHER_PORT=5004
 
-# Change dir to echo-extended-dapp root
-cd /mnt/echo-extended-dapp
+# Change dir to converter-dapp root
+cd /mnt/converter-dapp
 
-# Start echo-extended dapp
-echo -n "Starting echo-extended-dapp: "
+# Start converter dapp
+echo -n "Starting converter-dapp: "
 HTTP_DISPATCHER_URL="http://127.0.0.1:$HTTP_DISPATCHER_PORT" \
-gunicorn --preload --workers 1 --bind 127.0.0.1:$DAPP_PORT echo-extended:app &
+gunicorn --preload --workers 1 --bind 127.0.0.1:$DAPP_PORT converter:app &
 
-# Wait for the echo dapp to start up
+# Wait for the converter dapp to start up
 RETRY=0
 while ! netstat -ntl 2&>1 | grep $DAPP_PORT > /dev/null
 do
@@ -34,7 +34,7 @@ do
     RETRY=$(echo $RETRY + 1 | bc)
     if [ "$RETRY" == "100" ]
     then
-        echo "echo-extended dapp timed out"
+        echo "converter dapp timed out"
         return 1
     fi
 done
