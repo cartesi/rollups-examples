@@ -2,7 +2,12 @@
 
 This repository includes examples of decentralized applications implemented using [Cartesi Rollups](https://github.com/cartesi/rollups).
 
+You can use [Gitpod](https://www.gitpod.io/) to immediately open this repository within a working development environment with all [required dependencies](https://cartesi.io/docs/build-dapps/requirements) already installed.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#prebuild/https://github.com/cartesi/rollups-examples/)
+
 ## Introduction
+
 From a developer’s point of view, each decentralized application or _DApp_ is composed of two main parts: a **front-end** and a **back-end**.
 
 The **front-end** corresponds to the user-facing interface, which for these examples will often correspond to a command-line interface in the form of Hardhat tasks.
@@ -14,6 +19,7 @@ When compared to traditional software development, the main difference of a Cart
 ## HTTP API
 
 As discussed above, the front-end and back-end parts of a Cartesi DApp communicate with each other through the Rollups framework. This is accomplished in practice by using an HTTP API.
+
 ### Back-end
 
 The DApp's back-end needs to implement a couple of endpoints to receive requests from the Cartesi Rollups framework. These are specified by Cartesi's [HTTP DApp API](https://github.com/cartesi/openapi-interfaces/blob/master/dapp.yaml).
