@@ -16,7 +16,7 @@ import logging
 import requests
 import json
 from flask import Flask, request
-from py_exp_eval import Parser
+from py_eval import Parser
 
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)

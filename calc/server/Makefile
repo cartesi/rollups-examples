@@ -1,3 +1,4 @@
+
 # Copyright 2022 Cartesi Pte. Ltd.
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -18,9 +19,10 @@ CONTAINER_BASE := /opt/cartesi/calc
 CONTAINER_DAPP_FS_BIN := /opt/cartesi/calc-dapp-fs/calc-dapp.ext2
 CONTAINER_MACHINE_DIR := /opt/cartesi/calc-machine
 
-DAPP_FS_BIN := calc-dapp.ext2
-BINARIES := rootfs.ext2 linux-5.5.19-ctsi-3.bin rom.bin
+DAPP_FS_BIN := calc-dapp.ext2 
+BINARIES := rootfs.ext2 linux-5.5.19-ctsi-3.bin rom.bin py_eval.py
 MACHINE_DIR := machine
+LIB_DIR := py_expression_eval py_expression_eval-0.3.14.dist-info
 
 .PHONY: console clean
 
@@ -53,8 +55,12 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): calc.py run.sh py_exp_eval.py
+
+$(DAPP_FS_BIN): calc.py run.sh
 	@echo "Building calc-dapp filesystem..."
+	@pip3 install py_expression_eval --target .
+	@mv py_expression_eval/__init__.py ./py_eval.py
+	@rm -rf $(LIB_DIR)
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi
@@ -70,4 +76,4 @@ $(DAPP_FS_BIN): calc.py run.sh py_exp_eval.py
 	@echo "$(DAPP_FS_BIN): OK"
 
 clean:
-	@rm -rf $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR)
+	@rm -rf $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR) $(LIB_BIN)

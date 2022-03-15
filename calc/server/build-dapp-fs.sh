@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Copyright 2022 Cartesi Pte. Ltd.
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -17,6 +18,8 @@ DAPP_FS_BIN=/opt/cartesi/calc-dapp-fs/calc-dapp.ext2
 mkdir -p $DAPP_FS
 cp ./calc.py $DAPP_FS
 cp ./run.sh $DAPP_FS
-cp ./py_exp_eval.py $DAPP_FS
+cp ./py_eval.py $DAPP_FS
 genext2fs -f -i 1024 -b 64 -d $DAPP_FS $DAPP_FS_BIN
 truncate -s %4096 $DAPP_FS_BIN
+
+
