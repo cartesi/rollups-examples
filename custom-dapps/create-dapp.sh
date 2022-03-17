@@ -39,8 +39,10 @@ do
     sed -i'' -e "s/Template/${dapp_name}/g" $i
 done
 
+find ${dapp_name} -name '*-e' -exec rm {} \;
+
 echo "Creating template back-end script..."
 mv ${dapp_name}/server/template.py ${dapp_name}/server/${1}.py
 
 echo "Done"
-echo "Proceed with adapting or replacing the back-end source code of the Dapp at ${dapp_name}/server/${dapp_name}.py"
+echo "Proceed with adapting or replacing the back-end source code of the DApp at ${dapp_name}/server/${dapp_name}.py"
