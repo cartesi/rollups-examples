@@ -26,12 +26,11 @@ import { name } from "./package.json";
 
 // GraphQL endpoint configuration per network
 const graphqlConfig: GraphQLConfig = {
-    localhost: "http://localhost:4000/graphql",
-    polygon_mumbai: "https://echo.rollups.dev.cartesi.io/graphql",
-};
+    localhost: "http://localhost:4000/graphql"
+}
 
 // define app tasks that calls rollups tasks, resolving rollups contract address and GraphQL server address
-// i.e. echo:addInput -> rollups:addInput
+// i.e. template:addInput -> rollups:addInput
 appTasks(name, graphqlConfig);
 
 // read MNEMONIC from file or from env variable
