@@ -19,14 +19,19 @@ import "@nomiclabs/hardhat-etherscan";
 import "@typechain/hardhat";
 import "hardhat-deploy";
 import "@cartesi/rollups";
-import { appTasks } from "@cartesi/rollups";
+import { appTasks, GraphQLConfig } from "@cartesi/rollups";
 
 // get app name
 import { name } from "./package.json";
 
-// define app tasks that calls rollups tasks, resolving rollups contract address
-// i.e. echo:addInput -> rollups:addInput
-appTasks(name);
+// GraphQL endpoint configuration per network
+const graphqlConfig: GraphQLConfig = {
+    localhost: "http://localhost:4000/graphql"
+}
+
+// define app tasks that calls rollups tasks, resolving rollups contract address and GraphQL server address
+// i.e. knn:addInput -> rollups:addInput
+appTasks(name, graphqlConfig);
 
 // read MNEMONIC from file or from env variable
 let mnemonic = process.env.MNEMONIC;
@@ -56,7 +61,11 @@ const config: HardhatUserConfig = {
         kovan: infuraNetwork("kovan", 42, 6283185),
         goerli: infuraNetwork("goerli", 5, 6283185),
         mainnet: infuraNetwork("mainnet", 1, 6283185),
-        polygon_mumbai: infuraNetwork("polygon-mumbai", 80001),
+        polygon_mumbai: {
+            url: "https://matic-mumbai.chainstacklabs.com",
+            chainId: 80001,
+            accounts: mnemonic ? { mnemonic } : undefined,
+        },
         bsc_testnet: {
             url: "https://data-seed-prebsc-1-s1.binance.org:8545",
             chainId: 97,

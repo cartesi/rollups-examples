@@ -9,11 +9,12 @@ services:
       - '8545:8545'
     platform: linux/amd64
     volumes:
-      - ./contracts/export/abi:/opt/cartesi/share/blockchain
+      - blockchain-data:/opt/cartesi/share/blockchain
+      - ./contracts/deployments:/app/deployments
 
   rollups_dispatcher:
     depends_on: [hardhat]
-    image: cartesi/rollups-dispatcher:0.1.2
+    image: cartesi/rollups-dispatcher:0.1.3
     platform: linux/amd64
     restart: always
     environment:
@@ -32,12 +33,12 @@ services:
       - SERVER_MANAGER_PORT=5001
       - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
     volumes:
-      - ./contracts/export/abi:/opt/cartesi/share/blockchain:ro
+      - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
 
   state_server:
     depends_on: [hardhat]
-    image: cartesi/delegate-server:0.1.2
+    image: cartesi/delegate-server:0.1.3
     platform: linux/amd64
     restart: always
     environment:
@@ -45,7 +46,7 @@ services:
       - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
       - URL=http://hardhat:8545
     volumes:
-      - ./contracts/export/abi:/opt/cartesi/share/blockchain:ro
+      - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
 
   server_manager:
@@ -57,7 +58,7 @@ services:
 
   rollups_indexer:
     depends_on: [hardhat]
-    image: cartesi/rollups-indexer:0.1.2
+    image: cartesi/rollups-indexer:0.1.3
     platform: linux/amd64
     restart: always
     environment:
@@ -71,11 +72,11 @@ services:
       - POSTGRES_HOSTNAME=database
       - POSTGRES_PORT=5432
     volumes:
-      - ./contracts/export/abi:/opt/cartesi/share/blockchain
+      - blockchain-data:/opt/cartesi/share/blockchain
       - ./config:/opt/cartesi/share/config/
 
   query_server:
-    image: cartesi/query-server:0.1.2
+    image: cartesi/query-server:0.1.3
     platform: linux/amd64
     ports:
       - '4000:4000'
@@ -102,4 +103,5 @@ services:
       - database-data:/var/lib/postgresql/data
 
 volumes:
+  blockchain-data: {}
   database-data: {}

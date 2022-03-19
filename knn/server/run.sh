@@ -11,21 +11,21 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-# Start the Cartesi HTTP-Dispatcher and the ml-dapp.
+# Start the Cartesi HTTP-Dispatcher and the knn-dapp.
 # This script must run inside the cartesi machine
 
 DAPP_PORT=5003
 HTTP_DISPATCHER_PORT=5004
 
-# Change dir to ml-dapp root
-cd /mnt/ml-dapp
+# Change dir to knn-dapp root
+cd /mnt/knn-dapp
 
-# Start ml dapp
-echo -n "Starting ml-dapp: "
+# Start knn dapp
+echo -n "Starting knn-dapp: "
 HTTP_DISPATCHER_URL="http://127.0.0.1:$HTTP_DISPATCHER_PORT" \
-gunicorn --preload --workers 1 --bind 127.0.0.1:$DAPP_PORT ml:app &
+gunicorn --preload --workers 1 --bind 127.0.0.1:$DAPP_PORT knn:app &
 
-# Wait for the ml dapp to start up
+# Wait for the knn dapp to start up
 RETRY=0
 while ! netstat -ntl 2&>1 | grep $DAPP_PORT > /dev/null
 do
@@ -34,7 +34,7 @@ do
     RETRY=$(echo $RETRY + 1 | bc)
     if [ "$RETRY" == "100" ]
     then
-        echo "ml dapp timed out"
+        echo "knn dapp timed out"
         return 1
     fi
 done
