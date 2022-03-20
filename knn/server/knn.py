@@ -30,23 +30,48 @@ def load_csv(filename):
     return dataset
 
 
-# Convert string column to float
-def str_column_to_float(dataset, column):
+def hex2str(hex):
+    """
+    Decodes a hex string into a regular string
+    """
+    return bytes.fromhex(hex[2:]).decode("utf-8")
+
+def str2hex(str):
+    """
+    Encodes a string as a hex string
+    """
+    return "0x" + str.encode("utf-8").hex()
+
+
+def dataset_str2float(dataset, column):
+    """
+    Converts a dataset column's values from string to float
+    """
     for row in dataset:
         row[column] = float(row[column].strip())
 
-
-# Convert string column to integer
-def str_column_to_int(dataset, column):
+def dataset_str2index(dataset, column):
+    """
+    Converts a dataset column's values from string to an integer class index
+    """
+    # retrives class values from dataset column
     class_values = [row[column] for row in dataset]
-    unique = set(class_values)
+
+    # computes existing class names based on values
+    class_names = list(set(class_values))
+    class_names.sort()
+
+    # defines lookup dict class_name -> class_index
     lookup = dict()
-    for i, value in enumerate(unique):
-        lookup[value] = i
-        print("[%s] => %d" % (value, i))
+    for i, name in enumerate(class_names):
+        lookup[name] = i
+        print("[%s] => %d" % (name, i))
+
+    # converts dataset column from class values (names) to class indices
     for row in dataset:
         row[column] = lookup[row[column]]
-    return lookup
+
+    return class_names
 
 
 # Find the min and max values for each column
@@ -153,71 +178,58 @@ def k_nearest_neighbors(train, test, num_neighbors):
 def predict():
     # Make a prediction with KNN on Iris Dataset
     seed(1)
+
     app.logger.info("Loading model")
     filename = "iris.csv"
     dataset = load_csv(filename)
+
+    # converts value columns to float
     for i in range(len(dataset[0]) - 1):
-        str_column_to_float(dataset, i)
-    # convert class column to integers
-    str_column_to_int(dataset, len(dataset[0]) - 1)
-    # define model parameter
-    num_neighbors = 5
+        dataset_str2float(dataset, i)
+
+    # converts class column to class indices
+    class_names = dataset_str2index(dataset, len(dataset[0]) - 1)
+
     # evaluate algorithm
     n_folds = 5
     num_neighbors = 5
-    start = time.time()
     scores = evaluate_algorithm(dataset, k_nearest_neighbors, n_folds, num_neighbors)
-    end = time.time()
-    app.logger.info(
-        "The time of execution of evaluation algorithm is :" + str(end - start)
-    )
 
     app.logger.info("Current Scores for Knn: " + str(scores))
     app.logger.info(
         "Current Mean Accuracy for Knn in this dataset is : "
         + str((sum(scores) / float(len(scores))))
     )
-    app.logger.info("Getting input")
-    # get input
+
+
     body = request.get_json()
     app.logger.info(f"Received advance request body {body}")
-    app.logger.info("Printing Body Payload : " + body["payload"])
-    partial = body["payload"][2:]
 
-    content = bytes.fromhex(partial).decode("utf-8")
+    # retrieves input as string
+    input = hex2str(body["payload"])
+    app.logger.info(f"Received inout: '{input}'")
 
     # json input should be like this {"sl": "2.0", "sw": "3.0", "pl": "4.0", "pw": "3.5"}
-    s_json = json.loads(content)
-    sl = float(s_json["sl"])
-    app.logger.info("This should be the sepal lenght " + str(sl))
-    sw = float(s_json["sw"])
-    app.logger.info("This should be the sepal width " + str(sw))
-    pl = float(s_json["pl"])
-    app.logger.info("This should be the petal lenght " + str(pl))
-    pw = float(s_json["pw"])
-    app.logger.info("This should be the petal width " + str(pw))
-        
-    floats_list = [sl, sw, pl, pw]
-    app.logger.info("The received input is: " + str(floats_list))
+    input_json = json.loads(input)
+    input_row = [
+        float(input_json["sl"]),
+        float(input_json["sw"]),
+        float(input_json["pl"]),
+        float(input_json["pw"])
+    ]
 
-    start = time.time()
-    predicted = str(predict_classification(dataset, floats_list, num_neighbors))
-    end = time.time()
-    app.logger.info("The time of execution of prediction is :" + str(end - start))
-    app.logger.info(f"Data={content}, Predicted: {predicted}")
+    # computes predicted classification for input        
+    predicted = predict_classification(dataset, input_row, num_neighbors)
+    app.logger.info(f"Data={input}, Predicted: {predicted}")
 
-    # Encode back to Hex to add in the notice
-    newpayload = "0x" + str(predicted.encode("utf-8").hex())
-    app.logger.info("Predicted in Hex: " + newpayload)
-    body["payload"] = newpayload
-    app.logger.info("New PayLoad Added: " + body["payload"])
-    app.logger.info("Adding notice")
-    response = requests.post(
-        dispatcher_url + "/notice", json={"payload": body["payload"]}
-    )
-    app.logger.info(
-        f"Received notice status {response.status_code} body {response.content}"
-    )
+    # emits output notice with predicted class name
+    predicted_class_name = class_names[predicted]
+    output = str2hex(predicted_class_name)
+    app.logger.info(f"Adding notice with payload: {predicted_class_name}")
+    response = requests.post(dispatcher_url + "/notice", json={"payload": output})
+    app.logger.info(f"Received notice status {response.status_code} body {response.content}")
+
+    # finishes processing of the input
     app.logger.info("Finishing")
     response = requests.post(dispatcher_url + "/finish", json={"status": "accept"})
     app.logger.info(f"Received finish status {response.status_code}")
