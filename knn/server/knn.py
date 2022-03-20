@@ -2,7 +2,7 @@
 
 import json
 import logging
-import time
+import traceback
 from csv import reader
 from math import sqrt
 from os import environ
@@ -205,33 +205,42 @@ def predict():
     body = request.get_json()
     app.logger.info(f"Received advance request body {body}")
 
-    # retrieves input as string
-    input = hex2str(body["payload"])
-    app.logger.info(f"Received inout: '{input}'")
+    status = "accept"
+    try:
+        # retrieves input as string
+        input = hex2str(body["payload"])
+        app.logger.info(f"Received input: '{input}'")
 
-    # json input should be like this {"sl": "2.0", "sw": "3.0", "pl": "4.0", "pw": "3.5"}
-    input_json = json.loads(input)
-    input_row = [
-        float(input_json["sl"]),
-        float(input_json["sw"]),
-        float(input_json["pl"]),
-        float(input_json["pw"])
-    ]
+        # json input should be like this {"sl": "2.0", "sw": "3.0", "pl": "4.0", "pw": "3.5"}
+        input_json = json.loads(input)
+        input_row = [
+            float(input_json["sl"]),
+            float(input_json["sw"]),
+            float(input_json["pl"]),
+            float(input_json["pw"])
+        ]
 
-    # computes predicted classification for input        
-    predicted = predict_classification(dataset, input_row, num_neighbors)
-    app.logger.info(f"Data={input}, Predicted: {predicted}")
+        # computes predicted classification for input        
+        predicted = predict_classification(dataset, input_row, num_neighbors)
+        app.logger.info(f"Data={input}, Predicted: {predicted}")
 
-    # emits output notice with predicted class name
-    predicted_class_name = class_names[predicted]
-    output = str2hex(predicted_class_name)
-    app.logger.info(f"Adding notice with payload: {predicted_class_name}")
-    response = requests.post(dispatcher_url + "/notice", json={"payload": output})
-    app.logger.info(f"Received notice status {response.status_code} body {response.content}")
+        # emits output notice with predicted class name
+        predicted_class_name = class_names[predicted]
+        output = str2hex(predicted_class_name)
+        app.logger.info(f"Adding notice with payload: {predicted_class_name}")
+        response = requests.post(dispatcher_url + "/notice", json={"payload": output})
+        app.logger.info(f"Received notice status {response.status_code} body {response.content}")
+
+    except Exception as e:
+        status = "reject"
+        msg = f"Error processing body {body}\n{traceback.format_exc()}"
+        app.logger.error(msg)
+        response = requests.post(dispatcher_url + "/report", json={"payload": str2hex(msg)})
+        app.logger.info(f"Received report status {response.status_code} body {response.content}")
 
     # finishes processing of the input
     app.logger.info("Finishing")
-    response = requests.post(dispatcher_url + "/finish", json={"status": "accept"})
+    response = requests.post(dispatcher_url + "/finish", json={"status": status})
     app.logger.info(f"Received finish status {response.status_code}")
     return "", 202
 
