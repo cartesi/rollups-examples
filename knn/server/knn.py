@@ -18,6 +18,11 @@ app.logger.setLevel(logging.INFO)
 dispatcher_url = environ["HTTP_DISPATCHER_URL"]
 app.logger.info(f"HTTP dispatcher url is {dispatcher_url}")
 
+
+# k-NN model parameter: number of neighbors
+num_neighbors = 5
+
+
 # Load a CSV file
 def load_csv(filename):
     dataset = list()
@@ -65,7 +70,7 @@ def dataset_str2index(dataset, column):
     lookup = dict()
     for i, name in enumerate(class_names):
         lookup[name] = i
-        print("[%s] => %d" % (name, i))
+    app.logger.info("Class mapping from dataset: " + str(lookup))
 
     # converts dataset column from class values (names) to class indices
     for row in dataset:
@@ -86,7 +91,8 @@ def dataset_minmax(dataset):
 
 
 # Rescale dataset columns to the range 0-1
-def normalize_dataset(dataset, minmax):
+def normalize_dataset(dataset):
+    minmax = dataset_minmax(dataset)
     for row in dataset:
         for i in range(len(row)):
             row[i] = (row[i] - minmax[i][0]) / (minmax[i][1] - minmax[i][0])
@@ -173,15 +179,14 @@ def k_nearest_neighbors(train, test, num_neighbors):
     return predictions
 
 
-# Cartesi Endpoint
-@app.route("/advance", methods=["POST"])
-def predict():
-    # Make a prediction with KNN on Iris Dataset
+def load_dataset():
+    """
+    Loads the Iris Dataset, evaluates the k-NN algorithm on it and computes expected classification accuracy
+    """
     seed(1)
 
-    app.logger.info("Loading model")
-    filename = "iris.csv"
-    dataset = load_csv(filename)
+    app.logger.info("Loading Iris Dataset")
+    dataset = load_csv("iris.csv")
 
     # converts value columns to float
     for i in range(len(dataset[0]) - 1):
@@ -190,18 +195,20 @@ def predict():
     # converts class column to class indices
     class_names = dataset_str2index(dataset, len(dataset[0]) - 1)
 
-    # evaluate algorithm
+    # evaluates algorithm
     n_folds = 5
-    num_neighbors = 5
     scores = evaluate_algorithm(dataset, k_nearest_neighbors, n_folds, num_neighbors)
-
-    app.logger.info("Current Scores for Knn: " + str(scores))
+    app.logger.info("Current scores for cross-validation folds: " + str(scores))
     app.logger.info(
-        "Current Mean Accuracy for Knn in this dataset is : "
+        "Current mean accuracy for k-NN in this dataset is: "
         + str((sum(scores) / float(len(scores))))
     )
+    return (dataset, class_names)
 
 
+# Cartesi Endpoint
+@app.route("/advance", methods=["POST"])
+def predict():
     body = request.get_json()
     app.logger.info(f"Received advance request body {body}")
 
@@ -249,3 +256,6 @@ def predict():
 def inspect(payload):
     app.logger.info(f"Received inspect request payload {payload}")
     return {"reports": [{"payload": payload}]}, 200
+
+
+dataset, class_names = load_dataset()
