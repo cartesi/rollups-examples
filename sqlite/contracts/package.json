@@ -1,7 +1,7 @@
 {
-    "name": "echo",
+    "name": "sqlite",
     "version": "0.3.1",
-    "description": "Echo DApp",
+    "description": "Sqlite DApp",
     "main": "index.ts",
     "license": "Apache-2.0",
     "scripts": {

@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] 2022-03-15
+
+### Added
+
+- Easy link in main README to open working development environment using Gitpod
+
+### Changed
+
+- Use Chainstack for polygon_mumbai and not Infura
+
+## [0.3.0] 2022-03-12
+
+### Added
+
+- Frontend console application for Echo DApp
+- SQLite DApp example
+- Allow hardhat tasks to work on localhost
+- Use new Rollups getNotice task to retrieve notices
+- Support for submitting inputs and reading notices as UTF-8 strings
+
+### Changed
+
+- Locks `itsdangerous` to version 1.1.0 to avoid a crash when executing Echo DApp in host mode
+- AddInput task returning submitted input's index
+
 ## [0.2.2] 2022-02-25
 
 ### Changed
@@ -41,6 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Previous Versions]
 
+[0.3.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.3.1
+[0.3.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.3.0
 [0.2.2]: https://github.com/cartesi/rollups-examples/releases/tag/v0.2.2
 [0.2.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.2.1
 [0.2.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.2.0
