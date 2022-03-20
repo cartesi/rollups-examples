@@ -23,18 +23,6 @@ app.logger.info(f"HTTP dispatcher url is {dispatcher_url}")
 num_neighbors = 5
 
 
-# Load a CSV file
-def load_csv(filename):
-    dataset = list()
-    with open(filename, "r") as file:
-        csv_reader = reader(file)
-        for row in csv_reader:
-            if not row:
-                continue
-            dataset.append(row)
-    return dataset
-
-
 def hex2str(hex):
     """
     Decodes a hex string into a regular string
@@ -48,6 +36,19 @@ def str2hex(str):
     return "0x" + str.encode("utf-8").hex()
 
 
+def load_csv(filename):
+    """
+    Loads a CSV file as a list of rows
+    """
+    dataset = list()
+    with open(filename, "r") as file:
+        csv_reader = reader(file)
+        for row in csv_reader:
+            if not row:
+                continue
+            dataset.append(row)
+    return dataset
+
 def dataset_str2float(dataset, column):
     """
     Converts a dataset column's values from string to float
@@ -59,7 +60,7 @@ def dataset_str2index(dataset, column):
     """
     Converts a dataset column's values from string to an integer class index
     """
-    # retrives class values from dataset column
+    # retrieves class values from dataset column
     class_values = [row[column] for row in dataset]
 
     # computes existing class names based on values
@@ -79,76 +80,56 @@ def dataset_str2index(dataset, column):
     return class_names
 
 
-# Find the min and max values for each column
-def dataset_minmax(dataset):
-    minmax = list()
-    for i in range(len(dataset[0])):
-        col_values = [row[i] for row in dataset]
-        value_min = min(col_values)
-        value_max = max(col_values)
-        minmax.append([value_min, value_max])
-    return minmax
-
-
-# Rescale dataset columns to the range 0-1
-def normalize_dataset(dataset):
-    minmax = dataset_minmax(dataset)
-    for row in dataset:
-        for i in range(len(row)):
-            row[i] = (row[i] - minmax[i][0]) / (minmax[i][1] - minmax[i][0])
-
-
-# Calculate the Euclidean distance between two vectors
 def euclidean_distance(row1, row2):
+    """
+    Calculates the Euclidean distance between two vectors/rows
+    """
     distance = 0.0
-    for i in range(len(row1) - 1):
+    length = min(len(row1), len(row2))
+    for i in range(length):
         distance += (row1[i] - row2[i]) ** 2
     return sqrt(distance)
 
 
-# Locate the most similar neighbors
-def get_neighbors(train, test_row, num_neighbors):
+def get_nearest_neighbors(dataset, input_row, num_neighbors):
+    """
+    Searches the given dataset to locate the most similar neighbors of the given input row
+    """
+    # computes distances to all dataset rows, generating tuples (row, distance)
     distances = list()
-    for train_row in train:
-        dist = euclidean_distance(test_row, train_row)
-        distances.append((train_row, dist))
-    distances.sort(key=lambda tup: tup[1])
+    for dataset_row in dataset:
+        # computes distance disconsidering dataset_row's last value (its class)
+        dist = euclidean_distance(input_row, dataset_row[:-1])
+        distances.append((dataset_row, dist))
+
+    # sorts entries using tuples' distance value
+    distances.sort(key=lambda entry: entry[1])
+
+    # returns neighbors list with the specified number of entries
     neighbors = list()
     for i in range(num_neighbors):
         neighbors.append(distances[i][0])
     return neighbors
 
 
-# Make a prediction with neighbors
-def predict_classification(train, test_row, num_neighbors):
-    neighbors = get_neighbors(train, test_row, num_neighbors)
+def knn_classify(dataset, input_row, num_neighbors):
+    """
+    Predicts a given input row's classification using the k-nearest neighbors algorithm on the specified dataset
+    """
+    # retrieves the nearest neighbors
+    neighbors = get_nearest_neighbors(dataset, input_row, num_neighbors)
+
+    # computes the prediction by selecting the result with most entries within the nearest neighbors
+    # obs: neighbor class is given by the last value in the row
     output_values = [row[-1] for row in neighbors]
     prediction = max(set(output_values), key=output_values.count)
     return prediction
 
 
-# Evaluate an algorithm using a cross validation split
-def evaluate_algorithm(dataset, algorithm, n_folds, *args):
-    folds = cross_validation_split(dataset, n_folds)
-    scores = list()
-    for fold in folds:
-        train_set = list(folds)
-        train_set.remove(fold)
-        train_set = sum(train_set, [])
-        test_set = list()
-        for row in fold:
-            row_copy = list(row)
-            test_set.append(row_copy)
-            row_copy[-1] = None
-        predicted = algorithm(train_set, test_set, *args)
-        actual = [row[-1] for row in fold]
-        accuracy = accuracy_metric(actual, predicted)
-        scores.append(accuracy)
-    return scores
-
-
-# Split a dataset into k folds
 def cross_validation_split(dataset, n_folds):
+    """
+    Splits a given dataset into n random folds for cross-validation
+    """
     dataset_split = list()
     dataset_copy = list(dataset)
     fold_size = int(len(dataset) / n_folds)
@@ -160,28 +141,51 @@ def cross_validation_split(dataset, n_folds):
         dataset_split.append(fold)
     return dataset_split
 
-
-# Calculate accuracy percentage
 def accuracy_metric(actual, predicted):
+    """
+    Computes the accuracy percentage of a predicted classification when compared to the actual truth
+    """
     correct = 0
     for i in range(len(actual)):
         if actual[i] == predicted[i]:
             correct += 1
     return correct / float(len(actual)) * 100.0
 
+def evaluate_classification(dataset, classification_algorithm, n_folds, *args):
+    """
+    Evaluates a provided classification algorithm on a given dataset using cross-validation with n folds
+    """
+    # creates cross-validation folds
+    folds = cross_validation_split(dataset, n_folds)
 
-# kNN Algorithm
-def k_nearest_neighbors(train, test, num_neighbors):
-    predictions = list()
-    for row in test:
-        output = predict_classification(train, row, num_neighbors)
-        predictions.append(output)
-    return predictions
+    fold_accuracies = list()
+    for fold in folds:
+        # defines train and test sets for the fold
+        train_set = list(folds)
+        train_set.remove(fold)
+        train_set = sum(train_set, [])
+        test_set = list()
+        for row in fold:
+            row_copy = list(row)
+            test_set.append(row_copy)
+            row_copy[-1] = None
+
+        # runs the classification algorithm for the fold
+        predicted = list()
+        for row in test_set:
+            output = classification_algorithm(train_set, row, num_neighbors)
+            predicted.append(output)
+
+        # evaluates the accuracy for the fold
+        actual = [row[-1] for row in fold]
+        accuracy = accuracy_metric(actual, predicted)
+        fold_accuracies.append(accuracy)
+    return fold_accuracies
 
 
 def load_dataset():
     """
-    Loads the Iris Dataset, evaluates the k-NN algorithm on it and computes expected classification accuracy
+    Loads the Iris Dataset, evaluates the k-NN algorithm on it and computes classification accuracy
     """
     seed(1)
 
@@ -195,18 +199,17 @@ def load_dataset():
     # converts class column to class indices
     class_names = dataset_str2index(dataset, len(dataset[0]) - 1)
 
-    # evaluates algorithm
+    # evaluates knn algorithm for the dataset
     n_folds = 5
-    scores = evaluate_algorithm(dataset, k_nearest_neighbors, n_folds, num_neighbors)
-    app.logger.info("Current scores for cross-validation folds: " + str(scores))
+    fold_accuracies = evaluate_classification(dataset, knn_classify, n_folds, num_neighbors)
+    app.logger.info("Accuracies for k-NN in each cross-validation fold: " + str(fold_accuracies))
     app.logger.info(
-        "Current mean accuracy for k-NN in this dataset is: "
-        + str((sum(scores) / float(len(scores))))
+        "Mean accuracy for k-NN in the dataset: "
+        + str((sum(fold_accuracies) / float(len(fold_accuracies))))
     )
     return (dataset, class_names)
 
 
-# Cartesi Endpoint
 @app.route("/advance", methods=["POST"])
 def predict():
     body = request.get_json()
@@ -228,7 +231,7 @@ def predict():
         ]
 
         # computes predicted classification for input        
-        predicted = predict_classification(dataset, input_row, num_neighbors)
+        predicted = knn_classify(dataset, input_row, num_neighbors)
         app.logger.info(f"Data={input}, Predicted: {predicted}")
 
         # emits output notice with predicted class name
@@ -258,4 +261,5 @@ def inspect(payload):
     return {"reports": [{"payload": payload}]}, 200
 
 
+# loads dataset and its class names
 dataset, class_names = load_dataset()
