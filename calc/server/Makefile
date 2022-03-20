@@ -58,9 +58,6 @@ $(BINARIES) &:
 
 $(DAPP_FS_BIN): calc.py run.sh
 	@echo "Building calc-dapp filesystem..."
-	@pip3 install py_expression_eval --target .
-	@mv py_expression_eval/__init__.py ./py_eval.py
-	@rm -rf $(LIB_DIR)
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi
@@ -76,4 +73,4 @@ $(DAPP_FS_BIN): calc.py run.sh
 	@echo "$(DAPP_FS_BIN): OK"
 
 clean:
-	@rm -rf $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR) $(LIB_BIN)
+	@rm -rf $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR) $(LIB_DIR) $(LIB_BIN)

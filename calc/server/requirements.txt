@@ -1,4 +1,6 @@
+markupsafe == 2.0.1
 flask == 1.1.4
 requests == 2.23.0
 gunicorn == 19.9.0
-markupsafe == 2.0.1
+py_expression_eval == 0.3.14
+

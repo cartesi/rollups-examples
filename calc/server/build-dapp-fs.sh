@@ -15,6 +15,9 @@
 DAPP_FS=/opt/cartesi/calc-dapp-fs/calc-dapp
 DAPP_FS_BIN=/opt/cartesi/calc-dapp-fs/calc-dapp.ext2
 
+pip install -r <(sed '1,4d' requirements.txt) --target .
+cp py_expression_eval/__init__.py ./py_eval.py
+
 mkdir -p $DAPP_FS
 cp ./calc.py $DAPP_FS
 cp ./run.sh $DAPP_FS
