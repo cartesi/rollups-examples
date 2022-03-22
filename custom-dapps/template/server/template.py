@@ -74,7 +74,7 @@ def advance():
     """
 
     """
-    The sample code fomr the Echo DApp simply generates a notice with the payload of the
+    The sample code from the Echo DApp simply generates a notice with the payload of the
     request and print some log messages.
     """
 
