@@ -3,7 +3,7 @@
   "chainId": "80001",
   "contracts": {
     "ERC20PortalImpl": {
-      "address": "0xB61F7B17f4F252715e3eE9B80830AfFC8c455CdF",
+      "address": "0x485155F7241c851fc7e7F0c58AD43E4FBA5852e2",
       "abi": [
         {
           "inputs": [
@@ -128,7 +128,7 @@
       ]
     },
     "EtherPortalImpl": {
-      "address": "0x0AD6e715a9b703f7200a619c64e7Ef2373f2dF3C",
+      "address": "0x794E1A83C525ecF06Cd7f33297368A3dbf3e7e8A",
       "abi": [
         {
           "inputs": [
@@ -231,7 +231,7 @@
       ]
     },
     "RollupsImpl": {
-      "address": "0xd5889EA62d659a568720D0a6d197fA9301cd7Fd4",
+      "address": "0x2DE3edbcF55a1FAC46c665Bb8C0Fd95FB353deEa",
       "abi": [
         {
           "inputs": [
