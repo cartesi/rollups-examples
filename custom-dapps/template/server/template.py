@@ -11,6 +11,7 @@
 # specific language governing permissions and limitations under the License.
 
 from os import environ
+import traceback
 import logging
 import requests
 from flask import Flask, request
@@ -48,7 +49,7 @@ def advance():
     response = requests.post(dispatcher_url + "/notice", json={"payload": payload})
     app.logger.info(f"Received notice status {response.status_code} body {response.content}")
 
-    3. During processing, any expection must be handled accordingly:
+    3. During processing, any exception must be handled accordingly:
 
     try:
         # Execute sensible operation
@@ -80,11 +81,22 @@ def advance():
 
     body = request.get_json()
     app.logger.info(f"Received advance request body {body}")
-    app.logger.info("Adding notice")
-    response = requests.post(dispatcher_url + "/notice", json={"payload": body["payload"]})
-    app.logger.info(f"Received notice status {response.status_code} body {response.content}")
+
+    status = "accept"
+    try:
+        app.logger.info("Adding notice")
+        response = requests.post(dispatcher_url + "/notice", json={"payload": body["payload"]})
+        app.logger.info(f"Received notice status {response.status_code} body {response.content}")
+
+    except Exception as e:
+        status = "reject"
+        msg = f"Error processing body {body}\n{traceback.format_exc()}"
+        app.logger.error(msg)
+        response = requests.post(dispatcher_url + "/report", json={"payload": str2hex(msg)})
+        app.logger.info(f"Received report status {response.status_code} body {response.content}")
+
     app.logger.info("Finishing")
-    response = requests.post(dispatcher_url + "/finish", json={"status": "accept"})
+    response = requests.post(dispatcher_url + "/finish", json={"status": status})
     app.logger.info(f"Received finish status {response.status_code}")
     return "", 202
 
