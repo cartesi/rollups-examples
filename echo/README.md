@@ -97,7 +97,7 @@ $ npx hardhat --network localhost echo:getNotices --epoch 0 --payload string
 Finally, note that you can check the available options for all Hardhat tasks using the `--help` switch:
 
 ```shell
-$ npx hardhat echo:addInput --help
+$ npx hardhat --help
 ```
 
 ## Advancing time
