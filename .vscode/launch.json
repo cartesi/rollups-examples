@@ -20,6 +20,18 @@
             "env": {
                 "HTTP_DISPATCHER_URL": "http://127.0.0.1:5004"
             },
+            "cwd": "${workspaceFolder}/converter/server",
+            "name": "Converter DApp",
+            "type": "python",
+            "request": "launch",
+            "program": ".env/bin/gunicorn",
+            "gevent": true,
+            "args": ["--timeout", "0", "--reload", "--workers", "1", "--bind=0.0.0.0:5003", "converter:app"],
+        },
+        {
+            "env": {
+                "HTTP_DISPATCHER_URL": "http://127.0.0.1:5004"
+            },
             "cwd": "${workspaceFolder}/sqlite/server",
             "name": "Simple SQLite DApp",
             "type": "python",
