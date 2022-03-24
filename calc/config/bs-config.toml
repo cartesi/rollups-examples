@@ -1,0 +1,10 @@
+[block_subscriber]
+
+# max delay between retries in seconds
+max_delay = 64
+
+# max number of retries
+max_retries = 5
+
+# timeout for block subscriber in seconds
+timeout = 120

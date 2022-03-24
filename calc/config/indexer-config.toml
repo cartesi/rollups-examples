@@ -1,0 +1,18 @@
+[polling_config]
+
+# unique session identifier for machine manager
+session_id = "default_rollups_id"
+
+# node starts syncing from inital epoch
+initial_epoch = 0
+
+# node starts syncing from epoch index
+epoch_index = 0
+
+# polling interval
+interval = 10
+
+# end points
+postgres_endpoint = "postgres://postgres:password@database/postgres"
+state_server_endpoint = "http://state_server:50051"
+mm_endpoint = "http://server_manager:5001"

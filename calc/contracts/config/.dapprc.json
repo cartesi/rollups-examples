@@ -1,0 +1,6 @@
+{
+    "inputDuration": 86400,
+    "challengePeriod": 604800,
+    "inputLog2Size": 25,
+    "validators": "0,1,2"
+}
