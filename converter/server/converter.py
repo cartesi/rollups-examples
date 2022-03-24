@@ -11,6 +11,7 @@
 # specific language governing permissions and limitations under the License.
 
 import json
+import traceback
 import logging
 import random
 from os import environ
@@ -25,30 +26,45 @@ dispatcher_url = environ["HTTP_DISPATCHER_URL"]
 app.logger.info(f"HTTP dispatcher url is {dispatcher_url}")
 
 
-def unserialize(data):
-    raw_data = bytes.fromhex(data).decode("utf-8")
-    data = json.loads(raw_data)
+def hex2str(hex):
+    """
+    Decodes a hex string into a regular string
+    """
+    return bytes.fromhex(hex[2:]).decode("utf-8")
 
-    return data
+def str2hex(str):
+    """
+    Encodes a string as a hex string
+    """
+    return "0x" + str.encode("utf-8").hex()
 
 
-def serialize(data):
-    return "0x" + data.encode("utf-8").hex()
-
-
+# 
 # Custom transformations
-def reversed_transformation(text):
+#
+def reverse_transformation(text):
+    """
+    Reverses a given string so that the first character becomes the last one
+    """
     return text[::-1]
 
-
-def alternated_transformation(text):
+def alternate_transformation(text):
+    """
+    Alternates the capitalization of a string's characters
+    """
     return "".join(
         [char.lower() if index % 2 else char.upper()
          for index, char in enumerate(text)]
     )
 
-
 def random_transformation(text):
+    """
+    "Randomizes" the capitalization of a string's characters
+
+    Keep in mind that the seed of the pseudo-random function is known, so in practice
+    this is just a non-trivial way of making some characters upper case and others
+    lower case.
+    """
     return "".join(
         [char.upper() if random.randint(0, 1) == 1 else char.lower()
          for char in text]
@@ -57,34 +73,45 @@ def random_transformation(text):
 
 @app.route("/advance", methods=["POST"])
 def advance():
+    # defines supported transformations
     transformations = {
         "upper": str.upper,
         "lower": str.lower,
         "capitalize": str.capitalize,
-        "reversed": reversed_transformation,
-        "alternated": alternated_transformation,
+        "reverse": reverse_transformation,
+        "alternate": alternate_transformation,
         "random": random_transformation,
     }
 
     body = request.get_json()
+    app.logger.info(f"Received advance request body {body}")
 
-    payload = unserialize(body["payload"][2:])
-    app.logger.info("[APP] Unserialized payload: " + str(payload))
+    status = "accept"
+    try:
+        input = json.loads(hex2str(body["payload"]))
+        app.logger.info(f"Received input: {input}")
 
-    transform = payload["transform"]
-    message = payload["message"]
+        # collects conversion parameters
+        transform = input["transform"]
+        message = input["message"]
 
-    # Happy path
-    message_transformed = transformations[transform](message)
+        # performs conversion
+        output = transformations[transform](message)
 
-    message_serialized = serialize(message_transformed)
-    requests.post(dispatcher_url + "/notice",
-                  json={"payload": message_serialized})
-    requests.post(dispatcher_url + "/finish", json={"status": "accept"})
+        # emits output notice with transformed message
+        app.logger.info(f"Adding notice with payload: '{output}'")
+        requests.post(dispatcher_url + "/notice", json={"payload": str2hex(output)})
 
-    app.logger.info("[HAPPY PATH] Tranformed message: " + message_transformed)
-    app.logger.info("[APP] Serialized message: " + message_serialized)
+    except Exception as e:
+        status = "reject"
+        msg = f"Error processing body {body}\n{traceback.format_exc()}"
+        app.logger.error(msg)
+        response = requests.post(dispatcher_url + "/report", json={"payload": str2hex(msg)})
+        app.logger.info(f"Received report status {response.status_code} body {response.content}")
 
+    app.logger.info("Finishing")
+    response = requests.post(dispatcher_url + "/finish", json={"status": status})
+    app.logger.info(f"Received finish status {response.status_code}")
     return "", 202
 
 
