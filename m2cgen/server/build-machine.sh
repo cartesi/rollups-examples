@@ -11,14 +11,14 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-MACHINE_DIR=/opt/cartesi/lr-machine
+MACHINE_DIR=/opt/cartesi/m2cgen-machine
 
 cartesi-machine \
     --ram-length=128Mi \
     --rollup \
-    --flash-drive=label:lr-dapp,filename:lr-dapp.ext2 \
+    --flash-drive=label:m2cgen-dapp,filename:m2cgen-dapp.ext2 \
     --flash-drive=label:root,filename:rootfs.ext2 \
     --ram-image=linux-5.5.19-ctsi-3.bin \
     --rom-image=rom.bin \
     --store=$MACHINE_DIR \
-    -- "/mnt/lr-dapp/run.sh"
+    -- "/mnt/m2cgen-dapp/run.sh"

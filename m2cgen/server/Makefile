@@ -13,19 +13,19 @@
 DAPP_SERVER_MANAGER_TAG := 0.1.0
 DAPP_SERVER_MANAGER_IMG := cartesi/server-manager:$(DAPP_SERVER_MANAGER_TAG)
 
-CONTAINER_NAME := cartesi-lr-dapp
-CONTAINER_BASE := /opt/cartesi/lr
-CONTAINER_DAPP_FS_BIN := /opt/cartesi/lr-dapp-fs/lr-dapp.ext2
-CONTAINER_MACHINE_DIR := /opt/cartesi/lr-machine
+CONTAINER_NAME := cartesi-m2cgen-dapp
+CONTAINER_BASE := /opt/cartesi/m2cgen
+CONTAINER_DAPP_FS_BIN := /opt/cartesi/m2cgen-dapp-fs/m2cgen-dapp.ext2
+CONTAINER_MACHINE_DIR := /opt/cartesi/m2cgen-machine
 
-DAPP_FS_BIN := lr-dapp.ext2
+DAPP_FS_BIN := m2cgen-dapp.ext2
 BINARIES := rootfs.ext2 linux-5.5.19-ctsi-3.bin rom.bin
 MACHINE_DIR := machine
 
-.PHONY: console clean
+.PHONY: model console clean
 
 $(MACHINE_DIR): $(DAPP_FS_BIN) $(BINARIES)
-	@echo "Building cartesi-machine lr-dapp instance..."
+	@echo "Building cartesi-machine m2cgen-dapp instance..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi
@@ -53,8 +53,8 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): converted_lr_model.py run.sh
-	@echo "Building lr-dapp filesystem..."
+$(DAPP_FS_BIN): model m2cgen.py run.sh
+	@echo "Building m2cgen-dapp filesystem..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi
@@ -69,5 +69,9 @@ $(DAPP_FS_BIN): converted_lr_model.py run.sh
 	@docker rm -f $(CONTAINER_NAME) > /dev/null
 	@echo "$(DAPP_FS_BIN): OK"
 
+model:
+	@make -C model model
+
 clean:
-	@rm -rf $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR)
+	@make -C model clean
+	@rm -rf model.py $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR)

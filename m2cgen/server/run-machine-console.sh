@@ -11,11 +11,12 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-DAPP_FS=/opt/cartesi/lr-dapp-fs/lr-dapp
-DAPP_FS_BIN=/opt/cartesi/lr-dapp-fs/lr-dapp.ext2
-
-mkdir -p $DAPP_FS
-cp ./converted_lr_model.py $DAPP_FS
-cp ./run.sh $DAPP_FS
-genext2fs -f -i 512 -b 16 -d $DAPP_FS $DAPP_FS_BIN
-truncate -s %4096 $DAPP_FS_BIN
+cartesi-machine \
+    --ram-length=128Mi \
+    --rollup \
+    --flash-drive=label:m2cgen-dapp,filename:m2cgen-dapp.ext2 \
+    --flash-drive=label:root,filename:rootfs.ext2 \
+    --ram-image=linux-5.5.19-ctsi-3.bin \
+    --rom-image=rom.bin \
+    -i \
+    -- "/bin/sh"
