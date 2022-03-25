@@ -21,6 +21,9 @@ $(MACHINE_DIR):
 console:
 	@make -C server console
 
+echo-server-host:
+	@make -C server echo-server-host
+
 clean:
 	@make -C server clean
 	@rm -rf $(MACHINE_DIR)

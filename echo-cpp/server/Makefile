@@ -85,5 +85,5 @@ echo-server-host: echo-server.cpp
 	$(CXX_HOST) -pthread -std=c++11 -o $@  $^
 
 clean:
-	@rm -rf echo-server $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR)
+	@rm -rf echo-server echo-server-host $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR)
 	make -C 3rdparty clean

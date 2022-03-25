@@ -17,6 +17,10 @@
 DAPP_PORT=5003
 HTTP_DISPATCHER_PORT=5004
 
+# Rebuild echo dapp
+echo -n "Rebuilding echo-dapp: "
+make echo-server-host
+
 # Start echo dapp
 echo -n "Starting echo-dapp: "
 DAPP_PORT=$DAPP_PORT HTTP_DISPATCHER_URL="http://127.0.0.1:$HTTP_DISPATCHER_PORT" \
