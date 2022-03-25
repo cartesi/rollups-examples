@@ -48,18 +48,22 @@ _Note_: when running in host mode, localhost ports `5003` and `5004` will be use
 
 ## Examples
 
-### 1. [Simple Echo DApp](./echo)
+### 1. [Echo DApp](./echo)
 
-A basic "hello world" application, this DApp's back-end simply copies each input received as a corresponding output notice.
+A basic "hello world" application, this DApp's back-end is written in Python and simply copies each input received as a corresponding output notice.
 
-### 2. [Converter DApp](./converter)
+### 2. [Echo C++ DApp](./echo-cpp)
+
+Implements the same behavior as the [Simple Echo DApp](#1-simple-echo-dapp] above, but with a back-end written in C++.
+
+### 3. [Converter DApp](./converter)
 
 An extension of the Echo DApp that handles complex input in the form of JSON strings, in order to perform transformations on text messages.
 
-### 3. [Simple SQLite DApp](./sqlite)
+### 4. [SQLite DApp](./sqlite)
 
 Demonstrates how a DApp can easily leverage standard mainstream capabilities by building a minimalistic "decentralized SQL database" just by using the Cartesi Machine's built-in support for [SQLite](https://www.sqlite.org/index.html). This application will receive arbitrary SQL commands as input and execute them in an internal database, allowing users to insert data and query them later on. This example also highlights how errors should be handled, in the case of invalid SQL statements.
 
-### 4. [KNN DApp](./knn)
+### 5. [KNN DApp](./knn)
 
-A Machine Learning application in Python that implements the k-Nearest Neighbors supervised classification algorithm, and applies it to the classic Iris flower dataset.
+A Machine Learning Python application that implements the k-Nearest Neighbors supervised classification algorithm, and applies it to the classic Iris flower dataset.

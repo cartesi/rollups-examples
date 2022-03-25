@@ -1,6 +1,6 @@
-# Simple SQLite DApp
+# SQLite DApp
 
-This example shows how to build and interact with a minimalistic Cartesi Rollups application that internally runs an [SQLite database](https://www.sqlite.org/index.html). You can send any valid SQL command as input and if it produces results you get those back as a notice.
+This example shows how to build and interact with a Cartesi Rollups application that internally runs an [SQLite database](https://www.sqlite.org/index.html). You can send any valid SQL command as input and if it produces results you get those back as a notice.
 
 The example highlights how common mainstream technologies such as an SQL database can be easily used in a Cartesi DApp. It also introduces how errors should be handled by an application, in the case that invalid SQL statements are submitted.
 
