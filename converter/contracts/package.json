@@ -1,6 +1,6 @@
 {
     "name": "converter",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "converter DApp",
     "main": "index.ts",
     "license": "Apache-2.0",
