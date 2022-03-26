@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Echo C++ DApp example
 - Converter DApp example
 - k-NN DApp example
+- m2cgen DApp example
 
 ## [0.3.2] 2022-03-23
 

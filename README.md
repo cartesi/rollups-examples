@@ -54,7 +54,7 @@ A basic "hello world" application, this DApp's back-end is written in Python and
 
 ### 2. [Echo C++ DApp](./echo-cpp)
 
-Implements the same behavior as the [Simple Echo DApp](#1-simple-echo-dapp] above, but with a back-end written in C++.
+Implements the same behavior as the [Echo DApp](#1-echo-dapp) above, but with a back-end written in C++.
 
 ### 3. [Converter DApp](./converter)
 
@@ -64,6 +64,10 @@ An extension of the Echo DApp that handles complex input in the form of JSON str
 
 Demonstrates how a DApp can easily leverage standard mainstream capabilities by building a minimalistic "decentralized SQL database" just by using the Cartesi Machine's built-in support for [SQLite](https://www.sqlite.org/index.html). This application will receive arbitrary SQL commands as input and execute them in an internal database, allowing users to insert data and query them later on. This example also highlights how errors should be handled, in the case of invalid SQL statements.
 
-### 5. [KNN DApp](./knn)
+### 5. [k-NN DApp](./knn)
 
 A Machine Learning Python application that implements the k-Nearest Neighbors supervised classification algorithm, and applies it to the classic Iris flower dataset.
+
+### 6. [m2cgen DApp](./m2cgen)
+
+A more generic Machine Learning DApp that illustrates how to use the [m2cgen (Model to Code Generator)](https://github.com/BayesWitnesses/m2cgen) library to easily leverage widely used Python ML tools such as [scikit-learn](https://scikit-learn.org/), [NumPy](https://numpy.org/) and [pandas](https://pandas.pydata.org/). 

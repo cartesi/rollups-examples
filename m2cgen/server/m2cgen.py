@@ -36,11 +36,15 @@ def str2hex(str):
     """
     return "0x" + str.encode("utf-8").hex()
 
-# Make Predictions with LogisticRegression from Scikit learn + m2gen on the Titanic Dataset
 
-#generated from m2gen and model.py
-def prediction(input):    
+def classify(input): 
+    """
+    Predicts a given input's classification using the model generated with m2cgen
+    """
+    # computes the score from the input
     score = model.score(input)
+
+    # interprets the score to retrieve the predicted class index
     class_index = None
     if isinstance(score, list):
         class_index = score.index(max(score))
@@ -49,34 +53,44 @@ def prediction(input):
             class_index = 1
         else:
             class_index = 0
+
+    # returns the class specified by the predicted index
     return model.classes[class_index]
 
+
 def format(input):
+    """
+    Transforms a given input so that it is in the format expected by the m2cgen model
+    """
+    formatted_input = {}
+    for key in input.keys():
+        if key in model.columns:
+            # key in model: just copy the value
+            formatted_input[key] = input[key]
+        else:
+            # key not in model: it may need to be transformed due to One Hot Encoding
+            # - in OHE, there is a column for each possible key/value combination
+            # - a OHE column has value 1 if the entry contains the key/value combination
+            # - for each key, there is an extra column <key>_nan for unknown values
+            ohe_key = key + "_" + str(input[key])
+            ohe_key_unknown = key + "_nan"
+            if ohe_key in model.columns:
+                formatted_input[ohe_key] = 1
+            else:
+                formatted_input[ohe_key_unknown] = 1
+
+    # builds output as a list/array with one entry for each column in the model
     output = []
-    for i in range(len(input)):
-        entry = input[i]
-        formatted_entry = {}
-        for key in entry.keys():
-            if key in model.columns:
-                formatted_entry[key] = entry[key]
-            else:
-                ohe_key = key + "_" + entry[key]
-                ohe_key_missing = key + "_nan"
-                if ohe_key in model.columns:
-                    formatted_entry[ohe_key] = 1
-                else:
-                    formatted_entry[ohe_key_missing] = 1
-        output_entry = []
-        for column in model.columns:
-            if column in formatted_entry:
-                output_entry.append(formatted_entry[column])
-            else:
-                output_entry.append(0)
-        output.append(output_entry)
+    for column in model.columns:
+        if column in formatted_input:
+            # uses known value for columns present in input
+            output.append(formatted_input[column])
+        else:
+            # uses value 0 for columns not present in the input (all other OHE columns)
+            output.append(0)
     return output
 
 
-# Cartesi Endpoint
 @app.route("/advance", methods=["POST"])
 def predict():
     body = request.get_json()
@@ -84,30 +98,23 @@ def predict():
 
     status = "accept"
     try:
-        partial = body["payload"][2:]
+        # retrieves input as string
+        input = hex2str(body["payload"])
+        app.logger.info(f"Received input: '{input}'")
 
-        content = bytes.fromhex(partial).decode("utf-8")
-        app.logger.info("Printing all inputs : " + content)
-        json_ = json.loads(content)
-        array = format(json_)
-        print(f"Formatted input: {array}")
-        out_array = []
-        for i in range(len(array)):
-            out_array.append(prediction(array[i]))
-        app.logger.info({'prediction for all inputs': str(out_array)})
+        # converts input to the format expected by the m2cgen model
+        input_json = json.loads(input)
+        input_formatted = format(input_json)
 
-        # Encode back to Hex to add in the notice
-        newpayload = "0x" + str(str(out_array).encode("utf-8").hex())
-        app.logger.info("Predicted in Hex: " + newpayload)
-        body["payload"] = newpayload
-        app.logger.info("New PayLoad Added: " + body["payload"])
-        app.logger.info("Adding notice")
-        response = requests.post(
-            dispatcher_url + "/notice", json={"payload": body["payload"]}
-        )
-        app.logger.info(
-            f"Received notice status {response.status_code} body {response.content}"
-        )
+        # computes predicted classification for input        
+        predicted = classify(input_formatted)
+        app.logger.info(f"Data={input}, Predicted: {predicted}")
+
+        # emits output notice with predicted class name
+        output = str2hex(str(predicted))
+        app.logger.info(f"Adding notice with payload: {predicted}")
+        response = requests.post(dispatcher_url + "/notice", json={"payload": output})
+        app.logger.info(f"Received notice status {response.status_code} body {response.content}")
 
     except Exception as e:
         status = "reject"
