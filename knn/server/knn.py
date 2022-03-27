@@ -189,8 +189,9 @@ def load_dataset():
     """
     seed(1)
 
+    # loads Iris dataset CSV file, ignoring the first line containing column names
     app.logger.info("Loading Iris Dataset")
-    dataset = load_csv("iris.csv")
+    dataset = load_csv("iris.csv")[1:] 
 
     # converts value columns to float
     for i in range(len(dataset[0]) - 1):
@@ -221,13 +222,13 @@ def predict():
         input = hex2str(body["payload"])
         app.logger.info(f"Received input: '{input}'")
 
-        # json input should be like this {"sl": "2.0", "sw": "3.0", "pl": "4.0", "pw": "3.5"}
+        # json input should be like this {"sl": 2.0, "sw": 3.0, "pl": 4.0, "pw": 3.5}
         input_json = json.loads(input)
         input_row = [
-            float(input_json["sl"]),
-            float(input_json["sw"]),
-            float(input_json["pl"]),
-            float(input_json["pw"])
+            input_json["sl"],
+            input_json["sw"],
+            input_json["pl"],
+            input_json["pw"]
         ]
 
         # computes predicted classification for input        
