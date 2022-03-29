@@ -1,6 +1,6 @@
 {
     "name": "echo-cpp",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "description": "Echo C++ DApp",
     "main": "index.ts",
     "license": "Apache-2.0",
