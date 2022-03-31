@@ -91,7 +91,7 @@ To retrieve notices interpreting the payload as a UTF-8 string, you can use the 
 
 ```shell
 $ npx hardhat --network localhost echo:getNotices --epoch 0 --payload string
-{"session_id":"default_rollups_id","epoch_index":"0","input_index":"1","notice_index":"0","payload":"Hello there!"}
+{"session_id":"default_rollups_id","epoch_index":"0","input_index":"1","notice_index":"0","payload":"cartesi"}
 ```
 
 Finally, note that you can check the available options for all Hardhat tasks using the `--help` switch:
