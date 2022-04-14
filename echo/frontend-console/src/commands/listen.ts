@@ -83,7 +83,7 @@ export const handler = async (args: Args) => {
 
     // connect to provider, use deployment address based on returned chain id of provider
     console.log(`connecting to ${network}`);
-    const { chain } = await connect(network);
+    const { chain } = await connect(network, "CartesiDApp");
 
     // wait for notices to appear in reader
     const notices = await getNotices(chain.reader, {
