@@ -1,0 +1,9 @@
+./.idea
+__pycache__
+.env
+*.ext2
+*.yaml
+machine
+**/.DS_Store
+database.db
+
