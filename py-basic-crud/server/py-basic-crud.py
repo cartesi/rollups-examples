@@ -38,8 +38,8 @@ def advance():
     if method == 'GET' and path == '/users' and params != {}:
         result = get_user(params)
 
-    if method == 'GET' and path == '/users' and params != {}:
-        result = get_user(params)
+    if method == 'POST' and path == '/users':
+        result = add_users(payload)
 
     if method == 'GET' and path == '/users/tasks':
         result = get_user_tasks(params)
