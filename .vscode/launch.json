@@ -6,51 +6,63 @@
     "configurations": [
         {
             "env": {
-                "HTTP_DISPATCHER_URL": "http://127.0.0.1:5004"
+                "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
             },
             "cwd": "${workspaceFolder}/echo/server",
-            "name": "Simple Echo DApp",
+            "name": "Echo DApp",
             "type": "python",
             "request": "launch",
-            "program": ".env/bin/gunicorn",
-            "gevent": true,
-            "args": ["--timeout", "0", "--reload", "--workers", "1", "--bind=0.0.0.0:5003", "echo:app"],
+            "python": "${workspaceFolder}/echo/server/.env/bin/python3",
+            "program": "echo.py",
+            "gevent": false,
         },
         {
             "env": {
-                "HTTP_DISPATCHER_URL": "http://127.0.0.1:5004"
+                "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
             },
             "cwd": "${workspaceFolder}/converter/server",
             "name": "Converter DApp",
             "type": "python",
             "request": "launch",
-            "program": ".env/bin/gunicorn",
-            "gevent": true,
-            "args": ["--timeout", "0", "--reload", "--workers", "1", "--bind=0.0.0.0:5003", "converter:app"],
+            "python": "${workspaceFolder}/converter/server/.env/bin/python3",
+            "program": "converter.py",
+            "gevent": false,
         },
         {
             "env": {
-                "HTTP_DISPATCHER_URL": "http://127.0.0.1:5004"
+                "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
             },
             "cwd": "${workspaceFolder}/sqlite/server",
-            "name": "Simple SQLite DApp",
+            "name": "SQLite DApp",
             "type": "python",
             "request": "launch",
-            "program": ".env/bin/gunicorn",
-            "gevent": true,
-            "args": ["--timeout", "0", "--reload", "--workers", "1", "--bind=0.0.0.0:5003", "sqlite:app"],
+            "python": "${workspaceFolder}/sqlite/server/.env/bin/python3",
+            "program": "sqlite.py",
+            "gevent": false,
         },
         {
             "env": {
-                "HTTP_DISPATCHER_URL": "http://127.0.0.1:5004"
+                "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
             },
             "cwd": "${workspaceFolder}/knn/server",
-            "name": "ML k-NN DApp",
+            "name": "k-NN DApp",
             "type": "python",
             "request": "launch",
-            "program": ".env/bin/gunicorn",
-            "gevent": true,
-            "args": ["--timeout", "0", "--reload", "--workers", "1", "--bind=0.0.0.0:5003", "knn:app"],
+            "python": "${workspaceFolder}/knn/server/.env/bin/python3",
+            "program": "knn.py",
+            "gevent": false,
+        },
+        {
+            "env": {
+                "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
+            },
+            "cwd": "${workspaceFolder}/m2cgen/server",
+            "name": "m2cgen DApp",
+            "type": "python",
+            "request": "launch",
+            "python": "${workspaceFolder}/m2cgen/server/.env/bin/python3",
+            "program": "m2cgen.py",
+            "gevent": false,
         }
     ]
 }
