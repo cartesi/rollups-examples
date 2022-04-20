@@ -44,6 +44,7 @@ int main(int argc, char** argv) {
     httplib::Client cli(getenv("ROLLUP_HTTP_SERVER_URL"));
     cli.set_read_timeout(20, 0);
     std::string status("accept");
+    std::string rollup_address;
     while (true) {
         std::cout << "Sending finish" << std::endl;
         auto finish = std::string("{\"status\":\"") + status + std::string("\"}");
@@ -54,10 +55,16 @@ int main(int argc, char** argv) {
         } else {
             picojson::value rollup_request;
             picojson::parse(rollup_request, r.value().body);
-            auto request_type = rollup_request.get("request_type").get<std::string>();
-            auto handler = handlers.find(request_type)->second;
-            auto data = rollup_request.get("data");
-            status = (*handler)(cli, data);
+            picojson::value metadata = rollup_request.get("data").get("metadata");
+            if (metadata.get("epoch_index").get<double>() == 0 && metadata.get("input_index").get<double>() == 0) {
+                rollup_address = metadata.get("msg_sender").get<std::string>();
+                std::cout << "Captured rollup address: " << rollup_address << std::endl;
+            } else {
+                auto request_type = rollup_request.get("request_type").get<std::string>();
+                auto handler = handlers.find(request_type)->second;
+                auto data = rollup_request.get("data");
+                status = (*handler)(cli, data);
+            }
         }
     }
     return 0;

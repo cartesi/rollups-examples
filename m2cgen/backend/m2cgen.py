@@ -135,6 +135,8 @@ handlers = {
 }
 
 finish = {"status": "accept"}
+rollup_address = None
+
 while True:
     logger.info("Sending finish")
     response = requests.post(rollup_server + "/finish", json=finish)
@@ -143,5 +145,10 @@ while True:
         logger.info("No pending rollup request, trying again")
     else:
         rollup_request = response.json()
-        handler = handlers[rollup_request["request_type"]]
-        finish["status"] = handler(rollup_request["data"])
+        metadata = rollup_request["data"]["metadata"]
+        if metadata["epoch_index"] == 0 and metadata["input_index"] == 0:
+            rollup_address = metadata["msg_sender"]
+            logger.info(f"Captured rollup address: {rollup_address}")
+        else:
+            handler = handlers[rollup_request["request_type"]]
+            finish["status"] = handler(rollup_request["data"])
