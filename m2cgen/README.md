@@ -137,6 +137,11 @@ $ ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 m2cgen.py
 This will run the m2cgen server and send the corresponding notices to port `5004`.
 
 The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
+You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
+
+```shell
+$ ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 m2cgen.py
+```
 
 After the server successfully starts, it should print an output like the following:
 

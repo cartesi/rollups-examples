@@ -129,6 +129,12 @@ $ ./run-host.sh
 
 This will run the echo-cpp server and send the corresponding notices to port `5004`.
 
+You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
+
+```shell
+ls *.cpp | entr -r ./run-host.sh
+```
+
 After the server successfully starts, it should print an output like the following:
 
 ```log
