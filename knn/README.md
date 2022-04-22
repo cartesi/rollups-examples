@@ -138,21 +138,22 @@ $ cd knn/server/
 $ python3 -m venv .env
 $ . .env/bin/activate
 $ pip install -r requirements.txt
-$ HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --reload --workers 1 --bind 0.0.0.0:5003 knn:app
+$ ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 knn.py
 ```
 
-This will run the knn server on port `5003` and send the corresponding notices to port `5004`. The server will also automatically reload if there is a change in the source code, enabling fast development iterations.
+This will run the knn server and send the corresponding notices to port `5004`.
 
-The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints. In that case, it may be interesting to add the parameter `--timeout 0` to gunicorn, to avoid having it time out when the debugger stops at a breakpoint.
+The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
 
 After the server successfully starts, it should print an output like the following:
 
 ```log
-[2022-01-21 12:38:23,971] INFO in knn: HTTP dispatcher url is http://127.0.0.1:5004
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Starting gunicorn 19.9.0
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Listening at: http://0.0.0.0:5003 (79032)
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Using worker: sync
-[2022-01-21 12:38:23 -0500] [79035] [INFO] Booting worker with pid: 79035
+INFO:__main__:HTTP rollup_server url is http://127.0.0.1:5004
+INFO:__main__:Loading Iris Dataset
+INFO:__main__:Class mapping from dataset: {'Iris-setosa': 0, 'Iris-versicolor': 1, 'Iris-virginica': 2}
+INFO:__main__:Accuracies for k-NN in each cross-validation fold: [96.66666666666667, 96.66666666666667, 100.0, 90.0, 100.0]
+INFO:__main__:Mean accuracy for k-NN in the dataset: 96.66666666666667
+INFO:__main__:Sending finish
 ```
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
@@ -160,13 +161,13 @@ After that, you can interact with the application normally [as explained above](
 When you add an input, you should see it being processed by the knn server as follows:
 
 ```log
-[2022-03-26 21:40:31,139] INFO in knn: Received advance request body {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 11, 'time_stamp': 1648341638}, 'payload': '0x7b22736c223a20342e392c20227377223a20332e302c2022706c223a20312e342c20227077223a20302e337d'}
-[2022-03-26 21:40:31,140] INFO in knn: Received input: '{"sl": 4.9, "sw": 3.0, "pl": 1.4, "pw": 0.3}'
-[2022-03-26 21:40:31,140] INFO in knn: Data={"sl": 4.9, "sw": 3.0, "pl": 1.4, "pw": 0.3}, Predicted: 0
-[2022-03-26 21:40:31,141] INFO in knn: Adding notice with payload: Iris-setosa
-[2022-03-26 21:40:31,153] INFO in knn: Received notice status 201 body b'{"index":0}'
-[2022-03-26 21:40:31,154] INFO in knn: Finishing
-[2022-03-26 21:40:31,159] INFO in knn: Received finish status 202
+INFO:__main__:Received finish status 200
+INFO:__main__:Received advance request data {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 0, 'timestamp': 0}, 'payload': '0x7b22736c223a20342e392c20227377223a20332e302c2022706c223a20312e342c20227077223a20302e337d'}
+INFO:__main__:Received input: '{"sl": 4.9, "sw": 3.0, "pl": 1.4, "pw": 0.3}'
+INFO:__main__:Data={"sl": 4.9, "sw": 3.0, "pl": 1.4, "pw": 0.3}, Predicted: 0
+INFO:__main__:Adding notice with payload: Iris-setosa
+INFO:__main__:Received notice status 200 body b'{"index":0}'
+INFO:__main__:Sending finish
 ```
 
 Finally, to stop the containers, removing any associated volumes, execute:
