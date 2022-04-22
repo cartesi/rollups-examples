@@ -10,7 +10,7 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-DAPP_SERVER_MANAGER_TAG := 0.1.0
+DAPP_SERVER_MANAGER_TAG := 0.2.0
 DAPP_SERVER_MANAGER_IMG := cartesi/server-manager:$(DAPP_SERVER_MANAGER_TAG)
 
 CONTAINER_NAME := cartesi-sqlite-dapp
@@ -19,7 +19,7 @@ CONTAINER_DAPP_FS_BIN := /opt/cartesi/sqlite-dapp-fs/sqlite-dapp.ext2
 CONTAINER_MACHINE_DIR := /opt/cartesi/sqlite-machine
 
 DAPP_FS_BIN := sqlite-dapp.ext2
-BINARIES := rootfs.ext2 linux-5.5.19-ctsi-3.bin rom.bin
+BINARIES := rootfs.ext2 linux-5.5.19-ctsi-5.bin rom.bin
 MACHINE_DIR := machine
 
 .PHONY: console clean
@@ -53,7 +53,7 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): sqlite.py run.sh
+$(DAPP_FS_BIN): sqlite.py
 	@echo "Building sqlite-dapp filesystem..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \

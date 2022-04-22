@@ -10,7 +10,7 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-DAPP_SERVER_MANAGER_TAG := 0.1.0
+DAPP_SERVER_MANAGER_TAG := 0.2.0
 DAPP_SERVER_MANAGER_IMG := cartesi/server-manager:$(DAPP_SERVER_MANAGER_TAG)
 
 CONTAINER_NAME := cartesi-m2cgen-dapp
@@ -19,7 +19,7 @@ CONTAINER_DAPP_FS_BIN := /opt/cartesi/m2cgen-dapp-fs/m2cgen-dapp.ext2
 CONTAINER_MACHINE_DIR := /opt/cartesi/m2cgen-machine
 
 DAPP_FS_BIN := m2cgen-dapp.ext2
-BINARIES := rootfs.ext2 linux-5.5.19-ctsi-3.bin rom.bin
+BINARIES := rootfs.ext2 linux-5.5.19-ctsi-5.bin rom.bin
 MACHINE_DIR := machine
 
 .PHONY: model console clean
@@ -53,7 +53,7 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): model m2cgen.py run.sh
+$(DAPP_FS_BIN): model m2cgen.py
 	@echo "Building m2cgen-dapp filesystem..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \

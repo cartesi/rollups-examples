@@ -17,6 +17,5 @@ DAPP_FS_BIN=/opt/cartesi/knn-dapp-fs/knn-dapp.ext2
 mkdir -p $DAPP_FS
 cp ./knn.py $DAPP_FS
 cp ./iris.csv $DAPP_FS
-cp ./run.sh $DAPP_FS
 genext2fs -f -i 512 -b 32 -d $DAPP_FS $DAPP_FS_BIN
 truncate -s %4096 $DAPP_FS_BIN

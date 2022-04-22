@@ -50,7 +50,7 @@ services:
       - ./config:/opt/cartesi/share/config/
 
   server_manager:
-    image: cartesi/server-manager:0.1.0
+    image: cartesi/server-manager:0.2.0
     platform: linux/amd64
     restart: always
     volumes:

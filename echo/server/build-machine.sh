@@ -12,13 +12,16 @@
 # specific language governing permissions and limitations under the License.
 
 MACHINE_DIR=/opt/cartesi/echo-machine
+ROLLUP_HTTP_SERVER_PORT=5004
 
 cartesi-machine \
     --ram-length=128Mi \
     --rollup \
     --flash-drive=label:echo-dapp,filename:echo-dapp.ext2 \
     --flash-drive=label:root,filename:rootfs.ext2 \
-    --ram-image=linux-5.5.19-ctsi-3.bin \
+    --ram-image=linux-5.5.19-ctsi-5.bin \
     --rom-image=rom.bin \
     --store=$MACHINE_DIR \
-    -- "/mnt/echo-dapp/run.sh"
+    -- "cd /mnt/echo-dapp; \
+        ROLLUP_HTTP_SERVER_URL=\"http://127.0.0.1:$ROLLUP_HTTP_SERVER_PORT\" \
+        rollup-init python3 echo.py"

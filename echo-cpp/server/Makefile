@@ -10,7 +10,7 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-DAPP_SERVER_MANAGER_TAG := 0.1.0
+DAPP_SERVER_MANAGER_TAG := 0.2.0
 DAPP_SERVER_MANAGER_IMG := cartesi/server-manager:$(DAPP_SERVER_MANAGER_TAG)
 
 CONTAINER_NAME := cartesi-echo-dapp
@@ -19,7 +19,7 @@ CONTAINER_DAPP_FS_BIN := /opt/cartesi/echo-dapp-fs/echo-dapp.ext2
 CONTAINER_MACHINE_DIR := /opt/cartesi/echo-machine
 
 DAPP_FS_BIN := echo-dapp.ext2
-BINARIES := rootfs.ext2 linux-5.5.19-ctsi-3.bin rom.bin
+BINARIES := rootfs.ext2 linux-5.5.19-ctsi-5.bin rom.bin
 MACHINE_DIR := machine
 TOOLCHAIN_IMAGE := cartesi/toolchain:latest
 CXX  := riscv64-cartesi-linux-gnu-g++
@@ -56,7 +56,7 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): echo-server run.sh
+$(DAPP_FS_BIN): echo-server
 	@echo "Building echo-dapp filesystem..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
