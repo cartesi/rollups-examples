@@ -12,6 +12,8 @@
 
 DAPP_SERVER_MANAGER_TAG := 0.2.0
 DAPP_SERVER_MANAGER_IMG := cartesi/server-manager:$(DAPP_SERVER_MANAGER_TAG)
+TOOLCHAIN_TAG := 0.9.0
+TOOLCHAIN_IMG := cartesi/toolchain:$(TOOLCHAIN_TAG)
 
 CONTAINER_NAME := cartesi-echo-dapp
 CONTAINER_BASE := /opt/cartesi/echo
@@ -64,7 +66,7 @@ $(DAPP_FS_BIN): echo.py
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
 		--platform linux/amd64 \
-		$(DAPP_SERVER_MANAGER_IMG) $(CONTAINER_BASE)/build-dapp-fs.sh
+		$(TOOLCHAIN_IMG) $(CONTAINER_BASE)/build-dapp-fs.sh
 	@docker cp $(CONTAINER_NAME):$(CONTAINER_DAPP_FS_BIN) $@
 	@docker rm -f $(CONTAINER_NAME) > /dev/null
 	@echo "$(DAPP_FS_BIN): OK"

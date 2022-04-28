@@ -12,6 +12,8 @@
 
 DAPP_SERVER_MANAGER_TAG := 0.2.0
 DAPP_SERVER_MANAGER_IMG := cartesi/server-manager:$(DAPP_SERVER_MANAGER_TAG)
+TOOLCHAIN_TAG := 0.9.0
+TOOLCHAIN_IMG := cartesi/toolchain:$(TOOLCHAIN_TAG)
 
 CONTAINER_NAME := cartesi-echo-dapp
 CONTAINER_BASE := /opt/cartesi/echo
@@ -21,7 +23,6 @@ CONTAINER_MACHINE_DIR := /opt/cartesi/echo-machine
 DAPP_FS_BIN := echo-dapp.ext2
 BINARIES := rootfs.ext2 linux-5.5.19-ctsi-5.bin rom.bin
 MACHINE_DIR := machine
-TOOLCHAIN_IMAGE := cartesi/toolchain:latest
 CXX  := riscv64-cartesi-linux-gnu-g++
 CXX_HOST := g++
 
@@ -67,7 +68,7 @@ $(DAPP_FS_BIN): echo-server
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
 		--platform linux/amd64 \
-		$(DAPP_SERVER_MANAGER_IMG) $(CONTAINER_BASE)/build-dapp-fs.sh
+		$(TOOLCHAIN_IMG) $(CONTAINER_BASE)/build-dapp-fs.sh
 	@docker cp $(CONTAINER_NAME):$(CONTAINER_DAPP_FS_BIN) $@
 	@docker rm -f $(CONTAINER_NAME) > /dev/null
 	@echo "$(DAPP_FS_BIN): OK"
@@ -78,7 +79,7 @@ echo-server: echo-server.cpp
     -v `pwd`:/echo-server  \
     -w /echo-server \
     -e HOSTNAME=`hostname` \
-    -it $(TOOLCHAIN_IMAGE) $(CXX) -pthread -std=c++11 -o $@  $^
+    $(TOOLCHAIN_IMG) $(CXX) -pthread -std=c++11 -o $@  $^
 
 echo-server-host: echo-server.cpp
 	make -C 3rdparty
