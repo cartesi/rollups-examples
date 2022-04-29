@@ -24,14 +24,34 @@ echo "Creating DApp ${dapp_name}..."
 echo "Copying files from template..."
 cp -pr template ${dapp_name}
 
+echo "Copying common files..."
+cp -pr ../config ${dapp_name}
+mkdir -p ${dapp_name}/contracts
+cp -pr ../contracts/config ${dapp_name}/contracts
+cp -pr ../contracts/deploy ${dapp_name}/contracts
+find ../contracts -maxdepth 1 -type f | xargs -I {} cp {} ${dapp_name}/contracts
+cp ../docker-compose.yml ${dapp_name}
+cp ../docker-compose-host.yml ${dapp_name}
+cp ../Dockerfile ${dapp_name}
+
 echo "Customizing DApp infrastructure..."
+# replace references to machine directory from '${dapp}/machine' to './machine'
 for i in \
-    ${dapp_name}/contracts/package.json \
-    ${dapp_name}/contracts/hardhat.config.ts \
-    ${dapp_name}/server/build-dapp-fs.sh \
-    ${dapp_name}/server/build-machine.sh \
-    ${dapp_name}/server/Makefile \
-    ${dapp_name}/server/run-machine-console.sh \
+    ${dapp_name}/Dockerfile \
+    ${dapp_name}/docker-compose.yml
+do
+    sed -i'' -e "s/\$DAPP_NAME\/machine/machine/g" $i
+done
+sed -i'' -e "s/..\/\${dapp}\/machine/..\/machine/g" ${dapp_name}/contracts/deploy/01_rollups.ts
+# replace variable for dapp to be executed with the actual dapp name
+sed -i'' -e "s/dapps = \[.*\]/dapps = \[\"${dapp_name}\"\]/g" ${dapp_name}/contracts/hardhat.config.ts
+sed -i'' -e "s/\$DAPP_NAME/${dapp_name}/g" ${dapp_name}/docker-compose.yml
+# replace template placeholders by dapp name
+for i in \
+    ${dapp_name}/backend/build-dapp-fs.sh \
+    ${dapp_name}/backend/build-machine.sh \
+    ${dapp_name}/backend/Makefile \
+    ${dapp_name}/backend/run-machine-console.sh \
     ${dapp_name}/README.md
 do
     sed -i'' -e "s/template/${dapp_name}/g" $i
