@@ -7,6 +7,7 @@ jobs:
         strategy:
             matrix:
                 dapp:
+                    - calculator
                     - converter
                     - echo
                     - echo-cpp
