@@ -1,4 +1,3 @@
-#!/bin/bash
 # Copyright 2022 Cartesi Pte. Ltd.
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -11,18 +10,8 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-MACHINE_DIR=/opt/cartesi/calculator-machine
-ROLLUP_HTTP_SERVER_PORT=5004
+extras: requirements.txt
+	./install_extras.sh
 
-cartesi-machine \
-    --ram-length=128Mi \
-    --rollup \
-    --flash-drive=label:calculator-dapp,filename:calculator-dapp.ext2 \
-    --flash-drive=label:root,filename:rootfs.ext2 \
-    --ram-image=linux-5.5.19-ctsi-5.bin \
-    --rom-image=rom.bin \
-    --store=$MACHINE_DIR \
-    -- "cd /mnt/calculator-dapp; \
-        PYTHONPATH=./libs \
-        ROLLUP_HTTP_SERVER_URL=\"http://127.0.0.1:$ROLLUP_HTTP_SERVER_PORT\" \
-        rollup-init python3 calculator.py"
+clean:
+	rm -rf .env ../libs

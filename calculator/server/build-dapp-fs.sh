@@ -17,6 +17,7 @@ DAPP_FS_BIN=/opt/cartesi/calculator-dapp-fs/calculator-dapp.ext2
 
 mkdir -p $DAPP_FS
 cp ./calculator.py $DAPP_FS
-(cd $DAPP_FS; tar --sort=name --mtime="2022-01-01" --owner=0 --group=0 --numeric-owner -cf $DAPP_FS_TAR calculator.py)
-genext2fs -f -i 512 -b 16 -a $DAPP_FS_TAR $DAPP_FS_BIN
+cp -pr ./libs $DAPP_FS
+(cd $DAPP_FS; tar --sort=name --mtime="2022-01-01" --owner=0 --group=0 --numeric-owner -cf $DAPP_FS_TAR calculator.py libs)
+genext2fs -f -i 512 -b 1024 -a $DAPP_FS_TAR $DAPP_FS_BIN
 truncate -s %4096 $DAPP_FS_BIN

@@ -14,6 +14,7 @@ from os import environ
 import traceback
 import logging
 import requests
+from py_expression_eval import Parser
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)

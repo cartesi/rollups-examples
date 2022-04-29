@@ -19,6 +19,10 @@ $ cd rollups-examples/calculator
 $ make machine
 ```
 
+_Note:_ The DApp installs some extra requirements during the build process.
+See the list of libraries at [`server/extras/requirements.txt`](./server/extras/requirements.txt).
+The build process assumes the host environment has a version of Python installed that is compatible with the one available in the Cartesi Machine.
+
 ## Running the environment
 
 In order to start the containers in production mode, simply run:
@@ -128,7 +132,7 @@ In order to start the calculator server, run the following commands in a dedicat
 $ cd calculator/server/
 $ python3 -m venv .env
 $ . .env/bin/activate
-$ pip install -r requirements.txt
+$ pip install -r requirements.txt -r extras/requirements.txt
 $ ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 calculator.py
 ```
 

@@ -24,7 +24,7 @@ DAPP_FS_BIN := calculator-dapp.ext2
 BINARIES := rootfs.ext2 linux-5.5.19-ctsi-5.bin rom.bin
 MACHINE_DIR := machine
 
-.PHONY: console clean
+.PHONY: extras console clean
 
 $(MACHINE_DIR): $(DAPP_FS_BIN) $(BINARIES)
 	@echo "Building cartesi-machine calculator-dapp instance..."
@@ -55,7 +55,7 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): calculator.py
+$(DAPP_FS_BIN): extras calculator.py
 	@echo "Building calculator-dapp filesystem..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
@@ -71,5 +71,9 @@ $(DAPP_FS_BIN): calculator.py
 	@docker rm -f $(CONTAINER_NAME) > /dev/null
 	@echo "$(DAPP_FS_BIN): OK"
 
+extras:
+	@make -C extras extras
+
 clean:
+	@make -C extras clean
 	@rm -rf $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR)
