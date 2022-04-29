@@ -35,47 +35,20 @@ def str2hex(str):
     return "0x" + str.encode("utf-8").hex()
 
 def handle_advance(data):
-    """
-    An advance request may be processed as follows:
-
-    1. A notice may be generated, if appropriate:
-
-    response = requests.post(rollup_server + "/notice", json={"payload": data["payload"]})
-    logger.info(f"Received notice status {response.status_code} body {response.content}")
-
-    2. During processing, any exception must be handled accordingly:
-
-    try:
-        # Execute sensible operation
-        op.execute(params)
-
-    except Exception as e:
-        # status must be "reject"
-        status = "reject"
-        msg = "Error executing operation"
-        logger.error(msg)
-        response = requests.post(rollup_server + "/report", json={"payload": str2hex(msg)})
-
-    finally:
-        # Close any resource, if necessary
-        res.close()
-
-    3. Finish processing
-
-    return status
-    """
-
-    """
-    The sample code from the Echo DApp simply generates a notice with the payload of the
-    request and print some log messages.
-    """
-
     logger.info(f"Received advance request data {data}")
 
     status = "accept"
     try:
-        logger.info("Adding notice")
-        response = requests.post(rollup_server + "/notice", json={"payload": data["payload"]})
+        input = hex2str(data["payload"])
+        logger.info(f"Received input: {input}")
+
+        # Evaluates expression
+        parser = Parser()
+        output = parser.parse(input).evaluate({})
+
+        # Emits notice with result of calculation
+        logger.info(f"Adding notice with payload: '{output}'")
+        response = requests.post(rollup_server + "/notice", json={"payload": str2hex(str(output))})
         logger.info(f"Received notice status {response.status_code} body {response.content}")
 
     except Exception as e:
