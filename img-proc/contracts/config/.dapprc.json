@@ -1,0 +1,7 @@
+{
+    "inputDuration": 86400,
+    "challengePeriod": 604800,
+    "inputLog2Size": 25,
+    "feePerClaim": "1000000000000000000",
+    "validators": "0,1,2"
+}
