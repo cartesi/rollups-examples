@@ -21,7 +21,7 @@ CONTAINER_DAPP_FS_BIN := /opt/cartesi/img-proc-dapp-fs/img-proc-dapp.ext2
 CONTAINER_MACHINE_DIR := /opt/cartesi/img-proc-machine
 
 DAPP_FS_BIN := img-proc-dapp.ext2
-BINARIES := rootfs.ext2 linux-5.5.19-ctsi-5.bin rom.bin
+BINARIES := linux-5.5.19-ctsi-5.bin rom.bin
 MACHINE_DIR := machine
 
 .PHONY: console clean

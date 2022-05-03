@@ -14,9 +14,11 @@
 DAPP_FS=/opt/cartesi/img-proc-dapp-fs/img-proc-dapp
 DAPP_FS_TAR=/opt/cartesi/img-proc-dapp-fs/img-proc-dapp.tar
 DAPP_FS_BIN=/opt/cartesi/img-proc-dapp-fs/img-proc-dapp.ext2
+export LD_LIBRARY_PATH="/usr/local/opencv4-rvv/lib"
 
 mkdir -p $DAPP_FS
 cp ./img-proc.py $DAPP_FS
+cp ./lerImagen.sh $DAPP_FS
 (cd $DAPP_FS; tar --sort=name --mtime="2022-01-01" --owner=0 --group=0 --numeric-owner -cf $DAPP_FS_TAR img-proc.py)
 genext2fs -f -i 512 -b 16 -a $DAPP_FS_TAR $DAPP_FS_BIN
 truncate -s %4096 $DAPP_FS_BIN

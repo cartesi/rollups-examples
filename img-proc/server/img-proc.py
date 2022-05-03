@@ -14,6 +14,11 @@ from os import environ
 import traceback
 import logging
 import requests
+import json
+import os
+import base64
+import subprocess
+
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
@@ -27,6 +32,13 @@ def hex2str(hex):
 def str2hex(str):
     return "0x" + str.encode("utf-8").hex()
 
+def str642img(str,name):
+    imgdata = base64.b64decode(str)
+    filename = name+'.jpg'
+    with open(filename, 'wb') as f:
+        f.write(imgdata)
+    
+
 def handle_advance(data):
     logger.info(f"Received advance request data {data}")
 
@@ -34,8 +46,29 @@ def handle_advance(data):
     try:
          # retrieves input as string
         input = hex2str(data["payload"])
-        # logger.info(f"Received input: '{input}'")
-        
+        input_json = json.loads(input)
+
+        #check if the image is divided in chunks or it is only one chunk
+        #Start check inputs. When we receive a chunk with final tag we turn loaded for true and call opencv. Otherwise we just add the content in the temporary file.
+        loaded = False
+
+        with open('temp.txt', "a") as text_file:
+            text_file.write(input_json["content"])
+        if(input_json["chunk"]=="final"):
+            loaded = True
+            os.rename('temp.txt', input_json["imageId"]+'.txt')
+            print("You can now load opencv")
+
+        #if loaded = true, convert string64 to img and then calls opencv. At the end, turn loaded = false.
+        if(loaded):
+            with open(input_json["imageId"]) as f:
+                lines = f.read().rstrip()
+        #Convert the string to image
+            str642img(lines, input_json["imageId"])
+        #call opencv binary passing the image has parameter.
+            img_name = input_json["imageId"]+'.jpg' 
+            subprocess.call(['sh', './lerImagem.sh '+img_name])
+
         logger.info("Adding notice")
         response = requests.post(rollup_server + "/notice", json={"payload": data["payload"]})
         logger.info(f"Received notice status {response.status_code} body {response.content}")
