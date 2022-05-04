@@ -72,6 +72,7 @@ def handle_advance(data):
             cmd = './lerImagem '+img_name
             so = os.popen(cmd).read()
             print(so)
+            loaded = False
 
         logger.info("Adding notice")
         response = requests.post(rollup_server + "/notice", json={"payload": data["payload"]})
