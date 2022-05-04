@@ -55,7 +55,7 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): img-proc.py
+$(DAPP_FS_BIN): img-proc.py lerImagem
 	@echo "Building img-proc-dapp filesystem..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \

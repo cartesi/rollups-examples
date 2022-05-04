@@ -21,7 +21,7 @@ def main():
     with open(s_input) as f:
         content = f.read().rstrip()
     
-    chunks_lenght = 105
+    chunks_lenght = 10000
     chunks = [content[i:i+chunks_lenght] for i in range(0, len(content), chunks_lenght)]
     
     send_chunks(chunks)
@@ -32,11 +32,11 @@ def main():
 
 def send_chunks(content):
     for idx, x in enumerate(content):
-        if(idx == len(content)):
-            data_json = {"part": idx+1, "content": x,"imageId": 1}
+        if((idx+1)==len(content)):
+            strinput = {"chunk": "final", "content": x,"imageId": "4"}
         else:
-            data_json = {"part": 0, "content": x,"imageId": 1}
-        inp = convert_to_hex(json.dumps(data_json))
+            strinput = {"chunk": idx+1, "content": x,"imageId": "4"}
+        inp = convert_to_hex(json.dumps(strinput))
         call_docker(inp)
 
 def convert_to_hex(s_input):

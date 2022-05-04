@@ -20,3 +20,5 @@ cartesi-machine \
     --rom-image=rom.bin \
     -i \
     -- "/bin/sh"
+
+export LD_LIBRARY_PATH="/usr/local/opencv-rvv/lib"

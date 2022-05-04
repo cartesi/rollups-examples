@@ -25,3 +25,5 @@ cartesi-machine \
     -- "cd /mnt/img-proc-dapp; \
         ROLLUP_HTTP_SERVER_URL=\"http://127.0.0.1:$ROLLUP_HTTP_SERVER_PORT\" \
         rollup-init python3 img-proc.py"
+
+export LD_LIBRARY_PATH="/usr/local/opencv-rvv/lib"

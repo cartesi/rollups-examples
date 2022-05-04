@@ -31,7 +31,7 @@ const graphqlConfig: GraphQLConfig = {
 };
 
 // define app tasks that calls rollups tasks, resolving rollups contract address and GraphQL server address
-// i.e. echo:addInput -> rollups:addInput
+// i.e. img-proc:addInput -> rollups:addInput
 appTasks(name, graphqlConfig);
 
 // read MNEMONIC from file or from env variable

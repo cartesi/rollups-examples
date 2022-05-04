@@ -1,7 +1,7 @@
 {
     "name": "img-proc",
-    "version": "0.4.2",
-    "description": "img-proc DApp",
+    "version": "0.5.1",
+    "description": "Image Process DApp",
     "main": "index.ts",
     "license": "Apache-2.0",
     "scripts": {
