@@ -1,8 +1,11 @@
+from math import prod
 import sqlite3
-from .helpers import create_response, get_address_id, get_product_id
+from .helpers import create_payload, create_response, get_address_id, get_best_market_price, get_order_by_id, get_product_id, get_user_orders, insert_address, insert_order, query_best_price_amount, query_book, query_orders, query_side, cancel_order
+from .matcher import find_matches
 
 def handle_order(sender, payload, logger):
-    con = sqlite3.connect("src/db/order-book.db")
+    con = sqlite3.connect("src/db/cartesi-dex.db")
+    con.row_factory = sqlite3.Row
     cursor = con.cursor()
 
     if payload["action"] == "get":
@@ -13,6 +16,8 @@ def handle_order(sender, payload, logger):
         response = delete_order(sender, payload.get("data"), cursor)
     elif payload["action"] == "get_book":
         response = get_book_for_asset(sender, payload.get("data"), cursor)
+    elif payload["action"] == "get_orders":
+        response = get_orders_for_asset(sender, payload.get("data"), cursor)
     elif payload["action"] == "get_bids":
         response = get_bids_for_asset(sender, payload.get("data"), cursor)
     elif payload["action"] == "get_offers":
@@ -32,18 +37,28 @@ def handle_order(sender, payload, logger):
 
     return response
 
-
 def get_book_for_asset(sender, data, cursor):
     product_id = get_product_id(data["symbol"], cursor)
     if not product_id:
         return create_response(False, "product not found", None)
 
-    data = cursor.execute(
-        "SELECT * FROM orders WHERE product_id = ?",
-        (product_id,),
-    ).fetchall()
+    book = query_book(product_id, cursor)
 
-    return create_response(True, "book for product fetched", data)
+    payload = create_payload("open_orders_for_asset", book)
+
+    return create_response(True, "book for product fetched", payload)
+
+def get_orders_for_asset(sender, data, cursor):
+    product_id = get_product_id(data["symbol"], cursor)
+    if not product_id:
+        return create_response(False, "product not found", None)
+
+    orders = query_orders(product_id, cursor)
+
+    payload = create_payload("all_orders_for_asset", orders)
+    
+
+    return create_response(True, "all orders for product fetched", payload)
 
 
 def get_bids_for_asset(sender, data, cursor):
@@ -51,12 +66,11 @@ def get_bids_for_asset(sender, data, cursor):
     if not product_id:
         return create_response(False, "product not found", None)
 
-    data = cursor.execute(
-        "SELECT * FROM orders WHERE product_id = ? AND amount > 0",
-        (product_id,),
-    ).fetchall()
+    bids = query_side(product_id, "bid", cursor)
 
-    return create_response(True, "bids for product fetched", data)
+    payload = create_payload("bids_for_asset", bids)
+
+    return create_response(True, "bids for product fetched", payload)
 
 
 def get_offers_for_asset(sender, data, cursor):
@@ -64,32 +78,27 @@ def get_offers_for_asset(sender, data, cursor):
     if not product_id:
         return create_response(False, "product not found", None)
 
-    data = cursor.execute(
-        "SELECT * FROM orders WHERE product_id = ? AND 0 > amount",
-        (product_id,),
-    ).fetchall()
+    offers = query_side(product_id, "offer", cursor)
 
-    return create_response(True, "offers for product fetched", data)
+    payload = create_payload("offers_for_asset", offers)
+
+    return create_response(True, "offers for product fetched", payload)
 
 
 def get_orders_for_user(sender, data, cursor):
-    cursor.execute("INSERT OR IGNORE INTO accounts (address) VALUES (?)", (sender,))
-
     address_id = get_address_id(sender, cursor)
     if not address_id:
         return create_response(False, "account not found", None)
 
-    data = cursor.execute(
-        "SELECT * FROM orders WHERE address_id = ?",
-        (address_id,),
-    ).fetchall()
+    user_orders = get_user_orders(address_id, cursor)
 
-    return create_response(True, "orders of user fetched", data)
+    payload = create_payload("orders_for_user", user_orders)
+
+    return create_response(True, "orders of user fetched", payload)
 
 
 def create_order(sender, data, cursor):
-    cursor.execute("INSERT OR IGNORE INTO accounts (address) VALUES (?)", (sender,))
-
+    insert_address(sender, cursor)
     address_id = get_address_id(sender, cursor)
     if not address_id:
         return create_response(False, "account not found", None)
@@ -98,20 +107,11 @@ def create_order(sender, data, cursor):
     if not product_id:
         return create_response(False, "product not found", None)
 
-    cursor.execute(
-        "INSERT INTO orders (address_id, unit_price, amount, product_id, closing_time, timestamp)\
-         VALUES (?, ?, ?, ?, ?, ?)",
-        (
-            address_id,
-            data["unit_price"],
-            data["amount"],
-            product_id,
-            data["closing_time"],
-            data["timestamp"],
-        ),
-    )
+    insert_order(data, address_id, product_id, cursor)
+    order_id = cursor.lastrowid
+    payload = find_matches(order_id, cursor)
 
-    return create_response(True, "order created", None)
+    return create_response(True, "order created", payload)
 
 
 def delete_order(sender, data, cursor):
@@ -119,12 +119,16 @@ def delete_order(sender, data, cursor):
     if not address_id:
         return create_response(False, "account not found", None)
 
-    cursor.execute(
-        "DELETE FROM orders WHERE id = ? AND address_id = ?",
-        (data["id"], address_id),
-    )
+    order = get_order_by_id(data["id"], cursor)
 
-    return create_response(True, "order deleted", None)
+    if address_id != order[1]:
+        return create_response(False, "not authorized", None)
+
+    cancel_order(data["id"], cursor)
+
+    payload = create_payload("deleted_order", order)
+
+    return create_response(True, "order deleted", payload)
 
 
 def get_highest_bid(sender, data, cursor):
@@ -132,15 +136,14 @@ def get_highest_bid(sender, data, cursor):
     if not product_id:
         return create_response(False, "product not found", None)
 
-    highest_bid = cursor.execute(
-        "SELECT MAX (unit_price) FROM orders WHERE product_id = ? AND amount > 0",
-        (product_id,),
-    ).fetchone()[0]
+    highest_bid = get_best_market_price("bid", product_id, 0, cursor) # timestamp = 0 for now
 
     if not highest_bid:
         return create_response(False, "no bids found", None)
 
-    return create_response(True, "highest bid for product fetched", highest_bid)
+    payload = create_payload("highest_bid", highest_bid)
+
+    return create_response(True, "highest bid for product fetched", payload)
 
 
 def get_lowest_offer(sender, data, cursor):
@@ -148,15 +151,14 @@ def get_lowest_offer(sender, data, cursor):
     if not product_id:
         return create_response(False, "product not found", None)
 
-    lowest_offer = cursor.execute(
-        "SELECT MIN (unit_price) FROM orders WHERE product_id = ? AND 0 > amount",
-        (product_id,),
-    ).fetchone()[0]
+    lowest_offer = get_best_market_price("offer", product_id, 0, cursor) # timestamp = 0 for now
 
     if not lowest_offer:
         return create_response(False, "no offers found", None)
 
-    return create_response(True, "lowest offer for product fetched", lowest_offer)
+    payload = create_payload("lowest_offer", lowest_offer)
+
+    return create_response(True, "lowest offer for product fetched", payload)
 
 
 def get_bid_offer_spread(sender, data, cursor):
@@ -164,22 +166,17 @@ def get_bid_offer_spread(sender, data, cursor):
     if not product_id:
         return create_response(False, "product not found", None)
 
-    highest_bid = cursor.execute(
-        "SELECT MAX (unit_price) FROM orders WHERE product_id = ? AND amount > 0",
-        (product_id,),
-    ).fetchone()[0]
-
-    lowest_offer = cursor.execute(
-        "SELECT MIN (unit_price) FROM orders WHERE product_id = ? AND 0 > amount",
-        (product_id,),
-    ).fetchone()[0]
+    highest_bid = get_best_market_price("bid", product_id, 0, cursor) # timestamp = 0 for now
+    lowest_offer = get_best_market_price("offer", product_id, 0, cursor) # timestamp = 0 for now
 
     if None in (highest_bid, lowest_offer):
         return create_response(False, "no bids or offers found", None)
 
     bid_offer_spread = lowest_offer - highest_bid
 
-    return create_response(True, "bid-offer spread for product fetched", bid_offer_spread)
+    payload = create_payload("bid_offer_spread", bid_offer_spread)
+
+    return create_response(True, "bid-offer spread for product fetched", payload)
 
 
 def get_market(sender, data, cursor):
@@ -187,34 +184,21 @@ def get_market(sender, data, cursor):
     if not product_id:
         return create_response(False, "product not found", None)
 
-    highest_bid = cursor.execute(
-        "SELECT MAX (unit_price) FROM orders WHERE product_id = ? AND amount > 0",
-        (product_id,),
-    ).fetchone()[0]
+    highest_bid = get_best_market_price("bid", product_id, 0, cursor) # timestamp = 0 for now
+    lowest_offer = get_best_market_price("offer", product_id, 0, cursor) # timestamp = 0 for now
 
-    lowest_offer = cursor.execute(
-        "SELECT MIN (unit_price) FROM orders WHERE product_id = ? AND 0 > amount",
-        (product_id,),
-    ).fetchone()[0]
 
     if None in (highest_bid, lowest_offer):
         return create_response(False, "no bids or offers found", None)
 
-    bids_at_highest = cursor.execute(
-        "SELECT SUM (amount) FROM orders WHERE unit_price = ? AND amount > 0",
-        (highest_bid,),
-    ).fetchone()[0]
-
-    offers_at_lowest = cursor.execute(
-        "SELECT SUM (amount) FROM orders WHERE unit_price = ? AND 0 > amount",
-        (lowest_offer,),
-    ).fetchone()[0] * (-1)
+    bids_at_highest = query_best_price_amount("bid", product_id, highest_bid, 0, cursor) # timestamp = 0 for now
+    offers_at_lowest = query_best_price_amount("offer", product_id, lowest_offer, 0, cursor) # timestamp = 0 for now
 
     bid_offer_spread = lowest_offer - highest_bid
 
     mid_price = (lowest_offer + highest_bid) / 2
 
-    data = {
+    market_data = {
         "highest_bid": highest_bid,
         "bids_at_highest": bids_at_highest,
         "lowest_offer": lowest_offer,
@@ -223,4 +207,6 @@ def get_market(sender, data, cursor):
         "mid_price": mid_price,
     }
 
-    return create_response(True, "market data for product fetched", data)
+    payload = create_payload("market_data", market_data)
+
+    return create_response(True, "market data for product fetched", payload)

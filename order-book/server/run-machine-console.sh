@@ -14,7 +14,7 @@
 cartesi-machine \
     --ram-length=128Mi \
     --rollup \
-    --flash-drive=label:order-book-dapp,filename:order-book-dapp.ext2 \
+    --flash-drive=label:cartesi-dex-dapp,filename:cartesi-dex-dapp.ext2 \
     --flash-drive=label:root,filename:rootfs.ext2 \
     --ram-image=linux-5.5.19-ctsi-3.bin \
     --rom-image=rom.bin \

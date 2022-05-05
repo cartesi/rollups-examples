@@ -1,9 +1,9 @@
 import sqlite3
-from .helpers import create_response
-
+from .helpers import create_payload, create_response, get_product_by_id, query_products, insert_product
 
 def handle_product(sender, payload, logger):
-    con = sqlite3.connect("src/db/order-book.db")
+    con = sqlite3.connect("src/db/cartesi-dex.db")
+    con.row_factory = sqlite3.Row
     cursor = con.cursor()
 
     if payload["action"] == "get":
@@ -19,16 +19,16 @@ def handle_product(sender, payload, logger):
 
 
 def get_products(sender, data, cursor):
-    data = cursor.execute("SELECT * FROM products").fetchall()
+    products = query_products(cursor)
+    payload = create_payload("products", products)
 
-    return create_response(True, "products fetched", data)
+    return create_response(True, "products fetched", payload)
 
 
 def add_product(sender, data, cursor):
-    cursor.execute(
-        "INSERT OR IGNORE INTO products (name, symbol)\
-    VALUES (?, ?)",
-        (data["name"], data["symbol"]),
-    )
+    insert_product(data["name"], data["symbol"], cursor)
+    product_id = cursor.lastrowid
+    product = get_product_by_id(product_id, cursor)
+    payload = create_payload("new_product", product)
 
-    return create_response(True, "product added", None)
+    return create_response(True, "product added", payload)

@@ -1,7 +1,7 @@
 {
-    "name": "order-book",
+    "name": "cartesi-dex",
     "version": "0.4.2",
-    "description": "Order Book DApp",
+    "description": "cartesi-dex DApp",
     "main": "index.ts",
     "license": "Apache-2.0",
     "scripts": {

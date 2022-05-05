@@ -30,7 +30,7 @@ const graphqlConfig: GraphQLConfig = {
 }
 
 // define app tasks that calls rollups tasks, resolving rollups contract address and GraphQL server address
-// i.e. order-book:addInput -> rollups:addInput
+// i.e. cartesi-dex:addInput -> rollups:addInput
 appTasks(name, graphqlConfig);
 
 // read MNEMONIC from file or from env variable

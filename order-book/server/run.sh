@@ -11,23 +11,23 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-# Start the Cartesi HTTP-Dispatcher and the order-book-dapp.
+# Start the Cartesi HTTP-Dispatcher and the cartesi-dex-dapp.
 # This script must run inside the cartesi machine
 
 DAPP_PORT=5003
 HTTP_DISPATCHER_PORT=5004
 
-# Change dir to order-book-dapp root
-cd /mnt/order-book-dapp
+# Change dir to cartesi-dex-dapp root
+cd /mnt/cartesi-dex-dapp
 
 (cd src/db; python3 ./seed.py)
 
-# Start order-book dapp
-echo -n "Starting order-book-dapp: "
+# Start cartesi-dex dapp
+echo -n "Starting cartesi-dex-dapp: "
 HTTP_DISPATCHER_URL="http://127.0.0.1:$HTTP_DISPATCHER_PORT" \
-gunicorn --preload --workers 1 --bind 127.0.0.1:$DAPP_PORT order-book:app &
+gunicorn --preload --workers 1 --bind 127.0.0.1:$DAPP_PORT cartesi-dex:app &
 
-# Wait for the order-book dapp to start up
+# Wait for the cartesi-dex dapp to start up
 RETRY=0
 while ! netstat -ntl 2&>1 | grep $DAPP_PORT > /dev/null
 do
@@ -36,7 +36,7 @@ do
     RETRY=$(echo $RETRY + 1 | bc)
     if [ "$RETRY" == "100" ]
     then
-        echo "order-book dapp timed out"
+        echo "cartesi-dex dapp timed out"
         return 1
     fi
 done
