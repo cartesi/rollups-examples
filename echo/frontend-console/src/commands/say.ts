@@ -13,7 +13,7 @@ import { ContractReceipt, ethers } from "ethers";
 import prompts, { PromptObject } from "prompts";
 import { Argv } from "yargs";
 import { NoticeKeys } from "../../generated-src/graphql";
-import { InputAddedEvent } from "../../generated-src/rollups/Input";
+import { InputAddedEvent } from "../../generated-src/rollups/InputFacet";
 import { connect } from "../connect";
 import { networks } from "../networks";
 
@@ -76,8 +76,8 @@ export const findNoticeKeys = (receipt: ContractReceipt): NoticeKeys => {
 
     const inputAdded = event as InputAddedEvent;
     return {
-        epoch_index: inputAdded.args._epochNumber.toString(),
-        // XXX: input_index: event.args._inputIndex.toString(),
+        epoch_index: inputAdded.args.epochNumber.toString(),
+        input_index: inputAdded.args.inputIndex.toString(),
     };
 };
 
@@ -115,7 +115,7 @@ export const handler = async (args: Args) => {
 
     // connect to provider, use deployment address based on returned chain id of provider
     console.log(`connecting to ${network}`);
-    const { chain, inputContract } = await connect(network, mnemonic);
+    const { chain, inputContract } = await connect(network, "CartesiDApp", mnemonic);
 
     // use message from command line option, or from user prompt
     console.log(`saying "${message}"`);

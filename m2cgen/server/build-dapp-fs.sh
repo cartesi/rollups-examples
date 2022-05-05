@@ -12,11 +12,12 @@
 # specific language governing permissions and limitations under the License.
 
 DAPP_FS=/opt/cartesi/m2cgen-dapp-fs/m2cgen-dapp
+DAPP_FS_TAR=/opt/cartesi/m2cgen-dapp-fs/m2cgen-dapp.tar
 DAPP_FS_BIN=/opt/cartesi/m2cgen-dapp-fs/m2cgen-dapp.ext2
 
 mkdir -p $DAPP_FS
 cp ./m2cgen.py $DAPP_FS
 cp ./model.py $DAPP_FS
-cp ./run.sh $DAPP_FS
-genext2fs -f -i 512 -b 1024 -d $DAPP_FS $DAPP_FS_BIN
+(cd $DAPP_FS; tar --sort=name --mtime="2022-01-01" --owner=0 --group=0 --numeric-owner -cf $DAPP_FS_TAR m2cgen.py model.py)
+genext2fs -f -i 512 -b 1024 -a $DAPP_FS_TAR $DAPP_FS_BIN
 truncate -s %4096 $DAPP_FS_BIN

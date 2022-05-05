@@ -91,7 +91,7 @@ To retrieve notices interpreting the payload as a UTF-8 string, you can use the 
 
 ```shell
 $ npx hardhat --network localhost echo:getNotices --epoch 0 --payload string
-{"session_id":"default_rollups_id","epoch_index":"0","input_index":"1","notice_index":"0","payload":"Hello there!"}
+{"session_id":"default_rollups_id","epoch_index":"0","input_index":"1","notice_index":"0","payload":"cartesi"}
 ```
 
 Finally, note that you can check the available options for all Hardhat tasks using the `--help` switch:
@@ -127,21 +127,23 @@ $ cd echo/server/
 $ python3 -m venv .env
 $ . .env/bin/activate
 $ pip install -r requirements.txt
-$ HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --reload --workers 1 --bind 0.0.0.0:5003 echo:app
+$ ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 echo.py
 ```
 
-This will run the echo server on port `5003` and send the corresponding notices to port `5004`. The server will also automatically reload if there is a change in the source code, enabling fast development iterations.
+This will run the echo server and send the corresponding notices to port `5004`.
 
-The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints. In that case, it may be interesting to add the parameter `--timeout 0` to gunicorn, to avoid having it time out when the debugger stops at a breakpoint.
+The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
+You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
+
+```shell
+$ ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 echo.py
+```
 
 After the server successfully starts, it should print an output like the following:
 
 ```
-[2022-01-21 12:38:23,971] INFO in echo: HTTP dispatcher url is http://127.0.0.1:5004
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Starting gunicorn 19.9.0
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Listening at: http://0.0.0.0:5003 (79032)
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Using worker: sync
-[2022-01-21 12:38:23 -0500] [79035] [INFO] Booting worker with pid: 79035
+INFO:__main__:HTTP rollup_server url is http://127.0.0.1:5004
+INFO:__main__:Sending finish
 ```
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
@@ -149,11 +151,11 @@ After that, you can interact with the application normally [as explained above](
 When you add an input, you should see it being processed by the echo server as follows:
 
 ```shell
-[2022-01-21 15:58:39,555] INFO in echo: Received advance request body {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 11, 'time_stamp': 1642791522}, 'payload': '0x636172746573690d0a'}
-[2022-01-21 15:58:39,556] INFO in echo: Adding notice
-[2022-01-21 15:58:39,650] INFO in echo: Received notice status 201 body b'{"index":0}'
-[2022-01-21 15:58:39,651] INFO in echo: Finishing
-[2022-01-21 15:58:39,666] INFO in echo: Received finish status 202
+INFO:__main__:Received finish status 200
+INFO:__main__:Received advance request data {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 0, 'timestamp': 0}, 'payload': '0x63617274657369'}
+INFO:__main__:Adding notice
+INFO:__main__:Received notice status 200 body b'{"index":0}'
+INFO:__main__:Sending finish
 ```
 
 Finally, to stop the containers, removing any associated volumes, execute:

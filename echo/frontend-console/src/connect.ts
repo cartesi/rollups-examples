@@ -12,24 +12,22 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { ethers } from "ethers";
 import {
-    InputImpl,
-    InputImpl__factory,
-    OutputImpl,
-    OutputImpl__factory,
-    RollupsImpl,
-    RollupsImpl__factory,
+    InputFacet,
+    InputFacet__factory,
+    OutputFacet,
+    OutputFacet__factory,
 } from "../generated-src/rollups";
 import { Chain, networks } from "./networks";
 
 interface Contracts {
     chain: Chain;
-    rollupsContract: RollupsImpl;
-    inputContract: InputImpl;
-    outputContract: OutputImpl;
+    inputContract: InputFacet;
+    outputContract: OutputFacet;
 }
 
 export const connect = async (
     chainName: string,
+    contractName: string = "CartesiDApp",
     mnemonic?: string
 ): Promise<Contracts> => {
     const chain = networks.find((n) => n.name === chainName);
@@ -47,9 +45,10 @@ export const connect = async (
 
     // load contract address
     const deploy = await import(chain.abi);
-    const address = deploy.contracts?.RollupsImpl?.address;
-    if (!address) {
-        throw new Error(`contract RollupsImpl not found at ${chain.abi}`);
+    const contract = deploy.contracts[contractName];
+    const address = contract?.address;
+    if (!contract || !address) {
+        throw new Error(`contract ${contractName} not found at ${chain.abi}`);
     }
 
     // create signer to be used to send transactions
@@ -58,18 +57,10 @@ export const connect = async (
         : new ethers.VoidSigner(address).connect(provider);
 
     // connect to contracts
-    const rollupsContract = RollupsImpl__factory.connect(address, signer);
-    const inputContract = InputImpl__factory.connect(
-        await rollupsContract.getInputAddress(),
-        signer
-    );
-    const outputContract = OutputImpl__factory.connect(
-        await rollupsContract.getOutputAddress(),
-        signer
-    );
+    const inputContract = InputFacet__factory.connect(address, signer);
+    const outputContract = OutputFacet__factory.connect(address, signer);
     return {
         chain,
-        rollupsContract,
         inputContract,
         outputContract,
     };

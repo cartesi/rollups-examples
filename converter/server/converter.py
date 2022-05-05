@@ -17,13 +17,12 @@ import random
 from os import environ
 
 import requests
-from flask import Flask, request
 
-app = Flask(__name__)
-app.logger.setLevel(logging.INFO)
+logging.basicConfig(level="INFO")
+logger = logging.getLogger(__name__)
 
-dispatcher_url = environ["HTTP_DISPATCHER_URL"]
-app.logger.info(f"HTTP dispatcher url is {dispatcher_url}")
+rollup_server = environ["ROLLUP_HTTP_SERVER_URL"]
+logger.info(f"HTTP rollup_server url is {rollup_server}")
 
 
 def hex2str(hex):
@@ -71,8 +70,7 @@ def random_transformation(text):
     )
 
 
-@app.route("/advance", methods=["POST"])
-def advance():
+def handle_advance(data):
     # defines supported transformations
     transformations = {
         "upper": str.upper,
@@ -83,13 +81,12 @@ def advance():
         "random": random_transformation,
     }
 
-    body = request.get_json()
-    app.logger.info(f"Received advance request body {body}")
+    logger.info(f"Received advance request data {data}")
 
     status = "accept"
     try:
-        input = json.loads(hex2str(body["payload"]))
-        app.logger.info(f"Received input: {input}")
+        input = json.loads(hex2str(data["payload"]))
+        logger.info(f"Received input: {input}")
 
         # collects conversion parameters
         transform = input["transform"]
@@ -99,23 +96,40 @@ def advance():
         output = transformations[transform](message)
 
         # emits output notice with transformed message
-        app.logger.info(f"Adding notice with payload: '{output}'")
-        requests.post(dispatcher_url + "/notice", json={"payload": str2hex(output)})
+        logger.info(f"Adding notice with payload: '{output}'")
+        requests.post(rollup_server + "/notice", json={"payload": str2hex(output)})
 
     except Exception as e:
         status = "reject"
-        msg = f"Error processing body {body}\n{traceback.format_exc()}"
-        app.logger.error(msg)
-        response = requests.post(dispatcher_url + "/report", json={"payload": str2hex(msg)})
-        app.logger.info(f"Received report status {response.status_code} body {response.content}")
+        msg = f"Error processing data {data}\n{traceback.format_exc()}"
+        logger.error(msg)
+        response = requests.post(rollup_server + "/report", json={"payload": str2hex(msg)})
+        logger.info(f"Received report status {response.status_code} body {response.content}")
 
-    app.logger.info("Finishing")
-    response = requests.post(dispatcher_url + "/finish", json={"status": status})
-    app.logger.info(f"Received finish status {response.status_code}")
-    return "", 202
+    return status
 
 
-@app.route("/inspect/<payload>", methods=["GET"])
-def inspect(payload):
-    app.logger.info(f"Received inspect request payload {payload}")
-    return {"reports": [{"payload": payload}]}, 200
+def handle_inspect(data):
+    logger.info(f"Received inspect request data {data}")
+    logger.info("Adding report")
+    response = requests.post(rollup_server + "/report", json={"payload": data["payload"]})
+    logger.info(f"Received report status {response.status_code}")
+    return "accept"
+
+
+handlers = {
+    "advance_state": handle_advance,
+    "inspect_state": handle_inspect,
+}
+
+finish = {"status": "accept"}
+while True:
+    logger.info("Sending finish")
+    response = requests.post(rollup_server + "/finish", json=finish)
+    logger.info(f"Received finish status {response.status_code}")
+    if response.status_code == 202:
+        logger.info("No pending rollup request, trying again")
+    else:
+        rollup_request = response.json()
+        handler = handlers[rollup_request["request_type"]]
+        finish["status"] = handler(rollup_request["data"])
