@@ -122,28 +122,28 @@ The first step is to run the environment in host mode using the following comman
 $ docker-compose -f docker-compose.yml -f docker-compose-host.yml up --build
 ```
 
-The next step is to run the m2cgen server in your machine. The application is written in Python, so you need to have `python3` installed.
+The next step is to run the m2cgen backend in your machine. The application is written in Python, so you need to have `python3` installed.
 
-In order to start the m2cgen server, run the following commands in a dedicated terminal:
+In order to start the m2cgen backend, run the following commands in a dedicated terminal:
 
 ```shell
-$ cd m2cgen/server/
+$ cd m2cgen/backend/
 $ python3 -m venv .env
 $ . .env/bin/activate
 $ pip install -r requirements.txt
 $ ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 m2cgen.py
 ```
 
-This will run the m2cgen server and send the corresponding notices to port `5004`.
+This will run the m2cgen backend and send the corresponding notices to port `5004`.
 
-The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
+The final command, which effectively starts the backend, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
 You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
 
 ```shell
 $ ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 m2cgen.py
 ```
 
-After the server successfully starts, it should print an output like the following:
+After the backend successfully starts, it should print an output like the following:
 
 ```
 INFO:__main__:HTTP rollup_server url is http://127.0.0.1:5004
@@ -152,7 +152,7 @@ INFO:__main__:Sending finish
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
 
-When you add an input, you should see it being processed by the m2cgen server as follows:
+When you add an input, you should see it being processed by the m2cgen backend as follows:
 
 ```log
 INFO:__main__:Received finish status 200
@@ -174,7 +174,7 @@ $ docker-compose -f docker-compose.yml -f docker-compose-host.yml down -v
 
 This DApp was implemented in a rather generic way, and as such it is possible to easily change the target dataset as well as the predictor algorithm.
 
-To change those, open the file `m2cgen/server/model/build_model.py` and change the following variables defined in the beginning of the script:
+To change those, open the file `m2cgen/backend/model/build_model.py` and change the following variables defined in the beginning of the script:
 
 - `model`: defines the scikit-learn predictor algorithm to use. While it currently uses `sklearn.linear_model.LogisticRegression`, many [other possibilities](https://scikit-learn.org/stable/modules/classes.html) are available, from several types of linear regressions to solutions such as support vector machines (SVMs).
 - `train_csv`: a URL or file path to a CSV file containing the dataset. It should contain a first row with the feature names, followed by the data.

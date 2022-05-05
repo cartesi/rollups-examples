@@ -61,7 +61,7 @@ done
 find ${dapp_name} -name '*-e' -exec rm {} \;
 
 echo "Creating template back-end script..."
-mv ${dapp_name}/server/template.py ${dapp_name}/server/${1}.py
+mv ${dapp_name}/backend/template.py ${dapp_name}/backend/${1}.py
 
 echo "Done"
-echo "Proceed with adapting or replacing the back-end source code of the DApp at ${dapp_name}/server/${dapp_name}.py"
+echo "Proceed with adapting or replacing the back-end source code of the DApp at ${dapp_name}/backend/${dapp_name}.py"

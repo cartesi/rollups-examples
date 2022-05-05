@@ -132,7 +132,7 @@ assert_epoch_advance() {
 }
 
 assert_local_server_ready() {
-    print -n "Waiting for local server to be ready"
+    print -n "Waiting for local backend to be ready"
 
     ready_str="Received finish status 202"
     log=(cat echo.log)
@@ -187,7 +187,7 @@ test_host_mode() {
     wait_containers_ready 'host'
 
     print 'Starting backend'
-    cd server
+    cd backend
     python3 -m venv .env
     . .env/bin/activate
     pip install -r requirements.txt
@@ -214,7 +214,7 @@ test_host_mode() {
 
     print 'Taking down backend'
     kill $ECHO_PID
-    rm server/echo.log
+    rm backend/echo.log
 
     print 'Taking down docker environment'
     docker-compose down -v

@@ -118,16 +118,16 @@ The first step is to run the environment in host mode using the following comman
 $ docker-compose -f docker-compose.yml -f docker-compose-host.yml up --build
 ```
 
-The next step is to run the echo-cpp server in your machine. The application is written in C++, so you need to have `g++` installed in order to recompile it.
+The next step is to run the echo-cpp backend in your machine. The application is written in C++, so you need to have `g++` installed in order to recompile it.
 
-In order to start the echo-cpp server in host mode, run the following commands in a dedicated terminal:
+In order to start the echo-cpp backend in host mode, run the following commands in a dedicated terminal:
 
 ```shell
-$ cd echo-cpp/server/
+$ cd echo-cpp/backend/
 $ ./run-host.sh
 ```
 
-This will run the echo-cpp server and send the corresponding notices to port `5004`.
+This will run the echo-cpp backend and send the corresponding notices to port `5004`.
 
 You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
 
@@ -135,7 +135,7 @@ You can also use a tool like [entr](https://eradman.com/entrproject/) to restart
 ls *.cpp | entr -r ./run-host.sh
 ```
 
-After the server successfully starts, it should print an output like the following:
+After the backend successfully starts, it should print an output like the following:
 
 ```log
 Starting echo-dapp: Sending finish
@@ -143,7 +143,7 @@ Starting echo-dapp: Sending finish
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
 
-When you add an input, you should see it being processed by the echo-cpp server as follows:
+When you add an input, you should see it being processed by the echo-cpp backend as follows:
 
 ```log
 Received finish status 200

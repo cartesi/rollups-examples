@@ -15,15 +15,15 @@ MACHINE_DIR := machine
 .PHONY: clean console
 
 $(MACHINE_DIR):
-	@make -C server
-	@mv server/machine $@
+	@make -C backend
+	@mv backend/machine $@
 
 console:
-	@make -C server console
+	@make -C backend console
 
-echo-server-host:
-	@make -C server echo-server-host
+echo-backend-host:
+	@make -C backend echo-backend-host
 
 clean:
-	@make -C server clean
+	@make -C backend clean
 	@rm -rf $(MACHINE_DIR)

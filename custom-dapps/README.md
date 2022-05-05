@@ -27,7 +27,7 @@ For instructions about how to setup the environment and run the original DApp, p
 
 ## Modifying the DApp logic
 
-The back-end logic may be found at `$DAPP_NAME/server/$DAPP_NAME.py`.
+The back-end logic may be found at `$DAPP_NAME/backend/$DAPP_NAME.py`.
 
 The script comes with some reference code, which may be helpful during development.
 It may be replaced or extended according to the use case needs.

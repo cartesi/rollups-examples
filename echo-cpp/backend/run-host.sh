@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Copyright 2022 Cartesi Pte. Ltd.
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -11,13 +11,15 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-DAPP_FS=/opt/cartesi/echo-dapp-fs/echo-dapp
-DAPP_FS_TAR=/opt/cartesi/echo-dapp-fs/echo-dapp.tar
-DAPP_FS_BIN=/opt/cartesi/echo-dapp-fs/echo-dapp.ext2
+# Start the Cartesi echo-dapp in host mode
 
-mkdir -p $DAPP_FS
-cp echo-server $DAPP_FS
-(cd $DAPP_FS; tar --sort=name --mtime="2022-01-01" --owner=0 --group=0 --numeric-owner -cf $DAPP_FS_TAR echo-server)
-genext2fs -f -i 512 -b 4096 -a $DAPP_FS_TAR $DAPP_FS_BIN
-truncate -s %4096 $DAPP_FS_BIN
+ROLLUP_HTTP_SERVER_PORT=5004
 
+# Rebuild echo dapp
+echo -n "Rebuilding echo-dapp: "
+make echo-backend-host
+
+# Start echo dapp
+echo -n "Starting echo-dapp: "
+ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:$ROLLUP_HTTP_SERVER_PORT" \
+./echo-backend-host

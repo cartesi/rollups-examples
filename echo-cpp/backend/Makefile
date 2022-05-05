@@ -15,19 +15,21 @@ DAPP_SERVER_MANAGER_IMG := cartesi/server-manager:$(DAPP_SERVER_MANAGER_TAG)
 TOOLCHAIN_TAG := 0.9.0
 TOOLCHAIN_IMG := cartesi/toolchain:$(TOOLCHAIN_TAG)
 
-CONTAINER_NAME := cartesi-template-dapp
-CONTAINER_BASE := /opt/cartesi/template
-CONTAINER_DAPP_FS_BIN := /opt/cartesi/template-dapp-fs/template-dapp.ext2
-CONTAINER_MACHINE_DIR := /opt/cartesi/template-machine
+CONTAINER_NAME := cartesi-echo-dapp
+CONTAINER_BASE := /opt/cartesi/echo
+CONTAINER_DAPP_FS_BIN := /opt/cartesi/echo-dapp-fs/echo-dapp.ext2
+CONTAINER_MACHINE_DIR := /opt/cartesi/echo-machine
 
-DAPP_FS_BIN := template-dapp.ext2
+DAPP_FS_BIN := echo-dapp.ext2
 BINARIES := rootfs.ext2 linux-5.5.19-ctsi-5.bin rom.bin
 MACHINE_DIR := machine
+CXX  := riscv64-cartesi-linux-gnu-g++
+CXX_HOST := g++
 
-.PHONY: console clean
+.PHONY: console clean 3rdparty
 
 $(MACHINE_DIR): $(DAPP_FS_BIN) $(BINARIES)
-	@echo "Building cartesi-machine template-dapp instance..."
+	@echo "Building cartesi-machine echo-backend instance..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi
@@ -45,7 +47,7 @@ $(MACHINE_DIR): $(DAPP_FS_BIN) $(BINARIES)
 console: $(DAPP_FS_BIN) $(BINARIES)
 	@echo "Running cartesi-machine console..."
 	@docker run --hostname server-manager-env -it --rm \
-		-v `pwd`:$(CONTAINER_BASE) \
+		-v `pwd`:$(CONTAINER_BASE) -p 5003:5003 \
 		-w $(CONTAINER_BASE) \
 		--platform linux/amd64 \
 		$(DAPP_SERVER_MANAGER_IMG) $(CONTAINER_BASE)/run-machine-console.sh
@@ -55,8 +57,8 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): template.py
-	@echo "Building template-dapp filesystem..."
+$(DAPP_FS_BIN): echo-backend
+	@echo "Building echo-dapp filesystem..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi
@@ -71,5 +73,18 @@ $(DAPP_FS_BIN): template.py
 	@docker rm -f $(CONTAINER_NAME) > /dev/null
 	@echo "$(DAPP_FS_BIN): OK"
 
+echo-backend: echo-backend.cpp
+	make -C 3rdparty
+	@docker run --rm  \
+    -v `pwd`:/echo-backend  \
+    -w /echo-backend \
+    -e HOSTNAME=`hostname` \
+    $(TOOLCHAIN_IMG) $(CXX) -pthread -std=c++11 -o $@  $^
+
+echo-backend-host: echo-backend.cpp
+	make -C 3rdparty
+	$(CXX_HOST) -pthread -std=c++11 -o $@  $^
+
 clean:
-	@rm -rf $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR)
+	@rm -rf echo-backend echo-backend-host $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR)
+	make -C 3rdparty clean

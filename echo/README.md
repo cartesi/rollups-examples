@@ -118,28 +118,28 @@ The first step is to run the environment in host mode using the following comman
 $ docker-compose -f docker-compose.yml -f docker-compose-host.yml up --build
 ```
 
-The next step is to run the echo server in your machine. The application is written in Python, so you need to have `python3` installed.
+The next step is to run the echo backend in your machine. The application is written in Python, so you need to have `python3` installed.
 
-In order to start the echo server, run the following commands in a dedicated terminal:
+In order to start the echo backend, run the following commands in a dedicated terminal:
 
 ```shell
-$ cd echo/server/
+$ cd echo/backend/
 $ python3 -m venv .env
 $ . .env/bin/activate
 $ pip install -r requirements.txt
 $ ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 echo.py
 ```
 
-This will run the echo server and send the corresponding notices to port `5004`.
+This will run the echo backend and send the corresponding notices to port `5004`.
 
-The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
+The final command, which effectively starts the backend, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
 You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
 
 ```shell
 $ ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 echo.py
 ```
 
-After the server successfully starts, it should print an output like the following:
+After the backend successfully starts, it should print an output like the following:
 
 ```
 INFO:__main__:HTTP rollup_server url is http://127.0.0.1:5004
@@ -148,7 +148,7 @@ INFO:__main__:Sending finish
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
 
-When you add an input, you should see it being processed by the echo server as follows:
+When you add an input, you should see it being processed by the echo backend as follows:
 
 ```shell
 INFO:__main__:Received finish status 200

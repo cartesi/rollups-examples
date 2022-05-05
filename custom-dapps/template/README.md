@@ -120,28 +120,28 @@ The first step is to run the environment in host mode using the following comman
 $ docker-compose -f docker-compose.yml -f docker-compose-host.yml up --build
 ```
 
-The next step is to run the template server in your machine. The application is written in Python, so you need to have `python3` installed.
+The next step is to run the template backend in your machine. The application is written in Python, so you need to have `python3` installed.
 
-In order to start the template server, run the following commands in a dedicated terminal:
+In order to start the template backend, run the following commands in a dedicated terminal:
 
 ```shell
-$ cd template/server/
+$ cd template/backend/
 $ python3 -m venv .env
 $ . .env/bin/activate
 $ pip install -r requirements.txt
 $ ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 template.py
 ```
 
-This will run the template server and send the corresponding notices to port `5004`.
+This will run the template backend and send the corresponding notices to port `5004`.
 
-The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
+The final command, which effectively starts the backend, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
 You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
 
 ```shell
 $ ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 template.py
 ```
 
-After the server successfully starts, it should print an output like the following:
+After the backend successfully starts, it should print an output like the following:
 
 ```
 INFO:__main__:HTTP rollup_server url is http://127.0.0.1:5004
@@ -150,7 +150,7 @@ INFO:__main__:Sending finish
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
 
-When you add an input, you should see it being processed by the template server as follows:
+When you add an input, you should see it being processed by the template backend as follows:
 
 ```shell
 INFO:__main__:Received finish status 200

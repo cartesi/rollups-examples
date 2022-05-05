@@ -11,12 +11,13 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-DAPP_FS=/opt/cartesi/template-dapp-fs/template-dapp
-DAPP_FS_TAR=/opt/cartesi/template-dapp-fs/template-dapp.tar
-DAPP_FS_BIN=/opt/cartesi/template-dapp-fs/template-dapp.ext2
+DAPP_FS=/opt/cartesi/echo-dapp-fs/echo-dapp
+DAPP_FS_TAR=/opt/cartesi/echo-dapp-fs/echo-dapp.tar
+DAPP_FS_BIN=/opt/cartesi/echo-dapp-fs/echo-dapp.ext2
 
 mkdir -p $DAPP_FS
-cp ./template.py $DAPP_FS
-(cd $DAPP_FS; tar --sort=name --mtime="2022-01-01" --owner=0 --group=0 --numeric-owner -cf $DAPP_FS_TAR template.py)
-genext2fs -f -i 512 -b 16 -a $DAPP_FS_TAR $DAPP_FS_BIN
+cp echo-backend $DAPP_FS
+(cd $DAPP_FS; tar --sort=name --mtime="2022-01-01" --owner=0 --group=0 --numeric-owner -cf $DAPP_FS_TAR echo-backend)
+genext2fs -f -i 512 -b 4096 -a $DAPP_FS_TAR $DAPP_FS_BIN
 truncate -s %4096 $DAPP_FS_BIN
+

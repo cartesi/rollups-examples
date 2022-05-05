@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Copyright 2022 Cartesi Pte. Ltd.
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -11,15 +11,17 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-# Start the Cartesi echo-dapp in host mode
-
+MACHINE_DIR=/opt/cartesi/echo-machine
 ROLLUP_HTTP_SERVER_PORT=5004
 
-# Rebuild echo dapp
-echo -n "Rebuilding echo-dapp: "
-make echo-server-host
-
-# Start echo dapp
-echo -n "Starting echo-dapp: "
-ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:$ROLLUP_HTTP_SERVER_PORT" \
-./echo-server-host
+cartesi-machine \
+    --ram-length=128Mi \
+    --rollup \
+    --flash-drive=label:echo-dapp,filename:echo-dapp.ext2 \
+    --flash-drive=label:root,filename:rootfs.ext2 \
+    --ram-image=linux-5.5.19-ctsi-5.bin \
+    --rom-image=rom.bin \
+    --store=$MACHINE_DIR \
+    -- "cd /mnt/echo-dapp; \
+        ROLLUP_HTTP_SERVER_URL=\"http://127.0.0.1:$ROLLUP_HTTP_SERVER_PORT\" \
+        rollup-init ./echo-backend"

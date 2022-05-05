@@ -8,11 +8,11 @@
             "env": {
                 "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
             },
-            "cwd": "${workspaceFolder}/echo/server",
+            "cwd": "${workspaceFolder}/echo/backend",
             "name": "Echo DApp",
             "type": "python",
             "request": "launch",
-            "python": "${workspaceFolder}/echo/server/.env/bin/python3",
+            "python": "${workspaceFolder}/echo/backend/.env/bin/python3",
             "program": "echo.py",
             "gevent": false,
         },
@@ -20,11 +20,11 @@
             "env": {
                 "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
             },
-            "cwd": "${workspaceFolder}/converter/server",
+            "cwd": "${workspaceFolder}/converter/backend",
             "name": "Converter DApp",
             "type": "python",
             "request": "launch",
-            "python": "${workspaceFolder}/converter/server/.env/bin/python3",
+            "python": "${workspaceFolder}/converter/backend/.env/bin/python3",
             "program": "converter.py",
             "gevent": false,
         },
@@ -32,11 +32,11 @@
             "env": {
                 "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
             },
-            "cwd": "${workspaceFolder}/sqlite/server",
+            "cwd": "${workspaceFolder}/sqlite/backend",
             "name": "SQLite DApp",
             "type": "python",
             "request": "launch",
-            "python": "${workspaceFolder}/sqlite/server/.env/bin/python3",
+            "python": "${workspaceFolder}/sqlite/backend/.env/bin/python3",
             "program": "sqlite.py",
             "gevent": false,
         },
@@ -44,11 +44,11 @@
             "env": {
                 "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
             },
-            "cwd": "${workspaceFolder}/knn/server",
+            "cwd": "${workspaceFolder}/knn/backend",
             "name": "k-NN DApp",
             "type": "python",
             "request": "launch",
-            "python": "${workspaceFolder}/knn/server/.env/bin/python3",
+            "python": "${workspaceFolder}/knn/backend/.env/bin/python3",
             "program": "knn.py",
             "gevent": false,
         },
@@ -56,11 +56,11 @@
             "env": {
                 "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
             },
-            "cwd": "${workspaceFolder}/m2cgen/server",
+            "cwd": "${workspaceFolder}/m2cgen/backend",
             "name": "m2cgen DApp",
             "type": "python",
             "request": "launch",
-            "python": "${workspaceFolder}/m2cgen/server/.env/bin/python3",
+            "python": "${workspaceFolder}/m2cgen/backend/.env/bin/python3",
             "program": "m2cgen.py",
             "gevent": false,
         }
