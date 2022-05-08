@@ -21,7 +21,7 @@ import "hardhat-deploy";
 import "@cartesi/hardhat-rollups";
 import { appTasks, GraphQLConfig } from "@cartesi/hardhat-rollups";
 
-const dapps = ["calculator", "converter", "echo", "echo-cpp", "knn", "m2cgen", "sqlite"];
+const dapps = ["calculator", "converter", "echo", "echo-cpp", "echo-rust", "knn", "m2cgen", "sqlite"];
 dapps.forEach((name) => {
     // GraphQL endpoint configuration per network
     const graphqlConfig: GraphQLConfig = {
