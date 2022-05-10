@@ -11,12 +11,13 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-DAPP_FS=/opt/cartesi/cartesi-dex-dapp-fs/cartesi-dex-dapp
-DAPP_FS_BIN=/opt/cartesi/cartesi-dex-dapp-fs/cartesi-dex-dapp.ext2
+DAPP_FS=/opt/cartesi/order-book-dapp-fs/order-book-dapp
+DAPP_FS_TAR=/opt/cartesi/order-book-dapp-fs/order-book-dapp.tar
+DAPP_FS_BIN=/opt/cartesi/order-book-dapp-fs/order-book-dapp.ext2
 
 mkdir -p $DAPP_FS
-cp ./cartesi-dex.py $DAPP_FS
-cp ./run.sh $DAPP_FS
+cp ./order-book.py $DAPP_FS
 cp -r src/ $DAPP_FS
-genext2fs -f -i 512 -b 1024 -d $DAPP_FS $DAPP_FS_BIN
+(cd $DAPP_FS; tar --sort=name --mtime="2022-01-01" --owner=0 --group=0 --numeric-owner -cf $DAPP_FS_TAR order-book.py src)
+genext2fs -f -i 512 -b 1024 -a $DAPP_FS_TAR $DAPP_FS_BIN
 truncate -s %4096 $DAPP_FS_BIN

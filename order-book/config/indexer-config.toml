@@ -1,4 +1,4 @@
-[polling_config]
+[indexer_config]
 
 # unique session identifier for machine manager
 session_id = "default_rollups_id"

@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS funds (
 CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY,
     address_id INTEGER NOT NULL,
+    type TEXT,
     side TEXT,
     unit_price INTEGER,
     amount INTEGER,

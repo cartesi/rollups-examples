@@ -1,6 +1,3 @@
-from itertools import product
-
-
 def create_response(success, message, data):
     response =  { 
                     "status": {
@@ -86,7 +83,14 @@ def update_order_amount(amount, id, cursor):
         (amount, id)
     )
 
-def create_transaction(buy_order_id, sell_order_id, product_id, unit_price, amount, timestamp, cursor):
+def create_transaction(side, order_id, counter_order_id, product_id, unit_price, amount, timestamp, cursor):
+    if side == "bid":
+        buy_order_id = order_id
+        sell_order_id = counter_order_id
+    elif side == "offer":
+        buy_order_id = counter_order_id
+        sell_order_id = order_id
+    
     cursor.execute(
         "INSERT INTO transactions (buy_order_id, sell_order_id, product_id, unit_price, amount, timestamp)\
         VALUES (?, ?, ?, ?, ?, ?)",
@@ -119,7 +123,9 @@ def get_best_market_price(side, id, timestamp, cursor):
 
     return best_market_price
 
-def matching_price_exists(side, order_price, best_market_price):
+def matching_price_exists(type, side, order_price, best_market_price):
+    if type == "market" and best_market_price:
+        return True
     if side == "bid":
         if best_market_price and best_market_price <= order_price:
             return True
@@ -197,10 +203,11 @@ def get_user_orders(id, cursor):
 
 def insert_order(data, address_id, product_id, cursor):
     cursor.execute(
-        "INSERT INTO orders (address_id, side, unit_price, amount, product_id, closing_time, timestamp)\
-         VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO orders (address_id, type, side, unit_price, amount, product_id, closing_time, timestamp)\
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         (
             address_id,
+            data["type"],
             data["side"],
             data["unit_price"],
             data["amount"],
@@ -209,6 +216,13 @@ def insert_order(data, address_id, product_id, cursor):
             data["timestamp"],
         ),
     )
+
+def modify_order(data, cursor):
+    cursor.execute(
+        "UPDATE orders SET amount = ?, unit_price = ?, closing_time = ?, timestamp = ? WHERE id = ?",
+        (data["amount"], data["unit_price"], data["closing_time"], data["timestamp"], data["id"])
+    )
+
 
 def cancel_order(id, cursor):
     cursor.execute(

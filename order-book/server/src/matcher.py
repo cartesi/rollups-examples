@@ -2,6 +2,7 @@ from .helpers import get_order_by_id, matching_price_exists, get_amount_to_trans
 
 def find_matches(order_id, cursor):
     order = get_order_by_id(order_id, cursor)
+    order_type = order["type"]
     order_side = order["side"]
     order_price = order["unit_price"]
     order_amount = order["amount"]
@@ -17,7 +18,9 @@ def find_matches(order_id, cursor):
 
     while order_amount != 0:
         best_market_price = get_best_market_price(counter_order_side, product_id, order_timestamp, cursor)
-        if not matching_price_exists(order_side, order_price, best_market_price):
+        if not matching_price_exists(order_type, order_side, order_price, best_market_price):
+            if order_type == "market":
+                update_order_amount(0, order_id, cursor)
             break
 
         counter_order = get_counter_order(counter_order_side, best_market_price, product_id, cursor)
@@ -27,7 +30,7 @@ def find_matches(order_id, cursor):
 
         amount_to_transact = get_amount_to_transact(order_amount, counter_order_amount)
         
-        create_transaction(order_id, counter_order_id, product_id, best_market_price, amount_to_transact, order_timestamp, cursor)
+        create_transaction(order_side, order_id, counter_order_id, product_id, best_market_price, amount_to_transact, order_timestamp, cursor)
 
         order_amount -= amount_to_transact
         update_order_amount(order_amount, order_id, cursor)

@@ -11,14 +11,18 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-MACHINE_DIR=/opt/cartesi/cartesi-dex-machine
+MACHINE_DIR=/opt/cartesi/order-book-machine
+ROLLUP_HTTP_SERVER_PORT=5004
 
 cartesi-machine \
     --ram-length=128Mi \
     --rollup \
-    --flash-drive=label:cartesi-dex-dapp,filename:cartesi-dex-dapp.ext2 \
+    --flash-drive=label:order-book-dapp,filename:order-book-dapp.ext2 \
     --flash-drive=label:root,filename:rootfs.ext2 \
-    --ram-image=linux-5.5.19-ctsi-3.bin \
+    --ram-image=linux-5.5.19-ctsi-5.bin \
     --rom-image=rom.bin \
     --store=$MACHINE_DIR \
-    -- "/mnt/cartesi-dex-dapp/run.sh"
+    -- "cd /mnt/order-book-dapp; \
+        (cd src/db; python3 ./seed.py); \
+        ROLLUP_HTTP_SERVER_URL=\"http://127.0.0.1:$ROLLUP_HTTP_SERVER_PORT\" \
+        rollup-init python3 order-book.py"

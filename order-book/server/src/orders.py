@@ -1,10 +1,10 @@
 from math import prod
 import sqlite3
-from .helpers import create_payload, create_response, get_address_id, get_best_market_price, get_order_by_id, get_product_id, get_user_orders, insert_address, insert_order, query_best_price_amount, query_book, query_orders, query_side, cancel_order
+from .helpers import create_payload, create_response, get_address_id, get_best_market_price, get_order_by_id, get_product_id, get_user_orders, insert_address, insert_order, modify_order, query_best_price_amount, query_book, query_orders, query_side, cancel_order
 from .matcher import find_matches
 
 def handle_order(sender, payload, logger):
-    con = sqlite3.connect("src/db/cartesi-dex.db")
+    con = sqlite3.connect("src/db/database.db")
     con.row_factory = sqlite3.Row
     cursor = con.cursor()
 
@@ -12,6 +12,8 @@ def handle_order(sender, payload, logger):
         response = get_orders_for_user(sender, payload.get("data"), cursor)
     elif payload["action"] == "create":
         response = create_order(sender, payload.get("data"), cursor)
+    elif payload["action"] == "update":
+        response = update_order(sender, payload.get("data"), cursor)
     elif payload["action"] == "delete":
         response = delete_order(sender, payload.get("data"), cursor)
     elif payload["action"] == "get_book":
@@ -113,6 +115,21 @@ def create_order(sender, data, cursor):
 
     return create_response(True, "order created", payload)
 
+def update_order(sender, data, cursor):
+    address_id = get_address_id(sender, cursor)
+    if not address_id:
+        return create_response(False, "account not found", None)
+
+    order = get_order_by_id(data["id"], cursor)
+    if address_id != order["address_id"]:
+        return create_response(False, "not authorized", None)
+
+    modify_order(data, cursor)
+
+    payload = find_matches(data["id"], cursor)
+
+    return create_response(True, "order updated", payload)
+
 
 def delete_order(sender, data, cursor):
     address_id = get_address_id(sender, cursor)
@@ -121,7 +138,7 @@ def delete_order(sender, data, cursor):
 
     order = get_order_by_id(data["id"], cursor)
 
-    if address_id != order[1]:
+    if address_id != order["address_id"]:
         return create_response(False, "not authorized", None)
 
     cancel_order(data["id"], cursor)

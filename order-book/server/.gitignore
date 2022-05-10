@@ -1,7 +1,5 @@
 __pycache__
 .env
-*.bin
-*.db
 *.ext2
 *.yaml
 machine

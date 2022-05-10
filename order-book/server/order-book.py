@@ -15,15 +15,13 @@ import traceback
 import logging
 import requests
 import json
-from flask import Flask, request
-from src import orders, products
+from src import orders, products, transactions
 
-app = Flask(__name__)
-app.logger.setLevel(logging.INFO)
+logging.basicConfig(level="INFO")
+logger = logging.getLogger(__name__)
 
-dispatcher_url = environ["HTTP_DISPATCHER_URL"]
-app.logger.info(f"HTTP dispatcher url is {dispatcher_url}")
-
+rollup_server = environ["ROLLUP_HTTP_SERVER_URL"]
+logger.info(f"HTTP rollup_server url is {rollup_server}")
 
 def hex2str(hex):
     """
@@ -37,63 +35,59 @@ def str2hex(str):
     Encodes a string as a hex string
     """
     return "0x" + str.encode("utf-8").hex()
-
-
-@app.route("/advance", methods=["POST"])
-def advance():
-    body = request.get_json()
-    app.logger.info(f"Received advance request body: {body}")
-
-    status = "accept"
+    
+def handle_advance(data):
+    logger.info(f"Received advance request data {data}")
+    logger.info("Adding notice")
     try:
-        payload = json.loads(hex2str(body["payload"]))
-        sender = body["metadata"]["msg_sender"]
-        app.logger.info(f"Decoded payload: {payload}, sender: {sender}")
+        payload = json.loads(hex2str(data["payload"]))
+        sender = data["metadata"]["msg_sender"]
+        logger.info(f"Decoded payload: {payload}, sender: {sender}")
 
         if payload["resource"] == "order":
-            response_payload = orders.handle_order(sender, payload, app.logger)
+            response_payload = orders.handle_order(sender, payload, logger)
         elif payload["resource"] == "product":
-            response_payload = products.handle_product(sender, payload, app.logger)
+            response_payload = products.handle_product(sender, payload, logger)
+        elif payload["resource"] == "transaction":
+            response_payload = transactions.handle_transaction(sender, payload, logger)
         elif payload["resource"] == "test":
-            response_payload = {
-                "status": {"success": True, "message": "test input received"}
-            }
+            response_payload = {"status": {"success": True, "message": "test input received" }}
         else:
-            status = "reject"
-            response_payload = {
-                "status": {
-                    "success": False,
-                    "message": "no or unsupported resource specified",
-                }
-            }
+            response_payload = {"status": {"success": False, "message": "no or unsupported resource specified" }}
 
         response_payload = json.dumps(response_payload)
-        app.logger.info(response_payload)
-        response = requests.post(
-            dispatcher_url + "/notice", json={"payload": str2hex(response_payload)}
-        )
-        app.logger.info(
-            f"Received notice status {response.status_code} body {response.content}"
-        )
-
+        response = requests.post(rollup_server + "/notice", json={"payload": str2hex(response_payload)})
+        logger.info(f"Received notice status {response.status_code} body {response.content}")
+        return "accept"
+     
     except Exception as e:
-        status = "reject"
-        msg = f"Error processing body {body}\n{traceback.format_exc()}"
-        app.logger.error(msg)
-        response = requests.post(
-            dispatcher_url + "/report", json={"payload": str2hex(msg)}
-        )
-        app.logger.info(
-            f"Received report status {response.status_code} body {response.content}"
-        )
+        msg = f"Error processing body {data}\n{traceback.format_exc()}"
+        logger.error(msg)
+        response = requests.post(rollup_server + "/report", json={"payload": str2hex(msg)})
+        logger.info(f"Received report status {response.status_code} body {response.content}")
+        return "reject"
 
-    app.logger.info("Finishing")
-    response = requests.post(dispatcher_url + "/finish", json={"status": status})
-    app.logger.info(f"Received finish status {response.status_code}")
-    return "", 202
+def handle_inspect(data):
+    logger.info(f"Received inspect request data {data}")
+    logger.info("Adding report")
+    report = {"payload": data["payload"]}
+    response = requests.post(rollup_server + "/report", json=report)
+    logger.info(f"Received report status {response.status_code}")
+    return "accept"
 
+handlers = {
+    "advance_state": handle_advance,
+    "inspect_state": handle_inspect,
+}
 
-@app.route("/inspect/<payload>", methods=["GET"])
-def inspect(payload):
-    app.logger.info(f"Received inspect request payload {payload}")
-    return {"reports": [{"payload": payload}]}, 200
+finish = {"status": "accept"}
+while True:
+    logger.info("Sending finish")
+    response = requests.post(rollup_server + "/finish", json=finish)
+    logger.info(f"Received finish status {response.status_code}")
+    if response.status_code == 202:
+        logger.info("No pending rollup request, trying again")
+    else:
+        rollup_request = response.json()
+        handler = handlers[rollup_request["request_type"]]
+        finish["status"] = handler(rollup_request["data"])

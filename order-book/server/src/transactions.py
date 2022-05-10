@@ -2,7 +2,7 @@ import sqlite3
 from .helpers import create_payload, create_response, get_product_id, query_highest, query_last, query_lowest, query_transactions
 
 def handle_transaction(sender, payload, logger):
-    con = sqlite3.connect("src/db/cartesi-dex.db")
+    con = sqlite3.connect("src/db/database.db")
     con.row_factory = sqlite3.Row
     cursor = con.cursor()
 
