@@ -18,13 +18,12 @@ When compared to traditional software development, the main difference of a Cart
 
 ## HTTP API
 
-As discussed above, the front-end and back-end parts of a Cartesi DApp communicate with each other through the Rollups framework. This is accomplished in practice by using an HTTP API.
+As discussed above, the front-end and back-end parts of a Cartesi DApp communicate with each other through the Rollups framework.
+This is accomplished in practice by using a set of HTTP interfaces, which are specified in [Cartesi's OpenAPI Interfaces repository](https://github.com/cartesi/openapi-interfaces/).
 
 ### Back-end
 
-The DApp's back-end needs to implement a couple of endpoints to receive requests from the Cartesi Rollups framework. These are specified by Cartesi's [HTTP DApp API](https://github.com/cartesi/openapi-interfaces/blob/master/dapp.yaml).
-
-As the back-end processes the inputs received, it can access a second set of HTTP endpoints provided by the Rollups framework itself, in order to inform it of the computed results and consequences. These are defined by the [HTTP Dispatcher API](https://github.com/cartesi/openapi-interfaces/blob/master/dispatcher.yaml).
+The DApp's back-end interacts with the Cartesi Rollups framework by retrieving processing requests and then submitting corresponding outputs.
 
 ### Front-end
 
