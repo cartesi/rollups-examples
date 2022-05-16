@@ -3,3 +3,4 @@ __pycache__
 *.ext2
 *.yaml
 machine
+libs
