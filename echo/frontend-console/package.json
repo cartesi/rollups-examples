@@ -7,7 +7,7 @@
     "scripts": {
         "codegen": "run-p codegen:typechain codegen:graphql",
         "codegen:graphql": "graphql-codegen",
-        "codegen:typechain": "typechain --target ethers-v5 --out-dir generated-src/rollups ../contracts/node_modules/@cartesi/rollups/export/artifacts/*.json",
+        "codegen:typechain": "typechain --target ethers-v5 --out-dir generated-src/rollups ../../contracts/node_modules/@cartesi/rollups/export/artifacts/*.json",
         "build": "run-s codegen tsc",
         "prepack": "yarn build",
         "prettier": "prettier -w \"**/*.ts\"",
