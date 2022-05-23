@@ -82,7 +82,7 @@ services:
       - DB_TEST_NAME=postgres
 
   database:
-    image: postgres:12
+    image: postgres:13-alpine
     platform: linux/amd64
     ports:
       - 5432:5432
