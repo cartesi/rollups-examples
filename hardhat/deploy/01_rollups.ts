@@ -42,17 +42,11 @@ const func: DeployFunction = async ({ network, run }) => {
     console.log(`dapp configuration loaded from ${configResult.filepath}`);
     const config = configResult.config as CreateArgs;
 
-    // dapp to deploy
-    const dapp = process.env.DAPP_NAME;
-    if (!dapp) {
-        throw new Error("dapp name not defined");
-    }
-    console.log(`deploying ${dapp}`);
     // read machine hash
-    const templateHash = hash(`../${dapp}/machine`);
+    const templateHash = hash(`./machine`);
     const dappConfig: CreateArgs = {
         ...config,
-        name: dapp,
+        // name: dapp,
         templateHash: templateHash,
     };
 

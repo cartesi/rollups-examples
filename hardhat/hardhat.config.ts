@@ -21,18 +21,17 @@ import "hardhat-deploy";
 import "@cartesi/hardhat-rollups";
 import { appTasks, GraphQLConfig } from "@cartesi/hardhat-rollups";
 
-const dapps = ["calculator", "converter", "echo", "echo-cpp", "echo-rust", "knn", "m2cgen", "sqlite"];
-dapps.forEach((name) => {
-    // GraphQL endpoint configuration per network
-    const graphqlConfig: GraphQLConfig = {
-        localhost: "http://localhost:4000/graphql",
-        polygon_mumbai: `https://${name}.polygon-mumbai.rollups.dev.cartesi.io/graphql`,
-    };
+const name = process.env.DAPP_NAME!;
 
-    // define app tasks that calls rollups tasks, resolving rollups contract address and GraphQL server address
-    // i.e. echo:addInput -> rollups:addInput
-    appTasks(name, graphqlConfig);
-})
+// GraphQL endpoint configuration per network
+const graphqlConfig: GraphQLConfig = {
+    localhost: "http://localhost:4000/graphql",
+    polygon_mumbai: `https://${name}.polygon-mumbai.rollups.dev.cartesi.io/graphql`,
+};
+
+// define app tasks that calls rollups tasks, resolving rollups contract address and GraphQL server address
+// i.e. echo:addInput -> rollups:addInput
+appTasks(name, graphqlConfig);
 
 // read MNEMONIC from file or from env variable
 let mnemonic = process.env.MNEMONIC;
