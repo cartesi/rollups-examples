@@ -1,9 +1,0 @@
-__pycache__
-.env
-*.ext2
-*.yaml
-machine
-echo-backend
-echo-backend-host
-
-

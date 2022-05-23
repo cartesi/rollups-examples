@@ -1,1 +1,8 @@
-machine
+__pycache__
+.env
+*.ext2
+*.yaml
+echo-backend
+echo-backend-host
+
+

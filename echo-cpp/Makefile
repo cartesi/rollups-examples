@@ -10,20 +10,19 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-MACHINE_DIR := machine
+CXX  := riscv64-cartesi-linux-gnu-g++
+CXX_HOST := g++
 
-.PHONY: clean console
+.PHONY: clean 3rdparty
 
-$(MACHINE_DIR):
-	@make -C backend
-	@mv backend/machine $@
+echo-backend: echo-backend.cpp
+	make -C 3rdparty
+	$(CXX) -pthread -std=c++11 -o $@ $^
 
-console:
-	@make -C backend console
-
-echo-backend-host:
-	@make -C backend echo-backend-host
+echo-backend-host: echo-backend.cpp
+	make -C 3rdparty
+	$(CXX_HOST) -pthread -std=c++11 -o $@ $^
 
 clean:
-	@make -C backend clean
-	@rm -rf $(MACHINE_DIR)
+	@rm -rf echo-backend echo-backend-host
+	make -C 3rdparty clean
