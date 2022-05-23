@@ -39,11 +39,47 @@ In general, each application can be executed in 2 modes, as explained below.
 
 In this mode, the DApp's back-end logic is cross-compiled to the RISC-V architecture and executed inside a Cartesi Machine. This ensures that the computation performed by the back-end is _reproducible_ and hence _verifiable_, enabling a truly trustless and decentralized execution.
 
+In order to build and execute any example perform the following commands:
+
+```
+$ cd <example>
+$ docker buildx bake
+$ docker compose -p <example> -f ../docker-compose.yml -f ./docker-compose.override.yml up
+```
+
+This will build some docker images, including the Cartesi Machine with the application, and run some containers.
+The environment can be shutdown with the following command:
+
+```
+$ docker compose -p <example> down -v
+```
+
 ### Host mode
 
 The _Cartesi Rollups Host Environment_ provides the very same HTTP API as the regular one, mimicking the behavior of the actual Layer-1 and Layer-2 components. This way, the Cartesi Rollups infrastructure can make HTTP requests to a back-end that is running natively on localhost. This allows the developer to test and debug the back-end logic using familiar tools, such as an IDE.
 
 _Note_: when running in host mode, localhost ports `5003` and `5004` will be used by default for the communication between the Cartesi Rollups framework and the DApp's back-end.
+
+## Polygon Mumbai
+
+### Deploying
+
+Each example must have a corresponding smart contract deployed to the blockchain. When running locally a private network is provided by hardhat. When it's time to deploy to a public testnet this project provides connectivity configuration to some testnets.
+
+The connectivity to Polygon Mumbai testnet relies on Infura. So the deployer needs to create an Infura account with Polygon Mumbai enabled, and take a note of the `PROJECT_ID` of one of the account projects.
+
+The deployer also needs an account with enough MATIC funds to pay for the deployment transactions fees. Refer to Polygon documentation on how to [get free testnet tokens](https://docs.polygon.technology/docs/develop/tools/polygon-faucet/). Have in hand the `MNEMONIC` of the account that will be used to deploy.
+
+The smart contract has some configuration options, and it also depends on the hash of the Cartesi Machine of the application. So the first step is to build the Cartesi Machine by following the instructions in the previous sections. After that step the user should have a docker image built locally named `cartesi/dapp-<example>-hardhat`. This images contains the Cartesi Machine inside, as well as the necessary application to deploy the smart contract.
+
+The deployment can be executed with the following command:
+
+```shell
+$ cd <example>
+$ docker run -v $PWD/../deploy/:/deploy -e PROJECT_ID=<PROJECT_ID> -e MNEMONIC="<MNEMONIC>" cartesi/dapp-<example>-hardhat deploy --network polygon_mumbai --export /deploy/polygon_mumbai/<example>.json
+```
+
+This will create a file at `../deploy/polygon_mumbai/<example>.json` with the deployment information.
 
 ## Examples
 
