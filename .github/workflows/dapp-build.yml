@@ -27,8 +27,9 @@ jobs:
                   password: ${{ secrets.DOCKER_PASSWORD }}
 
             - name: Build and push
-              uses: docker/bake-action@v2
+              uses: tuler/bake-action@73d2e19fd548cbf243722fac4dcc9cfdf701c82b
               with:
+                  working-directory: ${{ matrix.dapp}}
                   files: |
-                      ${{ matrix.dapp }}/docker-bake.hcl
-                      ${{ matrix.dapp }}/docker-bake.override.hcl
+                      docker-bake.hcl
+                      docker-bake.override.hcl
