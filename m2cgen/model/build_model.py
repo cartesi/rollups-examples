@@ -85,7 +85,7 @@ model_columns = list(x.columns)
 model_classes = train_df[dependent_var].unique().tolist()
 
 # - writes model to file `model.py` in the parent directory (m2cgen/backend)
-with open("../model.py", "w") as text_file:
+with open("model.py", "w") as text_file:
     print(f"{model_to_python}", file=text_file)
     print(f"columns = {model_columns}", file=text_file)
     print(f"classes = {model_classes}", file=text_file)
