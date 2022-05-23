@@ -16,6 +16,7 @@ import logging
 import requests
 import sqlite3
 import json
+import sys
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
@@ -47,8 +48,15 @@ def handle_advance(data):
         logger.info(f"Received statement: '{statement}'")
 
         # connects to internal database
-        con = sqlite3.connect("data.db")
-        cur = con.cursor()
+        try:
+            con = sqlite3.connect("data.db")
+            cur = con.cursor()
+        except Exception as e:
+            # critical error if database is no longer accessible: DApp can no longer proceed
+            msg = f"Critical error connecting to database: {e}"
+            logger.error(msg)
+            requests.post(rollup_server + "/exception", json={"payload": str2hex(msg)})
+            sys.exit(1)
 
         result = None
         status = "accept"
