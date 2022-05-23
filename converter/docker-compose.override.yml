@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  hardhat:
+    image: cartesi/dapp-converter-hardhat
+
+  server_manager:
+    image: cartesi/dapp-converter-server
