@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Copyright 2022 Cartesi Pte. Ltd.
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -11,12 +11,5 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-cartesi-machine \
-    --ram-length=128Mi \
-    --rollup \
-    --flash-drive=label:echo-dapp,filename:echo-dapp.ext2 \
-    --flash-drive=label:root,filename:rootfs.ext2 \
-    --ram-image=linux-5.5.19-ctsi-5.bin \
-    --rom-image=rom.bin \
-    -i \
-    -- "/bin/sh"
+set -e
+./target/riscv64ima-cartesi-linux-gnu/release/echo-backend
