@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  hardhat:
+    image: cartesi/dapp-sqlite-hardhat
+
+  server_manager:
+    image: cartesi/dapp-sqlite-server
