@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Copyright 2022 Cartesi Pte. Ltd.
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -11,13 +11,5 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-mkdir -p ../libs
-
-python3 -m venv .env
-. .env/bin/activate; \
-    pip install -r requirements.txt; \
-    python_lib_dir=./.env/lib/python$(python --version | awk '{split($2, a, "."); print a[1]"."a[2]}')/site-packages/; \
-    cat requirements.txt | \
-    awk -v python_lib_dir=$python_lib_dir -v lib_dir=$lib_dir '{printf "%s"$1"\n", python_lib_dir}' | \
-    xargs -I % sh -c 'cp -pr % ../libs' \
-    deactivate
+set -e
+PYTHONPATH=/mnt/dapp/.env/cross/lib/python3.10/site-packages python3 calculator.py
