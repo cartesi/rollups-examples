@@ -1,3 +1,4 @@
+#!/bin/sh
 # Copyright 2022 Cartesi Pte. Ltd.
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -10,17 +11,5 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-MACHINE_DIR := machine
-
-.PHONY: clean console
-
-$(MACHINE_DIR):
-	@make -C backend
-	@mv backend/machine $@
-
-console:
-	@make -C backend console
-
-clean:
-	@make -C backend clean
-	@rm -rf $(MACHINE_DIR)
+set -e
+python3 echo.py
