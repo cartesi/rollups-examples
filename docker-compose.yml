@@ -1,4 +1,18 @@
-version: '3'
+version: '3.9'
+
+x-environment:
+  &rollups-config
+    LOGIC_CONFIG_PATH: /opt/cartesi/share/config/logic-config.toml
+    STATE_FOLD_CONFIG_PATH: /opt/cartesi/share/config/sf-config.toml
+    BLOCK_SUBSCRIBER_CONFIG_PATH: /opt/cartesi/share/config/bs-config.toml
+    TX_MANAGER_CONFIG_PATH: /opt/cartesi/share/config/tm-config.toml
+    INDEXER_CONFIG_PATH: /opt/cartesi/share/config/indexer-config.toml
+    STATE_SERVER_HOSTNAME: state_server
+    STATE_SERVER_PORT: "50051"
+    SERVER_MANAGER_HOSTNAME: server_manager
+    SERVER_MANAGER_PORT: "5001"
+    DEPLOYMENT_PATH: /opt/cartesi/share/blockchain/localhost.json
+    URL: http://hardhat:8545
 
 services:
   hardhat:
@@ -15,20 +29,12 @@ services:
     image: cartesi/rollups-dispatcher:0.2.0
     restart: always
     environment:
+      << : *rollups-config
       # TODO: currently hardhat's default mnemonic
       # this should become a secret
-      - MNEMONIC=test test test test test test test test test test test junk
-      - CHAIN_ID=31337
-      - RUST_LOG=info
-      - LOGIC_CONFIG_PATH=/opt/cartesi/share/config/logic-config.toml
-      - STATE_FOLD_CONFIG_PATH=/opt/cartesi/share/config/sf-config.toml
-      - BLOCK_SUBSCRIBER_CONFIG_PATH=/opt/cartesi/share/config/bs-config.toml
-      - TX_MANAGER_CONFIG_PATH=/opt/cartesi/share/config/tm-config.toml
-      - STATE_SERVER_HOSTNAME=state_server
-      - STATE_SERVER_PORT=50051
-      - SERVER_MANAGER_HOSTNAME=server_manager
-      - SERVER_MANAGER_PORT=5001
-      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
+      MNEMONIC: test test test test test test test test test test test junk
+      CHAIN_ID: 31337
+      RUST_LOG: info
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
@@ -39,9 +45,7 @@ services:
     platform: linux/amd64
     restart: always
     environment:
-      - STATE_FOLD_CONFIG_PATH=/opt/cartesi/share/config/sf-config.toml
-      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
-      - URL=http://hardhat:8545
+      << : *rollups-config
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
@@ -54,15 +58,9 @@ services:
     image: cartesi/rollups-indexer:0.2.0
     restart: always
     environment:
-      - URL=http://hardhat:8545
-      - INDEXER_CONFIG_PATH=/opt/cartesi/share/config/indexer-config.toml
-      - STATE_SERVER_HOSTNAME=state_server
-      - STATE_SERVER_PORT=50051
-      - SERVER_MANAGER_HOSTNAME=server_manager
-      - SERVER_MANAGER_PORT=5001
-      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
-      - POSTGRES_HOSTNAME=database
-      - POSTGRES_PORT=5432
+      << : *rollups-config
+      POSTGRES_HOSTNAME: database
+      POSTGRES_PORT: "5432"
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
       - ./config:/opt/cartesi/share/config/
