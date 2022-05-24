@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Copyright 2022 Cartesi Pte. Ltd.
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -11,12 +11,5 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-DAPP_FS=/opt/cartesi/template-dapp-fs/template-dapp
-DAPP_FS_TAR=/opt/cartesi/template-dapp-fs/template-dapp.tar
-DAPP_FS_BIN=/opt/cartesi/template-dapp-fs/template-dapp.ext2
-
-mkdir -p $DAPP_FS
-cp ./template.py $DAPP_FS
-(cd $DAPP_FS; tar --sort=name --mtime="2022-01-01" --owner=0 --group=0 --numeric-owner -cf $DAPP_FS_TAR template.py)
-genext2fs -f -i 512 -b 16 -a $DAPP_FS_TAR $DAPP_FS_BIN
-truncate -s %4096 $DAPP_FS_BIN
+set -e
+python3 template.py

@@ -1,6 +1,6 @@
 # Template DApp
 
-Template is a customized DApp written in Python, which originally resembles the one provided by the sample [Echo DApp](https://github.com/cartesi/rollups-examples/tree/main/echo).
+Template is a customized DApp written in Python, which originally resembles the one provided by the sample [Echo DApp](https://github.com/cartesi/rollups-examples/tree/main/echo-python).
 
 The documentation below is simply a copy of the one provided there and should be used to both run the original template code and as a basis for the documentation of any DApp created based on this template.
 
@@ -16,7 +16,7 @@ Then, build the back-end for the template example:
 
 ```shell
 $ cd rollups-examples/template
-$ make machine
+$ docker buildx bake -f docker-bake.hcl -f docker-bake.override.hcl
 ```
 
 ## Running the environment
@@ -24,7 +24,7 @@ $ make machine
 In order to start the containers in production mode, simply run:
 
 ```shell
-$ docker-compose up --build
+$ docker-compose up
 ```
 
 _Note:_ If you decide to use [Docker Compose V2](https://docs.docker.com/compose/cli-command/), make sure you set the [compatibility flag](https://docs.docker.com/compose/cli-command-compatibility/) when executing the command (e.g., `docker compose --compatibility up`).
@@ -52,10 +52,10 @@ $ docker-compose down -v
 
 With the infrastructure in place, you can interact with the application using a set of Hardhat tasks.
 
-First, go to a separate terminal window, switch to the `template/contracts` directory, and run `yarn`:
+First, go to a separate terminal window, switch to the `template/hardhat` directory, and run `yarn`:
 
 ```shell
-$ cd template/contracts/
+$ cd template/hardhat/
 $ yarn
 ```
 
@@ -117,7 +117,7 @@ When developing an application, it is often important to easily test and debug i
 The first step is to run the environment in host mode using the following command:
 
 ```shell
-$ docker-compose -f docker-compose.yml -f docker-compose-host.yml up --build
+$ docker-compose -f docker-compose.yml -f docker-compose-host.yml up
 ```
 
 The next step is to run the template backend in your machine. The application is written in Python, so you need to have `python3` installed.

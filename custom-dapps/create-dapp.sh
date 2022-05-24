@@ -26,32 +26,30 @@ cp -pr template ${dapp_name}
 
 echo "Copying common files..."
 cp -pr ../config ${dapp_name}
-mkdir -p ${dapp_name}/contracts
-cp -pr ../contracts/config ${dapp_name}/contracts
-cp -pr ../contracts/deploy ${dapp_name}/contracts
-find ../contracts -maxdepth 1 -type f | xargs -I {} cp {} ${dapp_name}/contracts
+cp -pr ../docker ${dapp_name}
+mkdir -p ${dapp_name}/hardhat
+cp -pr ../hardhat/config ${dapp_name}/hardhat
+cp -pr ../hardhat/deploy ${dapp_name}/hardhat
+find ../hardhat -maxdepth 1 -type f | xargs -I {} cp {} ${dapp_name}/hardhat
+cp ../base.hcl ${dapp_name}/docker-bake.hcl
 cp ../docker-compose.yml ${dapp_name}
 cp ../docker-compose-host.yml ${dapp_name}
-cp ../Dockerfile ${dapp_name}
 
 echo "Customizing DApp infrastructure..."
-# replace references to machine directory from '${dapp}/machine' to './machine'
+# adjust relative paths
 for i in \
-    ${dapp_name}/Dockerfile \
-    ${dapp_name}/docker-compose.yml
+    ${dapp_name}/docker-bake.hcl
 do
-    sed -i'' -e "s/\$DAPP_NAME\/machine/machine/g" $i
+    sed -i'' -e "s/\.\.\/docker/\.\/docker/g" $i
+    sed -i'' -e "s/\.\.\/hardhat/\.\/hardhat/g" $i
 done
-sed -i'' -e "s/..\/\${dapp}\/machine/..\/machine/g" ${dapp_name}/contracts/deploy/01_rollups.ts
-# replace variable for dapp to be executed with the actual dapp name
-sed -i'' -e "s/dapps = \[.*\]/dapps = \[\"${dapp_name}\"\]/g" ${dapp_name}/contracts/hardhat.config.ts
-sed -i'' -e "s/\$DAPP_NAME/${dapp_name}/g" ${dapp_name}/docker-compose.yml
+
 # replace template placeholders by dapp name
 for i in \
-    ${dapp_name}/backend/build-dapp-fs.sh \
-    ${dapp_name}/backend/build-machine.sh \
-    ${dapp_name}/backend/Makefile \
-    ${dapp_name}/backend/run-machine-console.sh \
+    ${dapp_name}/dapp.json \
+    ${dapp_name}/docker-bake.override.hcl \
+    ${dapp_name}/docker-compose.override.yml \
+    ${dapp_name}/entrypoint.sh \
     ${dapp_name}/README.md
 do
     sed -i'' -e "s/template/${dapp_name}/g" $i
@@ -61,7 +59,7 @@ done
 find ${dapp_name} -name '*-e' -exec rm {} \;
 
 echo "Creating template back-end script..."
-mv ${dapp_name}/backend/template.py ${dapp_name}/backend/${1}.py
+mv ${dapp_name}/template.py ${dapp_name}/${1}.py
 
 echo "Done"
-echo "Proceed with adapting or replacing the back-end source code of the DApp at ${dapp_name}/backend/${dapp_name}.py"
+echo "Proceed with adapting or replacing the back-end source code of the DApp at ${dapp_name}.py"
