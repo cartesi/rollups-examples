@@ -9,22 +9,23 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
+import { InputAddedEvent } from "@cartesi/rollups/dist/src/types/contracts/interfaces/IInput";
 import { ContractReceipt, ethers } from "ethers";
 import prompts, { PromptObject } from "prompts";
 import { Argv } from "yargs";
 import { NoticeKeys } from "../../generated-src/graphql";
-import { InputAddedEvent } from "../../generated-src/rollups/InputFacet";
 import { connect } from "../connect";
 import { networks } from "../networks";
 
 interface Args {
     network: string;
+    address: string;
     mnemonic: string;
     message: string;
 }
 
-export const command = "say [message]";
-export const describe = "Say something to echo DApp";
+export const command = "send [message]";
+export const describe = "Send string input to DApp";
 
 const HARDHAT_DEFAULT_MNEMONIC =
     "test test test test test test test test test test test junk";
@@ -35,6 +36,11 @@ export const builder = (yargs: Argv) => {
             describe: "Network to use",
             type: "string",
             choices: networks.map((n) => n.name),
+            demandOption: false,
+        })
+        .option("address", {
+            describe: "Rollups contract address",
+            type: "string",
             demandOption: false,
         })
         .option("mnemonic", {
@@ -61,7 +67,7 @@ const mnemonicValidator = (value: string) => {
 
 /**
  * Translate a InputAddedEvent into a NoticeKeys
- * @param event Blockchain event of input added
+ * @param receipt Blockchain transaction receipt
  * @returns NoticeKeys to find notice in GraphQL server
  */
 export const findNoticeKeys = (receipt: ContractReceipt): NoticeKeys => {
@@ -107,15 +113,22 @@ export const handler = async (args: Args) => {
         },
         {
             type: "text",
+            name: "address",
+            message: "Rollups contract address",
+        },
+        {
+            type: "text",
             name: "message",
             message: "Enter message to send",
         },
     ];
-    const { network, message, mnemonic } = await prompts<string>(questions);
+    const { network, message, address, mnemonic } = await prompts<string>(
+        questions
+    );
 
     // connect to provider, use deployment address based on returned chain id of provider
     console.log(`connecting to ${network}`);
-    const { chain, inputContract } = await connect(network, "CartesiDApp", mnemonic);
+    const { chain, inputContract } = await connect(network, address, mnemonic);
 
     // use message from command line option, or from user prompt
     console.log(`saying "${message}"`);

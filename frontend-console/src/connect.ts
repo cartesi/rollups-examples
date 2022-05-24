@@ -16,7 +16,7 @@ import {
     InputFacet__factory,
     OutputFacet,
     OutputFacet__factory,
-} from "../generated-src/rollups";
+} from "@cartesi/rollups";
 import { Chain, networks } from "./networks";
 
 interface Contracts {
@@ -27,7 +27,7 @@ interface Contracts {
 
 export const connect = async (
     chainName: string,
-    contractName: string = "CartesiDApp",
+    address: string,
     mnemonic?: string
 ): Promise<Contracts> => {
     const chain = networks.find((n) => n.name === chainName);
@@ -36,20 +36,6 @@ export const connect = async (
     }
     // connect to JSON-RPC provider
     const provider = new JsonRpcProvider(chain.rpc);
-
-    // check network chainId
-    const network = await provider.getNetwork();
-    if (network.chainId !== chain.chainId) {
-        throw new Error(`Mismatched chainId: ${network.chainId}`);
-    }
-
-    // load contract address
-    const deploy = await import(chain.abi);
-    const contract = deploy.contracts[contractName];
-    const address = contract?.address;
-    if (!contract || !address) {
-        throw new Error(`contract ${contractName} not found at ${chain.abi}`);
-    }
 
     // create signer to be used to send transactions
     const signer = mnemonic

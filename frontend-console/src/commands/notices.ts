@@ -11,25 +11,22 @@
 
 import prompts from "prompts";
 import { Argv } from "yargs";
-import { connect } from "../connect";
-import { networks } from "../networks";
 import { getNotices } from "../graphql/notices";
 import { ethers } from "ethers";
 
 interface Args {
-    network: string;
+    url: string;
     epoch: number;
 }
 
-export const command = "listen";
-export const describe = "Listen messages of an epoch and input";
+export const command = "notices";
+export const describe = "List notices of an epoch and input";
 
 export const builder = (yargs: Argv) => {
     return yargs
-        .option("network", {
-            describe: "Network to use",
+        .option("url", {
+            describe: "Reader URL",
             type: "string",
-            choices: networks.map((n) => n.name),
             demandOption: false,
         })
         .option("epoch", {
@@ -46,20 +43,15 @@ export const builder = (yargs: Argv) => {
 
 export const handler = async (args: Args) => {
     // use provider from command line option, or ask the user
-    const network: string =
-        args.network ||
+    const reader: string =
+        args.url ||
         (
             await prompts({
-                type: "select",
-                name: "network",
-                choices: networks.map((n) => ({
-                    title: n.name,
-                    value: n.name,
-                    description: n.rpc,
-                })),
-                message: "Select a network",
+                type: "text",
+                name: "url",
+                message: "Reader URL",
             })
-        ).network;
+        ).url;
 
     const epoch: number =
         args.epoch ||
@@ -82,11 +74,10 @@ export const handler = async (args: Args) => {
         ).input);
 
     // connect to provider, use deployment address based on returned chain id of provider
-    console.log(`connecting to ${network}`);
-    const { chain } = await connect(network, "CartesiDApp");
+    console.log(`connecting to ${reader}`);
 
     // wait for notices to appear in reader
-    const notices = await getNotices(chain.reader, {
+    const notices = await getNotices(reader, {
         epoch_index: epoch.toString(),
         input_index: input?.toString(),
     });
