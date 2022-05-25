@@ -134,35 +134,3 @@ WORKDIR /opt/cartesi/share/dapp-bin
 COPY --from=machine-server /opt/cartesi/share/dapp-bin .
 
 CMD ["xxd", "-c", "256", "-p", "hash"]
-
-
-# stage with hardhat
-FROM node:16-buster-slim as dapp-hardhat
-
-# install git
-RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
-    build-essential git python3 \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-
-# build to bring node_modules
-COPY --from=hardhat ["package.json", "yarn.lock", "./"]
-#COPY --from=hardhat .yalc .yalc
-RUN yarn install --non-interactive
-
-# build app
-COPY --from=hardhat . .
-RUN yarn install --non-interactive
-
-# copy machine
-COPY --from=machine-standalone /opt/cartesi/share/dapp-bin/hash ./machine/
-
-# expose hardhat node port
-EXPOSE 8545
-
-ARG DAPP_NAME
-ENV DAPP_NAME=$DAPP_NAME
-
-ENTRYPOINT ["npx", "hardhat"]
-CMD ["node"]

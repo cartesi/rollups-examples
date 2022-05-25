@@ -9,10 +9,3 @@ target "server" {
 target "console" {
   tags = ["cartesi/dapp-template-console"]
 }
-
-target "hardhat" {
-  tags = ["cartesi/dapp-template-hardhat"]
-  args = {
-    DAPP_NAME = "template",
-  }
-}

@@ -28,9 +28,6 @@ echo "Copying common files..."
 cp -pr ../config ${dapp_name}
 cp -pr ../docker ${dapp_name}
 mkdir -p ${dapp_name}/hardhat
-cp -pr ../hardhat/config ${dapp_name}/hardhat
-cp -pr ../hardhat/deploy ${dapp_name}/hardhat
-find ../hardhat -maxdepth 1 -type f | xargs -I {} cp {} ${dapp_name}/hardhat
 cp ../base.hcl ${dapp_name}/docker-bake.hcl
 cp ../docker-compose.yml ${dapp_name}
 cp ../docker-compose-host.yml ${dapp_name}

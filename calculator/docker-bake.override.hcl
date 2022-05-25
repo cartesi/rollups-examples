@@ -12,10 +12,3 @@ target "server" {
 target "console" {
   tags = ["cartesi/dapp-calculator-console"]
 }
-
-target "hardhat" {
-  tags = ["cartesi/dapp-calculator-hardhat"]
-  args = {
-    DAPP_NAME = "calculator",
-  }
-}

@@ -1,6 +1,6 @@
 
 group "default" {
-  targets = ["dapp", "server", "console", "hardhat"]
+  targets = ["dapp", "server", "console"]
 }
 
 # crossenv toolchain for python dapps
@@ -30,15 +30,6 @@ target "console" {
   context = "../docker"
   target  = "machine-console"
   contexts = {
-    dapp-build = "target:dapp"
-  }
-}
-
-target "hardhat" {
-  context = "../docker"
-  target  = "dapp-hardhat"
-  contexts = {
-    hardhat    = "../hardhat"
     dapp-build = "target:dapp"
   }
 }
