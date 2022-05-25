@@ -79,6 +79,7 @@ services:
       - DB_NAME=postgres
       - DB_PASSWORD=password
       - DB_HOST=database
+      - DB_PORT=5432
       - DB_TEST_NAME=postgres
 
   database:
