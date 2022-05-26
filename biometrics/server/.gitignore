@@ -1,0 +1,6 @@
+__pycache__
+.env
+*.ext2
+*.yaml
+machine
+model.py
