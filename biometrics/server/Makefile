@@ -15,19 +15,19 @@ DAPP_SERVER_MANAGER_IMG := cartesi/server-manager:$(DAPP_SERVER_MANAGER_TAG)
 TOOLCHAIN_TAG := 0.9.0
 TOOLCHAIN_IMG := cartesi/toolchain:$(TOOLCHAIN_TAG)
 
-CONTAINER_NAME := cartesi-m2cgen-dapp
-CONTAINER_BASE := /opt/cartesi/m2cgen
-CONTAINER_DAPP_FS_BIN := /opt/cartesi/m2cgen-dapp-fs/m2cgen-dapp.ext2
-CONTAINER_MACHINE_DIR := /opt/cartesi/m2cgen-machine
+CONTAINER_NAME := cartesi-biometrics-dapp
+CONTAINER_BASE := /opt/cartesi/biometrics
+CONTAINER_DAPP_FS_BIN := /opt/cartesi/biometrics-dapp-fs/biometrics-dapp.ext2
+CONTAINER_MACHINE_DIR := /opt/cartesi/biometrics-machine
 
-DAPP_FS_BIN := m2cgen-dapp.ext2
+DAPP_FS_BIN := biometrics-dapp.ext2
 BINARIES := rootfs.ext2 linux-5.5.19-ctsi-5.bin rom.bin
 MACHINE_DIR := machine
 
 .PHONY: model console clean
 
 $(MACHINE_DIR): $(DAPP_FS_BIN) $(BINARIES)
-	@echo "Building cartesi-machine m2cgen-dapp instance..."
+	@echo "Building cartesi-machine biometrics-dapp instance..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi
@@ -55,8 +55,8 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): model m2cgen.py
-	@echo "Building m2cgen-dapp filesystem..."
+$(DAPP_FS_BIN): model biometrics.py
+	@echo "Building biometrics-dapp filesystem..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
 	fi

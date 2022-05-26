@@ -1,7 +1,8 @@
 #include "opencv2/opencv.hpp"
 #include <opencv2/highgui.hpp>
+#include "include/histogram.hpp"
 #include <limits>
-#include <fstream>
+
 
 using namespace cv;
 using namespace std;
@@ -83,45 +84,83 @@ void OLBP(const Mat& src, Mat& dst) {
 	case CV_64FC1: OLBP_<double>(src, dst); break;
 	}
 }
+String findFileName(String filename) {
+	const size_t last_slash_idx = filename.find_last_of("\\/");
+	if (std::string::npos != last_slash_idx)
+	{
+		filename.erase(0, last_slash_idx + 1);
+	}
+
+	// Remove extension if present.
+	const size_t period_idx = filename.rfind('.');
+	if (std::string::npos != period_idx)
+	{
+		filename.erase(period_idx);
+	}
+	return filename;
+}
 
 
 int main(int argc, const char* argv[]) {
 
-	String path = argv[1];
-	String folders[2] = { "training", "testing" };
-	
-	for (int i = 0; i < 2; i++) {
-		vector<cv::String> fn;
-		printf("Creating %s files \n", folders[i]);
-		String concat = path + folders[i] + "/*.png";
-		glob(concat, fn, true);
+	if (strcmp(argv[1], "-d") == 0) { //if dataset path
+		String path = argv[2];
+		String folders[2] = { "training", "testing" };
 
-		vector<Mat> hists; // Vector of histograms
-		size_t count = fn.size(); //number of png files in images folder
+		for (int i = 0; i < 2; i++) {
+			vector<cv::String> fn;
+			printf("Creating %s files \n", folders[i]);
+			String concat = path + folders[i] + "/*.png";
+			glob(concat, fn, true);
 
-		//Reads the input folder, extracts lbp feature and puts to histogram vector.
-		String labelFile = folders[i] + "_label.txt";
-		String histogramFile = folders[i] + "_hists.txt";
-		ofstream flabel(labelFile);
-		for (size_t j = 0; j < count; j++) {
+			vector<Mat> hists; // Vector of histograms
+			size_t count = fn.size(); //number of png files in images folder
 
-			Mat img, lbp, hist;
-			img = imread(fn[j]);
-			if (fn[j].find("Live") != std::string::npos) {
-				flabel << "Live" << endl;
+			//Reads the input folder, extracts lbp feature and puts to histogram vector.
+			String labelFile = folders[i] + "_labels.txt";
+			String histogramFile = folders[i] + "_hists.txt";
+			ofstream flabel(labelFile);
+			for (size_t j = 0; j < count; j++) {
+
+				Mat img, lbp, hist;
+				img = imread(fn[j]);
+				if (fn[j].find("Live") != std::string::npos) {
+					flabel << "Live" << endl;
+				}
+				else {
+					flabel << "Fake" << endl;
+				}
+				cvtColor(img, img, COLOR_BGR2GRAY);
+				OLBP(img, lbp);
+				hist = histogram(lbp);
+				hists.push_back(hist);
 			}
-			else {
-				flabel << "Fake" << endl;
-			}
-			cvtColor(img, img, COLOR_BGR2GRAY);
-			OLBP(img, lbp);
-			hist = histogram(lbp);
-			hists.push_back(hist);
+			Mat data;
+			data = asRowMatrix(hists, CV_32F, 1, 0);
+			ofstream fout(histogramFile);
+			fout << data << endl;
 		}
+	}
+	else if(strcmp(argv[1], "-i") == 0){ // if image path
+		String path = argv[2];
+		printf("Creating input image histogram file \n");
+		Mat img, lbp,hist;
+		vector<Mat> hists;
+		img = imread(path);
+		cvtColor(img, img, COLOR_BGR2GRAY);
+		OLBP(img, lbp);
+		hist = histogram(lbp);
+		hists.push_back(hist);
 		Mat data;
 		data = asRowMatrix(hists, CV_32F, 1, 0);
+		String histogramFile = "hist.txt";//findFileName(path+".txt");
 		ofstream fout(histogramFile);
 		fout << data << endl;
+		printf("Created %s file! \n", histogramFile);
+	}else{
+		print("Inputs are as not expected");
 	}
+	
+	
 	return 0; // success
 }

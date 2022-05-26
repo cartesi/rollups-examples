@@ -14,7 +14,7 @@
 cartesi-machine \
     --ram-length=128Mi \
     --rollup \
-    --flash-drive=label:m2cgen-dapp,filename:m2cgen-dapp.ext2 \
+    --flash-drive=label:biometrics-dapp,filename:biometrics-dapp.ext2 \
     --flash-drive=label:root,filename:rootfs.ext2 \
     --ram-image=linux-5.5.19-ctsi-5.bin \
     --rom-image=rom.bin \

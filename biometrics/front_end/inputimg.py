@@ -1,6 +1,7 @@
 import json
 from multiprocessing.connection import wait
 import time
+import base64
 
 import subprocess
 
@@ -13,15 +14,15 @@ import subprocess
 def main():
     #Get user inputs
     start = time.time()
-    ex = input("Enter the image file txt path: ")
+    ex = input("Please Enter the image file path")
     print(ex)
     s_input = ex
     print("This is the file path : "+ s_input)
     
-    with open(s_input) as f:
-        content = f.read().rstrip()
+    with open(s_input, "rb") as image_file:
+        content = base64.b64encode(image_file.read())
     
-    chunks_lenght = 10000
+    chunks_lenght = 90000
     chunks = [content[i:i+chunks_lenght] for i in range(0, len(content), chunks_lenght)]
     
     send_chunks(chunks)
@@ -43,7 +44,7 @@ def convert_to_hex(s_input):
     return "0x"+str(s_input.encode("utf-8").hex())
 
 def call_docker(h_input):
-    subprocess.call("npx hardhat --network localhost img-proc:addInput --input "+h_input, shell=True)
+    subprocess.call("npx hardhat --network localhost biometrics:addInput --input "+h_input, shell=True)
 
 main()
 
