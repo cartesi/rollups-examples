@@ -1,7 +1,7 @@
 #include "opencv2/opencv.hpp"
 #include <opencv2/highgui.hpp>
-#include "include/histogram.hpp"
 #include <limits>
+#include <fstream>
 
 
 using namespace cv;
@@ -84,21 +84,6 @@ void OLBP(const Mat& src, Mat& dst) {
 	case CV_64FC1: OLBP_<double>(src, dst); break;
 	}
 }
-String findFileName(String filename) {
-	const size_t last_slash_idx = filename.find_last_of("\\/");
-	if (std::string::npos != last_slash_idx)
-	{
-		filename.erase(0, last_slash_idx + 1);
-	}
-
-	// Remove extension if present.
-	const size_t period_idx = filename.rfind('.');
-	if (std::string::npos != period_idx)
-	{
-		filename.erase(period_idx);
-	}
-	return filename;
-}
 
 
 int main(int argc, const char* argv[]) {
@@ -157,10 +142,8 @@ int main(int argc, const char* argv[]) {
 		ofstream fout(histogramFile);
 		fout << data << endl;
 		printf("Created %s file! \n", histogramFile);
-	}else{
-		print("Inputs are as not expected");
+	}else {
+		printf("Inputs are as not expected");
 	}
-	
-	
 	return 0; // success
 }

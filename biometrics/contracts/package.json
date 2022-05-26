@@ -1,7 +1,7 @@
 {
-    "name": "m2cgen",
+    "name": "biometris",
     "version": "0.5.1",
-    "description": "m2cgen DApp",
+    "description": "biometrics DApp",
     "main": "index.ts",
     "license": "Apache-2.0",
     "scripts": {
