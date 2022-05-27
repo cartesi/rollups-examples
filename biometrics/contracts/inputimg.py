@@ -28,7 +28,7 @@ def main():
     
     send_chunks(chunks, s_input)
     end = time.time()
-
+    print("Image Sent!")
     print("Time Elapsed was: " + str(end - start))
     print("Time per chunks was : " + str((end - start)/len(chunks)))
 
@@ -45,7 +45,7 @@ def convert_to_hex(s_input):
     return "0x"+str(s_input.encode("utf-8").hex())
 
 def call_docker(h_input):
-    subprocess.call("npx hardhat --network localhost biometris:addInput --input "+h_input, shell=True)
+    subprocess.call("npx hardhat --network localhost biometrics:addInput --input "+h_input, shell=True)
 
 main()
 
