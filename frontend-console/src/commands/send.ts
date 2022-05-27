@@ -31,6 +31,13 @@ const HARDHAT_DEFAULT_MNEMONIC =
     "test test test test test test test test test test test junk";
 
 export const builder = (yargs: Argv) => {
+    // retrieves mnemonic implicit from either the environment or from the default value for localhost
+    let mnemonic = process.env.MNEMONIC;
+    const network = (<any>yargs.argv).network;
+    if (!mnemonic && network == "localhost") {
+        mnemonic = HARDHAT_DEFAULT_MNEMONIC;
+    }
+
     return yargs
         .option("network", {
             describe: "Network to use",
@@ -46,7 +53,7 @@ export const builder = (yargs: Argv) => {
         .option("mnemonic", {
             describe: "Wallet mnemonic",
             type: "string",
-            default: process.env.MNEMONIC,
+            default: mnemonic,
             demandOption: false,
         })
         .positional("message", { demandOption: false, type: "string" });
@@ -130,6 +137,8 @@ export const handler = async (args: Args) => {
     // connect to provider, use deployment address based on returned chain id of provider
     console.log(`connecting to ${network}`);
     const { chain, inputContract } = await connect(network, address, mnemonic);
+    const signerAddress = await inputContract.signer.getAddress();
+    console.log(`using account "${signerAddress}"`);
 
     // use message from command line option, or from user prompt
     console.log(`sending "${message}"`);
