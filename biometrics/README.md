@@ -152,7 +152,7 @@ $ docker-compose -f docker-compose.yml -f docker-compose-host.yml up --build
 
 The next step is to run the biometrics server in your machine. The application is written in Python, so you need to have `python3` installed.
 
-In order to start the m2cgen server, run the following commands in a dedicated terminal:
+In order to start the biometrics server, run the following commands in a dedicated terminal:
 
 ```shell
 $ cd biometrics/server/
@@ -162,7 +162,7 @@ $ pip install -r requirements.txt
 $ ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 biometrics.py
 ```
 
-This will run the m2cgen server and send the corresponding notices to port `5004`.
+This will run the biometrics server and send the corresponding notices to port `5004`.
 
 The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
 You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
