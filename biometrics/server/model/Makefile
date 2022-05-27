@@ -12,7 +12,7 @@
 
 model: build_model.py
 	python3 -m venv .env
-	. .env/bin/activate; pip install -r requirements.txt; python3 build_model.py -t "training_hists.txt" -e "testing_hists.txt" -tl "training_label.txt" -tel "testing_label.txt"; deactivate
+	. .env/bin/activate; pip install -r requirements.txt; python3 build_model.py -t "training_hists.txt" -e "testing_hists.txt" -tl "training_labels.txt" -tel "testing_labels.txt"; deactivate
 
 clean:
 	rm -rf .env

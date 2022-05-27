@@ -141,7 +141,7 @@ int main(int argc, const char* argv[]) {
 		String histogramFile = "hist.txt";//findFileName(path+".txt");
 		ofstream fout(histogramFile);
 		fout << data << endl;
-		printf("Created %s file! \n", histogramFile);
+		printf("Created hist file! \n");
 	}else {
 		printf("Inputs are as not expected");
 	}

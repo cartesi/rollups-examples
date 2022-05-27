@@ -18,6 +18,7 @@ DAPP_FS_BIN=/opt/cartesi/biometrics-dapp-fs/biometrics-dapp.ext2
 mkdir -p $DAPP_FS
 cp ./biometrics.py $DAPP_FS
 cp ./model.py $DAPP_FS
-(cd $DAPP_FS; tar --sort=name --mtime="2022-01-01" --owner=0 --group=0 --numeric-owner -cf $DAPP_FS_TAR biometrics.py model.py)
+cp ./fexrvv $DAPP_FS
+(cd $DAPP_FS; tar --sort=name --mtime="2022-01-01" --owner=0 --group=0 --numeric-owner -cf $DAPP_FS_TAR biometrics.py model.py fexrvv)
 genext2fs -f -i 512 -b 1024 -a $DAPP_FS_TAR $DAPP_FS_BIN
 truncate -s %4096 $DAPP_FS_BIN

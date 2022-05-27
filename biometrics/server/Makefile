@@ -19,7 +19,6 @@ CONTAINER_NAME := cartesi-biometrics-dapp
 CONTAINER_BASE := /opt/cartesi/biometrics
 CONTAINER_DAPP_FS_BIN := /opt/cartesi/biometrics-dapp-fs/biometrics-dapp.ext2
 CONTAINER_MACHINE_DIR := /opt/cartesi/biometrics-machine
-
 DAPP_FS_BIN := biometrics-dapp.ext2
 BINARIES := rootfs.ext2 linux-5.5.19-ctsi-5.bin rom.bin
 MACHINE_DIR := machine
@@ -55,7 +54,7 @@ $(BINARIES) &:
 	@wget -q -nc -i dependencies -P .
 	@shasum -c shasumfile
 
-$(DAPP_FS_BIN): model biometrics.py
+$(DAPP_FS_BIN): model biometrics.py fexrvv
 	@echo "Building biometrics-dapp filesystem..."
 	@if docker inspect $(CONTAINER_NAME) > /dev/null 2>&1; then \
 		docker rm -f $(CONTAINER_NAME) > /dev/null; \
@@ -76,4 +75,4 @@ model:
 
 clean:
 	@make -C model clean
-	@rm -rf model.py $(DAPP_FS_BIN) $(BINARIES) $(MACHINE_DIR)
+	@rm -rf model.py $(DAPP_FS_BIN) linux-5.5.19-ctsi-5.bin rom.bin $(MACHINE_DIR)

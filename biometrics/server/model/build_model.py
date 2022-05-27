@@ -66,7 +66,7 @@ model.fit(data, labels)
 
 # convert model to pure python code  to be used in backend DApp.
 model_to_python = m2c.export_to_python(model) 
-with open("../xmodel.py", "w") as text_file:
+with open("../model.py", "w") as text_file:
     print(f"{model_to_python}", file=text_file)
 
 print("Model exported successfully")

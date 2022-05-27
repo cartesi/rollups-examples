@@ -14,3 +14,8 @@
 cmake .
 make
 ./fex "-d" ./dataset/
+#Input here your path to cartesi toolchain binaries. Or keep it if you have in the same path as bellow.
+export PATH="/home/riscv/riscv64-cartesi-linux-gnu/bin:$PATH"
+riscv64-cartesi-linux-gnu-g++ featureExtractor.cpp -o fexrvv -I /usr/local/opencv4-rvv/include/opencv4 -L /usr/local/opencv4-rvv/lib -lopencv_core -lopencv_imgcodecs -lopencv_imgproc -lopencv_highgui
+mv ./fexrvv ../../
+mv training_hists.txt testing_hists.txt training_labels.txt testing_labels.txt ../

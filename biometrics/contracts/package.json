@@ -1,5 +1,5 @@
 {
-    "name": "biometris",
+    "name": "biometrics",
     "version": "0.5.1",
     "description": "biometrics DApp",
     "main": "index.ts",
