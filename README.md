@@ -43,7 +43,7 @@ In order to build and execute any example perform the following commands:
 
 ```
 $ cd <example>
-$ docker buildx bake
+$ docker buildx bake --load
 $ docker compose -p <example> -f ../docker-compose.yml -f ./docker-compose.override.yml up
 ```
 
@@ -83,7 +83,7 @@ This will create a file at `../deploy/polygon_mumbai/<example>.json` with the de
 
 ## Examples
 
-### 1. [Echo DApp](./echo)
+### 1. [Echo Python DApp](./echo-python)
 
 A basic "hello world" application, this DApp's back-end is written in Python and simply copies each input received as a corresponding output notice.
 

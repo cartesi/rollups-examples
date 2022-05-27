@@ -1,6 +1,6 @@
 
 group "default" {
-  targets = ["server", "console", "hardhat"]
+  targets = ["dapp", "server", "console", "hardhat"]
 }
 
 # crossenv toolchain for python dapps
