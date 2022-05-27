@@ -22,11 +22,13 @@ You'll also need the risc-v toolchain from cartesi to cross compile the c++ code
 $ cd rollups-examples/biometrics/server/model/build_model_files
 $ ./build_prod_model_files dataset
 ```
+
 This command generates the files needed to train the model, and also builds the fexrvv to be used in the server folder. After that you construct the model with the command bellow.
 
 ```shell
 $ cd rollups-examples/biometrics/server/model
 $ make
+```
 
 This command takes the generated files from the step before and trains a model for be used in the back end, and also shows the scores for the trained model.
 
