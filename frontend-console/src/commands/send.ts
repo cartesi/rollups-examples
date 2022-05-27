@@ -46,6 +46,7 @@ export const builder = (yargs: Argv) => {
         .option("mnemonic", {
             describe: "Wallet mnemonic",
             type: "string",
+            default: process.env.MNEMONIC,
             demandOption: false,
         })
         .positional("message", { demandOption: false, type: "string" });
@@ -131,7 +132,7 @@ export const handler = async (args: Args) => {
     const { chain, inputContract } = await connect(network, address, mnemonic);
 
     // use message from command line option, or from user prompt
-    console.log(`saying "${message}"`);
+    console.log(`sending "${message}"`);
 
     // convert string to input bytes
     const input = ethers.utils.toUtf8Bytes(message);
