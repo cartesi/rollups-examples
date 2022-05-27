@@ -183,11 +183,8 @@ After that, you can interact with the application normally [as explained above](
 When you add an input, you should see it being processed by the biometrics server as follows:
 
 ```log
-INFO:__main__:Received finish status 200
-INFO:__main__:Received advance request data {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 0, 'timestamp': 0}, 'payload': '0x7b22416765223a2033372c2022536578223a20226d616c65222c2022456d6261726b6564223a202253227d'}
-INFO:__main__:Received input: '{"Age": 37, "Sex": "male", "Embarked": "S"}'
-INFO:__main__:Data={"Age": 37, "Sex": "male", "Embarked": "S"}, Predicted: 0
-INFO:__main__:Adding notice with payload: 0
+INFO:__main__:Data=fake.png, Predicted: fake
+INFO:__main__:Adding notice with payload: fake
 INFO:__main__:Received notice status 200 body b'{"index":0}'
 INFO:__main__:Sending finish
 ```
