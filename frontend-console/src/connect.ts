@@ -16,6 +16,8 @@ import {
     InputFacet__factory,
     OutputFacet,
     OutputFacet__factory,
+    ERC20PortalFacet,
+    ERC20PortalFacet__factory,
 } from "@cartesi/rollups";
 import { Chain, networks } from "./networks";
 
@@ -23,6 +25,7 @@ interface Contracts {
     chain: Chain;
     inputContract: InputFacet;
     outputContract: OutputFacet;
+    erc20Portal: ERC20PortalFacet;
 }
 
 export const connect = async (
@@ -45,9 +48,11 @@ export const connect = async (
     // connect to contracts
     const inputContract = InputFacet__factory.connect(address, signer);
     const outputContract = OutputFacet__factory.connect(address, signer);
+    const erc20Portal = ERC20PortalFacet__factory.connect(address, signer);
     return {
         chain,
         inputContract,
         outputContract,
+        erc20Portal,
     };
 };

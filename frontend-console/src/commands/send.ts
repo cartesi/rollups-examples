@@ -157,5 +157,7 @@ export const handler = async (args: Args) => {
 
     // find reference to notice from transaction receipt
     const noticeKeys = findNoticeKeys(receipt);
-    console.log(`input added to epoch ${noticeKeys.epoch_index}`);
+    console.log(
+        `input ${noticeKeys.input_index} added to epoch ${noticeKeys.epoch_index}`
+    );
 };
