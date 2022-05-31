@@ -17,16 +17,20 @@ import { ethers } from "ethers";
 interface Args {
     url: string;
     epoch: number;
+    input: number;
 }
 
 export const command = "notices";
 export const describe = "List notices of an epoch and input";
+
+const DEFAULT_URL = "http://localhost:4000/graphql";
 
 export const builder = (yargs: Argv) => {
     return yargs
         .option("url", {
             describe: "Reader URL",
             type: "string",
+            default: DEFAULT_URL,
             demandOption: false,
         })
         .option("epoch", {
@@ -42,8 +46,11 @@ export const builder = (yargs: Argv) => {
 };
 
 export const handler = async (args: Args) => {
+    // default values from args
+    prompts.override(args);
+
     // use provider from command line option, or ask the user
-    const reader: string =
+    const url: string =
         args.url ||
         (
             await prompts({
@@ -63,21 +70,23 @@ export const handler = async (args: Args) => {
             })
         ).epoch);
 
-    const input: number =
-        args.epoch ||
-        (await (
+    let input: number = args.input;
+    if (input === undefined && args.epoch === undefined) {
+        // only asks for input when neither itself nor the epoch has been defined in the args
+        input = await (
             await prompts({
                 type: "number",
                 name: "input",
                 message: "Enter input index",
             })
-        ).input);
+        ).input;
+    }
 
-    // connect to provider, use deployment address based on returned chain id of provider
-    console.log(`connecting to ${reader}`);
+    // connect to reader URL
+    console.log(`connecting to ${url}`);
 
     // wait for notices to appear in reader
-    const notices = await getNotices(reader, {
+    const notices = await getNotices(url, {
         epoch_index: epoch.toString(),
         input_index: input?.toString(),
     });
