@@ -9,14 +9,13 @@ from os import environ
 from random import randrange, seed
 
 import requests
-from flask import Flask, request
 
 # Your API definition
-app = Flask(__name__)
-app.logger.setLevel(logging.INFO)
+logging.basicConfig(level="INFO")
+logger = logging.getLogger(__name__)
 
-dispatcher_url = environ["HTTP_DISPATCHER_URL"]
-app.logger.info(f"HTTP dispatcher url is {dispatcher_url}")
+rollup_server = environ["ROLLUP_HTTP_SERVER_URL"]
+logger.info(f"HTTP rollup_server url is {rollup_server}")
 
 
 # k-NN model parameter: number of neighbors
@@ -71,7 +70,7 @@ def dataset_str2index(dataset, column):
     lookup = dict()
     for i, name in enumerate(class_names):
         lookup[name] = i
-    app.logger.info("Class mapping from dataset: " + str(lookup))
+    logger.info("Class mapping from dataset: " + str(lookup))
 
     # converts dataset column from class values (names) to class indices
     for row in dataset:
@@ -190,7 +189,7 @@ def load_dataset():
     seed(1)
 
     # loads Iris dataset CSV file, ignoring the first line containing column names
-    app.logger.info("Loading Iris Dataset")
+    logger.info("Loading Iris Dataset")
     dataset = load_csv("iris.csv")[1:] 
 
     # converts value columns to float
@@ -203,24 +202,22 @@ def load_dataset():
     # evaluates knn algorithm for the dataset
     n_folds = 5
     fold_accuracies = evaluate_classification(dataset, knn_classify, n_folds, num_neighbors)
-    app.logger.info("Accuracies for k-NN in each cross-validation fold: " + str(fold_accuracies))
-    app.logger.info(
+    logger.info("Accuracies for k-NN in each cross-validation fold: " + str(fold_accuracies))
+    logger.info(
         "Mean accuracy for k-NN in the dataset: "
         + str((sum(fold_accuracies) / float(len(fold_accuracies))))
     )
     return (dataset, class_names)
 
 
-@app.route("/advance", methods=["POST"])
-def predict():
-    body = request.get_json()
-    app.logger.info(f"Received advance request body {body}")
+def handle_advance(data):
+    logger.info(f"Received advance request data {data}")
 
     status = "accept"
     try:
         # retrieves input as string
-        input = hex2str(body["payload"])
-        app.logger.info(f"Received input: '{input}'")
+        input = hex2str(data["payload"])
+        logger.info(f"Received input: '{input}'")
 
         # json input should be like this {"sl": 2.0, "sw": 3.0, "pl": 4.0, "pw": 3.5}
         input_json = json.loads(input)
@@ -233,34 +230,50 @@ def predict():
 
         # computes predicted classification for input        
         predicted = knn_classify(dataset, input_row, num_neighbors)
-        app.logger.info(f"Data={input}, Predicted: {predicted}")
+        logger.info(f"Data={input}, Predicted: {predicted}")
 
         # emits output notice with predicted class name
         predicted_class_name = class_names[predicted]
         output = str2hex(predicted_class_name)
-        app.logger.info(f"Adding notice with payload: {predicted_class_name}")
-        response = requests.post(dispatcher_url + "/notice", json={"payload": output})
-        app.logger.info(f"Received notice status {response.status_code} body {response.content}")
+        logger.info(f"Adding notice with payload: {predicted_class_name}")
+        response = requests.post(rollup_server + "/notice", json={"payload": output})
+        logger.info(f"Received notice status {response.status_code} body {response.content}")
 
     except Exception as e:
         status = "reject"
-        msg = f"Error processing body {body}\n{traceback.format_exc()}"
-        app.logger.error(msg)
-        response = requests.post(dispatcher_url + "/report", json={"payload": str2hex(msg)})
-        app.logger.info(f"Received report status {response.status_code} body {response.content}")
+        msg = f"Error processing data {data}\n{traceback.format_exc()}"
+        logger.error(msg)
+        response = requests.post(rollup_server + "/report", json={"payload": str2hex(msg)})
+        logger.info(f"Received report status {response.status_code} body {response.content}")
 
-    # finishes processing of the input
-    app.logger.info("Finishing")
-    response = requests.post(dispatcher_url + "/finish", json={"status": status})
-    app.logger.info(f"Received finish status {response.status_code}")
-    return "", 202
+    return status
 
 
-@app.route("/inspect/<payload>", methods=["GET"])
-def inspect(payload):
-    app.logger.info(f"Received inspect request payload {payload}")
-    return {"reports": [{"payload": payload}]}, 200
+def handle_inspect(data):
+    logger.info(f"Received inspect request data {data}")
+    logger.info("Adding report")
+    response = requests.post(rollup_server + "/report", json={"payload": data["payload"]})
+    logger.info(f"Received report status {response.status_code}")
+    return "accept"
 
 
 # loads dataset and its class names
 dataset, class_names = load_dataset()
+
+
+handlers = {
+    "advance_state": handle_advance,
+    "inspect_state": handle_inspect,
+}
+
+finish = {"status": "accept"}
+while True:
+    logger.info("Sending finish")
+    response = requests.post(rollup_server + "/finish", json=finish)
+    logger.info(f"Received finish status {response.status_code}")
+    if response.status_code == 202:
+        logger.info("No pending rollup request, trying again")
+    else:
+        rollup_request = response.json()
+        handler = handlers[rollup_request["request_type"]]
+        finish["status"] = handler(rollup_request["data"])

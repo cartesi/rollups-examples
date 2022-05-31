@@ -11,11 +11,9 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-# Start the Cartesi HTTP-Dispatcher and the echo-dapp.
-# This script must run inside the cartesi machine
+# Start the Cartesi echo-dapp in host mode
 
-DAPP_PORT=5003
-HTTP_DISPATCHER_PORT=5004
+ROLLUP_HTTP_SERVER_PORT=5004
 
 # Rebuild echo dapp
 echo -n "Rebuilding echo-dapp: "
@@ -23,6 +21,5 @@ make echo-server-host
 
 # Start echo dapp
 echo -n "Starting echo-dapp: "
-DAPP_PORT=$DAPP_PORT HTTP_DISPATCHER_URL="http://127.0.0.1:$HTTP_DISPATCHER_PORT" \
+ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:$ROLLUP_HTTP_SERVER_PORT" \
 ./echo-server-host
-

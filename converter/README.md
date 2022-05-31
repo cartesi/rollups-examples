@@ -121,21 +121,23 @@ $ cd converter/server/
 $ python3 -m venv .env
 $ . .env/bin/activate
 $ pip install -r requirements.txt
-$ HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --reload --workers 1 --bind 0.0.0.0:5003 converter:app
+$ ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 converter.py
 ```
 
-This will run the converter server on port `5003` and send the corresponding notices to port `5004`. The server will also automatically reload if there is a change in the source code, enabling fast development iterations.
+This will run the converter server and send the corresponding notices to port `5004`.
 
-The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints. In that case, it may be interesting to add the parameter `--timeout 0` to gunicorn, to avoid having it time out when the debugger stops at a breakpoint.
+The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
+You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
+
+```shell
+$ ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 converter.py
+```
 
 After the server successfully starts, it should print an output like the following:
 
 ```log
-[2022-01-21 12:38:23,971] INFO in converter: HTTP dispatcher url is http://127.0.0.1:5004
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Starting gunicorn 19.9.0
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Listening at: http://0.0.0.0:5003 (79032)
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Using worker: sync
-[2022-01-21 12:38:23 -0500] [79035] [INFO] Booting worker with pid: 79035
+INFO:__main__:HTTP rollup_server url is http://127.0.0.1:5004
+INFO:__main__:Sending finish
 ```
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
@@ -143,11 +145,11 @@ After that, you can interact with the application normally [as explained above](
 When you add an input, you should see it being processed by the converter server as follows:
 
 ```log
-[2022-03-24 17:30:50,512] INFO in converter: Received advance request body {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 11, 'time_stamp': 1648153857}, 'payload': '0x7b227472616e73666f726d223a20227570706572222c20226d657373616765223a202268656c6c6f2066726f6d2063617274657369227d'}
-[2022-03-24 17:30:50,515] INFO in converter: Received input: {'transform': 'upper', 'message': 'hello from cartesi'}
-[2022-03-24 17:30:50,515] INFO in converter: Adding notice with payload: 'HELLO FROM CARTESI'
-[2022-03-24 17:30:50,561] INFO in converter: Finishing
-[2022-03-24 17:30:50,565] INFO in converter: Received finish status 202
+INFO:__main__:Received finish status 200
+INFO:__main__:Received advance request data {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 0, 'timestamp': 0}, 'payload': '0x7b227472616e73666f726d223a20227570706572222c20226d657373616765223a202268656c6c6f2066726f6d2063617274657369227d'}
+INFO:__main__:Received input: {'transform': 'upper', 'message': 'hello from cartesi'}
+INFO:__main__:Adding notice with payload: 'HELLO FROM CARTESI'
+INFO:__main__:Sending finish
 ```
 
 Finally, to stop the containers, removing any associated volumes, execute:

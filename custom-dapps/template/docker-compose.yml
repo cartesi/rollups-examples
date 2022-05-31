@@ -2,7 +2,7 @@ version: '3'
 
 services:
   hardhat:
-    build: ./contracts
+    build: .
     command: ["node", "--write", "true", "--network", "hardhat", "--export", "/opt/cartesi/share/blockchain/localhost.json"]
     init: true
     ports:
@@ -10,11 +10,11 @@ services:
     platform: linux/amd64
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
-      - ./contracts/deployments:/app/deployments
+      - ./contracts/deployments:/app/contracts/deployments
 
   rollups_dispatcher:
     depends_on: [hardhat]
-    image: cartesi/rollups-dispatcher:0.1.3
+    image: cartesi/rollups-dispatcher:0.2.0
     platform: linux/amd64
     restart: always
     environment:
@@ -38,7 +38,7 @@ services:
 
   state_server:
     depends_on: [hardhat]
-    image: cartesi/delegate-server:0.1.3
+    image: cartesi/delegate-server:0.2.0
     platform: linux/amd64
     restart: always
     environment:
@@ -50,7 +50,7 @@ services:
       - ./config:/opt/cartesi/share/config/
 
   server_manager:
-    image: cartesi/server-manager:0.1.0
+    image: cartesi/server-manager:0.2.0
     platform: linux/amd64
     restart: always
     volumes:
@@ -58,7 +58,7 @@ services:
 
   rollups_indexer:
     depends_on: [hardhat]
-    image: cartesi/rollups-indexer:0.1.3
+    image: cartesi/rollups-indexer:0.2.0
     platform: linux/amd64
     restart: always
     environment:
@@ -76,7 +76,7 @@ services:
       - ./config:/opt/cartesi/share/config/
 
   query_server:
-    image: cartesi/query-server:0.1.3
+    image: cartesi/query-server:0.2.0
     platform: linux/amd64
     ports:
       - '4000:4000'

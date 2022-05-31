@@ -32,7 +32,6 @@ for i in \
     ${dapp_name}/server/build-machine.sh \
     ${dapp_name}/server/Makefile \
     ${dapp_name}/server/run-machine-console.sh \
-    ${dapp_name}/server/run.sh \
     ${dapp_name}/README.md
 do
     sed -i'' -e "s/template/${dapp_name}/g" $i

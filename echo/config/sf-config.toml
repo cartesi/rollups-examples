@@ -10,4 +10,4 @@ genesis_block = "0x1"
 query_limit_error_codes = [-32005]
 
 # number of blocks (depth) before considering state finalized
-safety_margin = 1
+safety_margin = 0

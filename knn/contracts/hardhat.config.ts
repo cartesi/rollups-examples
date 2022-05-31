@@ -18,19 +18,20 @@ import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-etherscan";
 import "@typechain/hardhat";
 import "hardhat-deploy";
-import "@cartesi/rollups";
-import { appTasks, GraphQLConfig } from "@cartesi/rollups";
+import "@cartesi/hardhat-rollups";
+import { appTasks, GraphQLConfig } from "@cartesi/hardhat-rollups";
 
 // get app name
 import { name } from "./package.json";
 
 // GraphQL endpoint configuration per network
 const graphqlConfig: GraphQLConfig = {
-    localhost: "http://localhost:4000/graphql"
-}
+    localhost: "http://localhost:4000/graphql",
+    polygon_mumbai: `https://${name}.polygon-mumbai.rollups.dev.cartesi.io/graphql`,
+};
 
 // define app tasks that calls rollups tasks, resolving rollups contract address and GraphQL server address
-// i.e. knn:addInput -> rollups:addInput
+// i.e. echo:addInput -> rollups:addInput
 appTasks(name, graphqlConfig);
 
 // read MNEMONIC from file or from env variable
@@ -61,11 +62,7 @@ const config: HardhatUserConfig = {
         kovan: infuraNetwork("kovan", 42, 6283185),
         goerli: infuraNetwork("goerli", 5, 6283185),
         mainnet: infuraNetwork("mainnet", 1, 6283185),
-        polygon_mumbai: {
-            url: "https://matic-mumbai.chainstacklabs.com",
-            chainId: 80001,
-            accounts: mnemonic ? { mnemonic } : undefined,
-        },
+        polygon_mumbai: infuraNetwork("polygon-mumbai", 80001, 6283185),
         bsc_testnet: {
             url: "https://data-seed-prebsc-1-s1.binance.org:8545",
             chainId: 97,
@@ -79,20 +76,55 @@ const config: HardhatUserConfig = {
                 deploy: "node_modules/@cartesi/util/dist/deploy",
             },
             {
+                artifacts: "node_modules/@cartesi/token/export/artifacts",
+                deploy: "node_modules/@cartesi/token/dist/deploy",
+            },
+            {
                 artifacts: "node_modules/@cartesi/rollups/export/artifacts",
+                deploy: "node_modules/@cartesi/rollups/dist/deploy",
             },
         ],
         deployments: {
-            localhost: ["node_modules/@cartesi/util/deployments/localhost"],
-            mainnet: ["node_modules/@cartesi/util/deployments/mainnet"],
-            ropsten: ["node_modules/@cartesi/util/deployments/ropsten"],
-            rinkeby: ["node_modules/@cartesi/util/deployments/rinkeby"],
-            kovan: ["node_modules/@cartesi/util/deployments/kovan"],
-            goerli: ["node_modules/@cartesi/util/deployments/goerli"],
+            localhost: [
+                "node_modules/@cartesi/util/deployments/localhost",
+                "node_modules/@cartesi/token/deployments/localhost",
+                "node_modules/@cartesi/rollups/deployments/localhost",
+            ],
+            mainnet: [
+                "node_modules/@cartesi/util/deployments/mainnet",
+                "node_modules/@cartesi/token/deployments/mainnet",
+                "node_modules/@cartesi/rollups/deployments/mainnet",
+            ],
+            ropsten: [
+                "node_modules/@cartesi/util/deployments/ropsten",
+                "node_modules/@cartesi/token/deployments/ropsten",
+                "node_modules/@cartesi/rollups/deployments/ropsten",
+            ],
+            rinkeby: [
+                "node_modules/@cartesi/util/deployments/rinkeby",
+                "node_modules/@cartesi/token/deployments/rinkeby",
+                "node_modules/@cartesi/rollups/deployments/rinkeby",
+            ],
+            kovan: [
+                "node_modules/@cartesi/util/deployments/kovan",
+                "node_modules/@cartesi/token/deployments/kovan",
+                "node_modules/@cartesi/rollups/deployments/kovan",
+            ],
+            goerli: [
+                "node_modules/@cartesi/util/deployments/goerli",
+                "node_modules/@cartesi/token/deployments/goerli",
+                "node_modules/@cartesi/rollups/deployments/goerli",
+            ],
             polygon_mumbai: [
                 "node_modules/@cartesi/util/deployments/matic_testnet",
+                "node_modules/@cartesi/token/deployments/matic_testnet",
+                "node_modules/@cartesi/rollups/deployments/polygon_mumbai",
             ],
-            bsc_testnet: ["node_modules/@cartesi/util/deployments/bsc_testnet"],
+            bsc_testnet: [
+                "node_modules/@cartesi/util/deployments/bsc_testnet",
+                "node_modules/@cartesi/token/deployments/bsc_testnet",
+                "node_modules/@cartesi/rollups/deployments/bsc_testnet",
+            ],
         },
     },
     etherscan: {
@@ -107,6 +139,9 @@ const config: HardhatUserConfig = {
     },
     namedAccounts: {
         deployer: {
+            default: 0,
+        },
+        beneficiary: {
             default: 0,
         },
     },

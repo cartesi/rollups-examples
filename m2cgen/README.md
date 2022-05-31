@@ -131,21 +131,23 @@ $ cd m2cgen/server/
 $ python3 -m venv .env
 $ . .env/bin/activate
 $ pip install -r requirements.txt
-$ HTTP_DISPATCHER_URL="http://127.0.0.1:5004" gunicorn --reload --workers 1 --bind 0.0.0.0:5003 m2cgen:app
+$ ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 m2cgen.py
 ```
 
-This will run the m2cgen server on port `5003` and send the corresponding notices to port `5004`. The server will also automatically reload if there is a change in the source code, enabling fast development iterations.
+This will run the m2cgen server and send the corresponding notices to port `5004`.
 
-The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints. In that case, it may be interesting to add the parameter `--timeout 0` to gunicorn, to avoid having it time out when the debugger stops at a breakpoint.
+The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
+You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
+
+```shell
+$ ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 m2cgen.py
+```
 
 After the server successfully starts, it should print an output like the following:
 
 ```
-[2022-01-21 12:38:23,971] INFO in m2cgen: HTTP dispatcher url is http://127.0.0.1:5004
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Starting gunicorn 19.9.0
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Listening at: http://0.0.0.0:5003 (79032)
-[2022-01-21 12:38:23 -0500] [79032] [INFO] Using worker: sync
-[2022-01-21 12:38:23 -0500] [79035] [INFO] Booting worker with pid: 79035
+INFO:__main__:HTTP rollup_server url is http://127.0.0.1:5004
+INFO:__main__:Sending finish
 ```
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
@@ -153,13 +155,13 @@ After that, you can interact with the application normally [as explained above](
 When you add an input, you should see it being processed by the m2cgen server as follows:
 
 ```log
-[2022-03-26 08:24:05,981] INFO in m2cgen: Received advance request body {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 2, 'block_number': 13, 'time_stamp': 1648293851}, 'payload': '0x7b22416765223a2033372c2022536578223a20226d616c65222c2022456d6261726b6564223a202253227d'}
-[2022-03-26 08:24:05,982] INFO in m2cgen: Received input: '{"Age": 37, "Sex": "male", "Embarked": "S"}'
-[2022-03-26 08:24:05,982] INFO in m2cgen: Data={"Age": 37, "Sex": "male", "Embarked": "S"}, Predicted: 0
-[2022-03-26 08:24:05,982] INFO in m2cgen: Adding notice with payload: 0
-[2022-03-26 08:24:05,992] INFO in m2cgen: Received notice status 201 body b'{"index":0}'
-[2022-03-26 08:24:05,993] INFO in m2cgen: Finishing
-[2022-03-26 08:24:05,998] INFO in m2cgen: Received finish status 202
+INFO:__main__:Received finish status 200
+INFO:__main__:Received advance request data {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 0, 'timestamp': 0}, 'payload': '0x7b22416765223a2033372c2022536578223a20226d616c65222c2022456d6261726b6564223a202253227d'}
+INFO:__main__:Received input: '{"Age": 37, "Sex": "male", "Embarked": "S"}'
+INFO:__main__:Data={"Age": 37, "Sex": "male", "Embarked": "S"}, Predicted: 0
+INFO:__main__:Adding notice with payload: 0
+INFO:__main__:Received notice status 200 body b'{"index":0}'
+INFO:__main__:Sending finish
 ```
 
 Finally, to stop the containers, removing any associated volumes, execute:

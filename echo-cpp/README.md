@@ -127,13 +127,18 @@ $ cd echo-cpp/server/
 $ ./run-host.sh
 ```
 
-This will run the echo-cpp server on port `5003` and send the corresponding notices to port `5004`. The server will also automatically reload if there is a change in the source code, enabling fast development iterations.
+This will run the echo-cpp server and send the corresponding notices to port `5004`.
+
+You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
+
+```shell
+ls *.cpp | entr -r ./run-host.sh
+```
 
 After the server successfully starts, it should print an output like the following:
 
 ```log
-Starting echo-dapp: Echo server started
-Echo server is listening on port 5003
+Starting echo-dapp: Sending finish
 ```
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
@@ -141,11 +146,11 @@ After that, you can interact with the application normally [as explained above](
 When you add an input, you should see it being processed by the echo-cpp server as follows:
 
 ```log
-Received advance request body:{"metadata":{"msg_sender":"0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266","epoch_index":0,"input_index":0,"block_number":11,"time_stamp":1648200111},"payload":"0x616c6f6861"}
+Received finish status 200
+Received advance request data {"metadata":{"block_number":0,"epoch_index":0,"input_index":0,"msg_sender":"0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266","timestamp":0},"payload":"0x63617274657369"}
 Adding notice
-Received notice status 201 body {"index":0}
-Finishing
-Received finish status 202
+Received notice status 200 body {"index":0}
+Sending finish
 ```
 
 Finally, to stop the containers, removing any associated volumes, execute:
