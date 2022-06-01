@@ -87,6 +87,8 @@ services:
 
   server_manager:
     restart: always
+    ports:
+      - '5001:5001'
     #    healthcheck:
     #      test: ["CMD", "curl", "-f", "http://locahost:5001"]
     #      interval: 10s
