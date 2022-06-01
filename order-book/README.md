@@ -5,6 +5,7 @@ The application creates and runs an SQLite database internally which holds the p
 You can send inputs with predefined structures to interact with the database and you get the results back as a notice. The available inputs are listed under [Example inputs](#example-inputs).
 
 The following actions are supported:
+
 - Create new orders
 - Modify orders
 - Delete orders by user
@@ -14,32 +15,25 @@ The following actions are supported:
 - Add new products
 
 ## How it works
+
 Upon building and starting the application, a sqlite database is created with 5 tradeable products and an empty order book. Users can add orders to the order book which can get executed fully, executed partly, or wait for later execution, subject to market conditions. Order properties consist of the following:
+
 - **product** (the product against which the base product is traded)
-- **type** ("limit" or "market" order)
-- **side** ("bid" for buy, "offer" for sale orders) 
+- **side** ("bid" for buy, "offer" for sale orders)
 - **amount** (units of product to be traded)
 - **unit price** (the limit, aka best price the user would settle the trade at)
 - **closing time** (a deadline for the order)
 
-### Limit orders 
-Once a buy (bid) or sell (offer) limit order is added into the order book, the matching function of the application loops through all open counter-side orders (offers against bids, bids against offers) of the product to find the best available price on the market. The best price is the lowest price for a buy order and the highest price for a sell order. 
-If the best price is within the range of the order price limit, the matching function selects the counter-order associated with the best price. If there are more than one orders in the order book at the best price, the least recent order is selected as counter-order. Once the counter-order is selected, a transaction is initiated for the tradeable amount, which is the lower order amount of the order and the counter-order. When the transaction is created, the amount of the two orders are each reduced by the transacted amount. 
+Once a buy (bid) or sell (offer) order is added into the order book, the matching function of the application loops through all open counter-side orders (offers against bids, bids against offers) of the product to find the best available price on the market. The best price is the lowest price for a buy order and the highest price for a sell order.
+If the best price is within the range of the order price limit, the matching function selects the counter-order associated with the best price. If there are more than one orders in the order book at the best price, the least recent order is selected as counter-order. Once the counter-order is selected, a transaction is initiated for the tradeable amount, which is the lower order amount of the order and the counter-order. When the transaction is created, the amount of the two orders are each reduced by the transacted amount.
 If there is any remaining open amount on the order, the loop of the matching function starts again to look for further matches. The loop continues until either the order amount reaches 0 (i.e. the full amount has traded) or the order book runs out of open orders whose price would match the order. Order matching is triggered again when a new order is added into the order book.
 
 Example:
+
 - **User A** adds a bid at 8212 for 3 units. As the order book is empty, there are no transactions.
 - **User B** adds an offer at 8217 for 2 units. As the best bid is lower than the offer price, there are no transactions.
-- **User C** adds a bid at 8219 for 4 units. As the best offer is lower than the bid price, the order can be (partly) executed. The best price is associated with **User B**'s offer, which will be matched against the bid. 2 units are traded, which is the full amount of the offer, while 2 units will remain open on **User C**'s bid. The trading price is 8217, which was the best offer price on the market. 
+- **User C** adds a bid at 8219 for 4 units. As the best offer is lower than the bid price, the order can be (partly) executed. The best price is associated with **User B**'s offer, which will be matched against the bid. 2 units are traded, which is the full amount of the offer, while 2 units will remain open on **User C**'s bid. The trading price is 8217, which was the best offer price on the market.
 - **User D** adds an offer at 8210 for 5 units. The best price on the market is 8212 associated with **User A**'s bid. 3 units trade at that price, resulting in **User A**'s order being fully settled. The matching function looks for further matches and finds the current best price, which is **user C**'s remaining 2 units bid at 8219, against whom the remaining 2 units are traded at that price. With the last transaction, all open orders have been settled.
-
-### Market orders
-**Market orders** work similarly to **Limit orders**, except that they don't have a price associated with them. Because of this, **Market orders** are automatically matched against the order on the other side with the best price, whatever that is. Execution continues until the full quantity of the market order has been matched, or until there are any open orders on the other side. In case the order book runs out of open orders on the other side, the **Market order** will be considered closed with whatever amount was able to trade. 
-
-Example:
-- **User A** adds a bid at 8212 for 3 units. As the order book is empty, there are no transactions.
-- **User B** adds a bid at 8214 for 2 units. As there are no offers, there are no transactions.
-- **User C** adds a market order for 7 units. Execution starts immediately, 2 units trade with **User B** at 8214 which is the best bid on the market, then 3 units trade with **User A** at 8212. As there are no more remaining bids on the market, the market order of **User C** will be closed despite only 5 out of 7 units traded. 
 
 ## Building the environment
 
@@ -93,12 +87,12 @@ $ yarn
 Then, send an input as follows:
 
 ```shell
-$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"test"}'
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"test","data":{}}'
 ```
 
 The input will have been accepted when you receive a response similar to the following one:
 
-```shell
+````shell
 Added input '{"resource":"test"}' to epoch '0' (index: '0', timestamp: 1650886109, signer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, tx: 0x6a07b324d4bad477f82fd6db85d8440520a657cc674f0048217817d7188370ed)```
 
 In order to verify the notices generated by your inputs, run the command:
@@ -135,45 +129,54 @@ The input for the application should be in the following structure:
   "resource": "order",
   "action": "create",
   "data": {
+    "side": "bid",
     "unit_price": 8212,
     "amount": 2,
     "symbol": "ETH",
-    "closing_time": 1650616219,
-    "timestamp": 1650537001
+    "closing_time": 1650616219
   }
 }
 ```
+
 - `side` can be `bid` for buy orders and `offer` for sell orders
 - `unit_price` is the price you want to exchange the asset at
 - `amount` is the amount of the asset you want to exchange
 - `symbol` is the symbol of the asset
 - `closing_time` is the time your offer times out. If set to `0` it never times out
-- `timestamp` is the current timestamp
 
 All assets are traded in CTSI so the price should be given in CTSI.
 
 ### Example inputs
 
 ```shell
+# Accounts
+
+# Get all accounts
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"account","action":"get"}'
+
+# Add account
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"account","action":"add"}'
+
+
 # Orders
 
 ## Create a new limit buy order
-$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"create","data":{"type":"limit","side":"bid","unit_price":8212,"amount":2,"symbol":"ETH","closing_time":1872128654,"timestamp":1650537001}}'
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"create","data":{"type":"limit","side":"bid","unit_price":11200,"amount":2,"symbol":"ETH","closing_time":1872128654}}'
 
 ## Create a new limit sell order
-$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"create","data":{"type":"limit","side":"offer","unit_price":8217,"amount":21,"symbol":"ETH","closing_time":1872128654,"timestamp":1650537045}}'
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"create","data":{"type":"limit","side":"offer","unit_price":11208,"amount":21,"symbol":"ETH","closing_time":1872128654}}'
 
 ## Create a new market buy order
-$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"create","data":{"type":"market","side":"bid","unit_price":0,"amount":32,"symbol":"ETH","closing_time":1872128654,"timestamp":1650537045}}'
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"create","data":{"type":"market","side":"bid","unit_price":0,"amount":32,"symbol":"ETH","closing_time":1872128654}}'
 
 ## Get your orders
 $ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"get"}'
 
 ## Modify an order
-$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"update","data":{"id":1,"unit_price":8214,"amount":3,"closing_time":1872128659,"timestamp":1650539999}}'
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"modify","data":{"id":1,"unit_price":8214,"amount":3,"closing_time":1872128659}}'
 
-## Delete an order
-$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"delete","data":{"id":1}}'
+## Cancel an order
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"cancel","data":{"id":1}}'
 
 ## Get all open orders for a product
 $ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"get_book","data":{"symbol":"ETH"}}'
@@ -192,6 +195,9 @@ $ yarn hardhat --network localhost order-book:addInput --input '{"resource":"ord
 
 ## Get the lowest offer for a product
 $ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"get_offer","data":{"symbol":"ETH"}}'
+
+## Get best price for a product
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"get_best","data":{"symbol":"ETH","side":"bid"}}'
 
 ## Get the bid-offer spread for a product
 $ yarn hardhat --network localhost order-book:addInput --input '{"resource":"order","action":"get_spread","data":{"symbol":"ETH"}}'
@@ -222,6 +228,18 @@ $ yarn hardhat --network localhost order-book:addInput --input '{"resource":"pro
 
 # Add new product
 $ yarn hardhat --network localhost order-book:addInput --input '{"resource":"product","action":"add","data":{"symbol":"DMC","name":"Dummycoin"}}'
+
+
+# Funds
+
+# Get user funds
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"fund","action":"get"}'
+
+# Get available user funds (not including those reserved in open orders)
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"fund","action":"get_available"}'
+
+# Add user funds for product
+$ yarn hardhat --network localhost order-book:addInput --input '{"resource":"fund","action":"add","data":{"symbol":"CTSI","amount":30000}}'
 ```
 
 ## Advancing time
@@ -285,3 +303,4 @@ Finally, to stop the containers, removing any associated volumes, execute:
 ```shell
 $ docker-compose -f docker-compose.yml -f docker-compose-host.yml down -v
 ```
+````

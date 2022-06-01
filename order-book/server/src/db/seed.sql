@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS funds (
     id INTEGER PRIMARY KEY,
     address_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
-    amount INTEGER NOT NULL
+    amount INTEGER NOT NULL,
+    reserved INTEGER NOT NULL
     -- FOREIGN KEY (address_id) 
     --     REFERENCES accounts (id)
     --         ON UPDATE CASCADE
@@ -68,6 +69,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 );
 
 
+INSERT OR IGNORE INTO products (name, symbol) VALUES ('Cartesi', 'CTSI');
 INSERT OR IGNORE INTO products (name, symbol) VALUES ('Ethereum', 'ETH');
 INSERT OR IGNORE INTO products (name, symbol) VALUES ('Bitcoin', 'BTC');
 INSERT OR IGNORE INTO products (name, symbol) VALUES ('Tether', 'USDT');

@@ -15,13 +15,14 @@ import traceback
 import logging
 import requests
 import json
-from src import orders, products, transactions
+from src import accounts, orders, products, transactions, funds
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
 
 rollup_server = environ["ROLLUP_HTTP_SERVER_URL"]
 logger.info(f"HTTP rollup_server url is {rollup_server}")
+
 
 def hex2str(hex):
     """
@@ -35,37 +36,52 @@ def str2hex(str):
     Encodes a string as a hex string
     """
     return "0x" + str.encode("utf-8").hex()
-    
+
+
 def handle_advance(data):
     logger.info(f"Received advance request data {data}")
     logger.info("Adding notice")
     try:
         payload = json.loads(hex2str(data["payload"]))
-        sender = data["metadata"]["msg_sender"]
-        logger.info(f"Decoded payload: {payload}, sender: {sender}")
+        if not "data" in payload:  # Maybe better to send empty data property with all requests?
+            payload["data"] = {}
+        payload["data"]["sender"] = data["metadata"]["msg_sender"]
+        payload["data"]["timestamp"] = data["metadata"]["timestamp"]
+        logger.info(
+            f"Decoded payload: {payload}, sender: {payload['data']['sender']}")
 
-        if payload["resource"] == "order":
-            response_payload = orders.handle_order(sender, payload, logger)
+        if payload["resource"] == "account":
+            response_payload = accounts.handle_account(payload, logger)
+        elif payload["resource"] == "order":
+            response_payload = orders.handle_order(payload, logger)
         elif payload["resource"] == "product":
-            response_payload = products.handle_product(sender, payload, logger)
+            response_payload = products.handle_product(payload, logger)
         elif payload["resource"] == "transaction":
-            response_payload = transactions.handle_transaction(sender, payload, logger)
+            response_payload = transactions.handle_transaction(payload, logger)
+        elif payload["resource"] == "fund":
+            response_payload = funds.handle_fund(payload, logger)
         elif payload["resource"] == "test":
-            response_payload = {"status": {"success": True, "message": "test input received" }}
+            response_payload = {"status": {
+                "success": True, "message": "test input received"}}
         else:
-            response_payload = {"status": {"success": False, "message": "no or unsupported resource specified" }}
+            response_payload = {"status": {
+                "success": False, "message": "no or unsupported resource specified"}}
 
         response_payload = json.dumps(response_payload)
-        response = requests.post(rollup_server + "/notice", json={"payload": str2hex(response_payload)})
-        logger.info(f"Received notice status {response.status_code} body {response.content}")
+        response = requests.post(
+            rollup_server + "/notice", json={"payload": str2hex(response_payload)})
+        logger.info(
+            f"Received notice status {response.status_code} body {response.content}")
         return "accept"
-     
+
     except Exception as e:
         msg = f"Error processing body {data}\n{traceback.format_exc()}"
         logger.error(msg)
-        response = requests.post(rollup_server + "/report", json={"payload": str2hex(msg)})
-        logger.info(f"Received report status {response.status_code} body {response.content}")
-        return "reject"
+        response_payload = json.dumps({"error_message": msg})
+        response = requests.post(
+            rollup_server + "/notice", json={"payload": str2hex(response_payload)})
+        return "accept"
+
 
 def handle_inspect(data):
     logger.info(f"Received inspect request data {data}")
@@ -74,6 +90,7 @@ def handle_inspect(data):
     response = requests.post(rollup_server + "/report", json=report)
     logger.info(f"Received report status {response.status_code}")
     return "accept"
+
 
 handlers = {
     "advance_state": handle_advance,
