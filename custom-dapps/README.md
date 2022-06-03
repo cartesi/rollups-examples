@@ -21,13 +21,13 @@ cd custom-dapps
 
 A new directory, `$DAPP_NAME`, will be created with all the boiler plate infrastructure needed by the new DApp.
 
-The new DApp will be provided with some basic back-end code, resembling what is available in the sample [Echo DApp](https://github.com/cartesi/rollups-examples/tree/main/echo).
+The new DApp will be provided with some basic back-end code, resembling what is available in the sample [Echo Python DApp](https://github.com/cartesi/rollups-examples/tree/main/echo-python).
 
 For instructions about how to setup the environment and run the original DApp, please refer to the [Template documentation](./template/README.md).
 
 ## Modifying the DApp logic
 
-The back-end logic may be found at `$DAPP_NAME/backend/$DAPP_NAME.py`.
+The back-end logic may be found at `$DAPP_NAME/$DAPP_NAME.py`.
 
 The script comes with some reference code, which may be helpful during development.
 It may be replaced or extended according to the use case needs.
