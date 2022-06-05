@@ -6,8 +6,6 @@ services:
     command:
       [
         "node",
-        "--write",
-        "true",
         "--network",
         "hardhat",
         "--export",
@@ -16,11 +14,16 @@ services:
     init: true
     ports:
       - "8545:8545"
+    healthcheck:
+      test:
+        ["CMD", "test", "-f", "/opt/cartesi/share/blockchain/localhost.json"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
 
   rollups_dispatcher:
-    depends_on: [hardhat]
     image: cartesi/rollups-dispatcher:devel
     command:
       [
@@ -40,19 +43,22 @@ services:
         "31337",
       ]
     restart: always
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      deployer:
+        condition: service_completed_successfully
+      state_server:
+        condition: service_started
+      server_manager:
+        condition: service_started
     environment:
-      STATE_SERVER_HOSTNAME: state_server
-      STATE_SERVER_PORT: "50051"
-      SERVER_MANAGER_HOSTNAME: server_manager
-      SERVER_MANAGER_PORT: "5001"
-      DEPLOYMENT_PATH: /opt/cartesi/share/blockchain/localhost.json
       RUST_LOG: info
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
 
   state_server:
-    depends_on: [hardhat]
     image: cartesi/delegate-server:devel
     command:
       [
@@ -62,23 +68,39 @@ services:
         "http://hardhat:8545",
         "--ws-url",
         "ws://hardhat:8545",
+        "rollups",
       ]
     restart: always
-    environment:
-      DEPLOYMENT_PATH: /opt/cartesi/share/blockchain/localhost.json
+    #    healthcheck:
+    #      test: ["CMD", "curl", "-f", "http://locahost:50051"]
+    #      interval: 10s
+    #      timeout: 5s
+    #      retries: 5
+    depends_on:
+      hardhat:
+        condition: service_healthy
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
 
   server_manager:
     restart: always
+    #    healthcheck:
+    #      test: ["CMD", "curl", "-f", "http://locahost:5001"]
+    #      interval: 10s
+    #      timeout: 5s
+    #      retries: 5
     volumes:
       - machine:/opt/cartesi/share/dapp-bin
 
   deployer:
-    depends_on: [hardhat, server_manager]
-    restart: on-failure
     image: cartesi/rollups-cli:devel
+    restart: on-failure
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      server_manager:
+        condition: service_started
     command:
       [
         "create",
@@ -98,7 +120,6 @@ services:
       - machine:/opt/cartesi/share/dapp-bin:ro
 
   rollups_indexer:
-    depends_on: [hardhat]
     image: cartesi/rollups-indexer:devel
     command:
       [
@@ -108,14 +129,18 @@ services:
         "/opt/cartesi/share/config/indexer-config.toml",
       ]
     restart: always
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      deployer:
+        condition: service_completed_successfully
+      state_server:
+        condition: service_started
+      server_manager:
+        condition: service_started
+      database:
+        condition: service_healthy
     environment:
-      STATE_SERVER_HOSTNAME: state_server
-      STATE_SERVER_PORT: "50051"
-      SERVER_MANAGER_HOSTNAME: server_manager
-      SERVER_MANAGER_PORT: "5001"
-      POSTGRES_HOSTNAME: database
-      POSTGRES_PORT: "5432"
-      DEPLOYMENT_PATH: /opt/cartesi/share/blockchain/dapp.address
       RUST_LOG: info
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
@@ -125,10 +150,9 @@ services:
     image: cartesi/query-server:devel
     ports:
       - "4000:4000"
-    links:
-      - database
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     environment:
       - DB_USER=postgres
       - DB_NAME=postgres
@@ -141,8 +165,12 @@ services:
     image: postgres:13-alpine
     ports:
       - 5432:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
-      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     volumes:
       - database-data:/var/lib/postgresql/data
