@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Markdown Linter
+on:
+  push:
+    paths:
+      - .github/workflows/markdown.yml
+      - .markdownlint-cli2.yaml
+      - '**.md'
+jobs:
+  build:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Lint Code Base
+        uses: DavidAnson/markdownlint-cli2-action@v5
+        with:
+          globs: "**/*.md"
