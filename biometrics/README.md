@@ -11,7 +11,6 @@ The practical goal of this application is to predict a classification for Finger
 This example uses a supervised approach to classify samples of fingerprints as lives and fakes. In doing so, the workflow used is the most default in this scenario: giving a classifier labeled inputs and then using the generated algorithm to classify a new input with a label. For this case, we area talking about binary classification, where the classifier will predict the inputs as one class or another (in this case as live or fake). The diagram bellow shows the workflow with every technology used in this experiment.
 
 ![bio drawio](https://user-images.githubusercontent.com/4421825/172433970-7817cc24-6ce1-416e-92d9-44fbc6b7fc37.png)
-![dataset drawio](https://user-images.githubusercontent.com/4421825/172434624-e3790aea-9780-4d61-834e-2957a739e01e.png)
 
 The whole DApp uses C++ opencv and Python to achieve the main goal. It is a product of many researches applied with the Cartesi API.
 
