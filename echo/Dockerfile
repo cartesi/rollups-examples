@@ -14,6 +14,7 @@ COPY machine .
 # build to bring node_modules
 WORKDIR /app/contracts
 COPY ["contracts/package.json", "contracts/yarn.lock", "./"]
+COPY contracts/.yalc .yalc
 RUN yarn install --non-interactive
 
 # build app
