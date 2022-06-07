@@ -49,7 +49,7 @@ $ cd <example>
 $ docker buildx bake --load
 ```
 
-This will also build the example's Cartesi Machine containing the DApp's back-end logic.
+This will also build the example's Cartesi Machine containing the DApp's back-end logic. For certain examples, this may include special [procedures for downloading and installing additional dependencies](./calculator/README.md#installing-extra-dependencies) required by the application.
 
 ## Running
 
