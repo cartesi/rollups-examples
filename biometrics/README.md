@@ -6,6 +6,15 @@ The DApp generates a [SVM](https://en.wikipedia.org/wiki/Support-vector_machine)
 
 The practical goal of this application is to predict a classification for Fingerprints. As such, users can submit images as inputs to classify as "Live" or "Fake". 
 
+#Biometrics Workflow Explanation
+
+This example uses a supervised approach to classify samples of fingerprints as lives and fakes. In doing so, the workflow used is the most default in this scenario: giving a classifier labeled inputs and then using the generated algorithm to classify a new input with a label. For this case, we area talking about binary classification, where the classifier will predict the inputs as one class or another (in this case as live or fake). The diagram bellow shows the workflow with every technology used in this experiment.
+
+![bio drawio](https://user-images.githubusercontent.com/4421825/172433970-7817cc24-6ce1-416e-92d9-44fbc6b7fc37.png)
+![dataset drawio](https://user-images.githubusercontent.com/4421825/172434624-e3790aea-9780-4d61-834e-2957a739e01e.png)
+
+The whole DApp uses C++ opencv and Python to achieve the main goal. It is a product of many researches applied with the Cartesi API.
+
 ## Building the environment
 
 To run the biometrics example, clone the repository as follows:
@@ -16,12 +25,17 @@ $ git clone https://github.com/cartesi/rollups-examples.git
 
 Before building, you will have to create a new rootfs file for the cartesi machine with OpenCV. For that, you will need to cross compile OpenCV for RISC-V and put inside of it. Or, you can just download a version that i've done myself [here](https://drive.google.com/file/d/1S_U4x7XZ4gOR4PIrZYoIvb1WnkDCrUWH/view?usp=sharing).
 
+The clone of this repository will give a sample dataset with the ideal structure for this experiment. Any change in it needs to be evaluated, but if the main structure fits the diagram bellow, it will work for any texture classification example:
+
+![dataset drawio](https://user-images.githubusercontent.com/4421825/172434671-f3f3fbb8-5f9d-4313-832d-d0f039c79912.png)
+
 You'll also need the risc-v toolchain from cartesi to cross compile the c++ code. You can see how to do that in this [article](https://medium.com/cartesi/guest-post-how-opencv-cross-compiles-in-the-blockchain-os-79a9eba6108b). We'll consider that you have it in /home/riscv/riscv64-cartesi-linux-gnu/. With that:
 
 ```shell
 $ cd rollups-examples/biometrics/server/model/build_model_files
 $ ./build_prod_model_files dataset
 ```
+
 
 This command generates the files needed to train the model, and also builds the fexrvv to be used in the server folder. After that you construct the model with the command bellow.
 
