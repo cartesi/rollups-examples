@@ -71,3 +71,7 @@ A Machine Learning Python application that implements the k-Nearest Neighbors su
 ### 6. [m2cgen DApp](./m2cgen)
 
 A more generic Machine Learning DApp that illustrates how to use the [m2cgen (Model to Code Generator)](https://github.com/BayesWitnesses/m2cgen) library to easily leverage widely used Python ML tools such as [scikit-learn](https://scikit-learn.org/), [NumPy](https://numpy.org/) and [pandas](https://pandas.pydata.org/). 
+
+### 7. [biometrics DApp](./biometrics)
+
+A DApp which uses C++ OpenV and Python to solve a biometrics problem.
