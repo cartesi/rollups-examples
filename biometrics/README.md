@@ -10,7 +10,9 @@ The practical goal of this application is to predict a classification for Finger
 
 This example uses a supervised approach to classify samples of fingerprints as lives and fakes. In doing so, the workflow used is the most default in this scenario: giving a classifier labeled inputs and then using the generated algorithm to classify a new input with a label. For this case, we area talking about binary classification, where the classifier will predict the inputs as one class or another (in this case as live or fake). The diagram bellow shows the workflow with every technology used in this experiment.
 
-![bio drawio](https://user-images.githubusercontent.com/4421825/172433970-7817cc24-6ce1-416e-92d9-44fbc6b7fc37.png)
+
+![bio drawio (2)](https://user-images.githubusercontent.com/4421825/172436514-10043ed8-1b92-4861-a39f-8c9aa41679fc.png)
+
 
 The whole DApp uses C++ opencv and Python to achieve the main goal. It is a product of many researches applied with the Cartesi API.
 
@@ -26,7 +28,8 @@ Before building, you will have to create a new rootfs file for the cartesi machi
 
 The clone of this repository will give a sample dataset with the ideal structure for this experiment. Any change in it needs to be evaluated, but if the main structure fits the diagram bellow, it will work for any texture classification example:
 
-![dataset drawio](https://user-images.githubusercontent.com/4421825/172434671-f3f3fbb8-5f9d-4313-832d-d0f039c79912.png)
+![dataset drawio (2)](https://user-images.githubusercontent.com/4421825/172436480-a9043209-25b1-4de3-b769-465c5a4272e9.png)
+
 
 You'll also need the risc-v toolchain from cartesi to cross compile the c++ code. You can see how to do that in this [article](https://medium.com/cartesi/guest-post-how-opencv-cross-compiles-in-the-blockchain-os-79a9eba6108b). We'll consider that you have it in /home/riscv/riscv64-cartesi-linux-gnu/. With that:
 
