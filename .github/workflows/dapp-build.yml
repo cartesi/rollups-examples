@@ -1,6 +1,9 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: Build
-on: [push]
+on:
+    push:
+        paths-ignore:
+            - '**/*.md'
 jobs:
     build_package:
         runs-on: ubuntu-20.04
