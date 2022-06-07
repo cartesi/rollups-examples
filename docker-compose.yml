@@ -28,7 +28,7 @@ services:
     command:
       [
         "--dapp-contract-address-file",
-        "/opt/cartesi/share/blockchain/dapp.address",
+        "/deployments/localhost/dapp.address",
         "--logic-config-path",
         "/opt/cartesi/share/config/logic-config.toml",
         "--sf-config",
@@ -57,6 +57,7 @@ services:
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
+      - ./deployments:/deployments
 
   state_server:
     image: cartesi/delegate-server:devel
@@ -113,18 +114,19 @@ services:
         "--templateHashFile",
         "/opt/cartesi/share/dapp-bin/hash",
         "--outputFile",
-        "/opt/cartesi/share/blockchain/dapp.address",
+        "/deployments/localhost/dapp.address",
       ]
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
       - machine:/opt/cartesi/share/dapp-bin:ro
+      - ./deployments:/deployments
 
   rollups_indexer:
     image: cartesi/rollups-indexer:devel
     command:
       [
         "--dapp-contract-address-file",
-        "/opt/cartesi/share/blockchain/dapp.address",
+        "/deployments/localhost/dapp.address",
         "--indexer-config-path",
         "/opt/cartesi/share/config/indexer-config.toml",
       ]
@@ -145,6 +147,7 @@ services:
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
       - ./config:/opt/cartesi/share/config/
+      - ./deployments:/deployments
 
   query_server:
     image: cartesi/query-server:devel
@@ -166,7 +169,7 @@ services:
     ports:
       - 5432:5432
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres || exit 1" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
