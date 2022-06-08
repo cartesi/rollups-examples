@@ -7,7 +7,7 @@ This simple template is aimed at providing a quick start for creating Cartesi Ro
 First of all, clone the repository as follows:
 
 ```shell
-$ git clone https://github.com/cartesi/rollups-examples.git
+git clone https://github.com/cartesi/rollups-examples.git
 ```
 
 ## Customizing the DApp
@@ -31,4 +31,3 @@ The back-end logic may be found at `$DAPP_NAME/$DAPP_NAME.py`.
 
 The script comes with some reference code, which may be helpful during development.
 It may be replaced or extended according to the use case needs.
-

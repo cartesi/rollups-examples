@@ -39,14 +39,14 @@ Docker version `20.10.14` is required for building the environment and executing
 To run the examples, first clone the repository as follows:
 
 ```shell
-$ git clone https://github.com/cartesi/rollups-examples.git
+git clone https://github.com/cartesi/rollups-examples.git
 ```
 
 Then, for each example, build the required docker images:
 
 ```shell
-$ cd <example>
-$ docker buildx bake --load
+cd <example>
+docker buildx bake --load
 ```
 
 This will also build the example's Cartesi Machine containing the DApp's back-end logic. For certain examples, this may include special [procedures for downloading and installing additional dependencies](./calculator/README.md#installing-extra-dependencies) required by the application.
@@ -62,8 +62,8 @@ In this mode, the DApp's back-end logic is executed inside a Cartesi Machine, me
 After building an example as described in the previous section, you can run it in production mode by executing:
 
 ```shell
-$ cd <example>
-$ docker compose -f ../docker-compose.yml -f ./docker-compose.override.yml up
+cd <example>
+docker compose -f ../docker-compose.yml -f ./docker-compose.override.yml up
 ```
 
 Allow some time for the infrastructure to be ready.
@@ -81,7 +81,7 @@ rollups-examples-server_manager_1      | Received GetEpochStatus for session def
 The environment can be shut down with the following command:
 
 ```shell
-$ docker-compose -f ../docker-compose.yml -f ./docker-compose.override.yml down -v
+docker-compose -f ../docker-compose.yml -f ./docker-compose.override.yml down -v
 ```
 
 ### Host mode
@@ -91,7 +91,7 @@ The _Cartesi Rollups Host Environment_ provides the very same HTTP API as the re
 The host environment can be executed with the following command:
 
 ```shell
-$ docker compose -f ../docker-compose.yml -f ./docker-compose.override.yml -f ../docker-compose-host.yml up
+docker compose -f ../docker-compose.yml -f ./docker-compose.override.yml -f ../docker-compose-host.yml up
 ```
 
 _Note_: When running in host mode, localhost ports `5003` and `5004` will be used by default for the communication between the Cartesi Rollups framework and the DApp's back-end.
@@ -101,7 +101,7 @@ _Note_: When running in host mode, localhost ports `5003` and `5004` will be use
 When executing an example, it is possible to advance time in order to simulate the passing of epochs. To do that, run:
 
 ```shell
-$ docker run cartesi/dapp-<example>-hardhat npx hardhat --network localhost util:advanceTime --seconds 864010
+docker run cartesi/dapp-<example>-hardhat npx hardhat --network localhost util:advanceTime --seconds 864010
 ```
 
 ## Polygon Mumbai
@@ -123,8 +123,8 @@ To perform this operation, first of all the DApp must be built by following the 
 With that in place, you can submit a deploy transaction to the Cartesi DApp Factory contract on the target network by executing the following command:
 
 ```shell
-$ cd <example>
-$ docker run -v $PWD/../deploy/:/deploy -e PROJECT_ID=<PROJECT_ID> -e MNEMONIC="<MNEMONIC>" cartesi/dapp-<example>-hardhat deploy --network polygon_mumbai --export /deploy/polygon_mumbai/<example>.json
+cd <example>
+docker run -v $PWD/../deploy/:/deploy -e PROJECT_ID=<PROJECT_ID> -e MNEMONIC="<MNEMONIC>" cartesi/dapp-<example>-hardhat deploy --network polygon_mumbai --export /deploy/polygon_mumbai/<example>.json
 ```
 
 This will create a file at `../deploy/polygon_mumbai/<example>.json` with the deployment information.

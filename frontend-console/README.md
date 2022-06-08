@@ -5,8 +5,8 @@ It's implemented in typescript and uses the [ethers](https://docs.ethers.io/v5/)
 
 ## Requirements
 
--   node.js
--   yarn
+- node.js
+- yarn
 
 ## Running
 
@@ -30,15 +30,15 @@ Options:
 
 TL/DR:
 
-```bash
-$ yarn
-$ yarn build
-$ yarn start send
+```shell
+yarn
+yarn build
+yarn start send
 ```
 
 For more information:
 
-```bash
+```shell
 $ yarn start send --help
 index.ts send [message]
 
@@ -66,8 +66,8 @@ You can pass the wallet mnemonic to the `--mnemonic` option or set an environmen
 
 TL/DR:
 
-```bash
-$ yarn
-$ yarn build
-$ yarn start notices
+```shell
+yarn
+yarn build
+yarn start notices
 ```
