@@ -13,9 +13,9 @@ import { IERC20__factory, IInput } from "@cartesi/rollups";
 import { ContractReceipt, ethers } from "ethers";
 import prompts, { PromptObject } from "prompts";
 import { Argv } from "yargs";
-import { NoticeKeys } from "../../generated-src/graphql";
-import { connect } from "../connect";
-import { networks } from "../networks";
+import { NoticeKeys } from "../../../generated-src/graphql";
+import { connect } from "../../connect";
+import { networks } from "../../networks";
 
 interface Args {
     network: string;
@@ -25,7 +25,7 @@ interface Args {
     amount: string;
 }
 
-export const command = "erc20Deposit [amount]";
+export const command = "deposit [amount]";
 export const describe = "Deposit ERC-20 tokens in DApp";
 
 const HARDHAT_DEFAULT_MNEMONIC =
