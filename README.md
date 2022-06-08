@@ -106,6 +106,7 @@ docker run cartesi/dapp-<example>-hardhat npx hardhat --network localhost util:a
 
 ## Polygon Mumbai
 
+<!-- markdownlint-disable MD024 -->
 ### Running
 
 Each example committed to the repository is also already deployed on the Polygon Mumbai testnet. In order to interact with them, you can simply use the same [frontend-console](./frontend-console) tool, but specifying the `polygon-mumbai` network.
