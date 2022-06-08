@@ -31,7 +31,8 @@ interface Contracts {
 export const connect = async (
     chainName: string,
     address: string,
-    mnemonic?: string
+    mnemonic?: string,
+    accountIndex?: number
 ): Promise<Contracts> => {
     const chain = networks.find((n) => n.name === chainName);
     if (!chain) {
@@ -42,13 +43,25 @@ export const connect = async (
 
     // create signer to be used to send transactions
     const signer = mnemonic
-        ? ethers.Wallet.fromMnemonic(mnemonic).connect(provider)
-        : new ethers.VoidSigner(address).connect(provider);
+        ? ethers.Wallet.fromMnemonic(
+              mnemonic,
+              `m/44'/60'/0'/0/${accountIndex ?? 0}`
+          ).connect(provider)
+        : undefined;
 
     // connect to contracts
-    const inputContract = InputFacet__factory.connect(address, signer);
-    const outputContract = OutputFacet__factory.connect(address, signer);
-    const erc20Portal = ERC20PortalFacet__factory.connect(address, signer);
+    const inputContract = InputFacet__factory.connect(
+        address,
+        signer || provider
+    );
+    const outputContract = OutputFacet__factory.connect(
+        address,
+        signer || provider
+    );
+    const erc20Portal = ERC20PortalFacet__factory.connect(
+        address,
+        signer || provider
+    );
     return {
         chain,
         inputContract,
