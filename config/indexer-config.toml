@@ -10,6 +10,5 @@ initial_epoch = 0
 interval = 10
 
 # end points
-postgres_endpoint = "postgres://postgres:password@database/postgres"
 state_server_endpoint = "http://state_server:50051"
 mm_endpoint = "http://server_manager:5001"

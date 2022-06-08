@@ -1,5 +1,13 @@
 version: "3.9"
 
+x-credentials: &postgres-config
+  POSTGRES_HOSTNAME: database
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: password
+  POSTGRES_DB: postgres
+  POSTGRES_MIGRATION_FOLDER: /usr/local/bin/migrations/
+
 services:
   hardhat:
     image: cartesi/rollups-hardhat:0.5.0
@@ -88,7 +96,7 @@ services:
   server_manager:
     restart: always
     ports:
-      - '5001:5001'
+      - "5001:5001"
     #    healthcheck:
     #      test: ["CMD", "curl", "-f", "http://locahost:5001"]
     #      interval: 10s
@@ -146,6 +154,7 @@ services:
       database:
         condition: service_healthy
     environment:
+      <<: *postgres-config
       RUST_LOG: info
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
@@ -160,12 +169,10 @@ services:
       database:
         condition: service_healthy
     environment:
-      - DB_USER=postgres
-      - DB_NAME=postgres
-      - DB_PASSWORD=password
-      - DB_HOST=database
-      - DB_PORT=5432
-      - DB_TEST_NAME=postgres
+      RUST_LOG: info
+      GRAPHQL_HOST: "0.0.0.0"
+      GRAPHQL_PORT: "4000"
+      <<: *postgres-config
 
   database:
     image: postgres:13-alpine

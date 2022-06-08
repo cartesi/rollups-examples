@@ -1,5 +1,13 @@
 version: "3.9"
 
+x-credentials: &postgres-config
+  POSTGRES_HOSTNAME: database
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: password
+  POSTGRES_DB: postgres
+  POSTGRES_MIGRATION_FOLDER: /usr/local/bin/migrations/
+
 services:
   rollups_dispatcher:
     image: cartesi/rollups-dispatcher:0.5.0
@@ -87,6 +95,7 @@ services:
       database:
         condition: service_healthy
     environment:
+      <<: *postgres-config
       RUST_LOG: info
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
@@ -101,12 +110,10 @@ services:
       database:
         condition: service_healthy
     environment:
-      - DB_USER=postgres
-      - DB_NAME=postgres
-      - DB_PASSWORD=password
-      - DB_HOST=database
-      - DB_PORT=5432
-      - DB_TEST_NAME=postgres
+      RUST_LOG: info
+      GRAPHQL_HOST: "0.0.0.0"
+      GRAPHQL_PORT: "4000"
+      <<: *postgres-config
 
   database:
     image: postgres:13-alpine
