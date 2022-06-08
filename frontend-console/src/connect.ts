@@ -20,6 +20,15 @@ import {
     ERC20PortalFacet__factory,
 } from "@cartesi/rollups";
 import { Chain, networks } from "./networks";
+import { Argv } from "yargs";
+
+export interface Args {
+    network: string;
+    address?: string;
+    addressFile?: string;
+    mnemonic?: string;
+    accountIndex: number;
+}
 
 interface Contracts {
     chain: Chain;
@@ -27,6 +36,37 @@ interface Contracts {
     outputContract: OutputFacet;
     erc20Portal: ERC20PortalFacet;
 }
+
+export const builder = (
+    yargs: Argv<{}>,
+    transactional: boolean = false
+): Argv<Args> => {
+    return yargs
+        .option("network", {
+            describe: "Network",
+            type: "string",
+            choices: networks.map((n) => n.name),
+            demandOption: true,
+        })
+        .option("mnemonic", {
+            describe: "Wallet mnemonic",
+            type: "string",
+            demandOption: transactional, // required if need to send transactions
+        })
+        .option("accountIndex", {
+            describe: "Account index from mnemonic",
+            type: "number",
+            default: 0,
+        })
+        .option("address", {
+            describe: "Rollups contract address",
+            type: "string",
+        })
+        .option("addressFile", {
+            describe: "File with rollups contract address",
+            type: "string",
+        });
+};
 
 export const connect = async (
     chainName: string,

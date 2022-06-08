@@ -12,15 +12,16 @@
 import { InputAddedEvent } from "@cartesi/rollups/dist/src/types/contracts/interfaces/IInput";
 import { ContractReceipt, ethers } from "ethers";
 import prompts, { PromptObject } from "prompts";
-import { Argv } from "yargs";
+import { Argv, MiddlewareFunction } from "yargs";
 import { NoticeKeys } from "../../generated-src/graphql";
-import { connect } from "../connect";
+import {
+    connect,
+    Args as ConnectArgs,
+    builder as connectBuilder,
+} from "../connect";
 import { networks } from "../networks";
 
-interface Args {
-    network: string;
-    address: string;
-    mnemonic: string;
+interface Args extends ConnectArgs {
     message: string;
 }
 
@@ -30,33 +31,11 @@ export const describe = "Send string input to DApp";
 const HARDHAT_DEFAULT_MNEMONIC =
     "test test test test test test test test test test test junk";
 
-export const builder = (yargs: Argv) => {
-    // retrieves mnemonic implicit from either the environment or from the default value for localhost
-    let mnemonic = process.env.MNEMONIC;
-    const network = (<any>yargs.argv).network;
-    if (!mnemonic && network == "localhost") {
-        mnemonic = HARDHAT_DEFAULT_MNEMONIC;
-    }
-
-    return yargs
-        .option("network", {
-            describe: "Network to use",
-            type: "string",
-            choices: networks.map((n) => n.name),
-            demandOption: false,
-        })
-        .option("address", {
-            describe: "Rollups contract address",
-            type: "string",
-            demandOption: false,
-        })
-        .option("mnemonic", {
-            describe: "Wallet mnemonic",
-            type: "string",
-            default: mnemonic,
-            demandOption: false,
-        })
-        .positional("message", { demandOption: false, type: "string" });
+export const builder = (yargs: Argv): Argv<Args> => {
+    return connectBuilder(yargs, true).positional("message", {
+        demandOption: true,
+        type: "string",
+    });
 };
 
 /**
@@ -94,6 +73,12 @@ export const findNoticeKeys = (receipt: ContractReceipt): NoticeKeys => {
         input_index: inputAdded.args.inputIndex.toString(),
     };
 };
+
+export const middlewares: MiddlewareFunction<Args>[] = [
+    (args) => {
+        console.log("middleware", args);
+    },
+];
 
 export const handler = async (args: Args) => {
     // default values from args
