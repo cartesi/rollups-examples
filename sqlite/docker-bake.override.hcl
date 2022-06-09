@@ -9,3 +9,7 @@ target "server" {
 target "console" {
   tags = ["cartesi/dapp-sqlite-console"]
 }
+
+target "machine" {
+  tags = ["cartesi/dapp-sqlite-machine"]
+}

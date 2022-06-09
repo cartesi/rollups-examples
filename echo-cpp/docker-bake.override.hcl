@@ -9,3 +9,7 @@ target "server" {
 target "console" {
   tags = ["cartesi/dapp-echo-cpp-console"]
 }
+
+target "machine" {
+  tags = ["cartesi/dapp-echo-cpp-machine"]
+}

@@ -33,3 +33,11 @@ target "console" {
     dapp-build = "target:dapp"
   }
 }
+
+target "machine" {
+  context = "../docker"
+  target  = "machine-standalone"
+  contexts = {
+    dapp-build = "target:dapp"
+  }
+}

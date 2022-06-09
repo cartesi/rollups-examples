@@ -9,3 +9,7 @@ target "server" {
 target "console" {
   tags = ["cartesi/dapp-converter-console"]
 }
+
+target "machine" {
+  tags = ["cartesi/dapp-converter-machine"]
+}

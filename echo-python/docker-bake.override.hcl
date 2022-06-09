@@ -11,3 +11,7 @@ target "server" {
 target "console" {
   tags = ["cartesi/dapp-echo-python-console"]
 }
+
+target "machine" {
+  tags = ["cartesi/dapp-echo-python-machine"]
+}

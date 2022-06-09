@@ -12,3 +12,7 @@ target "server" {
 target "console" {
   tags = ["cartesi/dapp-calculator-console"]
 }
+
+target "machine" {
+  tags = ["cartesi/dapp-calculator-machine"]
+}

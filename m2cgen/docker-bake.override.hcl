@@ -9,3 +9,7 @@ target "server" {
 target "console" {
   tags = ["cartesi/dapp-m2cgen-console"]
 }
+
+target "machine" {
+  tags = ["cartesi/dapp-m2cgen-machine"]
+}

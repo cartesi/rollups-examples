@@ -2,8 +2,8 @@ version: "3.9"
 
 services:
   machine:
-    image: cartesi/dapp-${DAPP_NAME:?undefined DAPP_NAME}-server
-    entrypoint: "/bin/bash"
+    image: cartesi/dapp-${DAPP_NAME:?undefined DAPP_NAME}-machine
+    command: xxd -c 256 -p hash; sleep 3
     volumes:
       - machine:/opt/cartesi/share/dapp-bin
 
