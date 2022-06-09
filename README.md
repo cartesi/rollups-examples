@@ -212,3 +212,7 @@ A more generic Machine Learning DApp that illustrates how to use the [m2cgen (Mo
 Demonstrates how to handle ERC-20 deposits and withdrawals.
 The application parses ERC-20 deposits received from the Portal and emits a notice confirming receipt.
 It then issues corresponding vouchers to return the assets back to the depositor.
+
+### 10. [Echo Low-Level DApp](./echo-low-level)
+
+Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) above, but with a back-end written in C++ using the low-level Cartesi Rollups API.
