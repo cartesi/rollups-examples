@@ -12,4 +12,4 @@
 # specific language governing permissions and limitations under the License.
 
 set -e
-python3 sqlite.py
+rollup-init python3 sqlite.py
