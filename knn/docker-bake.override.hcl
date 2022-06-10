@@ -3,13 +3,13 @@ target "dapp" {
 }
 
 target "server" {
-  tags = ["cartesi/dapp-knn-server"]
+  tags = ["cartesi/dapp:knn-devel-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp-knn-console"]
+  tags = ["cartesi/dapp:knn-devel-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp-knn-machine"]
+  tags = ["cartesi/dapp:knn-devel-machine"]
 }

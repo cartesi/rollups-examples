@@ -3,13 +3,13 @@ target "dapp" {
 }
 
 target "server" {
-  tags = ["cartesi/dapp-echo-rust-server"]
+  tags = ["cartesi/dapp:echo-rust-devel-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp-echo-rust-console"]
+  tags = ["cartesi/dapp:echo-rust-devel-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp-echo-rust-machine"]
+  tags = ["cartesi/dapp:echo-rust-devel-machine"]
 }

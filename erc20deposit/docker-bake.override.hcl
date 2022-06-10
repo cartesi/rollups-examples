@@ -6,13 +6,13 @@ target "dapp" {
 }
 
 target "server" {
-  tags = ["cartesi/dapp-erc20deposit-server"]
+  tags = ["cartesi/dapp:erc20deposit-devel-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp-erc20deposit-console"]
+  tags = ["cartesi/dapp:erc20deposit-devel-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp-erc20deposit-machine"]
+  tags = ["cartesi/dapp:erc20deposit-devel-machine"]
 }

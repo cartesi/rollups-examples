@@ -6,13 +6,13 @@ target "dapp" {
 }
 
 target "server" {
-  tags = ["cartesi/dapp-calculator-server"]
+  tags = ["cartesi/dapp:calculator-devel-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp-calculator-console"]
+  tags = ["cartesi/dapp:calculator-devel-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp-calculator-machine"]
+  tags = ["cartesi/dapp:calculator-devel-machine"]
 }

@@ -5,13 +5,13 @@ target "dapp" {
 }
 
 target "server" {
-  tags = ["cartesi/dapp-echo-python-server"]
+  tags = ["cartesi/dapp:echo-python-devel-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp-echo-python-console"]
+  tags = ["cartesi/dapp:echo-python-devel-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp-echo-python-machine"]
+  tags = ["cartesi/dapp:echo-python-devel-machine"]
 }
