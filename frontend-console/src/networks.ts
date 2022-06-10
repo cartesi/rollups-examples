@@ -10,23 +10,41 @@
 // specific language governing permissions and limitations under the License.
 
 export interface Chain {
-    chainId: number;
     name: string;
-    rpc: string;
     explorer?: string;
 }
 
 // compatible networks
-export const networks: Chain[] = [
-    {
-        chainId: 31337,
+export const networks: Record<number, Chain> = {
+    31337: {
         name: "localhost",
-        rpc: "http://localhost:8545",
     },
-    {
-        chainId: 80001,
+    3: {
+        name: "ropsten",
+        explorer: "https://ropsten.etherscan.io",
+    },
+    4: {
+        name: "rinkeby",
+        explorer: "https://rinkeby.etherscan.io",
+    },
+    5: {
+        name: "goerli",
+        explorer: "https://goerli.etherscan.io",
+    },
+    42: {
+        name: "kovan",
+        explorer: "https://kovan.etherscan.io",
+    },
+    97: {
+        name: "bsc_testnet",
+        explorer: "https://testnet.bscscan.com",
+    },
+    43113: {
+        name: "avax_fuji",
+        explorer: "https://testnet.snowtrace.io",
+    },
+    80001: {
         name: "polygon_mumbai",
-        rpc: "https://matic-mumbai.chainstacklabs.com",
         explorer: "https://mumbai.polygonscan.com",
     },
-];
+};

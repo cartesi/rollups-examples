@@ -11,35 +11,41 @@
 
 import { IERC20__factory, IInput } from "@cartesi/rollups";
 import { ContractReceipt, ethers } from "ethers";
-import prompts, { PromptObject } from "prompts";
 import { Argv } from "yargs";
 import { NoticeKeys } from "../../../generated-src/graphql";
-import { connect } from "../../connect";
 import { networks } from "../../networks";
+import {
+    connect,
+    Args as ConnectArgs,
+    builder as connectBuilder,
+} from "../../connect";
+import {
+    rollups,
+    Args as RollupsArgs,
+    builder as rollupsBuilder,
+} from "../../rollups";
 
-interface Args {
-    network: string;
-    address: string;
-    mnemonic: string;
-    erc20: string;
+interface Args extends ConnectArgs, RollupsArgs {
+    erc20?: string;
     amount: string;
 }
 
-export const command = "deposit [amount]";
+export const command = "deposit";
 export const describe = "Deposit ERC-20 tokens in DApp";
 
-const HARDHAT_DEFAULT_MNEMONIC =
-    "test test test test test test test test test test test junk";
+const tokenAddress = (chainId: number): string | undefined => {
+    const network = networks[chainId];
+    if (!network) {
+        return; // undefined
+    }
 
-const tokenAddress = (network: string): string | undefined => {
     try {
-        if (network == "localhost") {
-            return require("../../../hardhat/deployments/localhost/CartesiToken.json")
+        if (network.name == "localhost") {
+            // TODO: need to fix this path
+            return require("../../../deployments/localhost/CartesiToken.json")
                 .address;
         } else if (network) {
-            let ctsiDeploymentNetwork =
-                network == "polygon_mumbai" ? "matic_testnet" : network;
-            return require(`@cartesi/token/deployments/${ctsiDeploymentNetwork}/CartesiToken.json`)
+            return require(`@cartesi/token/deployments/${network.name}/CartesiToken.json`)
                 .address;
         }
     } catch (e) {
@@ -48,59 +54,23 @@ const tokenAddress = (network: string): string | undefined => {
 };
 
 export const builder = (yargs: Argv<Args>) => {
-    // retrieves mnemonic implicit from either the environment or from the default value for localhost
-    let mnemonic = process.env.MNEMONIC;
-    const network = (<any>yargs.argv).network;
-    if (!mnemonic && network == "localhost") {
-        mnemonic = HARDHAT_DEFAULT_MNEMONIC;
-    }
+    // args regarding connecting to provider
+    const connectArgs = connectBuilder(yargs, true);
 
-    // retrieves the address of the CTSI token for the configured network, to use as a default ERC-20 address
-    const ctsiAddress = tokenAddress(network);
+    // args regarding connecting to rollups
+    const rollupsArgs = rollupsBuilder(connectArgs);
 
-    return yargs
-        .option("network", {
-            describe: "Network to use",
-            type: "string",
-            choices: networks.map((n) => n.name),
-            demandOption: false,
-        })
-        .option("address", {
-            describe: "Rollups contract address",
-            type: "string",
-            demandOption: false,
-        })
-        .option("mnemonic", {
-            describe: "Wallet mnemonic",
-            type: "string",
-            default: mnemonic,
-            demandOption: false,
-        })
+    // this command args
+    return rollupsArgs
         .option("erc20", {
             describe: "ERC-20 address",
             type: "string",
-            default: ctsiAddress,
-            demandOption: false,
         })
-        .positional("amount", {
-            demandOption: false,
+        .option("amount", {
+            demandOption: true,
             type: "string",
             describe: "Amount of ERC-20 tokens to deposit",
         });
-};
-
-/**
- * Validator for mnemonic value
- * @param value mnemonic words separated by space
- * @returns true if valid, false if invalid
- */
-const mnemonicValidator = (value: string) => {
-    try {
-        ethers.Wallet.fromMnemonic(value);
-        return true;
-    } catch (e) {
-        return "Invalid mnemonic";
-    }
 };
 
 /**
@@ -133,88 +103,63 @@ export const findInputAddedInfo = (
 };
 
 export const handler = async (args: Args) => {
-    // default values from args
-    prompts.override(args);
+    const { rpc, address, mnemonic, accountIndex, erc20, amount } = args;
 
-    let promptsNetwork: string;
-    const questions: PromptObject[] = [
-        {
-            type: "select",
-            name: "network",
-            choices: networks.map((n) => ({
-                title: n.name,
-                value: n.name,
-                description: n.rpc,
-            })),
-            message: "Select a network",
-        },
-        {
-            type: (network: string) =>
-                network == "localhost" ? "text" : "password", // if localhost is selected, we can show as plain text
-            name: "mnemonic",
-            message: "Enter your wallet mnemonic words",
-            validate: mnemonicValidator,
-            initial: (network: string) => {
-                promptsNetwork = network;
-                return network == "localhost" ? HARDHAT_DEFAULT_MNEMONIC : ""; // if localhost is selected, suggest default mnemonic
-            },
-        },
-        {
-            type: "text",
-            name: "address",
-            message: "Rollups contract address",
-        },
-        {
-            type: "text",
-            name: "erc20",
-            message: "ERC-20 address",
-            initial: () => tokenAddress(promptsNetwork) || "",
-        },
-        {
-            type: "text",
-            name: "amount",
-            message: "Amount of ERC-20 tokens to deposit",
-        },
-    ];
-    const { network, address, mnemonic, erc20, amount } = await prompts<string>(
-        questions
+    // connect to provider
+    console.log(`connecting to ${rpc}`);
+    const { provider, signer } = connect(rpc, mnemonic, accountIndex);
+
+    const network = await provider.getNetwork();
+    console.log(`connected to chain ${network.chainId}`);
+
+    // connect to rollups,
+    const { inputContract, erc20Portal } = await rollups(
+        network.chainId,
+        signer || provider,
+        args
     );
 
     // connect to provider, use deployment address based on returned chain id of provider
-    console.log(`using ERC-20 token contract at address "${erc20}"`);
-    console.log(`connecting to ${network}`);
-    const { chain, inputContract, erc20Portal } = await connect(
-        network,
-        address,
-        mnemonic
-    );
+    const erc20Address = erc20 ?? tokenAddress(network.chainId);
+    if (!erc20Address) {
+        throw new Error(
+            `cannot resolve ERC-20 address for chain ${network.chainId}`
+        );
+    }
+    console.log(`using ERC-20 token contract at address "${erc20Address}"`);
 
     const erc20Amount = ethers.BigNumber.from(amount);
 
     // increase erc20 allowance first if necessary
-    const erc20Contract = IERC20__factory.connect(erc20, erc20Portal.signer);
+    const erc20Contract = IERC20__factory.connect(
+        erc20Address,
+        erc20Portal.signer
+    );
     const signerAddress = await erc20Portal.signer.getAddress();
     console.log(`using account "${signerAddress}"`);
-    const allowance = await erc20Contract.allowance(signerAddress, address);
+    const allowance = await erc20Contract.allowance(
+        signerAddress,
+        erc20Portal.address
+    );
     if (allowance.lt(erc20Amount)) {
         const allowanceApproveAmount =
             ethers.BigNumber.from(erc20Amount).sub(allowance);
         console.log(
             `approving allowance of ${allowanceApproveAmount} tokens...`
         );
-        const tx = await erc20Contract.approve(address, allowanceApproveAmount);
+        const tx = await erc20Contract.approve(
+            erc20Portal.address,
+            allowanceApproveAmount
+        );
         await tx.wait();
     }
 
     // send deposit transaction
     console.log(`depositing ${amount} tokens...`);
-    const tx = await erc20Portal.erc20Deposit(erc20, erc20Amount, "0x");
+    const tx = await erc20Portal.erc20Deposit(erc20Address, erc20Amount, "0x");
     console.log(`transaction: ${tx.hash}`);
     console.log("waiting for confirmation...");
     const receipt = await tx.wait();
-    if (chain.explorer) {
-        console.log(`${chain.explorer}/tx/${tx.hash}`);
-    }
 
     // find added input information from transaction receipt
     const inputAddedInfo = findInputAddedInfo(receipt, inputContract);

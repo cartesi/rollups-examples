@@ -9,77 +9,81 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-import { JsonRpcProvider } from "@ethersproject/providers";
-import { ethers } from "ethers";
-import {
-    InputFacet,
-    InputFacet__factory,
-    OutputFacet,
-    OutputFacet__factory,
-    ERC20PortalFacet,
-    ERC20PortalFacet__factory,
-} from "@cartesi/rollups";
-import { Chain, networks } from "./networks";
+import { JsonRpcProvider, Provider } from "@ethersproject/providers";
+import { ethers, Signer } from "ethers";
 import { Argv } from "yargs";
 
 export interface Args {
-    network: string;
-    address?: string;
-    addressFile?: string;
+    rpc: string;
     mnemonic?: string;
     accountIndex: number;
 }
 
-interface Contracts {
-    chain: Chain;
-    inputContract: InputFacet;
-    outputContract: OutputFacet;
-    erc20Portal: ERC20PortalFacet;
-}
+const HARDHAT_DEFAULT_MNEMONIC =
+    "test test test test test test test test test test test junk";
 
-export const builder = (
-    yargs: Argv<{}>,
+/**
+ * Validator for mnemonic value
+ * @param value mnemonic words separated by space
+ * @returns true if valid, false if invalid
+ */
+const mnemonicValidator = (value: string) => {
+    try {
+        ethers.Wallet.fromMnemonic(value);
+        return true;
+    } catch (e) {
+        return "Invalid mnemonic";
+    }
+};
+
+/**
+ * Builder for provider connection
+ * @param yargs yargs instance
+ * @param transactional indicate if will need to sign transactions, hence MNEMONIC is required
+ * @returns Argv instance with all options
+ */
+export const builder = <T>(
+    yargs: Argv<T>,
     transactional: boolean = false
-): Argv<Args> => {
+): Argv<Args & T> => {
     return yargs
-        .option("network", {
-            describe: "Network",
+        .option("rpc", {
+            describe: "JSON-RPC provider URL",
             type: "string",
-            choices: networks.map((n) => n.name),
-            demandOption: true,
+            default: "http://localhost:8545",
         })
         .option("mnemonic", {
             describe: "Wallet mnemonic",
             type: "string",
+            default: process.env.MNEMONIC || HARDHAT_DEFAULT_MNEMONIC,
             demandOption: transactional, // required if need to send transactions
         })
         .option("accountIndex", {
             describe: "Account index from mnemonic",
             type: "number",
             default: 0,
-        })
-        .option("address", {
-            describe: "Rollups contract address",
-            type: "string",
-        })
-        .option("addressFile", {
-            describe: "File with rollups contract address",
-            type: "string",
         });
 };
 
-export const connect = async (
-    chainName: string,
-    address: string,
+export type Connection = {
+    provider: Provider;
+    signer?: Signer;
+};
+
+/**
+ * Connect to a JSON-RPC provider and return a signer or provider
+ * @param rpc JSON-RPC provider URL
+ * @param mnemonic optional mnemonic to sign transactions
+ * @param accountIndex account index of mnemonic (default to 0)
+ * @returns signer if mnemonic is provided, provider otherwise
+ */
+export const connect = (
+    rpc: string,
     mnemonic?: string,
     accountIndex?: number
-): Promise<Contracts> => {
-    const chain = networks.find((n) => n.name === chainName);
-    if (!chain) {
-        throw new Error(`Unknown network: ${chainName}`);
-    }
+): Connection => {
     // connect to JSON-RPC provider
-    const provider = new JsonRpcProvider(chain.rpc);
+    const provider = new JsonRpcProvider(rpc);
 
     // create signer to be used to send transactions
     const signer = mnemonic
@@ -89,23 +93,8 @@ export const connect = async (
           ).connect(provider)
         : undefined;
 
-    // connect to contracts
-    const inputContract = InputFacet__factory.connect(
-        address,
-        signer || provider
-    );
-    const outputContract = OutputFacet__factory.connect(
-        address,
-        signer || provider
-    );
-    const erc20Portal = ERC20PortalFacet__factory.connect(
-        address,
-        signer || provider
-    );
     return {
-        chain,
-        inputContract,
-        outputContract,
-        erc20Portal,
+        provider,
+        signer,
     };
 };

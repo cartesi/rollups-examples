@@ -11,45 +11,39 @@
 
 import { InputAddedEvent } from "@cartesi/rollups/dist/src/types/contracts/interfaces/IInput";
 import { ContractReceipt, ethers } from "ethers";
-import prompts, { PromptObject } from "prompts";
-import { Argv, MiddlewareFunction } from "yargs";
+import { Argv } from "yargs";
 import { NoticeKeys } from "../../generated-src/graphql";
 import {
     connect,
     Args as ConnectArgs,
     builder as connectBuilder,
 } from "../connect";
-import { networks } from "../networks";
+import {
+    rollups,
+    Args as RollupsArgs,
+    builder as rollupsBuilder,
+} from "../rollups";
 
-interface Args extends ConnectArgs {
+interface Args extends ConnectArgs, RollupsArgs {
     message: string;
 }
 
-export const command = "send [message]";
+export const command = "send";
 export const describe = "Send string input to DApp";
 
-const HARDHAT_DEFAULT_MNEMONIC =
-    "test test test test test test test test test test test junk";
+export const builder = (yargs: Argv<{}>): Argv<Args> => {
+    // args regarding connecting to provider
+    const connectArgs = connectBuilder(yargs, true);
 
-export const builder = (yargs: Argv): Argv<Args> => {
-    return connectBuilder(yargs, true).positional("message", {
-        demandOption: true,
+    // args regarding connecting to rollups
+    const rollupsArgs = rollupsBuilder(connectArgs);
+
+    // this command args
+    return rollupsArgs.option("message", {
+        describe: "Message to send",
         type: "string",
+        demandOption: true,
     });
-};
-
-/**
- * Validator for mnemonic value
- * @param value mnemonic words separated by space
- * @returns true if valid, false if invalid
- */
-const mnemonicValidator = (value: string) => {
-    try {
-        ethers.Wallet.fromMnemonic(value);
-        return true;
-    } catch (e) {
-        return "Invalid mnemonic";
-    }
 };
 
 /**
@@ -74,54 +68,23 @@ export const findNoticeKeys = (receipt: ContractReceipt): NoticeKeys => {
     };
 };
 
-export const middlewares: MiddlewareFunction<Args>[] = [
-    (args) => {
-        console.log("middleware", args);
-    },
-];
-
 export const handler = async (args: Args) => {
-    // default values from args
-    prompts.override(args);
+    const { rpc, message, mnemonic, accountIndex } = args;
 
-    const questions: PromptObject[] = [
-        {
-            type: "select",
-            name: "network",
-            choices: networks.map((n) => ({
-                title: n.name,
-                value: n.name,
-                description: n.rpc,
-            })),
-            message: "Select a network",
-        },
-        {
-            type: (network: string) =>
-                network == "localhost" ? "text" : "password", // if localhost is selected, we can show as plain text
-            name: "mnemonic",
-            message: "Enter your wallet mnemonic words",
-            validate: mnemonicValidator,
-            initial: (network: string) =>
-                network == "localhost" ? HARDHAT_DEFAULT_MNEMONIC : "", // if localhost is selected, suggest default mnemonic
-        },
-        {
-            type: "text",
-            name: "address",
-            message: "Rollups contract address",
-        },
-        {
-            type: "text",
-            name: "message",
-            message: "Enter message to send",
-        },
-    ];
-    const { network, message, address, mnemonic } = await prompts<string>(
-        questions
+    // connect to provider
+    console.log(`connecting to ${rpc}`);
+    const { provider, signer } = connect(rpc, mnemonic, accountIndex);
+
+    const network = await provider.getNetwork();
+    console.log(`connected to chain ${network.chainId}`);
+
+    // connect to rollups,
+    const { inputContract } = await rollups(
+        network.chainId,
+        signer || provider,
+        args
     );
 
-    // connect to provider, use deployment address based on returned chain id of provider
-    console.log(`connecting to ${network}`);
-    const { chain, inputContract } = await connect(network, address, mnemonic);
     const signerAddress = await inputContract.signer.getAddress();
     console.log(`using account "${signerAddress}"`);
 
@@ -136,9 +99,6 @@ export const handler = async (args: Args) => {
     console.log(`transaction: ${tx.hash}`);
     console.log("waiting for confirmation...");
     const receipt = await tx.wait(1);
-    if (chain.explorer) {
-        console.log(`${chain.explorer}/tx/${tx.hash}`);
-    }
 
     // find reference to notice from transaction receipt
     const noticeKeys = findNoticeKeys(receipt);
