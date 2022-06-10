@@ -9,15 +9,14 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-import prompts from "prompts";
 import { Argv } from "yargs";
 import { getNotices } from "../graphql/notices";
 import { ethers } from "ethers";
 
 interface Args {
     url: string;
-    epoch: number;
-    input: number;
+    epoch?: number;
+    input?: number;
 }
 
 export const command = "notices";
@@ -31,60 +30,23 @@ export const builder = (yargs: Argv) => {
             describe: "Reader URL",
             type: "string",
             default: DEFAULT_URL,
-            demandOption: false,
         })
         .option("epoch", {
             describe: "Epoch index",
             type: "number",
-            demandOption: false,
         })
         .option("input", {
             describe: "Input index",
             type: "number",
-            demandOption: false,
         });
 };
 
 export const handler = async (args: Args) => {
-    // default values from args
-    prompts.override(args);
-
-    // use provider from command line option, or ask the user
-    const url: string =
-        args.url ||
-        (
-            await prompts({
-                type: "text",
-                name: "url",
-                message: "Reader URL",
-            })
-        ).url;
-
-    const epoch: number =
-        args.epoch ||
-        (await (
-            await prompts({
-                type: "number",
-                name: "epoch",
-                message: "Enter epoch number",
-            })
-        ).epoch);
-
-    let input: number = args.input;
-    if (input === undefined && args.epoch === undefined) {
-        // only asks for input when neither itself nor the epoch has been defined in the args
-        input = await (
-            await prompts({
-                type: "number",
-                name: "input",
-                message: "Enter input index",
-            })
-        ).input;
-    }
+    const { url, epoch, input } = args;
 
     // wait for notices to appear in reader
     const notices = await getNotices(url, {
-        epoch_index: epoch.toString(),
+        epoch_index: epoch?.toString(),
         input_index: input?.toString(),
     });
 
