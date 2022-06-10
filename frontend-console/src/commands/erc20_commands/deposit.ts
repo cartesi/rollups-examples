@@ -41,8 +41,7 @@ const tokenAddress = (chainId: number): string | undefined => {
 
     try {
         if (network.name == "localhost") {
-            // TODO: need to fix this path
-            return require("../../../deployments/localhost/CartesiToken.json")
+            return require("../../../../deployments/localhost/CartesiToken.json")
                 .address;
         } else if (network) {
             return require(`@cartesi/token/deployments/${network.name}/CartesiToken.json`)
