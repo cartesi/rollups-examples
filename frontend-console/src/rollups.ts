@@ -24,7 +24,7 @@ import { Argv } from "yargs";
 import { networks } from "./networks";
 
 export interface Args {
-    dapp?: string;
+    dapp: string;
     address?: string;
     addressFile?: string;
 }
@@ -45,6 +45,7 @@ export const builder = <T>(yargs: Argv<T>): Argv<Args & T> => {
         .option("dapp", {
             describe: "DApp name",
             type: "string",
+            default: "dapp",
         })
         .option("address", {
             describe: "Rollups contract address",
