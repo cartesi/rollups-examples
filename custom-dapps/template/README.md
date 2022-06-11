@@ -51,12 +51,12 @@ docker-compose down -v
 ## Interacting with the application
 
 With the infrastructure in place, you can interact with the application using a set of Hardhat tasks.
+Ensure that the [application has already been built](../frontend-console/README.md#building) before using it.
 
-First, go to a separate terminal window, switch to the `template/hardhat` directory, and run `yarn`:
+First, go to a separate terminal window and switch to the `frontend-console` directory:
 
 ```shell
-cd template/hardhat/
-yarn
+cd frontend-console
 ```
 
 Then, send an input as follows:

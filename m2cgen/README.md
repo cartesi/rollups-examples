@@ -25,12 +25,12 @@ The predicted classification result will be given as `0` (did not survive) or `1
 ## Interacting with the application
 
 We can use the [frontend-console](../frontend-console) application to interact with the DApp.
+Ensure that the [application has already been built](../frontend-console/README.md#building) before using it.
 
-First, go to a separate terminal window, switch to the `frontend-console` directory, and run `yarn`:
+First, go to a separate terminal window and switch to the `frontend-console` directory:
 
 ```shell
 cd frontend-console
-yarn
 ```
 
 Then, send an input as follows:
