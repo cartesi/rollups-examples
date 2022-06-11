@@ -22,6 +22,8 @@ export interface Args {
 const HARDHAT_DEFAULT_MNEMONIC =
     "test test test test test test test test test test test junk";
 
+const HARDHAT_DEFAULT_RPC_URL = "http://localhost:8545";
+
 /**
  * Validator for mnemonic value
  * @param value mnemonic words separated by space
@@ -50,7 +52,7 @@ export const builder = <T>(
         .option("rpc", {
             describe: "JSON-RPC provider URL",
             type: "string",
-            default: "http://localhost:8545",
+            default: process.env.RPC_URL || HARDHAT_DEFAULT_RPC_URL,
         })
         .option("mnemonic", {
             describe: "Wallet mnemonic",
