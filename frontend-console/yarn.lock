@@ -469,20 +469,20 @@
   dependencies:
     "@cartesi/util" "^2.0.1"
 
-"@cartesi/rollups@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-0.2.0.tgz#9464245953a4fa4ec083bab398e060c025f20277"
-  integrity sha512-wBhcjIFRT+GQWb55wsitdkkfCivDWXjPCWGZ0JM56hHLdQc8IfUQdFUVXhnYwG1jkW6tTC9X/5OYARRzd/cwFw==
+"@cartesi/rollups@^0.3.0-beta.1":
+  version "0.3.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-0.3.0-rc.1.tgz#e227d79481bc4ec32cddc60eded15d18616322e0"
+  integrity sha512-T+zlgB6aEOFb3HaDwiXE/kYCQjXi4VaU+pj2nKSV+SXNYGvs4qDt81cFi5L3fUgdy+1Y0RdGeknpPeKZhV/OMg==
   dependencies:
     "@cartesi/logger" "^0.7.4"
-    "@cartesi/token" "^1.3.0"
+    "@cartesi/token" "^1.4.0"
     "@cartesi/util" "^3.1.2"
     "@openzeppelin/contracts" "^4.5.0"
 
-"@cartesi/token@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@cartesi/token/-/token-1.3.0.tgz#b4ef208263320281761b6ed5676f1081ef3a2a8b"
-  integrity sha512-5m27aFhR9QXjLz4evEc+sp7fb5l1ATJpcFF+qwcXKneTx5ASXbhex1I2HoTqSb0fRLZvWGby3ulaixJgQjQylg==
+"@cartesi/token@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@cartesi/token/-/token-1.4.0.tgz#ec4339e6423afed7204dcd6a981d40c9576fb7cf"
+  integrity sha512-tDZgZHa4sKaiGMLQ4DykwYdtM3y4q3jdAc2A/PH53+K6L5vbAERTiUcWsd3kZm7/08wm6CjpajWIHzhwCoKipQ==
   dependencies:
     "@openzeppelin/contracts" "^2.5.0"
 
@@ -1351,13 +1351,6 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
-
-"@types/prompts@^2.0.14":
-  version "2.0.14"
-  resolved "https://registry.yarnpkg.com/@types/prompts/-/prompts-2.0.14.tgz#10cb8899844bb0771cabe57c1becaaaca9a3b521"
-  integrity sha512-HZBd99fKxRWpYCErtm2/yxUZv6/PBI9J7N4TNFffl5JbrYMHBwF25DjQGTW3b3jmXq+9P6/8fCIb2ee57BFfYA==
-  dependencies:
-    "@types/node" "*"
 
 "@types/websocket@^1.0.4":
   version "1.0.5"
@@ -3019,11 +3012,6 @@ keyv@^3.0.0:
   dependencies:
     json-buffer "3.0.0"
 
-kleur@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
-  integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
-
 latest-version@5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/latest-version/-/latest-version-5.1.0.tgz#119dfe908fe38d15dfa43ecd13fa12ec8832face"
@@ -3651,14 +3639,6 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prompts@^2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/prompts/-/prompts-2.4.2.tgz#7b57e73b3a48029ad10ebd44f74b01722a4cb069"
-  integrity sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==
-  dependencies:
-    kleur "^3.0.3"
-    sisteransi "^1.0.5"
-
 pump@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/pump/-/pump-3.0.0.tgz#b4a2116815bde2f4e1ea602354e8c75565107a64"
@@ -3957,11 +3937,6 @@ signedsource@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/signedsource/-/signedsource-1.0.0.tgz#1ddace4981798f93bd833973803d80d52e93ad6a"
   integrity sha1-HdrOSYF5j5O9gzlzgD2A1S6TrWo=
-
-sisteransi@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/sisteransi/-/sisteransi-1.0.5.tgz#134d681297756437cc05ca01370d3a7a571075ed"
-  integrity sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==
 
 slash@^3.0.0:
   version "3.0.0"
