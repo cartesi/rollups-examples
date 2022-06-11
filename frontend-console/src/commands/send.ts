@@ -25,7 +25,7 @@ import {
 } from "../rollups";
 
 interface Args extends ConnectArgs, RollupsArgs {
-    message: string;
+    input: string;
 }
 
 export const command = "send";
@@ -39,8 +39,8 @@ export const builder = (yargs: Argv<{}>): Argv<Args> => {
     const rollupsArgs = rollupsBuilder(connectArgs);
 
     // this command args
-    return rollupsArgs.option("message", {
-        describe: "Message to send",
+    return rollupsArgs.option("input", {
+        describe: "Input message to send",
         type: "string",
         demandOption: true,
     });
@@ -69,7 +69,7 @@ export const findNoticeKeys = (receipt: ContractReceipt): NoticeKeys => {
 };
 
 export const handler = async (args: Args) => {
-    const { rpc, message, mnemonic, accountIndex } = args;
+    const { rpc, input, mnemonic, accountIndex } = args;
 
     // connect to provider
     console.log(`connecting to ${rpc}`);
@@ -89,13 +89,13 @@ export const handler = async (args: Args) => {
     console.log(`using account "${signerAddress}"`);
 
     // use message from command line option, or from user prompt
-    console.log(`sending "${message}"`);
+    console.log(`sending "${input}"`);
 
     // convert string to input bytes
-    const input = ethers.utils.toUtf8Bytes(message);
+    const inputBytes = ethers.utils.toUtf8Bytes(input);
 
     // send transaction
-    const tx = await inputContract.addInput(input);
+    const tx = await inputContract.addInput(inputBytes);
     console.log(`transaction: ${tx.hash}`);
     console.log("waiting for confirmation...");
     const receipt = await tx.wait(1);
