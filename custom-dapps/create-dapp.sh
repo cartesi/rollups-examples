@@ -28,7 +28,9 @@ echo "Copying common files..."
 cp -pr ../config ${dapp_name}
 cp -pr ../docker ${dapp_name}
 cp ../base.hcl ${dapp_name}/docker-bake.hcl
+cp ../deploy-testnet.yml ${dapp_name}
 cp ../docker-compose.yml ${dapp_name}
+cp ../docker-compose-testnet.yml ${dapp_name}
 cp ../docker-compose-host.yml ${dapp_name}
 
 echo "Customizing DApp infrastructure..."
