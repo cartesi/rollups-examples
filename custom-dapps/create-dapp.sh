@@ -27,7 +27,6 @@ cp -pr template ${dapp_name}
 echo "Copying common files..."
 cp -pr ../config ${dapp_name}
 cp -pr ../docker ${dapp_name}
-mkdir -p ${dapp_name}/hardhat
 cp ../base.hcl ${dapp_name}/docker-bake.hcl
 cp ../docker-compose.yml ${dapp_name}
 cp ../docker-compose-host.yml ${dapp_name}
@@ -38,7 +37,6 @@ for i in \
     ${dapp_name}/docker-bake.hcl
 do
     sed -i'' -e "s/\.\.\/docker/\.\/docker/g" $i
-    sed -i'' -e "s/\.\.\/hardhat/\.\/hardhat/g" $i
 done
 
 # replace template placeholders by dapp name
