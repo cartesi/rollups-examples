@@ -104,36 +104,73 @@ When executing an example, it is possible to advance time in order to simulate t
 docker run cartesi/dapp-<example>-hardhat npx hardhat --network localhost util:advanceTime --seconds 864010
 ```
 
-## Polygon Mumbai
+## Using testnets
 
 <!-- markdownlint-disable MD024 -->
-### Running
+### Interacting with deployed DApps
 
-Each example committed to the repository is also already deployed on the Polygon Mumbai testnet. In order to interact with them, you can simply use the same [frontend-console](./frontend-console) tool, but specifying the `polygon-mumbai` network.
+The [Echo Python](./echo-python/) example committed to this repository is also already deployed to the Polygon Mumbai testnet. In order to interact with it, you can simply use the [frontend-console](./frontend-console) tool mentioned before, but this time specifying a few connectivity configurations appropriate for the target network.
 
-The connectivity to Polygon Mumbai testnet relies on Infura. To use it, you need to create an Infura account with Polygon Mumbai enabled, and then take note of the `PROJECT_ID` of one of the account projects.
+First of all, you will need to provide an account with some funds for submitting transactions. This can be accomplished by specifying a mnemonic string, and optionally an account index to use from that mnemonic. Please refer to Polygon's documentation on how to [get free testnet tokens](https://docs.polygon.technology/docs/develop/tools/polygon-faucet/).
 
-In order to send inputs, you will also need to provide an appropriate `MNEMONIC` for an account with enough MATIC funds to pay for the transaction fees. Please refer to Polygon's documentation on how to [get free testnet tokens](https://docs.polygon.technology/docs/develop/tools/polygon-faucet/).
+Aside from the account to use, submitting transactions also requires you to provide the URL of an appropriate RPC gateway node for the target network. There are many options for that, and several services provide private nodes with free tiers that are more than enough for running these examples. Some options include [Alchemy](https://www.alchemy.com/), [Infura](https://infura.io/) and [Moralis](https://moralis.io/).
 
-### Deploying
+Finally, to query the layer-2 Cartesi Node for DApp outputs, you will need to specify the URL of its GraphQL endpoint. The Echo Python example has its endpoint available at `https://echo-python.polygon-mumbai.rollups.staging.cartesi.io/graphql`. Please refer to the [frontend-console](./frontend-console)'s documentation for details on how to use it to [send inputs](./frontend-console/README.md#sending-inputs), [list notices](./frontend-console/README.md#listing-notices) and [deposit tokens](./frontend-console/README.md#depositing-erc-20-tokens).
 
-Deploying a new Cartesi DApp to a blockchain requires creating a smart contract there, as well as running a validator node for the DApp.
+### Deploying DApps
 
-To perform this operation, first of all the DApp must be built by following the instructions in the previous section. After that, the user should have a locally built docker image called `cartesi/dapp-<example>-hardhat`. This image contains the Cartesi Machine inside, as well as the necessary application and connectivity configuration to deploy the smart contract to remote networks. It should be noted that the smart contract deployment depends on the hash of the Cartesi Machine of the application, which is why the build procedure must be done beforehand.
+Deploying a new Cartesi DApp to a blockchain requires creating a smart contract on that network, as well as running a validator node for the DApp.
+
+The first step is to build the DApp's back-end machine, which will produce a hash that serves as a unique identifier.
+
+```shell
+cd <example>
+docker buildx bake machine --load
+```
+
+Once the machine docker image is ready, we can use it to deploy a corresponding Rollups smart contract. This requires you to define a few environment variables to specify which network you are deploying to, which account to use, and which RPC gateway to use when submitting the deploy transaction.
+
+```shell
+export NETWORK=<network>
+export MNEMONIC=<user sequence of twelve words>
+export RPC_URL=<https://your.rpc.gateway>
+```
+
+For example, to deploy to the Goerli testnet using an Infura RPC node, you could execute:
+
+```shell
+export NETWORK=goerli
+export MNEMONIC=<user sequence of twelve words>
+export RPC_URL=https://goerli.infura.io/v3/<USER_PROJECT_ID>
+```
 
 With that in place, you can submit a deploy transaction to the Cartesi DApp Factory contract on the target network by executing the following command:
 
 ```shell
-cd <example>
-docker run -v $PWD/../deploy/:/deploy -e PROJECT_ID=<PROJECT_ID> -e MNEMONIC="<MNEMONIC>" cartesi/dapp-<example>-hardhat deploy --network polygon_mumbai --export /deploy/polygon_mumbai/<example>.json
+DAPP_NAME=<example> docker compose -f ../deploy-testnet.yml up
 ```
 
-This will create a file at `../deploy/polygon_mumbai/<example>.json` with the deployment information.
-
-After that, a corresponding Cartesi Validator Node must also be instantiated in order to interact with the deployed smart contract on the target network and handle the back-end logic of the DApp. This is achieved by running a Docker Compose as such:
+This will create a file at `../deployments/<network>/<example>.address` with the deployed contract's address.
+Once the command finishes, it is advisable to stop the docker compose and remove the volumes created when executing it.
 
 ```shell
-TODO
+DAPP_NAME=<example> docker compose -f ../deploy-testnet.yml down -v
+```
+
+After that, a corresponding Cartesi Validator Node must also be instantiated in order to interact with the deployed smart contract on the target network and handle the back-end logic of the DApp.
+Aside from the environment variables defined above, the node will also need a secure websocket endpoint for the RPC gateway (WSS URL) and the chain ID of the target network.
+
+For example, for Goerli and Infura, you would set the following additional variables:
+
+```shell
+export WSS_URL=wss://goerli.infura.io/ws/v3/<USER_PROJECT_ID>
+export CHAIN_ID=5
+```
+
+Then, the node itself can be started by running a docker compose as follows:
+
+```shell
+docker compose -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml up
 ```
 
 ## Examples
