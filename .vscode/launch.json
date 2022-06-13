@@ -20,6 +20,18 @@
             "env": {
                 "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
             },
+            "cwd": "${workspaceFolder}/calculator",
+            "name": "Calculator DApp",
+            "type": "python",
+            "request": "launch",
+            "python": "${workspaceFolder}/calculator/.env/bin/python3",
+            "program": "calculator.py",
+            "gevent": false,
+        },
+        {
+            "env": {
+                "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
+            },
             "cwd": "${workspaceFolder}/converter",
             "name": "Converter DApp",
             "type": "python",
@@ -62,6 +74,18 @@
             "request": "launch",
             "python": "${workspaceFolder}/m2cgen/.env/bin/python3",
             "program": "m2cgen.py",
+            "gevent": false,
+        },
+        {
+            "env": {
+                "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
+            },
+            "cwd": "${workspaceFolder}/erc20deposit",
+            "name": "ERC-20 Deposit DApp",
+            "type": "python",
+            "request": "launch",
+            "python": "${workspaceFolder}/erc20deposit/.env/bin/python3",
+            "program": "erc20deposit.py",
             "gevent": false,
         }
     ]
