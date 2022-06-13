@@ -101,7 +101,7 @@ _Note_: When running in host mode, localhost ports `5003` and `5004` will be use
 When executing an example, it is possible to advance time in order to simulate the passing of epochs. To do that, run:
 
 ```shell
-docker run cartesi/dapp-<example>-hardhat npx hardhat --network localhost util:advanceTime --seconds 864010
+curl --data '{"id":1337,"jsonrpc":"2.0","method":"evm_increaseTime","params":[864010]}' http://localhost:8545
 ```
 
 ## Using testnets
@@ -136,12 +136,12 @@ export MNEMONIC=<user sequence of twelve words>
 export RPC_URL=<https://your.rpc.gateway>
 ```
 
-For example, to deploy to the Goerli testnet using an Infura RPC node, you could execute:
+For example, to deploy to the Goerli testnet using an Alchemy RPC node, you could execute:
 
 ```shell
 export NETWORK=goerli
 export MNEMONIC=<user sequence of twelve words>
-export RPC_URL=https://goerli.infura.io/v3/<USER_PROJECT_ID>
+export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
 ```
 
 With that in place, you can submit a deploy transaction to the Cartesi DApp Factory contract on the target network by executing the following command:
@@ -160,10 +160,10 @@ DAPP_NAME=<example> docker compose -f ../deploy-testnet.yml down -v
 After that, a corresponding Cartesi Validator Node must also be instantiated in order to interact with the deployed smart contract on the target network and handle the back-end logic of the DApp.
 Aside from the environment variables defined above, the node will also need a secure websocket endpoint for the RPC gateway (WSS URL) and the chain ID of the target network.
 
-For example, for Goerli and Infura, you would set the following additional variables:
+For example, for Goerli and Alchemy, you would set the following additional variables:
 
 ```shell
-export WSS_URL=wss://goerli.infura.io/ws/v3/<USER_PROJECT_ID>
+export WSS_URL=wss://eth-goerli.alchemyapi.io/v2/<USER_KEY>
 export CHAIN_ID=5
 ```
 
