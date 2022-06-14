@@ -2,24 +2,17 @@ version: '3'
 
 services:
   hardhat:
-    build:
-      context: .
-      args:
-        DAPP_NAME: $DAPP_NAME
     command: ["node", "--write", "true", "--network", "hardhat", "--export", "/opt/cartesi/share/blockchain/localhost.json"]
     init: true
     ports:
       - '8545:8545'
-    platform: linux/amd64
-    environment:
-      - DAPP_NAME=$DAPP_NAME
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
-      - ./contracts/deployments:/app/contracts/deployments
+      - ./hardhat/deployments:/app/deployments
 
   rollups_dispatcher:
     depends_on: [hardhat]
-    image: cartesi/rollups-dispatcher:devel
+    image: cartesi/rollups-dispatcher:0.2.0
     restart: always
     environment:
       # TODO: currently hardhat's default mnemonic
@@ -36,7 +29,6 @@ services:
       - SERVER_MANAGER_HOSTNAME=server_manager
       - SERVER_MANAGER_PORT=5001
       - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
-      - DAPP_CONTRACT_NAME=$DAPP_NAME
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
@@ -55,15 +47,11 @@ services:
       - ./config:/opt/cartesi/share/config/
 
   server_manager:
-    image: cartesi/server-manager:0.2.0
-    platform: linux/amd64
     restart: always
-    volumes:
-      - ./$DAPP_NAME/machine:/opt/cartesi/share/dapp-bin
 
   rollups_indexer:
     depends_on: [hardhat]
-    image: cartesi/rollups-indexer:devel
+    image: cartesi/rollups-indexer:0.2.0
     restart: always
     environment:
       - URL=http://hardhat:8545
@@ -73,7 +61,6 @@ services:
       - SERVER_MANAGER_HOSTNAME=server_manager
       - SERVER_MANAGER_PORT=5001
       - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
-      - DAPP_CONTRACT_NAME=$DAPP_NAME
       - POSTGRES_HOSTNAME=database
       - POSTGRES_PORT=5432
     volumes:
