@@ -49,7 +49,7 @@ yarn start notices
 
 The response should be something like this:
 
-```json
+```shell
 [ { epoch: '0', input: '1', notice: '0', payload: 'Hello there' } ]
 ```
 

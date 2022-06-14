@@ -38,7 +38,7 @@ yarn start notices
 
 The response should be something like this:
 
-```json
+```shell
 [
   {
     epoch: '0',

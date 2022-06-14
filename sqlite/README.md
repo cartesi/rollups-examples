@@ -43,7 +43,7 @@ yarn start notices
 
 The response should be something like this:
 
-```json
+```shell
 [ { epoch: '0', input: '3', notice: '0', payload: '[["Peter", 32]]' } ]
 ```
 
