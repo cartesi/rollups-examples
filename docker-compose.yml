@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   hardhat:
-    image: cartesi/rollups-hardhat:devel
+    image: cartesi/rollups-hardhat:0.3.0
     command:
       [
         "node",
@@ -25,7 +25,7 @@ services:
       - ./deployments:/app/deployments
 
   rollups_dispatcher:
-    image: cartesi/rollups-dispatcher:devel
+    image: cartesi/rollups-dispatcher:0.3.0
     command:
       [
         "--dapp-contract-address-file",
@@ -61,7 +61,7 @@ services:
       - ./deployments:/deployments
 
   state_server:
-    image: cartesi/delegate-server:devel
+    image: cartesi/delegate-server:0.3.0
     command:
       [
         "--sf-config",
@@ -96,7 +96,7 @@ services:
       - machine:/opt/cartesi/share/dapp-bin
 
   deployer:
-    image: cartesi/rollups-cli:devel
+    image: cartesi/rollups-cli:0.3.0
     restart: on-failure
     depends_on:
       hardhat:
@@ -123,7 +123,7 @@ services:
       - ./deployments:/deployments
 
   rollups_indexer:
-    image: cartesi/rollups-indexer:devel
+    image: cartesi/rollups-indexer:0.3.0
     command:
       [
         "--dapp-contract-address-file",
@@ -151,7 +151,7 @@ services:
       - ./deployments:/deployments
 
   query_server:
-    image: cartesi/query-server:devel
+    image: cartesi/query-server:0.3.0
     ports:
       - "4000:4000"
     depends_on:

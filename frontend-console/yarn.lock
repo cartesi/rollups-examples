@@ -469,10 +469,10 @@
   dependencies:
     "@cartesi/util" "^2.0.1"
 
-"@cartesi/rollups@^0.3.0-beta.1":
-  version "0.3.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-0.3.0-rc.1.tgz#e227d79481bc4ec32cddc60eded15d18616322e0"
-  integrity sha512-T+zlgB6aEOFb3HaDwiXE/kYCQjXi4VaU+pj2nKSV+SXNYGvs4qDt81cFi5L3fUgdy+1Y0RdGeknpPeKZhV/OMg==
+"@cartesi/rollups@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-0.3.0.tgz#c7432e19cddb91335f38e5cb43c048ef31b0c0c9"
+  integrity sha512-Yum/6sTRCvQ6qZVk1JewHxQOtw7vXSVi5vqbqu6h+4hh20gHsaJczn+OuKVCflrWfSfR3VsmQ2Qu2sz8pnOHQQ==
   dependencies:
     "@cartesi/logger" "^0.7.4"
     "@cartesi/token" "^1.4.0"
