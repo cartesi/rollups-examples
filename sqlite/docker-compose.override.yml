@@ -1,0 +1,5 @@
+version: "3"
+
+services:
+  server_manager:
+    image: cartesi/dapp:sqlite-devel-server

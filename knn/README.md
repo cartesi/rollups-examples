@@ -2,55 +2,11 @@
 
 This example implements a simple Machine Learning classification algorithm within a Cartesi Rollups DApp.
 
-In this DApp, we use the [k-Nearest Neighbor algorithm](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm) to predict the class of a given input based on a previously known dataset of samples. We use the classic [Iris flower dataset](https://en.wikipedia.org/wiki/Iris_flower_data_set), which contains 3 classes of 50 instances each, where each class refers to a species of the [Iris flower](https://en.wikipedia.org/wiki/Iris_(plant)). The actual data used in this example is available [here](https://archive.ics.uci.edu/ml/datasets/iris).
+In this DApp, we use the [k-Nearest Neighbor algorithm](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm) to predict the class of a given input based on a previously known dataset of samples.
 
-## Building the environment
-
-To run the knn example, clone the repository as follows:
-
-```shell
-$ git clone https://github.com/cartesi/rollups-examples.git
-```
-
-Then, build the back-end for the knn example:
-
-```shell
-$ cd rollups-examples/knn
-$ make machine
-```
-
-## Running the environment
-
-In order to start the containers in production mode, simply run:
-
-```shell
-$ docker-compose up --build
-```
-
-_Note:_ If you decide to use [Docker Compose V2](https://docs.docker.com/compose/cli-command/), make sure you set the [compatibility flag](https://docs.docker.com/compose/cli-command-compatibility/) when executing the command (e.g., `docker compose --compatibility up`).
-
-Allow some time for the infrastructure to be ready.
-How much will depend on your system, but after some time showing the error `"concurrent call in session"`, eventually the container logs will repeatedly show the following:
-
-```shell
-server_manager_1      | Received GetVersion
-server_manager_1      | Received GetStatus
-server_manager_1      |   default_rollups_id
-server_manager_1      | Received GetSessionStatus for session default_rollups_id
-server_manager_1      |   0
-server_manager_1      | Received GetEpochStatus for session default_rollups_id epoch 0
-```
-
-To stop the containers, first end the process with `Ctrl + C`.
-Then, remove the containers and associated volumes by executing:
-
-```shell
-$ docker-compose down -v
-```
-
-## Understanding the application
-
-As explained before, the Iris dataset used in this application contains 3 classes, where each class refers to a species of Iris flowers. One class is linearly separable from the other two, however the latter are NOT linearly separable from each other.
+We use the classic [Iris flower dataset](https://en.wikipedia.org/wiki/Iris_flower_data_set), which contains 3 classes of 50 instances each, where each class refers to a species of the [Iris flower](https://en.wikipedia.org/wiki/Iris_(plant)).
+One class is linearly separable from the other two, however the latter are NOT linearly separable from each other.
+The actual data used in this example is available [here](https://archive.ics.uci.edu/ml/datasets/iris).
 
 When starting the application while building the machine, the k-NN classification algorithm is evaluated on the dataset using cross-validation, showing the expected accuracy of the classifier.
 
@@ -69,88 +25,70 @@ Once started, the DApp will receive input samples and predict its classification
 4. Petal width in cm
 
 Each input should be given as a JSON string, such as the following:
+
 ```json
 {"sl": 4.9, "sw": 3.0, "pl": 1.4, "pw": 0.3}
 ```
-Where "sl" represents the sepal length, "sw" is the sepal width, "pl" is the petal length and "pw" is the petal width.
+
+Where `sl` represents the sepal length, `sw` is the sepal width, `pl` is the petal length and `pw` is the petal width.
 
 ## Interacting with the application
 
-With the infrastructure in place, you can interact with the application using a set of Hardhat tasks.
+We can use the [frontend-console](../frontend-console) application to interact with the DApp.
+Ensure that the [application has already been built](../frontend-console/README.md#building) before using it.
 
-First, go to a separate terminal window, switch to the `knn/contracts` directory, and run `yarn`:
+First, go to a separate terminal window and switch to the `frontend-console` directory:
 
 ```shell
-$ cd knn/contracts/
-$ yarn
+cd frontend-console
 ```
 
 Then, send an input as follows:
 
 ```shell
-$ npx hardhat --network localhost knn:addInput --input '{"sl": 4.9, "sw": 3.0, "pl": 1.4, "pw": 0.3}'
-```
-
-The input will have been accepted when you receive a response similar to the following one:
-
-```shell
-Added input '{"sl": 4.9, "sw": 3.0, "pl": 1.4, "pw": 0.3}' to epoch '0' (index '0', timestamp: 1640643170, signer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, tx: 0x31d7e9e810d8702196623837b8512097786b544a4b5ffb52f693b9ff7d424147)
+yarn start send --input '{"sl": 4.9, "sw": 3.0, "pl": 1.4, "pw": 0.3}'
 ```
 
 In order to verify the notices generated by your inputs, run the command:
 
 ```shell
-$ npx hardhat --network localhost knn:getNotices --epoch 0 --payload string
+yarn start notices
 ```
 
 The response should be something like this:
 
 ```shell
-{"session_id":"default_rollups_id","epoch_index":"0","input_index":"0","notice_index":"0","payload":"Iris-setosa"}
+[ { epoch: '0', input: '1', notice: '0', payload: 'Iris-setosa' } ]
 ```
 
-Where the payload corresponds to the Iris flower species class predicted by the k-NN algorithm.
-
-## Advancing time
-
-To advance time, in order to simulate the passing of epochs, run:
-
-```shell
-$ npx hardhat --network localhost util:advanceTime --seconds 864010
-```
+The payload corresponds to the Iris flower species class predicted by the k-NN algorithm.
 
 ## Running the environment in host mode
 
 When developing an application, it is often important to easily test and debug it. For that matter, it is possible to run the Cartesi Rollups environment in [host mode](../README.md#host-mode), so that the DApp's back-end can be executed directly on the host machine, allowing it to be debugged using regular development tools such as an IDE.
 
-The first step is to run the environment in host mode using the following command:
+This DApp's back-end is written in Python, so to run it in your machine you need to have `python3` installed.
+
+In order to start the back-end, run the following commands in a dedicated terminal:
 
 ```shell
-$ docker-compose -f docker-compose.yml -f docker-compose-host.yml up --build
+cd knn/
+python3 -m venv .env
+. .env/bin/activate
+pip install -r requirements.txt
+ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 knn.py
 ```
 
-The next step is to run the knn server in your machine. The application is written in Python, so you need to have `python3` installed.
+The final command will effectively run the back-end and send corresponding outputs to port `5004`.
+It can optionally be configured in an IDE to allow interactive debugging using features like breakpoints.
 
-In order to start the knn server, run the following commands in a dedicated terminal:
+You can also use a tool like [entr](https://eradman.com/entrproject/) to restart the back-end automatically when the code changes. For example:
 
 ```shell
-$ cd knn/server/
-$ python3 -m venv .env
-$ . .env/bin/activate
-$ pip install -r requirements.txt
-$ ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 knn.py
+ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 knn.py
 ```
 
-This will run the knn server and send the corresponding notices to port `5004`.
-
-The final command, which effectively starts the server, can also be configured in an IDE to allow interactive debugging using features like breakpoints.
-You can also use a tool like [entr](https://eradman.com/entrproject/) to restart it automatically when the code changes. For example:
-
-```shell
-$ ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 knn.py
-```
-
-After the server successfully starts, it should print an output like the following:
+After the back-end successfully starts, it should print an output like the following:
 
 ```log
 INFO:__main__:HTTP rollup_server url is http://127.0.0.1:5004
@@ -162,21 +100,3 @@ INFO:__main__:Sending finish
 ```
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
-
-When you add an input, you should see it being processed by the knn server as follows:
-
-```log
-INFO:__main__:Received finish status 200
-INFO:__main__:Received advance request data {'metadata': {'msg_sender': '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', 'epoch_index': 0, 'input_index': 0, 'block_number': 0, 'timestamp': 0}, 'payload': '0x7b22736c223a20342e392c20227377223a20332e302c2022706c223a20312e342c20227077223a20302e337d'}
-INFO:__main__:Received input: '{"sl": 4.9, "sw": 3.0, "pl": 1.4, "pw": 0.3}'
-INFO:__main__:Data={"sl": 4.9, "sw": 3.0, "pl": 1.4, "pw": 0.3}, Predicted: 0
-INFO:__main__:Adding notice with payload: Iris-setosa
-INFO:__main__:Received notice status 200 body b'{"index":0}'
-INFO:__main__:Sending finish
-```
-
-Finally, to stop the containers, removing any associated volumes, execute:
-
-```shell
-$ docker-compose -f docker-compose.yml -f docker-compose-host.yml down -v
-```
