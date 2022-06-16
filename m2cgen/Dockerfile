@@ -1,28 +1,13 @@
-FROM node:16-buster-slim
+# syntax=docker.io/docker/dockerfile:1.4
+FROM python:3.8.10 as model
 
-# install git
-RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
-    build-essential git python3 \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /usr/src/app
+COPY ./model .
+RUN pip3 install -r requirements.txt
+RUN python3 build_model.py
 
-WORKDIR /app
+FROM cartesi/toolchain:0.9.0 as dapp-build
 
-# copy machine
-WORKDIR /app/machine
-COPY machine .
-
-# build to bring node_modules
-WORKDIR /app/contracts
-COPY ["contracts/package.json", "contracts/yarn.lock", "./"]
-RUN yarn install --non-interactive
-
-# build app
-COPY contracts .
-RUN yarn install --non-interactive
-
-# expose hardhat node port
-EXPOSE 8545
-
-WORKDIR /app/contracts
-ENTRYPOINT ["npx", "hardhat"]
-CMD ["node"]
+WORKDIR /opt/cartesi/dapp
+COPY . .
+COPY --from=model /usr/src/app/model.py .

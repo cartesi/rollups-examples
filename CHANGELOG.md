@@ -1,9 +1,27 @@
+<!-- markdownlint-disable-file MD024 -->
 # Changelog
 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.6.0] 2022-06-14
+
+### Added
+
+- Deployment mechanism for EVM-compatible testnets
+- Echo Rust DApp example
+- Calculator DApp example
+- ERC-20 Deposit DApp example
+- Basic mechanism for adding extra Python dependencies
+- Usage of new exception endpoint in SQLite DApp example
+
+### Changed
+
+- Major reorganization of packages and build processes to reduce boilerplate code duplication
+- Major refactor of the frontend-console application, originally specific for the Echo Python DApp and now generalized to support sending inputs, querying notices and depositing ERC-20 tokens for all DApps, both locally and deployed on testnets
+- Deprecated usage of Hardhat tasks for interacting with applications in favor of the frontend-console
 
 ## [0.5.1] 2022-05-02
 
@@ -111,6 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Previous Versions]
 
+[0.5.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.5.1
 [0.5.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.5.0
 [0.4.2]: https://github.com/cartesi/rollups-examples/releases/tag/v0.4.2
 [0.4.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.4.1
