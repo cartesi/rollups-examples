@@ -70,5 +70,5 @@ export const handler = async (args: Args) => {
             return output;
         });
 
-    console.log(outputs);
+    console.log(JSON.stringify(outputs));
 };

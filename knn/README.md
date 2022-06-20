@@ -57,8 +57,8 @@ yarn start notices
 
 The response should be something like this:
 
-```shell
-[ { epoch: '0', input: '1', notice: '0', payload: 'Iris-setosa' } ]
+```json
+[{"epoch":"0","input":"1","notice":"0","payload":"Iris-setosa"}]
 ```
 
 The payload corresponds to the Iris flower species class predicted by the k-NN algorithm.

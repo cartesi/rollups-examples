@@ -38,15 +38,8 @@ yarn start notices
 
 The response should be something like this:
 
-```shell
-[
-  {
-    epoch: '0',
-    input: '1',
-    notice: '0',
-    payload: 'Deposit received from: 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266; ERC-20: 0xa513e6e4b8f2a923d98304ec87f64353c4d5c853; Amount: 100'
-  }
-]
+```json
+[{"epoch":"0","input":"1","notice":"0","payload":"Deposit received from: 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266; ERC-20: 0xa513e6e4b8f2a923d98304ec87f64353c4d5c853; Amount: 100"}]
 ```
 
 ## Running the environment in host mode
