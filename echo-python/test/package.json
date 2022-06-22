@@ -16,13 +16,16 @@
         "stopEnvironment": "cd .. && docker-compose -f ../docker-compose.yml -f docker-compose.override.yml down -v",
         "pretest:prod": "yarn prepareEnvironment && yarn startEnvironment:prod",
         "pretest:host": "yarn prepareEnvironment && yarn startEnvironment:host && yarn startBackend",
+        "pretest:ci": "yarn generateTypes && yarn setupConsole && yarn startEnvironment:prod",
         "mocha": "mocha -r ts-node/register './*test.ts' -t 3m -b --address 0.0.0.0:5001",
         "test:prod": "yarn mocha",
         "test:host": "yarn mocha",
+        "test:ci": "yarn mocha",
         "test": "wrap () { yarn test:prod \"$@\" && yarn test:host \"$@\"; }; wrap",
         "posttest": "yarn stopEnvironment",
         "posttest:prod": "yarn posttest",
-        "posttest:host": "yarn posttest && yarn cleanEnvironment"
+        "posttest:host": "yarn posttest && yarn cleanEnvironment",
+        "posttest:ci": "yarn posttest"
     },
     "devDependencies": {
         "@grpc/grpc-js": "^1.6.7",
