@@ -12,51 +12,92 @@
 import { createClient, defaultExchanges } from "@urql/core";
 import fetch from "cross-fetch";
 import {
-    GetNoticeDocument,
+    NoticesDocument,
+    NoticesByEpochDocument,
+    NoticesByEpochAndInputDocument,
     Notice,
-    NoticeKeys,
+    Input,
 } from "../../generated-src/graphql";
+import { InputKeys } from "../commands/types";
 
-// we don't get every field of Notice
-export type PartialNotice = Pick<
-    Notice,
-    | "__typename"
-    | "session_id"
-    | "epoch_index"
-    | "input_index"
-    | "notice_index"
-    | "payload"
->;
+// define PartialNotice type only with the desired fields of the full Notice defined by the GraphQL schema
+export type PartialEpoch = Pick<Input, "index">;
+export type PartialInput = Pick<Input, "index"> & { epoch: PartialEpoch };
+export type PartialNotice = Pick<Notice, "__typename" | "index" | "payload"> & {
+    input: PartialInput;
+};
 
 // define a type predicate to filter out notices
 const isPartialNotice = (n: PartialNotice | null): n is PartialNotice =>
     n !== null;
 
 /**
- * Queries a GraphQL server looking for the notices of an input
+ * Queries a GraphQL server for notices based on input keys
  * @param url URL of the GraphQL server
- * @param input Blockchain event of input added or the notice keys to be queried
- * @param timeout How long to wait for notice to be detected
+ * @param input input identification keys
  * @returns List of notices
  */
 export const getNotices = async (
     url: string,
-    noticeKeys: NoticeKeys
+    inputKeys: InputKeys
 ): Promise<PartialNotice[]> => {
     // create GraphQL client to reader server
     const client = createClient({ url, exchanges: defaultExchanges, fetch });
 
-    // query the GraphQL server for notices of our input
-    // keeping trying forever (or until user kill the process)
+    // query the GraphQL server for notices corresponding to the input keys
     console.log(
-        `querying ${url} for notices of ${JSON.stringify(noticeKeys)}...`
+        `querying ${url} for notices of ${JSON.stringify(inputKeys)}...`
     );
-    const { data, error } = await client
-        .query(GetNoticeDocument, { query: noticeKeys })
-        .toPromise();
-    if (data?.GetNotice) {
-        return data.GetNotice.filter<PartialNotice>(isPartialNotice);
+
+    if (
+        inputKeys.epoch_index !== undefined &&
+        inputKeys.input_index !== undefined
+    ) {
+        // list notices querying by epoch and input
+        const { data, error } = await client
+            .query(NoticesByEpochAndInputDocument, {
+                epoch_index: inputKeys.epoch_index,
+                input_index: inputKeys.input_index,
+            })
+            .toPromise();
+        if (data?.epoch?.input?.notices) {
+            return data.epoch.input.notices.nodes.filter<PartialNotice>(
+                isPartialNotice
+            );
+        } else {
+            throw new Error(error?.message);
+        }
+    } else if (inputKeys.epoch_index !== undefined) {
+        // list notices querying only by epoch
+        const { data, error } = await client
+            .query(NoticesByEpochDocument, {
+                epoch_index: inputKeys.epoch_index,
+            })
+            .toPromise();
+        if (data?.epoch?.inputs) {
+            // builds return notices array by concatenating each input's notices
+            let ret: PartialNotice[] = [];
+            const inputs = data.epoch.inputs.nodes;
+            for (let input of inputs) {
+                ret = ret.concat(
+                    input.notices.nodes.filter<PartialNotice>(isPartialNotice)
+                );
+            }
+            return ret;
+        } else {
+            throw new Error(error?.message);
+        }
+    } else if (inputKeys.input_index !== undefined) {
+        throw new Error(
+            "Querying only by input index is not supported. Please define epoch index as well."
+        );
     } else {
-        throw new Error(error?.message);
+        // list notices using top-level query
+        const { data, error } = await client.query(NoticesDocument).toPromise();
+        if (data?.notices) {
+            return data.notices.nodes.filter<PartialNotice>(isPartialNotice);
+        } else {
+            throw new Error(error?.message);
+        }
     }
 };

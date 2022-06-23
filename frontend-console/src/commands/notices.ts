@@ -46,8 +46,8 @@ export const handler = async (args: Args) => {
 
     // wait for notices to appear in reader
     const notices = await getNotices(url, {
-        epoch_index: epoch?.toString(),
-        input_index: input?.toString(),
+        epoch_index: epoch,
+        input_index: input,
     });
 
     // gathers outputs to print based on the retrieved notices
@@ -55,17 +55,25 @@ export const handler = async (args: Args) => {
     // - decodes the hex payload as an UTF-8 string, if possible
     // - prints only payload and indices for epoch, input and notice
     const outputs = notices
-        .sort((a, b) => parseInt(a.input_index) - parseInt(b.input_index))
+        .sort((a, b) => {
+            // sort by epoch index and then by input index
+            const epochResult = a.input.epoch.index - b.input.epoch.index;
+            if (epochResult != 0) {
+                return epochResult;
+            } else {
+                return a.input.index - b.input.index;
+            }
+        })
         .map((n) => {
             const output: any = {};
-            output.epoch = n.epoch_index;
-            output.input = n.input_index;
-            output.notice = n.notice_index;
+            output.epoch = n.input.epoch.index;
+            output.input = n.input.index;
+            output.notice = n.index;
             try {
-                output.payload = ethers.utils.toUtf8String("0x" + n.payload);
+                output.payload = ethers.utils.toUtf8String(n.payload);
             } catch (e) {
                 // cannot decode hex payload as a UTF-8 string
-                output.payload = "0x" + n.payload;
+                output.payload = n.payload;
             }
             return output;
         });

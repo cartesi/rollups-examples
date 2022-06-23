@@ -12,7 +12,7 @@
 import { IERC20__factory, IInput } from "@cartesi/rollups";
 import { ContractReceipt, ethers } from "ethers";
 import { Argv } from "yargs";
-import { NoticeKeys } from "../../../generated-src/graphql";
+import { InputKeys } from "../types";
 import { networks } from "../../networks";
 import {
     connect,
@@ -73,22 +73,22 @@ export const builder = (yargs: Argv<Args>) => {
 };
 
 /**
- * Translate a InputAddedEvent into a NoticeKeys
+ * Retrieve InputKeys from InputAddedEvent
  * @param receipt Blockchain transaction receipt
- * @returns NoticeKeys to find notice in GraphQL server
+ * @returns input identification keys
  */
 export const findInputAddedInfo = (
     receipt: ContractReceipt,
     inputContract: IInput
-): NoticeKeys => {
+): InputKeys => {
     if (receipt.events) {
         for (const event of receipt.events) {
             try {
                 const parsedLog = inputContract.interface.parseLog(event);
                 if (parsedLog.name == "InputAdded") {
                     return {
-                        epoch_index: parsedLog.args.epochNumber.toString(),
-                        input_index: parsedLog.args.inputIndex.toString(),
+                        epoch_index: parsedLog.args.epochNumber.toNumber(),
+                        input_index: parsedLog.args.inputIndex.toNumber(),
                     };
                 }
             } catch (e) {

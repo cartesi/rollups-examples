@@ -1,9 +1,54 @@
-query GetNotice($query: NoticeKeys) {
-    GetNotice(query: $query) {
-        session_id
-        epoch_index
-        input_index
-        notice_index
-        payload
+query notices {
+  notices {
+    nodes {
+      index
+      payload
+      input {
+        index
+        epoch {
+          index
+        }
+      }
     }
+  }
+}
+
+query noticesByEpochAndInput($epoch_index: Int!, $input_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    input(index: $input_index) {
+      notices {
+        nodes {
+          index
+          payload
+          input {
+            index
+            epoch {
+              index
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query noticesByEpoch($epoch_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    inputs {
+      nodes {
+        notices {
+          nodes {
+            index
+            payload
+            input {
+              index
+              epoch {
+                index
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
