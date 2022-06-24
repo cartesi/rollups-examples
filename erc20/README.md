@@ -49,11 +49,11 @@ This DApp's back-end is written in Python, so to run it in your machine you need
 In order to start the back-end, run the following commands in a dedicated terminal:
 
 ```shell
-cd erc20deposit/
+cd erc20/
 python3 -m venv .env
 . .env/bin/activate
 pip install -r requirements.txt
-ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 erc20deposit.py
+ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 erc20.py
 ```
 
 The final command will effectively run the back-end and send corresponding outputs to port `5004`.
@@ -62,7 +62,7 @@ It can optionally be configured in an IDE to allow interactive debugging using f
 You can also use a tool like [entr](https://eradman.com/entrproject/) to restart the back-end automatically when the code changes. For example:
 
 ```shell
-ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 erc20deposit.py
+ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 erc20.py
 ```
 
 After the back-end successfully starts, it should print an output like the following:
