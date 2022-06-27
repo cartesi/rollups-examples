@@ -1,107 +1,185 @@
-version: '3'
+version: "3.9"
 
 services:
   hardhat:
-    build: .
-    command: ["node", "--write", "true", "--network", "hardhat", "--export", "/opt/cartesi/share/blockchain/localhost.json"]
+    image: cartesi/rollups-hardhat:0.3.0
+    command:
+      [
+        "node",
+        "--network",
+        "hardhat",
+        "--export",
+        "/opt/cartesi/share/blockchain/localhost.json",
+      ]
     init: true
     ports:
-      - '8545:8545'
-    platform: linux/amd64
+      - "8545:8545"
+    healthcheck:
+      test:
+        ["CMD", "test", "-f", "/opt/cartesi/share/blockchain/localhost.json"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
-      - ./contracts/deployments:/app/contracts/deployments
+      - ./deployments:/app/deployments
 
   rollups_dispatcher:
-    depends_on: [hardhat]
-    image: cartesi/rollups-dispatcher:0.2.0
-    platform: linux/amd64
+    image: cartesi/rollups-dispatcher:0.3.0
+    command:
+      [
+        "--dapp-contract-address-file",
+        "/deployments/localhost/dapp.address",
+        "--logic-config-path",
+        "/opt/cartesi/share/config/logic-config.toml",
+        "--sf-config",
+        "/opt/cartesi/share/config/sf-config.toml",
+        "--bs-config",
+        "/opt/cartesi/share/config/bs-config.toml",
+        "--tm-config",
+        "/opt/cartesi/share/config/tm-config.toml",
+        "--mnemonic",
+        "test test test test test test test test test test test junk",
+        "--chain-id",
+        "31337",
+      ]
     restart: always
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      deployer:
+        condition: service_completed_successfully
+      state_server:
+        condition: service_started
+      server_manager:
+        condition: service_started
     environment:
-      # TODO: currently hardhat's default mnemonic
-      # this should become a secret
-      - MNEMONIC=test test test test test test test test test test test junk
-      - CHAIN_ID=31337
-      - RUST_LOG=info
-      - LOGIC_CONFIG_PATH=/opt/cartesi/share/config/logic-config.toml
-      - STATE_FOLD_CONFIG_PATH=/opt/cartesi/share/config/sf-config.toml
-      - BLOCK_SUBSCRIBER_CONFIG_PATH=/opt/cartesi/share/config/bs-config.toml
-      - TX_MANAGER_CONFIG_PATH=/opt/cartesi/share/config/tm-config.toml
-      - STATE_SERVER_HOSTNAME=state_server
-      - STATE_SERVER_PORT=50051
-      - SERVER_MANAGER_HOSTNAME=server_manager
-      - SERVER_MANAGER_PORT=5001
-      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
+      RUST_LOG: info
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
+      - ./deployments:/deployments
 
   state_server:
-    depends_on: [hardhat]
-    image: cartesi/delegate-server:0.2.0
-    platform: linux/amd64
+    image: cartesi/delegate-server:0.3.0
+    command:
+      [
+        "--sf-config",
+        "/opt/cartesi/share/config/sf-config.toml",
+        "--url",
+        "http://hardhat:8545",
+        "--ws-url",
+        "ws://hardhat:8545",
+        "rollups",
+      ]
     restart: always
-    environment:
-      - STATE_FOLD_CONFIG_PATH=/opt/cartesi/share/config/sf-config.toml
-      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
-      - URL=http://hardhat:8545
+    #    healthcheck:
+    #      test: ["CMD", "curl", "-f", "http://locahost:50051"]
+    #      interval: 10s
+    #      timeout: 5s
+    #      retries: 5
+    depends_on:
+      hardhat:
+        condition: service_healthy
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
 
   server_manager:
-    image: cartesi/server-manager:0.2.0
-    platform: linux/amd64
     restart: always
+    #    healthcheck:
+    #      test: ["CMD", "curl", "-f", "http://locahost:5001"]
+    #      interval: 10s
+    #      timeout: 5s
+    #      retries: 5
     volumes:
-      - ./machine:/opt/cartesi/share/dapp-bin
+      - machine:/opt/cartesi/share/dapp-bin
+
+  deployer:
+    image: cartesi/rollups-cli:0.3.0
+    restart: on-failure
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      server_manager:
+        condition: service_started
+    command:
+      [
+        "create",
+        "--rpc",
+        "http://hardhat:8545",
+        "--deploymentFile",
+        "/opt/cartesi/share/blockchain/localhost.json",
+        "--mnemonic",
+        "test test test test test test test test test test test junk",
+        "--templateHashFile",
+        "/opt/cartesi/share/dapp-bin/hash",
+        "--outputFile",
+        "/deployments/localhost/dapp.address",
+      ]
+    volumes:
+      - blockchain-data:/opt/cartesi/share/blockchain
+      - machine:/opt/cartesi/share/dapp-bin:ro
+      - ./deployments:/deployments
 
   rollups_indexer:
-    depends_on: [hardhat]
-    image: cartesi/rollups-indexer:0.2.0
-    platform: linux/amd64
+    image: cartesi/rollups-indexer:0.3.0
+    command:
+      [
+        "--dapp-contract-address-file",
+        "/deployments/localhost/dapp.address",
+        "--indexer-config-path",
+        "/opt/cartesi/share/config/indexer-config.toml",
+      ]
     restart: always
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      deployer:
+        condition: service_completed_successfully
+      state_server:
+        condition: service_started
+      server_manager:
+        condition: service_started
+      database:
+        condition: service_healthy
     environment:
-      - URL=http://hardhat:8545
-      - INDEXER_CONFIG_PATH=/opt/cartesi/share/config/indexer-config.toml
-      - STATE_SERVER_HOSTNAME=state_server
-      - STATE_SERVER_PORT=50051
-      - SERVER_MANAGER_HOSTNAME=server_manager
-      - SERVER_MANAGER_PORT=5001
-      - DEPLOYMENT_PATH=/opt/cartesi/share/blockchain/localhost.json
-      - POSTGRES_HOSTNAME=database
-      - POSTGRES_PORT=5432
+      RUST_LOG: info
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
       - ./config:/opt/cartesi/share/config/
+      - ./deployments:/deployments
 
   query_server:
-    image: cartesi/query-server:0.2.0
-    platform: linux/amd64
+    image: cartesi/query-server:0.3.0
     ports:
-      - '4000:4000'
-    links:
-      - database
+      - "4000:4000"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     environment:
       - DB_USER=postgres
       - DB_NAME=postgres
       - DB_PASSWORD=password
       - DB_HOST=database
+      - DB_PORT=5432
       - DB_TEST_NAME=postgres
 
   database:
-    image: postgres:12
-    platform: linux/amd64
+    image: postgres:13-alpine
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
-      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     volumes:
       - database-data:/var/lib/postgresql/data
 
 volumes:
   blockchain-data: {}
+  machine: {}
   database-data: {}
