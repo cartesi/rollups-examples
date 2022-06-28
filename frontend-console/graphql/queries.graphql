@@ -1,3 +1,26 @@
+query notice($id: ID!) {
+  notice(id: $id) {
+    id
+    payload
+    index
+    keccak
+    proof {
+      outputHashesRootHash
+      vouchersEpochRootHash
+      noticesEpochRootHash
+      machineStateHash
+      keccakInHashesSiblings
+      outputHashesInEpochSiblings
+    }
+    input {
+      index
+      epoch {
+        index
+      }
+    }
+  }
+}
+
 query notices {
   notices {
     nodes {
