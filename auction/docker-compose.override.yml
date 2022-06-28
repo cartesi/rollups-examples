@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  server_manager:
+    image: cartesi/dapp:auction-devel-server
+
+  common-contracts:
+    build: ./common-contracts
+    depends_on:
+      hardhat:
+        condition: service_healthy
+    command:
+      [
+        "deploy",
+        "--network",
+        "localhost_docker",
+        "--export",
+        "/deployments/localhost/localhost_aux.json",
+      ]
+    init: true
+    healthcheck:
+      test:
+        ["CMD", "test", "-f", "/opt/cartesi/share/blockchain/localhost_aux.json"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+    volumes:
+      - blockchain-data:/opt/cartesi/share/blockchain
+      - ./common-contracts/deployments:/deployments
+
+  rollups_dispatcher:
+    depends_on:
+      common-contracts:
+        condition: service_completed_successfully
+  state_server:
+    depends_on:
+      common-contracts:
+        condition: service_completed_successfully
+
+  deployer:
+    depends_on:
+      common-contracts:
+        condition: service_completed_successfully

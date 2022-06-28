@@ -9,10 +9,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-import { IERC20__factory } from "@cartesi/rollups";
-import { ethers } from "ethers";
+import { IERC721__factory } from "@cartesi/rollups";
 import { Argv } from "yargs";
-import { networks } from "../../networks";
 import {
     connect,
     Args as ConnectArgs,
@@ -24,14 +22,18 @@ import {
     builder as rollupsBuilder,
 } from "../../rollups";
 import { findInputAddedInfo } from "../util";
+import { networks } from "../../networks";
 
 interface Args extends ConnectArgs, RollupsArgs {
-    erc20?: string;
-    amount: string;
+    erc721?: string;
+    to: string;
+    tokenId: string;
 }
 
+const safeTransferFrom = "safeTransferFrom(address,address,uint256)";
+
 export const command = "deposit";
-export const describe = "Deposit ERC-20 tokens in DApp";
+export const describe = "Deposit ERC-721 tokens to a DApp";
 
 const tokenAddress = (chainId: number): string | undefined => {
     const network = networks[chainId];
@@ -41,11 +43,8 @@ const tokenAddress = (chainId: number): string | undefined => {
 
     try {
         if (network.name == "localhost") {
-            return require("../../../../deployments/localhost/CartesiToken.json")
-                .address;
-        } else if (network) {
-            return require(`@cartesi/token/deployments/${network.name}/CartesiToken.json`)
-                .address;
+            return require("../../../../common-contracts/deployments/localhost/localhost_aux.json")
+                .contracts.CartesiNFT.address;
         }
     } catch (e) {
         return; // undefined
@@ -53,27 +52,23 @@ const tokenAddress = (chainId: number): string | undefined => {
 };
 
 export const builder = (yargs: Argv<Args>) => {
-    // args regarding connecting to provider
     const connectArgs = connectBuilder(yargs, true);
-
-    // args regarding connecting to rollups
     const rollupsArgs = rollupsBuilder(connectArgs);
 
-    // this command args
     return rollupsArgs
-        .option("erc20", {
-            describe: "ERC-20 address",
+        .option("erc721", {
+            describe: "ERC-721 contract address",
             type: "string",
         })
-        .option("amount", {
+        .option("tokenId", {
             demandOption: true,
             type: "string",
-            describe: "Amount of ERC-20 tokens to deposit",
+            describe: "The ID of the token being transfered",
         });
 };
 
 export const handler = async (args: Args) => {
-    const { rpc, address, mnemonic, accountIndex, erc20, amount } = args;
+    const { rpc, mnemonic, accountIndex, erc721, tokenId } = args;
 
     // connect to provider
     console.log(`connecting to ${rpc}`);
@@ -82,53 +77,41 @@ export const handler = async (args: Args) => {
     const network = await provider.getNetwork();
     console.log(`connected to chain ${network.chainId}`);
 
-    // connect to rollups,
-    const { inputContract, erc20Portal } = await rollups(
+    // connect to rollups
+    const { inputContract, erc721Portal } = await rollups(
         network.chainId,
         signer || provider,
         args
     );
 
-    // connect to provider, use deployment address based on returned chain id of provider
-    const erc20Address = erc20 ?? tokenAddress(network.chainId);
-    if (!erc20Address) {
+    console.log(`depositing token ${tokenId}...`);
+
+    // get ERC-721 contract address
+    const erc721address = erc721 ?? tokenAddress(network.chainId);
+    if (!erc721address) {
         throw new Error(
-            `cannot resolve ERC-20 address for chain ${network.chainId}`
+            `cannot resolve ERC-721 address for chain ${network.chainId}`
         );
     }
-    console.log(`using ERC-20 token contract at address "${erc20Address}"`);
-
-    const erc20Amount = ethers.BigNumber.from(amount);
-
-    // increase erc20 allowance first if necessary
-    const erc20Contract = IERC20__factory.connect(
-        erc20Address,
-        erc20Portal.signer
+    console.log(`using ERC-721 token contract at "${erc721address}"`);
+    const erc721Contract = IERC721__factory.connect(
+        erc721address,
+        erc721Portal.signer
     );
-    const signerAddress = await erc20Portal.signer.getAddress();
-    console.log(`using account "${signerAddress}"`);
-    const allowance = await erc20Contract.allowance(
-        signerAddress,
-        erc20Portal.address
-    );
-    if (allowance.lt(erc20Amount)) {
-        const allowanceApproveAmount =
-            ethers.BigNumber.from(erc20Amount).sub(allowance);
-        console.log(
-            `approving allowance of ${allowanceApproveAmount} tokens...`
-        );
-        const tx = await erc20Contract.approve(
-            erc20Portal.address,
-            allowanceApproveAmount
-        );
-        await tx.wait();
-    }
 
-    // send deposit transaction
-    console.log(`depositing ${amount} tokens...`);
-    const tx = await erc20Portal.erc20Deposit(erc20Address, erc20Amount, "0x");
+    // send safeTransferFrom transaction
+    const senderAddress = await erc721Portal.signer.getAddress();
+    console.log(`using account "${senderAddress}"`);
+
+    const tx = await erc721Contract[safeTransferFrom](
+        senderAddress,
+        erc721Portal.address,
+        tokenId
+    );
     console.log(`transaction: ${tx.hash}`);
     console.log("waiting for confirmation...");
+
+    // print receipt info
     const receipt = await tx.wait();
 
     // find added input information from transaction receipt

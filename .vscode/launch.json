@@ -87,6 +87,17 @@
             "python": "${workspaceFolder}/erc20/.venv/bin/python3",
             "program": "erc20.py",
             "gevent": false,
+        },
+        {
+          "env": {
+            "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
+          },
+          "cwd": "${workspaceFolder}/auction",
+          "name": "Auction DApp",
+          "type": "python",
+          "request": "launch",
+          "python": "${workspaceFolder}/auction/.venv/bin/python3",
+          "module": "auction.dapp",
         }
     ]
 }

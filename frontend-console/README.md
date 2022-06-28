@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # Frontend Console
 
 This project demonstrates how to implement a console application to send inputs to a Cartesi Rollups DApp, both running locally and deployed on remote testnet networks.
@@ -219,7 +221,12 @@ Options are:
 
 If the `url` parameter is absent, the console application will use a default value of "http://localhost:5005/inspect", which provides connectivity to the local Cartesi Node.
 
-### Depositing ERC-20 tokens
+### Depositing tokens
+
+Deposits of both ERC-20 and ERC-721 tokens are supported via similar commands.
+Aside from what is described in the sections below, the commands parameters behave as described for the [input send](#options) command.
+
+#### Depositing ERC-20 tokens
 
 The `erc20 deposit` command deposits ERC-20 tokens in the DApp.
 
@@ -258,4 +265,42 @@ Options are:
 
 If the `erc20` address is unspecified, the appropriate address for the CTSI token will be used for the target blockchain being specified.
 
-Aside from that, the other parameters have the same behavior as described for the [input send](#options) command.
+#### Depositing ERC-721 tokens
+
+The `erc721 deposit` command deposits ERC-20 tokens in the DApp.
+
+```shell
+yarn start erc721 deposit --tokenId [token_id] <options>
+```
+
+Examples:
+
+1. Deposit token with id `1` in the locally deployed DApp:
+
+    ```shell
+    yarn start erc721 deposit --tokenId 1
+    ```
+
+1. Deposit token with id `1` in the `echo-python` DApp instance already deployed to the Ethereum Goerli testnet, using a user's account and a user's gateway RPC on Alchemy:
+
+    ```shell
+    export MNEMONIC=<user sequence of twelve words>
+    export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
+
+    yarn start erc721 deposit --tokenId 1 --dapp echo-python
+    ```
+
+Options are:
+
+```shell
+--rpc           URL of the RPC gateway to use
+--mnemonic      Wallet mnemonic
+--accountIndex  Account index from mnemonic
+--address       DApp Rollups contract address
+--addressFile   Path to a file containing the DApp Rollups contract address
+--dapp          DApp name
+--erc721        ERC-721 contract address
+--tokenId       The ID of the token being transfered
+```
+
+If the `erc721` address is left unspecified, the address for CartesiNFT contract will be used for the target blockchain being specified.

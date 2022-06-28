@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # Cartesi Rollups Examples
 
 This repository includes examples of decentralized applications implemented using [Cartesi Rollups](https://github.com/cartesi/rollups).
@@ -258,3 +260,10 @@ A more generic Machine Learning DApp that illustrates how to use the [m2cgen (Mo
 Demonstrates how to handle ERC-20 deposits and withdrawals.
 The application parses ERC-20 deposits received from the Portal and emits a notice confirming receipt.
 It then issues corresponding vouchers to return the assets back to the depositor.
+
+### 13. [Auction DApp](./auction)
+
+Demonstrates how to create simple auctions for NFTs.
+The application comes with an integrated wallet and is capable of handling deposits, transfers and withdrawals for ERC-20 and ERC-721 tokens.
+It also implements a simple auction engine, which is responsible for creating auctions and handling bids, as well as transferring the auctioned NFTs to the winning bidder when the auction ends.
+It exercises the Rollups API, showing how to process advance and inspect requests, as well as how to generate Notices, Vouchers, and Reports.

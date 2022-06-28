@@ -1,0 +1,44 @@
+# yaml-language-server: =https://json.schemastore.org/github-workflow.json
+---
+name: "Build and test Auction DApp"
+on:
+    workflow_dispatch:
+    push:
+        paths:
+            - "config/**"
+            - "docker/**"
+            - "base.hcl"
+            - ".github/workflows/dapp-build.yml"
+            - ".github/workflows/auction-dapp.yml"
+            - "auction/**"
+            - "!**/*.md"
+jobs:
+    build:
+        uses: ./.github/workflows/dapp-build.yml
+        with:
+            dapp-name: auction
+        secrets: inherit
+
+    unittest:
+        needs: build
+        runs-on: ubuntu-20.04
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v3
+              with:
+                  submodules: recursive
+                  token: ${{ secrets.CI_TOKEN }}
+
+            - uses: actions/setup-python@v4
+              with:
+                  python-version: "3.10"
+
+            - name: Run unit tests
+              env:
+                  DAPP_IMAGE: ${{ needs.build.outputs.dapp-image }}
+              run: |
+                  python3 -m venv .venv
+                  . .venv/bin/activate
+                  pip install -r requirements.txt
+                  python3 -m unittest
+              working-directory: ./auction/
