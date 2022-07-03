@@ -193,31 +193,35 @@ Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) abov
 
 Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) above, but with a back-end written in Lua.
 
-### 5. [Echo Low-Level DApp](./echo-low-level)
+### 5. [Echo JS DApp](./echo-js)
+
+Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) above, but with a back-end written in JavaScript.
+
+### 6. [Echo Low-Level DApp](./echo-low-level)
 
 Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) above, but with a back-end written in C++ using the low-level Cartesi Rollups API.
 
-### 6. [Converter DApp](./converter)
+### 7. [Converter DApp](./converter)
 
 An extension of the Echo DApp that handles complex input in the form of JSON strings, in order to perform transformations on text messages.
 
-### 7. [Calculator DApp](./calculator)
+### 8. [Calculator DApp](./calculator)
 
 The Calculator DApp is a simple mathematical expression evaluator that illustrates how to incorporate a pure Python dependency into an application.
 
-### 8. [SQLite DApp](./sqlite)
+### 9. [SQLite DApp](./sqlite)
 
 Demonstrates how a DApp can easily leverage standard mainstream capabilities by building a minimalistic "decentralized SQL database" just by using the Cartesi Machine's built-in support for [SQLite](https://www.sqlite.org/index.html). This application will receive arbitrary SQL commands as input and execute them in an internal database, allowing users to insert data and query them later on. This example also highlights how errors should be handled, in the case of invalid SQL statements.
 
-### 9. [k-NN DApp](./knn)
+### 10. [k-NN DApp](./knn)
 
 A Machine Learning Python application that implements the k-Nearest Neighbors supervised classification algorithm, and applies it to the classic Iris flower dataset.
 
-### 10. [m2cgen DApp](./m2cgen)
+### 11. [m2cgen DApp](./m2cgen)
 
 A more generic Machine Learning DApp that illustrates how to use the [m2cgen (Model to Code Generator)](https://github.com/BayesWitnesses/m2cgen) library to easily leverage widely used Python ML tools such as [scikit-learn](https://scikit-learn.org/), [NumPy](https://numpy.org/) and [pandas](https://pandas.pydata.org/).
 
-### 11. [ERC-20 DApp](./erc20)
+### 12. [ERC-20 DApp](./erc20)
 
 Demonstrates how to handle ERC-20 deposits and withdrawals.
 The application parses ERC-20 deposits received from the Portal and emits a notice confirming receipt.
