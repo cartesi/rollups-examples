@@ -44,7 +44,7 @@ describe("Echo DApp Integration Tests", () => {
 
         const sentInputs = inputs.pop();
         expect(
-            sentInputs?.result?.notices?.pop()?.payload?.toString()
+            sentInputs?.acceptedData?.notices?.pop()?.payload?.toString()
         ).to.eq("cartesi");
     });
 
