@@ -1,0 +1,4 @@
+config:
+  line-length: false
+
+noProgress: true

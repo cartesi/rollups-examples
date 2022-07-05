@@ -1,0 +1,10 @@
+[package]
+name = "echo-backend"
+version = "0.3.0"
+edition = "2021"
+authors = ["Alex Mikhalevich <alex.mikhalevich@cartesi.io>"]
+
+[dependencies]
+json = "0.12"
+hyper = { version = "0.14", features = ["http1", "runtime", "client"] }
+tokio = { version = "1.18", features = ["macros", "rt-multi-thread"] }

@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  server_manager:
+    image: cartesi/host-server-manager:0.3.0
+    ports:
+      - "5004:5004"
+
+  deployer:
+    command:
+      [
+        "create",
+        "--rpc",
+        "http://hardhat:8545",
+        "--deploymentFile",
+        "/opt/cartesi/share/blockchain/localhost.json",
+        "--mnemonic",
+        "test test test test test test test test test test test junk",
+        # template hash is not relevant in host mode, so we can specify hash zero
+        "--templateHash",
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "--outputFile",
+        "/deployments/localhost/dapp.address",
+      ]

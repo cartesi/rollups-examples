@@ -24,14 +24,29 @@ echo "Creating DApp ${dapp_name}..."
 echo "Copying files from template..."
 cp -pr template ${dapp_name}
 
+echo "Copying common files..."
+cp -pr ../config ${dapp_name}
+cp -pr ../docker ${dapp_name}
+cp ../base.hcl ${dapp_name}/docker-bake.hcl
+cp ../deploy-testnet.yml ${dapp_name}
+cp ../docker-compose.yml ${dapp_name}
+cp ../docker-compose-testnet.yml ${dapp_name}
+cp ../docker-compose-host.yml ${dapp_name}
+
 echo "Customizing DApp infrastructure..."
+# adjust relative paths
 for i in \
-    ${dapp_name}/contracts/package.json \
-    ${dapp_name}/contracts/hardhat.config.ts \
-    ${dapp_name}/server/build-dapp-fs.sh \
-    ${dapp_name}/server/build-machine.sh \
-    ${dapp_name}/server/Makefile \
-    ${dapp_name}/server/run-machine-console.sh \
+    ${dapp_name}/docker-bake.hcl
+do
+    sed -i'' -e "s/\.\.\/docker/\.\/docker/g" $i
+done
+
+# replace template placeholders by dapp name
+for i in \
+    ${dapp_name}/dapp.json \
+    ${dapp_name}/docker-bake.override.hcl \
+    ${dapp_name}/docker-compose.override.yml \
+    ${dapp_name}/entrypoint.sh \
     ${dapp_name}/README.md
 do
     sed -i'' -e "s/template/${dapp_name}/g" $i
@@ -41,7 +56,7 @@ done
 find ${dapp_name} -name '*-e' -exec rm {} \;
 
 echo "Creating template back-end script..."
-mv ${dapp_name}/server/template.py ${dapp_name}/server/${1}.py
+mv ${dapp_name}/template.py ${dapp_name}/${1}.py
 
 echo "Done"
-echo "Proceed with adapting or replacing the back-end source code of the DApp at ${dapp_name}/server/${dapp_name}.py"
+echo "Proceed with adapting or replacing the back-end source code of the DApp at ${dapp_name}.py"
