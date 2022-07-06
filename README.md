@@ -170,7 +170,7 @@ export CHAIN_ID=5
 Then, the node itself can be started by running a docker compose as follows:
 
 ```shell
-docker compose -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml up
+DAPP_NAME=<example> docker compose -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml up
 ```
 
 ## Examples

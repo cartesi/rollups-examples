@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   rollups_dispatcher:
-    image: cartesi/rollups-dispatcher:0.3.0
+    image: cartesi/rollups-dispatcher:0.4.0
     command:
       [
         "--dapp-contract-address-file",
@@ -38,7 +38,7 @@ services:
       - ./deployments:/deployments
 
   state_server:
-    image: cartesi/delegate-server:0.3.0
+    image: cartesi/delegate-server:0.4.0
     command:
       [
         "--sf-config",
@@ -70,7 +70,7 @@ services:
       - machine:/opt/cartesi/share/dapp-bin
 
   rollups_indexer:
-    image: cartesi/rollups-indexer:0.3.0
+    image: cartesi/rollups-indexer:0.4.0
     command:
       [
         "--dapp-contract-address-file",
@@ -94,7 +94,7 @@ services:
       - ./deployments:/deployments
 
   query_server:
-    image: cartesi/query-server:0.3.0
+    image: cartesi/query-server:0.4.0
     ports:
       - "4000:4000"
     depends_on:
