@@ -24,6 +24,7 @@ query notice($id: ID!) {
 query notices {
   notices {
     nodes {
+      id
       index
       payload
       input {
@@ -41,6 +42,7 @@ query noticesByEpochAndInput($epoch_index: Int!, $input_index: Int!) {
     input(index: $input_index) {
       notices {
         nodes {
+          id
           index
           payload
           input {
@@ -61,6 +63,7 @@ query noticesByEpoch($epoch_index: Int!) {
       nodes {
         notices {
           nodes {
+            id
             index
             payload
             input {

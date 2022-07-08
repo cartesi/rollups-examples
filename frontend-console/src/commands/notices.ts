@@ -66,6 +66,7 @@ export const handler = async (args: Args) => {
         })
         .map((n) => {
             const output: any = {};
+            output.id = n.id;
             output.epoch = n.input.epoch.index;
             output.input = n.input.index;
             output.notice = n.index;

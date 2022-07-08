@@ -24,7 +24,10 @@ import { InputKeys } from "../commands/types";
 // define PartialNotice type only with the desired fields of the full Notice defined by the GraphQL schema
 export type PartialEpoch = Pick<Input, "index">;
 export type PartialInput = Pick<Input, "index"> & { epoch: PartialEpoch };
-export type PartialNotice = Pick<Notice, "__typename" | "index" | "payload"> & {
+export type PartialNotice = Pick<
+    Notice,
+    "__typename" | "id" | "index" | "payload"
+> & {
     input: PartialInput;
 };
 
