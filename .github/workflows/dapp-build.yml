@@ -1,47 +1,76 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: Build
-on: [push]
+---
+name: "DApp Build"
+on:
+    workflow_call:
+        inputs:
+            dapp-name:
+                required: true
+                type: string
+        secrets:
+            DOCKER_ORGANIZATION:
+                required: true
+            DOCKER_USERNAME:
+                required: true
+            DOCKER_PASSWORD:
+                required: true
+
 jobs:
     build_package:
         runs-on: ubuntu-20.04
-        strategy:
-            matrix:
-                dapp:
-                    - converter
-                    - echo
-                    - echo-cpp
-                    - knn
-                    - m2cgen
-                    - sqlite
         steps:
             - uses: actions/checkout@v3
 
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v2
+
+            - name: Docker meta
+              id: meta
+              uses: docker/metadata-action@v4
+              with:
+                  bake-target: server
+                  images: ${{ secrets.DOCKER_ORGANIZATION }}/dapp
+                  tags: type=semver,prefix=${{ inputs.dapp-name }}-,pattern={{version}},suffix=-server
+                  flavor: latest=false
+
             - name: Login to Docker Hub
-              uses: docker/login-action@v1
+              uses: docker/login-action@v2
               with:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
 
-            - name: Build Cartesi Machine
-              working-directory: ${{ matrix.dapp }}
-              run: make machine
-
-            - name: Save Cartesi Machine Artifact
-              uses: actions/upload-artifact@v2
+            - name: Build
+              id: build
+              uses: tuler/bake-action@49296ad87bc0081ff6973a65aaa7335e8340e76f
               with:
-                  name: ${{ matrix.dapp }}-machine
-                  path: ${{ matrix.dapp }}/machine
-                  retention-days: 7
+                  working-directory: ${{ inputs.dapp-name }}
+                  load: true
+                  targets: server
+                  files: |
+                      docker-bake.hcl
+                      docker-bake.override.hcl
+                      ${{ steps.meta.outputs.bake-file }}
+                  set: |
+                      *.cache-from=type=gha
+                      *.cache-to=type=gha,mode=max
 
-            - name: Package Cartesi Machine
-              if: startsWith(github.ref, 'refs/tags/v') && hashFiles(join(matrix.dapp, '/contracts/export/abi/*.json')) != ''
-              working-directory: ${{ matrix.dapp }}
-              run: tar -czf ${{ matrix.dapp }}-${GITHUB_REF:11}.tar.gz --transform "s/contracts\/export\/abi/chains/" machine contracts/export/abi
+            - name: Get image hash
+              id: hash
+              run: |
+                  export IMAGE_HASH="${{ fromJSON(steps.build.outputs.metadata).server['containerimage.config.digest'] }}"
+                  echo "::set-output name=hash::${IMAGE_HASH#*:}"
 
-            - name: Publish Cartesi Machine
-              uses: softprops/action-gh-release@v1
-              if: startsWith(github.ref, 'refs/tags/v') && hashFiles(join(matrix.dapp, '/contracts/export/abi/*.json')) != ''
+            - name: Export image
+              run: docker image save -o server_manager.tar ${{steps.hash.outputs.hash}}
+
+            - name: Upload image
+              uses: actions/upload-artifact@master
               with:
-                  files: ${{ matrix.dapp }}/${{ matrix.dapp }}-*.tar.gz
-              env:
-                  GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+                  name: server_manager.tar
+                  path: ./server_manager.tar
+
+            - name: Push image to registry
+              if: startsWith(github.ref, 'refs/tags/v')
+              run: |
+                  docker image tag ${{ steps.hash.outputs.hash }} ${{ steps.meta.outputs.tags }}
+                  docker image push ${{ steps.meta.outputs.tags }}

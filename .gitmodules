@@ -1,0 +1,3 @@
+[submodule "grpc-interfaces"]
+	path = grpc-interfaces
+	url = ../grpc-interfaces.git

@@ -1,0 +1,19 @@
+# yaml-language-server: =https://json.schemastore.org/github-workflow.json
+---
+name: "Build echo-lua DApp"
+on:
+    push:
+        paths:
+            - "config/**"
+            - "docker/**"
+            - "base.hcl"
+            - ".github/workflows/dapp-build.yml"
+            - ".github/workflows/echo-lua-dapp.yml"
+            - "echo-lua/**"
+            - "!**/*.md"
+jobs:
+    build:
+        uses: ./.github/workflows/dapp-build.yml
+        with:
+            dapp-name: echo-lua
+        secrets: inherit

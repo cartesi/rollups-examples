@@ -1,0 +1,56 @@
+# yaml-language-server: =https://json.schemastore.org/github-workflow.json
+---
+name: "Build echo-python DApp"
+on:
+    workflow_dispatch:
+    push:
+        paths:
+            - "config/**"
+            - "docker/**"
+            - "base.hcl"
+            - ".github/workflows/dapp-build.yml"
+            - ".github/workflows/echo-python-dapp.yml"
+            - "echo-python/**"
+            - "!**/*.md"
+jobs:
+    build:
+        uses: ./.github/workflows/dapp-build.yml
+        with:
+            dapp-name: echo-python
+        secrets: inherit
+
+    test:
+        needs: build
+        runs-on: ubuntu-20.04
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v3
+              with:
+                  submodules: recursive
+                  token: ${{ secrets.CI_TOKEN }}
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 14
+
+            - name: Download image
+              uses: actions/download-artifact@master
+              with:
+                  name: server_manager.tar
+
+            - name: Load image
+              run: docker image load -i server_manager.tar
+
+            - name: Get image hash
+              id: hash
+              run: echo "::set-output name=hash::$(tar -xf server_manager.tar manifest.json -O | jq -r '.[0].Config | split(".")[0]' )"
+
+            - name: Tag image
+              run: docker image tag ${{steps.hash.outputs.hash}} cartesi/dapp:echo-python-devel-server
+
+            - name: Run tests
+              run: |
+                  yarn install
+                  yarn test:ci --verbose
+              working-directory: ./echo-python/test
