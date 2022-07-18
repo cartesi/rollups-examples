@@ -2,19 +2,20 @@
  * FetchToCurl Strongly inspired by https://github.com/leoek/fetch-to-curl
  */
 
-import {popen} from 'std';
+import * as std from "std";
+import * as os from "os";
 
 function generateMethod(options) {
     const method = options.method;
     if (!method) return '';
     const type = {
-        GET: ' -X GET',
-        POST: ' -X POST',
-        PUT: ' -X PUT',
-        PATCH: ' -X PATCH',
-        DELETE: ' -X DELETE',
-        HEAD: ' -X HEAD',
-        OPTIONS: ' -X OPTIONS'
+        GET: ' -X "GET"',
+        POST: ' -X "POST"',
+        PUT: ' -X "PUT"',
+        PATCH: ' -X "PATCH"',
+        DELETE: ' -X "DELETE"',
+        HEAD: ' -X "HEAD"',
+        OPTIONS: ' -X "OPTIONS"'
     };
     return type[method.toUpperCase()] || '';
 }
@@ -96,11 +97,11 @@ function fetchToCurl(requestInfo, requestInit) {
 export default (resource, init) => {
     // curl command
     let curlCmd = fetchToCurl(resource, init);
-
     // exec curl command in subprocess
-    const spErr = {};
-    const sp = popen(curlCmd, 'r', spErr);
-    let curlOutput = sp.readAsString();
+    let spErr = {};
+    let curlOutputFile = std.popen(curlCmd, 'r', spErr);
+    let curlOutput = curlOutputFile.readAsString();
+    curlOutputFile.close();
 
     if (curlOutput.indexOf('}{') > -1) {
         curlOutput = curlOutput.replace('}{', '},{');

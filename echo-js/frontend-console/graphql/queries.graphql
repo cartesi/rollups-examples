@@ -1,9 +1,0 @@
-query GetNotice($query: NoticeKeys) {
-    GetNotice(query: $query) {
-        session_id
-        epoch_index
-        input_index
-        notice_index
-        payload
-    }
-}

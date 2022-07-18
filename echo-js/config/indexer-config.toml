@@ -6,9 +6,6 @@ session_id = "default_rollups_id"
 # node starts syncing from inital epoch
 initial_epoch = 0
 
-# node starts syncing from epoch index
-epoch_index = 0
-
 # polling interval
 interval = 10
 
