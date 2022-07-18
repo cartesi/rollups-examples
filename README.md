@@ -170,7 +170,13 @@ export CHAIN_ID=5
 Then, the node itself can be started by running a docker compose as follows:
 
 ```shell
-docker compose -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml up
+DAPP_NAME=<example> docker compose -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml up
+```
+
+Alternatively, you can also run the node on host mode by executing:
+
+```shell
+DAPP_NAME=<example> docker compose -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml -f ../docker-compose-host-testnet.yml up
 ```
 
 ## Examples
@@ -187,26 +193,36 @@ Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) abov
 
 Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) above, but with a back-end written in Rust.
 
-### 4. [Converter DApp](./converter)
+### 4. [Echo Lua DApp](./echo-lua)
+
+Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) above, but with a back-end written in Lua.
+
+### 5. [Echo Low-Level DApp](./echo-low-level)
+
+Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) above, but with a back-end written in C++ using the low-level Cartesi Rollups API.
+
+### 6. [Converter DApp](./converter)
 
 An extension of the Echo DApp that handles complex input in the form of JSON strings, in order to perform transformations on text messages.
 
-### 5. [Calculator DApp](./calculator)
+### 7. [Calculator DApp](./calculator)
 
 The Calculator DApp is a simple mathematical expression evaluator that illustrates how to incorporate a pure Python dependency into an application.
 
-### 6. [SQLite DApp](./sqlite)
+### 8. [SQLite DApp](./sqlite)
 
 Demonstrates how a DApp can easily leverage standard mainstream capabilities by building a minimalistic "decentralized SQL database" just by using the Cartesi Machine's built-in support for [SQLite](https://www.sqlite.org/index.html). This application will receive arbitrary SQL commands as input and execute them in an internal database, allowing users to insert data and query them later on. This example also highlights how errors should be handled, in the case of invalid SQL statements.
 
-### 7. [k-NN DApp](./knn)
+### 9. [k-NN DApp](./knn)
 
 A Machine Learning Python application that implements the k-Nearest Neighbors supervised classification algorithm, and applies it to the classic Iris flower dataset.
 
-### 8. [m2cgen DApp](./m2cgen)
+### 10. [m2cgen DApp](./m2cgen)
 
 A more generic Machine Learning DApp that illustrates how to use the [m2cgen (Model to Code Generator)](https://github.com/BayesWitnesses/m2cgen) library to easily leverage widely used Python ML tools such as [scikit-learn](https://scikit-learn.org/), [NumPy](https://numpy.org/) and [pandas](https://pandas.pydata.org/).
 
-### 9. [ERC-20 Deposit](./erc20deposit)
+### 11. [ERC-20 DApp](./erc20)
 
-Demonstrates how to parse ERC-20 deposits sent from the Portal.
+Demonstrates how to handle ERC-20 deposits and withdrawals.
+The application parses ERC-20 deposits received from the Portal and emits a notice confirming receipt.
+It then issues corresponding vouchers to return the assets back to the depositor.

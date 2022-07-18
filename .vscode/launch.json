@@ -80,12 +80,12 @@
             "env": {
                 "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
             },
-            "cwd": "${workspaceFolder}/erc20deposit",
-            "name": "ERC-20 Deposit DApp",
+            "cwd": "${workspaceFolder}/erc20",
+            "name": "ERC-20 DApp",
             "type": "python",
             "request": "launch",
-            "python": "${workspaceFolder}/erc20deposit/.env/bin/python3",
-            "program": "erc20deposit.py",
+            "python": "${workspaceFolder}/erc20/.env/bin/python3",
+            "program": "erc20.py",
             "gevent": false,
         }
     ]

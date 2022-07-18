@@ -6,6 +6,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] 2022-07-06
+
+### Added
+
+- Echo Low-Level C++ DApp example
+- Echo Lua DApp example
+- ERC-20 DApp generating vouchers for withdrawals
+
+### Changed
+
+- Move rollup-init call from build-machine.sh to entrypoint.sh
+- Support for running nodes in host mode for DApps deployed on testnet
+
 ## [0.6.0] 2022-06-14
 
 ### Added
@@ -127,8 +140,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove machine-emulator-tools submodule
 - Remove openapi-interfaces submodule
 
-## [Previous Versions]
-
+[0.7.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.7.0
+[0.6.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.6.0
 [0.5.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.5.1
 [0.5.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.5.0
 [0.4.2]: https://github.com/cartesi/rollups-examples/releases/tag/v0.4.2

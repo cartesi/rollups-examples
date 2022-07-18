@@ -14,7 +14,7 @@ from os import environ
 import traceback
 import logging
 import requests
-from eth_abi import decode_abi
+from eth_abi import decode_abi, encode_abi
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
@@ -26,6 +26,9 @@ logger.info(f"HTTP rollup_server url is {rollup_server}")
 # to the Keccak256-encoded string "ERC20_Transfer", as defined at
 # https://github.com/cartesi/rollups/blob/main/onchain/rollups/contracts/facets/ERC20PortalFacet.sol.
 ERC20_TRANSFER_HEADER =  b'Y\xda*\x98N\x16Z\xe4H|\x99\xe5\xd1\xdc\xa7\xe0L\x8a\x990\x1b\xe6\xbc\t)2\xcb]\x7f\x03Cx'
+# Function selector to be called during the execution of a voucher, which
+# corresponds to the Keccak256-encoded result of Web3.keccak(text='transfer')
+TRANSFER_FUNCTION_SELECTOR = b'\xb4\x83\xaf\xd3\xf4\xca\xed\xc6\xee\xbfD$o\xe5N8\xc9^1y\xa5\xec\x9e\xa8\x17@\xec\xa5\xb4\x82\xd1.'
 
 def str2hex(str):
     """
@@ -62,11 +65,26 @@ def handle_advance(data):
         if input_header != ERC20_TRANSFER_HEADER:
             return reject_input(f"Input header is not from an ERC20 transfer", data["payload"])
 
-        notice_str = f"Deposit received from: {decoded[1]}; ERC-20: {decoded[2]}; Amount: {decoded[3]}"
+        # Post notice about the deposit
+        depositor = decoded[1]
+        erc20 = decoded[2]
+        amount = decoded[3]
+        notice_str = f"Deposit received from: {depositor}; ERC-20: {erc20}; Amount: {amount}"
         logger.info(f"Adding notice: {notice_str}")
         notice = {"payload": str2hex(notice_str)}
         response = requests.post(rollup_server + "/notice", json=notice)
         logger.info(f"Received notice status {response.status_code} body {response.content}")
+
+        # Encode a transfer function call that returns the amount back to the depositor
+        transfer_payload = encode_abi(['bytes','address','uint256'], [TRANSFER_FUNCTION_SELECTOR, depositor, amount])
+        # Encode voucher to execute the transfer on the ERC-20 contract
+        encodedVoucher = encode_abi(['address', 'bytes'], [erc20, transfer_payload])
+        # Post voucher returning the deposited amount back to the depositor: "I don't want your money"!
+        logger.info("Issuing voucher")
+        voucher = {"address": depositor, "payload": "0x" + encodedVoucher.hex()}
+        response = requests.post(rollup_server + "/voucher", json=voucher)
+        logger.info(f"Received voucher status {response.status_code} body {response.content}")
+
         return "accept"
 
     except Exception as e:

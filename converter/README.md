@@ -37,8 +37,8 @@ yarn start notices
 
 The response should be something like this:
 
-```shell
-[ { epoch: '0', input: '1', notice: '0', payload: 'HELLO FROM CARTESI' } ]
+```json
+[{"epoch": "0", "input": "1", "notice": "0", "payload": "HELLO FROM CARTESI"}]
 ```
 
 ## Running the back-end in host mode

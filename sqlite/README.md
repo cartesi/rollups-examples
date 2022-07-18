@@ -43,8 +43,8 @@ yarn start notices
 
 The response should be something like this:
 
-```shell
-[ { epoch: '0', input: '3', notice: '0', payload: '[["Peter", 32]]' } ]
+```json
+[{"epoch":"0","input":"3","notice":"0","payload":"[[\"Peter\", 32]]"}]
 ```
 
 ## Running the environment in host mode

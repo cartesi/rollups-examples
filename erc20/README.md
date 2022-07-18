@@ -1,10 +1,12 @@
-# ERC-20 Deposit DApp
+# ERC-20 DApp
 
-This DApp shows how to parse ERC-20 deposits sent by the Portal, which is where all legitimate deposits come from.
+This DApp shows how to parse ERC-20 deposits sent by the Portal, which is where all legitimate deposits come from, and how to issue vouchers so the amount deposited can be withdrawn later on.
 
 A deposit must have a payload, whose format is defined at the [ERC-20 Portal facet](https://github.com/cartesi/rollups/blob/main/onchain/rollups/contracts/facets/ERC20PortalFacet.sol), which is part of the Cartesi Rollups contract.
 
 Any input that either does not come from the Portal or is malformed will be rejected.
+
+After the deposit is properly parsed, the application issues a voucher to return the amount back to the depositor ("I don't want your money!"). This voucher can then be executed to withdraw the amount from the Portal and recover the assets.
 
 ## Installing extra dependencies
 
@@ -38,15 +40,8 @@ yarn start notices
 
 The response should be something like this:
 
-```shell
-[
-  {
-    epoch: '0',
-    input: '1',
-    notice: '0',
-    payload: 'Deposit received from: 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266; ERC-20: 0xa513e6e4b8f2a923d98304ec87f64353c4d5c853; Amount: 100'
-  }
-]
+```json
+[{"epoch":"0","input":"1","notice":"0","payload":"Deposit received from: 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266; ERC-20: 0xa513e6e4b8f2a923d98304ec87f64353c4d5c853; Amount: 100"}]
 ```
 
 ## Running the environment in host mode
@@ -56,11 +51,11 @@ This DApp's back-end is written in Python, so to run it in your machine you need
 In order to start the back-end, run the following commands in a dedicated terminal:
 
 ```shell
-cd erc20deposit/
+cd erc20/
 python3 -m venv .env
 . .env/bin/activate
 pip install -r requirements.txt
-ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 erc20deposit.py
+ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 erc20.py
 ```
 
 The final command will effectively run the back-end and send corresponding outputs to port `5004`.
@@ -69,7 +64,7 @@ It can optionally be configured in an IDE to allow interactive debugging using f
 You can also use a tool like [entr](https://eradman.com/entrproject/) to restart the back-end automatically when the code changes. For example:
 
 ```shell
-ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 erc20deposit.py
+ls *.py | ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" entr -r python3 erc20.py
 ```
 
 After the back-end successfully starts, it should print an output like the following:

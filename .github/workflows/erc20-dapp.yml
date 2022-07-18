@@ -1,6 +1,6 @@
 # yaml-language-server: =https://json.schemastore.org/github-workflow.json
 ---
-name: "Build erc20deposit DApp"
+name: "Build erc20 DApp"
 on:
     push:
         paths:
@@ -8,12 +8,12 @@ on:
             - "docker/**"
             - "base.hcl"
             - ".github/workflows/dapp-build.yml"
-            - ".github/workflows/erc20deposit-dapp.yml"
-            - "erc20deposit/**"
+            - ".github/workflows/erc20-dapp.yml"
+            - "erc20/**"
             - "!**/*.md"
 jobs:
     build:
         uses: ./.github/workflows/dapp-build.yml
         with:
-            dapp-name: erc20deposit
+            dapp-name: erc20
         secrets: inherit

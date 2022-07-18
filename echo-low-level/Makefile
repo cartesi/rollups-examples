@@ -1,4 +1,3 @@
-#!/bin/sh
 # Copyright 2022 Cartesi Pte. Ltd.
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -11,5 +10,12 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-set -e
-PYTHONPATH=/mnt/dapp/.env/cross/lib/python3.10/site-packages python3 erc20deposit.py
+CXX  := riscv64-cartesi-linux-gnu-g++
+
+.PHONY: clean 3rdparty
+
+low-level-backend: low-level-backend.cpp
+	$(CXX) -std=c++17 -Wall -Werror -o $@ $^
+
+clean:
+	@rm -rf low-level-backend

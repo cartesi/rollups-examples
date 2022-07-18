@@ -1,0 +1,19 @@
+# yaml-language-server: =https://json.schemastore.org/github-workflow.json
+---
+name: "Build echo-low-level DApp"
+on:
+    push:
+        paths:
+            - "config/**"
+            - "docker/**"
+            - "base.hcl"
+            - ".github/workflows/dapp-build.yml"
+            - ".github/workflows/echo-low-level-dapp.yml"
+            - "echo-low-level/**"
+            - "!**/*.md"
+jobs:
+    build:
+        uses: ./.github/workflows/dapp-build.yml
+        with:
+            dapp-name: echo-low-level
+        secrets: inherit
