@@ -1,0 +1,218 @@
+{
+  "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_num",
+          "type": "uint256"
+        }
+      ],
+      "name": "clz",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_num",
+          "type": "uint256"
+        }
+      ],
+      "name": "ctz",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_num",
+          "type": "uint256"
+        }
+      ],
+      "name": "getLog2Floor",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_num",
+          "type": "uint256"
+        }
+      ],
+      "name": "getLog2TableTimes1M",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_num",
+          "type": "uint256"
+        }
+      ],
+      "name": "isPowerOf2",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_num",
+          "type": "uint256"
+        }
+      ],
+      "name": "log2ApproxTimes1M",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x7ade92f7ba8f601e08c7d0d3c49df65533e1d6cb495b8fcaac7aeef5f63d8659",
+  "receipt": {
+    "to": null,
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "contractAddress": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    "transactionIndex": 0,
+    "gasUsed": "479702",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x47692e638868cadc92222970bda062e7ea9612e7d7f2fb435e867a9b28ccb718",
+    "transactionHash": "0x7ade92f7ba8f601e08c7d0d3c49df65533e1d6cb495b8fcaac7aeef5f63d8659",
+    "logs": [],
+    "blockNumber": 3,
+    "cumulativeGasUsed": "479702",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "metadata": "{\"compiler\":{\"version\":\"0.8.4+commit.c7e474f2\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_num\",\"type\":\"uint256\"}],\"name\":\"clz\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_num\",\"type\":\"uint256\"}],\"name\":\"ctz\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_num\",\"type\":\"uint256\"}],\"name\":\"getLog2Floor\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_num\",\"type\":\"uint256\"}],\"name\":\"getLog2TableTimes1M\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_num\",\"type\":\"uint256\"}],\"name\":\"isPowerOf2\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_num\",\"type\":\"uint256\"}],\"name\":\"log2ApproxTimes1M\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"clz(uint256)\":{\"details\":\"this a binary search implementation\",\"params\":{\"_num\":\"number you want the clz of\"}},\"ctz(uint256)\":{\"details\":\"this a binary search implementation\",\"params\":{\"_num\":\"number you want the ctz of\"}},\"getLog2Floor(uint256)\":{\"params\":{\"_num\":\"number to take floor(log2) of\"},\"returns\":{\"_0\":\"floor(log2) of _num\"}},\"getLog2TableTimes1M(uint256)\":{\"params\":{\"_num\":\"number to take log2 of\"},\"returns\":{\"_0\":\"result after table look-up\"}},\"isPowerOf2(uint256)\":{\"params\":{\"_num\":\"number to check\"},\"returns\":{\"_0\":\"true if number is power of 2, false if not\"}},\"log2ApproxTimes1M(uint256)\":{\"params\":{\"_num\":\"number to take log2 * 1M of\"},\"returns\":{\"_0\":\"approximate log2 times 1M\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"clz(uint256)\":{\"notice\":\"count leading zeros\"},\"ctz(uint256)\":{\"notice\":\"count trailing zeros\"},\"getLog2Floor(uint256)\":{\"notice\":\"get floor of log2 of number\"},\"getLog2TableTimes1M(uint256)\":{\"notice\":\"navigates log2tableTimes1M\"},\"isPowerOf2(uint256)\":{\"notice\":\"checks if a number is Power of 2\"},\"log2ApproxTimes1M(uint256)\":{\"notice\":\"Approximates log2 * 1M\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/CartesiMath.sol\":\"CartesiMath\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/CartesiMath.sol\":{\"content\":\"// Copyright 2020 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\n/// @title CartesiMath\\n/// @author Felipe Argento\\npragma solidity ^0.8.0;\\n\\nlibrary CartesiMath {\\n    // mapping values are packed as bytes3 each\\n    // see test/TestCartesiMath.ts for decimal values\\n    bytes constant log2tableTimes1M =\\n        hex\\\"0000000F4240182F421E8480236E082771822AD63A2DC6C0305E8532B04834C96736B3C23876D73A187A3B9D4A3D09003E5EA63FA0C540D17741F28843057D440BA745062945F60246DC1047B917488DC7495ABA4A207C4ADF8A4B98544C4B404CF8AA4DA0E64E44434EE3054F7D6D5013B750A61A5134C851BFF05247BD52CC58534DE753CC8D54486954C19C55384255AC75561E50568DE956FB575766B057D00758376F589CFA5900BA5962BC59C3135A21CA5A7EF15ADA945B34BF5B8D805BE4DF5C3AEA5C8FA95CE3265D356C5D86835DD6735E25455E73005EBFAD5F0B525F55F75F9FA25FE85A60302460770860BD0A61023061467F6189FD61CCAE620E98624FBF62902762CFD5630ECD634D12638AA963C7966403DC643F7F647A8264B4E864EEB56527EC6560906598A365D029660724663D9766738566A8F066DDDA6712476746386779AF67ACAF67DF3A6811526842FA68743268A4FC68D55C6905536934E169640A6992CF69C13169EF326A1CD46A4A186A76FF6AA38C6ACFC0\\\";\\n\\n    /// @notice Approximates log2 * 1M\\n    /// @param _num number to take log2 * 1M of\\n    /// @return approximate log2 times 1M\\n    function log2ApproxTimes1M(uint256 _num) public pure returns (uint256) {\\n        require(_num > 0, \\\"Number cannot be zero\\\");\\n        uint256 leading = 0;\\n\\n        if (_num == 1) return 0;\\n\\n        while (_num > 128) {\\n            _num = _num >> 1;\\n            leading += 1;\\n        }\\n        return (leading * uint256(1000000)) + (getLog2TableTimes1M(_num));\\n    }\\n\\n    /// @notice navigates log2tableTimes1M\\n    /// @param _num number to take log2 of\\n    /// @return result after table look-up\\n    function getLog2TableTimes1M(uint256 _num) public pure returns (uint256) {\\n        bytes3 result = 0;\\n        for (uint8 i = 0; i < 3; i++) {\\n            bytes3 tempResult = log2tableTimes1M[(_num - 1) * 3 + i];\\n            result = result | (tempResult >> (i * 8));\\n        }\\n\\n        return uint256(uint24(result));\\n    }\\n\\n    /// @notice get floor of log2 of number\\n    /// @param _num number to take floor(log2) of\\n    /// @return floor(log2) of _num\\n   function getLog2Floor(uint256 _num) public pure returns (uint8) {\\n       require(_num != 0, \\\"log of zero is undefined\\\");\\n\\n       return uint8(255 - clz(_num));\\n    }\\n\\n    /// @notice checks if a number is Power of 2\\n    /// @param _num number to check\\n    /// @return true if number is power of 2, false if not\\n    function isPowerOf2(uint256 _num) public pure returns (bool) {\\n        if (_num == 0) return false;\\n\\n        return _num & (_num - 1) == 0;\\n    }\\n\\n    /// @notice count trailing zeros\\n    /// @param _num number you want the ctz of\\n    /// @dev this a binary search implementation\\n    function ctz(uint256 _num) public pure returns (uint256) {\\n        if (_num == 0) return 256;\\n\\n        uint256 n = 0;\\n        if (_num & 0x00000000000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF == 0) { n = n + 128; _num = _num >> 128; }\\n        if (_num & 0x000000000000000000000000000000000000000000000000FFFFFFFFFFFFFFFF == 0) { n = n + 64; _num = _num >> 64; }\\n        if (_num & 0x00000000000000000000000000000000000000000000000000000000FFFFFFFF == 0) { n = n + 32; _num = _num >> 32; }\\n        if (_num & 0x000000000000000000000000000000000000000000000000000000000000FFFF == 0) { n = n + 16; _num = _num >> 16; }\\n        if (_num & 0x00000000000000000000000000000000000000000000000000000000000000FF == 0) { n = n +  8; _num = _num >>  8; }\\n        if (_num & 0x000000000000000000000000000000000000000000000000000000000000000F == 0) { n = n +  4; _num = _num >>  4; }\\n        if (_num & 0x0000000000000000000000000000000000000000000000000000000000000003 == 0) { n = n +  2; _num = _num >>  2; }\\n        if (_num & 0x0000000000000000000000000000000000000000000000000000000000000001 == 0) { n = n +  1; }\\n\\n        return n;\\n    }\\n\\n    /// @notice count leading zeros\\n    /// @param _num number you want the clz of\\n    /// @dev this a binary search implementation\\n    function clz(uint256 _num) public pure returns (uint256) {\\n        if (_num == 0) return 256;\\n\\n        uint256 n = 0;\\n        if (_num & 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000000000000000000000000000 == 0) { n = n + 128; _num = _num << 128; }\\n        if (_num & 0xFFFFFFFFFFFFFFFF000000000000000000000000000000000000000000000000 == 0) { n = n + 64; _num = _num << 64; }\\n        if (_num & 0xFFFFFFFF00000000000000000000000000000000000000000000000000000000 == 0) { n = n + 32; _num = _num << 32; }\\n        if (_num & 0xFFFF000000000000000000000000000000000000000000000000000000000000 == 0) { n = n + 16; _num = _num << 16; }\\n        if (_num & 0xFF00000000000000000000000000000000000000000000000000000000000000 == 0) { n = n +  8; _num = _num <<  8; }\\n        if (_num & 0xF000000000000000000000000000000000000000000000000000000000000000 == 0) { n = n +  4; _num = _num <<  4; }\\n        if (_num & 0xC000000000000000000000000000000000000000000000000000000000000000 == 0) { n = n +  2; _num = _num <<  2; }\\n        if (_num & 0x8000000000000000000000000000000000000000000000000000000000000000 == 0) { n = n +  1; }\\n\\n        return n;\\n    }\\n}\\n\",\"keccak256\":\"0x28b74012e966438edff701decdc5ffd207b3f0244af65fbd7d397050986e58d4\",\"license\":\"Apache-2.0\"}},\"version\":1}",
+  "bytecode": "0x6107b661003a600b82828239805160001a60731461002d57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe730000000000000000000000000000000000000000301460806040526004361061006c5760003560e01c806306c8e54b14610071578063296e7af81461009b57806330244f7a146100bc57806332ef283b146100cf578063d82ae4b1146100e2578063e3581b6814610105575b600080fd5b61008461007f36600461053b565b610118565b60405160ff90911681526020015b60405180910390f35b6100ae6100a936600461053b565b610186565b604051908152602001610092565b6100ae6100ca36600461053b565b610297565b6100ae6100dd36600461053b565b6103bc565b6100f56100f036600461053b565b61047b565b6040519015158152602001610092565b6100ae61011336600461053b565b61049e565b60008161016c5760405162461bcd60e51b815260206004820152601860248201527f6c6f67206f66207a65726f20697320756e646566696e6564000000000000000060448201526064015b60405180910390fd5b61017582610297565b6101809060ff6105b3565b92915050565b6000816101965750610100919050565b60006fffffffffffffffffffffffffffffffff83166101c4576101ba816080610553565b9050608083901c92505b67ffffffffffffffff83166101e8576101de816040610553565b9050604083901c92505b63ffffffff8316610208576101fe816020610553565b9050602083901c92505b61ffff83166102265761021c816010610553565b9050601083901c92505b60ff831661024357610239816008610553565b9050600883901c92505b600f831661026057610256816004610553565b9050600483901c92505b6003831661027d57610273816002610553565b9050600283901c92505b6001831661018057610290816001610553565b9392505050565b6000816102a75750610100919050565b60006fffffffffffffffffffffffffffffffff1983166102d6576102cc816080610553565b9050608083901b92505b6001600160c01b031983166102fa576102f0816040610553565b9050604083901b92505b6001600160e01b0319831661031e57610314816020610553565b9050602083901b92505b6001600160f01b0319831661034257610338816010610553565b9050601083901b92505b6001600160f81b031983166103665761035c816008610553565b9050600883901b92505b600f60fc1b83166103865761037c816004610553565b9050600483901b92505b600360fe1b83166103a65761039c816002610553565b9050600283901b92505b600160ff1b831661018057610290816001610553565b600080805b60038160ff161015610471576000604051806101a001604052806101808152602001610601610180913960ff83166103fa6001886105b3565b61040590600361056b565b61040f9190610553565b8151811061042d57634e487b7160e01b600052603260045260246000fd5b01602001516001600160f81b031916905061044982600861058a565b60ff16816001600160e81b031916901c83179250508080610469906105ca565b9150506103c1565b5060e81c92915050565b60008161048a57506000919050565b6104956001836105b3565b90911615919050565b60008082116104e75760405162461bcd60e51b81526020600482015260156024820152744e756d6265722063616e6e6f74206265207a65726f60581b6044820152606401610163565b600082600114156104fb5750600092915050565b608083111561051b57600192831c926105149082610553565b90506104fb565b610524836103bc565b610531620f42408361056b565b6102909190610553565b60006020828403121561054c578081fd5b5035919050565b60008219821115610566576105666105ea565b500190565b6000816000190483118215151615610585576105856105ea565b500290565b600060ff821660ff84168160ff04811182151516156105ab576105ab6105ea565b029392505050565b6000828210156105c5576105c56105ea565b500390565b600060ff821660ff8114156105e1576105e16105ea565b60010192915050565b634e487b7160e01b600052601160045260246000fdfe0000000f4240182f421e8480236e082771822ad63a2dc6c0305e8532b04834c96736b3c23876d73a187a3b9d4a3d09003e5ea63fa0c540d17741f28843057d440ba745062945f60246dc1047b917488dc7495aba4a207c4adf8a4b98544c4b404cf8aa4da0e64e44434ee3054f7d6d5013b750a61a5134c851bff05247bd52cc58534de753cc8d54486954c19c55384255ac75561e50568de956fb575766b057d00758376f589cfa5900ba5962bc59c3135a21ca5a7ef15ada945b34bf5b8d805be4df5c3aea5c8fa95ce3265d356c5d86835dd6735e25455e73005ebfad5f0b525f55f75f9fa25fe85a60302460770860bd0a61023061467f6189fd61ccae620e98624fbf62902762cfd5630ecd634d12638aa963c7966403dc643f7f647a8264b4e864eeb56527ec6560906598a365d029660724663d9766738566a8f066ddda6712476746386779af67acaf67df3a6811526842fa68743268a4fc68d55c6905536934e169640a6992cf69c13169ef326a1cd46a4a186a76ff6aa38c6acfc0a26469706673582212209ec06539722b047c33e8d359cfc9b7cd43d1170f471e94162e8503d48b06b59e64736f6c63430008040033",
+  "deployedBytecode": "0x730000000000000000000000000000000000000000301460806040526004361061006c5760003560e01c806306c8e54b14610071578063296e7af81461009b57806330244f7a146100bc57806332ef283b146100cf578063d82ae4b1146100e2578063e3581b6814610105575b600080fd5b61008461007f36600461053b565b610118565b60405160ff90911681526020015b60405180910390f35b6100ae6100a936600461053b565b610186565b604051908152602001610092565b6100ae6100ca36600461053b565b610297565b6100ae6100dd36600461053b565b6103bc565b6100f56100f036600461053b565b61047b565b6040519015158152602001610092565b6100ae61011336600461053b565b61049e565b60008161016c5760405162461bcd60e51b815260206004820152601860248201527f6c6f67206f66207a65726f20697320756e646566696e6564000000000000000060448201526064015b60405180910390fd5b61017582610297565b6101809060ff6105b3565b92915050565b6000816101965750610100919050565b60006fffffffffffffffffffffffffffffffff83166101c4576101ba816080610553565b9050608083901c92505b67ffffffffffffffff83166101e8576101de816040610553565b9050604083901c92505b63ffffffff8316610208576101fe816020610553565b9050602083901c92505b61ffff83166102265761021c816010610553565b9050601083901c92505b60ff831661024357610239816008610553565b9050600883901c92505b600f831661026057610256816004610553565b9050600483901c92505b6003831661027d57610273816002610553565b9050600283901c92505b6001831661018057610290816001610553565b9392505050565b6000816102a75750610100919050565b60006fffffffffffffffffffffffffffffffff1983166102d6576102cc816080610553565b9050608083901b92505b6001600160c01b031983166102fa576102f0816040610553565b9050604083901b92505b6001600160e01b0319831661031e57610314816020610553565b9050602083901b92505b6001600160f01b0319831661034257610338816010610553565b9050601083901b92505b6001600160f81b031983166103665761035c816008610553565b9050600883901b92505b600f60fc1b83166103865761037c816004610553565b9050600483901b92505b600360fe1b83166103a65761039c816002610553565b9050600283901b92505b600160ff1b831661018057610290816001610553565b600080805b60038160ff161015610471576000604051806101a001604052806101808152602001610601610180913960ff83166103fa6001886105b3565b61040590600361056b565b61040f9190610553565b8151811061042d57634e487b7160e01b600052603260045260246000fd5b01602001516001600160f81b031916905061044982600861058a565b60ff16816001600160e81b031916901c83179250508080610469906105ca565b9150506103c1565b5060e81c92915050565b60008161048a57506000919050565b6104956001836105b3565b90911615919050565b60008082116104e75760405162461bcd60e51b81526020600482015260156024820152744e756d6265722063616e6e6f74206265207a65726f60581b6044820152606401610163565b600082600114156104fb5750600092915050565b608083111561051b57600192831c926105149082610553565b90506104fb565b610524836103bc565b610531620f42408361056b565b6102909190610553565b60006020828403121561054c578081fd5b5035919050565b60008219821115610566576105666105ea565b500190565b6000816000190483118215151615610585576105856105ea565b500290565b600060ff821660ff84168160ff04811182151516156105ab576105ab6105ea565b029392505050565b6000828210156105c5576105c56105ea565b500390565b600060ff821660ff8114156105e1576105e16105ea565b60010192915050565b634e487b7160e01b600052601160045260246000fdfe0000000f4240182f421e8480236e082771822ad63a2dc6c0305e8532b04834c96736b3c23876d73a187a3b9d4a3d09003e5ea63fa0c540d17741f28843057d440ba745062945f60246dc1047b917488dc7495aba4a207c4adf8a4b98544c4b404cf8aa4da0e64e44434ee3054f7d6d5013b750a61a5134c851bff05247bd52cc58534de753cc8d54486954c19c55384255ac75561e50568de956fb575766b057d00758376f589cfa5900ba5962bc59c3135a21ca5a7ef15ada945b34bf5b8d805be4df5c3aea5c8fa95ce3265d356c5d86835dd6735e25455e73005ebfad5f0b525f55f75f9fa25fe85a60302460770860bd0a61023061467f6189fd61ccae620e98624fbf62902762cfd5630ecd634d12638aa963c7966403dc643f7f647a8264b4e864eeb56527ec6560906598a365d029660724663d9766738566a8f066ddda6712476746386779af67acaf67df3a6811526842fa68743268a4fc68d55c6905536934e169640a6992cf69c13169ef326a1cd46a4a186a76ff6aa38c6acfc0a26469706673582212209ec06539722b047c33e8d359cfc9b7cd43d1170f471e94162e8503d48b06b59e64736f6c63430008040033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "clz(uint256)": {
+        "details": "this a binary search implementation",
+        "params": {
+          "_num": "number you want the clz of"
+        }
+      },
+      "ctz(uint256)": {
+        "details": "this a binary search implementation",
+        "params": {
+          "_num": "number you want the ctz of"
+        }
+      },
+      "getLog2Floor(uint256)": {
+        "params": {
+          "_num": "number to take floor(log2) of"
+        },
+        "returns": {
+          "_0": "floor(log2) of _num"
+        }
+      },
+      "getLog2TableTimes1M(uint256)": {
+        "params": {
+          "_num": "number to take log2 of"
+        },
+        "returns": {
+          "_0": "result after table look-up"
+        }
+      },
+      "isPowerOf2(uint256)": {
+        "params": {
+          "_num": "number to check"
+        },
+        "returns": {
+          "_0": "true if number is power of 2, false if not"
+        }
+      },
+      "log2ApproxTimes1M(uint256)": {
+        "params": {
+          "_num": "number to take log2 * 1M of"
+        },
+        "returns": {
+          "_0": "approximate log2 times 1M"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "clz(uint256)": {
+        "notice": "count leading zeros"
+      },
+      "ctz(uint256)": {
+        "notice": "count trailing zeros"
+      },
+      "getLog2Floor(uint256)": {
+        "notice": "get floor of log2 of number"
+      },
+      "getLog2TableTimes1M(uint256)": {
+        "notice": "navigates log2tableTimes1M"
+      },
+      "isPowerOf2(uint256)": {
+        "notice": "checks if a number is Power of 2"
+      },
+      "log2ApproxTimes1M(uint256)": {
+        "notice": "Approximates log2 * 1M"
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

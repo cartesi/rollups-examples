@@ -1,0 +1,239 @@
+{
+  "address": "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_token",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Deposit",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "depositTokens",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getToken",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferTokens",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xc21d4634243103d1e2f07d9000244ebab6b75ffa6b0728b40c5d0eb554af2a65",
+  "receipt": {
+    "to": null,
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "contractAddress": "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E",
+    "transactionIndex": 0,
+    "gasUsed": "337439",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x3f9310e49ca623e973fc2d1ac5b83a9104434d09c8a11e290b441ca674ab60b5",
+    "transactionHash": "0xc21d4634243103d1e2f07d9000244ebab6b75ffa6b0728b40c5d0eb554af2a65",
+    "logs": [],
+    "blockNumber": 31,
+    "cumulativeGasUsed": "337439",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "853463bf44733f3d929a32fa4eacb9e6",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.13+commit.abaa5c0e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Deposit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"depositTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getToken\",\"outputs\":[{\"internalType\":\"contract IERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"balanceOf(address)\":{\"params\":{\"_owner\":\"account owner\"}},\"depositTokens(address,uint256)\":{\"details\":\"you may need to call `token.approve(bank, _value)`\",\"params\":{\"_to\":\"account that will have their balance increased by `_value`\",\"_value\":\"amount of tokens to be transfered\"}},\"transferTokens(address,uint256)\":{\"params\":{\"_to\":\"account that will receive `_value` tokens\",\"_value\":\"amount of tokens to be transfered\"}}},\"version\":1},\"userdoc\":{\"events\":{\"Deposit(address,address,uint256)\":{\"notice\":\"`value` tokens were transfered from `from` to bankthe balance of `to` was increased by `value`\"},\"Transfer(address,address,uint256)\":{\"notice\":\"`value` tokens were transfered from the bank to `to`the balance of `from` was decreased by `value`\"}},\"kind\":\"user\",\"methods\":{\"balanceOf(address)\":{\"notice\":\"get balance of `_owner`\"},\"depositTokens(address,uint256)\":{\"notice\":\"transfer `_value` tokens from caller to bankincrease the balance of `_to` by `_value`\"},\"getToken()\":{\"notice\":\"returns the token used internally\"},\"transferTokens(address,uint256)\":{\"notice\":\"transfer `_value` tokens from bank to `_to`decrease the balance of caller by `_value`\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Bank.sol\":\"Bank\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n\\n    /**\\n     * @dev Returns the amount of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves `amount` tokens from the caller's account to `to`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address to, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Moves `amount` tokens from `from` to `to` using the\\n     * allowance mechanism. `amount` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(\\n        address from,\\n        address to,\\n        uint256 amount\\n    ) external returns (bool);\\n}\\n\",\"keccak256\":\"0x9750c6b834f7b43000631af5cc30001c5f547b3ceb3635488f140f60e897ea6b\",\"license\":\"MIT\"},\"contracts/Bank.sol\":{\"content\":\"// Copyright 2022 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\n// @title Bank contract\\npragma solidity ^0.8.0;\\n\\nimport {IBank} from \\\"./IBank.sol\\\";\\nimport {IERC20} from \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\n\\ncontract Bank is IBank {\\n    IERC20 private immutable token;\\n\\n    // `balances` maps account/contract addresses to balances\\n    mapping(address => uint256) private balances;\\n\\n    constructor(address _token) {\\n        require(_token != address(0), \\\"Bank: invalid token\\\");\\n        token = IERC20(_token);\\n    }\\n\\n    function getToken() public view override returns (IERC20) {\\n        return token;\\n    }\\n\\n    function balanceOf(address _owner) public view override returns (uint256) {\\n        return balances[_owner];\\n    }\\n\\n    function transferTokens(address _to, uint256 _value) public override {\\n        // checks\\n        uint256 balance = balances[msg.sender];\\n        require(_value <= balance, \\\"Bank: not enough balance\\\");\\n\\n        // effects\\n        // Note: this should not underflow because we checked that\\n        // `_value <= balance` in the `require` above\\n        unchecked {\\n            balances[msg.sender] = balance - _value;\\n        }\\n\\n        // interactions\\n        // Note: a well-implemented ERC-20 contract should already\\n        // require the recipient (in this case, `_to`) to be different\\n        // than address(0), so we don't need to check it ourselves\\n        require(token.transfer(_to, _value), \\\"Bank: transfer failed\\\");\\n        emit Transfer(msg.sender, _to, _value);\\n    }\\n\\n    function depositTokens(address _to, uint256 _value) public override {\\n        // checks\\n        require(_to != address(0), \\\"Bank: invalid recipient\\\");\\n\\n        // effects\\n        // Note: this should not overflow because `IERC20.totalSupply`\\n        // returns a `uint256` value, so there can't be more than\\n        // `uint256.max` tokens in an ERC-20 contract.\\n        balances[_to] += _value;\\n\\n        // interactions\\n        // Note: transfers tokens to bank, but emits `Deposit` event\\n        // with recipient being `_to`\\n        require(\\n            token.transferFrom(msg.sender, address(this), _value),\\n            \\\"Bank: transferFrom failed\\\"\\n        );\\n        emit Deposit(msg.sender, _to, _value);\\n    }\\n}\\n\",\"keccak256\":\"0x1a0ebcbd1c823c592b224959a3b9c4603489c4a3d878b2809c6552528fed672b\",\"license\":\"Apache-2.0\"},\"contracts/IBank.sol\":{\"content\":\"// Copyright 2022 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\n// @title Bank interface\\npragma solidity ^0.8.0;\\n\\nimport {IERC20} from \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\n\\ninterface IBank {\\n    /// @notice returns the token used internally\\n    function getToken() external view returns (IERC20);\\n\\n    /// @notice get balance of `_owner`\\n    /// @param _owner account owner\\n    function balanceOf(address _owner) external view returns (uint256);\\n\\n    /// @notice transfer `_value` tokens from bank to `_to`\\n    /// @notice decrease the balance of caller by `_value`\\n    /// @param _to account that will receive `_value` tokens\\n    /// @param _value amount of tokens to be transfered\\n    function transferTokens(address _to, uint256 _value) external;\\n\\n    /// @notice transfer `_value` tokens from caller to bank\\n    /// @notice increase the balance of `_to` by `_value`\\n    /// @dev you may need to call `token.approve(bank, _value)`\\n    /// @param _to account that will have their balance increased by `_value`\\n    /// @param _value amount of tokens to be transfered\\n    function depositTokens(address _to, uint256 _value) external;\\n\\n    /// @notice `value` tokens were transfered from the bank to `to`\\n    /// @notice the balance of `from` was decreased by `value`\\n    /// @dev is triggered on any successful call to `transferTokens`\\n    /// @param from the account/contract that called `transferTokens` and\\n    ///              got their balance decreased by `value`\\n    /// @param to the one that received `value` tokens from the bank\\n    /// @param value amount of tokens that were transfered\\n    event Transfer(address indexed from, address to, uint256 value);\\n\\n    /// @notice `value` tokens were transfered from `from` to bank\\n    /// @notice the balance of `to` was increased by `value`\\n    /// @dev is triggered on any successful call to `depositTokens`\\n    /// @param from the account/contract that called `depositTokens` and\\n    ///              transfered `value` tokens to the bank\\n    /// @param to the one that got their balance increased by `value`\\n    /// @param value amount of tokens that were transfered\\n    event Deposit(address from, address indexed to, uint256 value);\\n}\\n\",\"keccak256\":\"0x483dc9b0c26e3a5d43148cf847bd4df2af03438a0d76d60d33549de3ca2dd77d\",\"license\":\"Apache-2.0\"}},\"version\":1}",
+  "bytecode": "0x60a060405234801561001057600080fd5b5060405161060b38038061060b83398101604081905261002f9161009a565b6001600160a01b0381166100895760405162461bcd60e51b815260206004820152601360248201527f42616e6b3a20696e76616c696420746f6b656e00000000000000000000000000604482015260640160405180910390fd5b6001600160a01b03166080526100ca565b6000602082840312156100ac57600080fd5b81516001600160a01b03811681146100c357600080fd5b9392505050565b6080516105196100f260003960008181605e01528181610196015261033901526105196000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c806321df0da71461005157806366168bd71461008d57806370a08231146100a2578063bec3fa17146100d9575b600080fd5b6040516001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001681526020015b60405180910390f35b6100a061009b36600461044f565b6100ec565b005b6100cb6100b0366004610479565b6001600160a01b031660009081526020819052604090205490565b604051908152602001610084565b6100a06100e736600461044f565b61029f565b6001600160a01b0382166101475760405162461bcd60e51b815260206004820152601760248201527f42616e6b3a20696e76616c696420726563697069656e7400000000000000000060448201526064015b60405180910390fd5b6001600160a01b0382166000908152602081905260408120805483929061016f90849061049b565b90915550506040516323b872dd60e01b8152336004820152306024820152604481018290527f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316906323b872dd906064016020604051808303816000875af11580156101e7573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061020b91906104c1565b6102575760405162461bcd60e51b815260206004820152601960248201527f42616e6b3a207472616e7366657246726f6d206661696c656400000000000000604482015260640161013e565b60408051338152602081018390526001600160a01b038416917f5548c837ab068cf56a2c2479df0882a4922fd203edb7517321831d95078c5f62910160405180910390a25050565b33600090815260208190526040902054808211156102ff5760405162461bcd60e51b815260206004820152601860248201527f42616e6b3a206e6f7420656e6f7567682062616c616e63650000000000000000604482015260640161013e565b336000908152602081905260409081902083830390555163a9059cbb60e01b81526001600160a01b038481166004830152602482018490527f0000000000000000000000000000000000000000000000000000000000000000169063a9059cbb906044016020604051808303816000875af1158015610382573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103a691906104c1565b6103ea5760405162461bcd60e51b815260206004820152601560248201527410985b9ace881d1c985b9cd9995c8819985a5b1959605a1b604482015260640161013e565b604080516001600160a01b03851681526020810184905233917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef910160405180910390a2505050565b80356001600160a01b038116811461044a57600080fd5b919050565b6000806040838503121561046257600080fd5b61046b83610433565b946020939093013593505050565b60006020828403121561048b57600080fd5b61049482610433565b9392505050565b600082198211156104bc57634e487b7160e01b600052601160045260246000fd5b500190565b6000602082840312156104d357600080fd5b8151801515811461049457600080fdfea26469706673582212202f52a7f24915f76bd55f8533504eca6464ea1199be7010f33418e3e3cb53374564736f6c634300080d0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061004c5760003560e01c806321df0da71461005157806366168bd71461008d57806370a08231146100a2578063bec3fa17146100d9575b600080fd5b6040516001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001681526020015b60405180910390f35b6100a061009b36600461044f565b6100ec565b005b6100cb6100b0366004610479565b6001600160a01b031660009081526020819052604090205490565b604051908152602001610084565b6100a06100e736600461044f565b61029f565b6001600160a01b0382166101475760405162461bcd60e51b815260206004820152601760248201527f42616e6b3a20696e76616c696420726563697069656e7400000000000000000060448201526064015b60405180910390fd5b6001600160a01b0382166000908152602081905260408120805483929061016f90849061049b565b90915550506040516323b872dd60e01b8152336004820152306024820152604481018290527f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316906323b872dd906064016020604051808303816000875af11580156101e7573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061020b91906104c1565b6102575760405162461bcd60e51b815260206004820152601960248201527f42616e6b3a207472616e7366657246726f6d206661696c656400000000000000604482015260640161013e565b60408051338152602081018390526001600160a01b038416917f5548c837ab068cf56a2c2479df0882a4922fd203edb7517321831d95078c5f62910160405180910390a25050565b33600090815260208190526040902054808211156102ff5760405162461bcd60e51b815260206004820152601860248201527f42616e6b3a206e6f7420656e6f7567682062616c616e63650000000000000000604482015260640161013e565b336000908152602081905260409081902083830390555163a9059cbb60e01b81526001600160a01b038481166004830152602482018490527f0000000000000000000000000000000000000000000000000000000000000000169063a9059cbb906044016020604051808303816000875af1158015610382573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103a691906104c1565b6103ea5760405162461bcd60e51b815260206004820152601560248201527410985b9ace881d1c985b9cd9995c8819985a5b1959605a1b604482015260640161013e565b604080516001600160a01b03851681526020810184905233917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef910160405180910390a2505050565b80356001600160a01b038116811461044a57600080fd5b919050565b6000806040838503121561046257600080fd5b61046b83610433565b946020939093013593505050565b60006020828403121561048b57600080fd5b61049482610433565b9392505050565b600082198211156104bc57634e487b7160e01b600052601160045260246000fd5b500190565b6000602082840312156104d357600080fd5b8151801515811461049457600080fdfea26469706673582212202f52a7f24915f76bd55f8533504eca6464ea1199be7010f33418e3e3cb53374564736f6c634300080d0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "balanceOf(address)": {
+        "params": {
+          "_owner": "account owner"
+        }
+      },
+      "depositTokens(address,uint256)": {
+        "details": "you may need to call `token.approve(bank, _value)`",
+        "params": {
+          "_to": "account that will have their balance increased by `_value`",
+          "_value": "amount of tokens to be transfered"
+        }
+      },
+      "transferTokens(address,uint256)": {
+        "params": {
+          "_to": "account that will receive `_value` tokens",
+          "_value": "amount of tokens to be transfered"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "events": {
+      "Deposit(address,address,uint256)": {
+        "notice": "`value` tokens were transfered from `from` to bankthe balance of `to` was increased by `value`"
+      },
+      "Transfer(address,address,uint256)": {
+        "notice": "`value` tokens were transfered from the bank to `to`the balance of `from` was decreased by `value`"
+      }
+    },
+    "kind": "user",
+    "methods": {
+      "balanceOf(address)": {
+        "notice": "get balance of `_owner`"
+      },
+      "depositTokens(address,uint256)": {
+        "notice": "transfer `_value` tokens from caller to bankincrease the balance of `_to` by `_value`"
+      },
+      "getToken()": {
+        "notice": "returns the token used internally"
+      },
+      "transferTokens(address,uint256)": {
+        "notice": "transfer `_value` tokens from bank to `_to`decrease the balance of caller by `_value`"
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 3434,
+        "contract": "contracts/Bank.sol:Bank",
+        "label": "balances",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_mapping(t_address,t_uint256)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
