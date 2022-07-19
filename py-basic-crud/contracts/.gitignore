@@ -1,0 +1,7 @@
+cache
+coverage
+deployments/localhost
+deployments/*/solcInputs/*.json
+dist
+export/abi/localhost.json
+node_modules
