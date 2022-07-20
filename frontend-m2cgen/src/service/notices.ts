@@ -49,8 +49,7 @@ export const getNotices = async (
     const client = createClient({
         url,
         exchanges: defaultExchanges,
-        fetch,
-        fetchOptions: { cache: "no-cache" },
+        fetch
     });
 
     // query the GraphQL server for notices of our input
