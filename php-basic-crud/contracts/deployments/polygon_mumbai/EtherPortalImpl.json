@@ -1,0 +1,179 @@
+{
+  "address": "0x794E1A83C525ecF06Cd7f33297368A3dbf3e7e8A",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_inputContract",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_outputContract",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "_data",
+          "type": "bytes"
+        }
+      ],
+      "name": "EtherDeposited",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address payable",
+          "name": "_receiver",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "EtherWithdrawn",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "_data",
+          "type": "bytes"
+        }
+      ],
+      "name": "etherDeposit",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "_data",
+          "type": "bytes"
+        }
+      ],
+      "name": "executeRollupsVoucher",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x914db613a2c60153ca4110d1b95a80e1486acb93ec219c54d053f59c9c8f9aa9",
+  "receipt": {
+    "to": null,
+    "from": "0x18930e8a66a1DbE21D00581216789AAB7460Afd0",
+    "contractAddress": "0x794E1A83C525ecF06Cd7f33297368A3dbf3e7e8A",
+    "transactionIndex": 8,
+    "gasUsed": "308794",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000800000000000000000000100000000004000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000080000000000000000000200000000000000000000000000000000000000000000000000000000000004000000000000000000001000000000000000000000000000000100040000000000000000000000000000000000000000000000000000000000000024000100000",
+    "blockHash": "0x213bf8fa01956330d7a6ff863fb82d281a4ebdd13ae7eb1c79ad53d94f5b195b",
+    "transactionHash": "0x914db613a2c60153ca4110d1b95a80e1486acb93ec219c54d053f59c9c8f9aa9",
+    "logs": [
+      {
+        "transactionIndex": 8,
+        "blockNumber": 25638501,
+        "transactionHash": "0x914db613a2c60153ca4110d1b95a80e1486acb93ec219c54d053f59c9c8f9aa9",
+        "address": "0x0000000000000000000000000000000000001010",
+        "topics": [
+          "0x4dfe1bbbcf077ddc3e01291eea2d5c70c2b422b415d95645b9adcfd678cb1d63",
+          "0x0000000000000000000000000000000000000000000000000000000000001010",
+          "0x00000000000000000000000018930e8a66a1dbe21d00581216789aab7460afd0",
+          "0x000000000000000000000000be188d6641e8b680743a4815dfa0f6208038960f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000015f0ee1d3513780000000000000000000000000000000000000000000000000bc440b16ae775a7000000000000000000000000000000000000000000000c1a39747f85e3d556e40000000000000000000000000000000000000000000000000bae4fc34db2622f000000000000000000000000000000000000000000000c1a398a7074010a6a5c",
+        "logIndex": 119,
+        "blockHash": "0x213bf8fa01956330d7a6ff863fb82d281a4ebdd13ae7eb1c79ad53d94f5b195b"
+      }
+    ],
+    "blockNumber": 25638501,
+    "cumulativeGasUsed": "2992944",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0xb5Ccad9FE56FDC70d770b107a6D3B354dDF8D1E6",
+    "0xB90467e3c4fB5Ac75aAB8D932A4136E5d4EE5814"
+  ],
+  "numDeployments": 2,
+  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_inputContract\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_outputContract\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"EtherDeposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address payable\",\"name\":\"_receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"EtherWithdrawn\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"etherDeposit\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"executeRollupsVoucher\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"etherDeposit(bytes)\":{\"params\":{\"_data\":\"information to be interpreted by L2\"},\"returns\":{\"_0\":\"hash of input generated by deposit\"}},\"executeRollupsVoucher(bytes)\":{\"details\":\"can only be called by the Output contract\",\"params\":{\"_data\":\"data with information necessary to execute voucher\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"etherDeposit(bytes)\":{\"notice\":\"deposit an amount of Ether in the portal contract and create Ether in L2\"},\"executeRollupsVoucher(bytes)\":{\"notice\":\"executes a rollups voucher\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/EtherPortalImpl.sol\":\"EtherPortalImpl\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/EtherPortal.sol\":{\"content\":\"// Copyright 2021 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\n/// @title Ether Portal\\npragma solidity >=0.7.0;\\n\\ninterface EtherPortal {\\n    /// @notice deposit an amount of Ether in the portal contract and create Ether in L2\\n    /// @param _data information to be interpreted by L2\\n    /// @return hash of input generated by deposit\\n    function etherDeposit(\\n        bytes calldata _data\\n    ) external payable returns (bytes32);\\n\\n    /// @notice execute a rollups voucher\\n    /// @param _data data with information necessary to execute voucher\\n    /// @dev can only be called by the Output contract\\n    function executeRollupsVoucher(bytes calldata _data)\\n        external\\n        returns (bool);\\n\\n    // @notice emitted on Ether deposited\\n    event EtherDeposited(\\n        address _sender,\\n        uint256 _amount,\\n        bytes _data\\n    );\\n\\n    // @notice emitted on Ether withdrawal\\n    event EtherWithdrawn(\\n        address payable _receiver,\\n        uint256 _amount\\n    );\\n}\\n\",\"keccak256\":\"0xb284f9d2b2707df4671c019ed4fc0e3173d713c19ee1055f670a88767197c85e\",\"license\":\"Apache-2.0\"},\"contracts/EtherPortalImpl.sol\":{\"content\":\"// Copyright 2021 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\n/// @title Ether Portal Implementation\\npragma solidity ^0.8.0;\\n\\nimport \\\"./EtherPortal.sol\\\";\\nimport \\\"./Input.sol\\\";\\n\\ncontract EtherPortalImpl is EtherPortal {\\n    address immutable outputContract;\\n    Input immutable inputContract;\\n\\n    modifier onlyOutputContract {\\n        require(msg.sender == outputContract, \\\"only outputContract\\\");\\n        _;\\n    }\\n\\n    constructor(address _inputContract, address _outputContract) {\\n        inputContract = Input(_inputContract);\\n        outputContract = _outputContract;\\n    }\\n\\n    /// @notice deposit an amount of Ether in the portal contract and create Ether in L2\\n    /// @param _data information to be interpreted by L2\\n    /// @return hash of input generated by deposit\\n    function etherDeposit(\\n        bytes calldata _data\\n    ) public payable override returns (bytes32) {\\n        bytes memory input =\\n            abi.encode(msg.sender, msg.value, _data);\\n\\n        emit EtherDeposited(msg.sender, msg.value, _data);\\n        return inputContract.addInput(input);\\n    }\\n\\n    /// @notice executes a rollups voucher\\n    /// @param _data data with information necessary to execute voucher\\n    /// @dev can only be called by the Output contract\\n    function executeRollupsVoucher(bytes calldata _data)\\n        public\\n        override\\n        onlyOutputContract\\n        returns (bool)\\n    {\\n        (\\n            address payable receiver,\\n            uint256 value\\n        ) = abi.decode(_data, (address, uint256));\\n\\n        // We used to call receiver.transfer(value) but it's no\\n        // longer considered safe, as it assumes gas costs are\\n        // immutable, while in fact they are not.\\n        (bool success, ) = receiver.call{value: value}(\\\"\\\");\\n        require(success, \\\"transfer failed\\\");\\n\\n        emit EtherWithdrawn(receiver, value);\\n\\n        return true;\\n    }\\n}\\n\",\"keccak256\":\"0x2830efd3857cfe12080ec5bdb55e6c14a800f986b3dd38d155f15b67ea550d6d\",\"license\":\"Apache-2.0\"},\"contracts/Input.sol\":{\"content\":\"// Copyright 2021 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\n/// @title Input\\npragma solidity >=0.7.0;\\n\\ninterface Input {\\n    /// @notice adds input to correct inbox\\n    /// @param _input bytes array of input\\n    /// @return merkle root hash of input\\n    /// @dev  msg.sender and timestamp are preppended log2 size\\n    ///       has to be calculated offchain taking that into account\\n    function addInput(bytes calldata _input) external returns (bytes32);\\n\\n    /// @notice returns input from correct input inbox\\n    /// @param _index position of the input on inbox\\n    /// @return root hash of input\\n    function getInput(uint256 _index) external view returns (bytes32);\\n\\n    /// @notice returns number of inputs on correct inbox\\n    /// @return number of inputs of non active inbox\\n    function getNumberOfInputs() external view returns (uint256);\\n\\n    /// @notice returns active current inbox index\\n    /// @return index of current active inbox\\n    function getCurrentInbox() external view returns (uint256);\\n\\n    /// @notice called whenever there is a new input accumulation epoch\\n    /// @dev has to be  called even if new input accumulation happens\\n    ///      implicitly due to a new epoch\\n    function onNewInputAccumulation() external;\\n\\n    /// @notice called when a new epoch begins, clears correct input box\\n    function onNewEpoch() external;\\n\\n    /// @notice input added\\n    /// @param _epochNumber which epoch this input belongs to\\n    /// @param _inputIndex index of the input just added\\n    /// @param _sender msg.sender\\n    /// @param _timestamp block.timestamp\\n    /// @param _input input data\\n    event InputAdded(\\n        uint256 indexed _epochNumber,\\n        uint256 indexed _inputIndex,\\n        address _sender,\\n        uint256 _timestamp,\\n        bytes _input\\n    );\\n}\\n\",\"keccak256\":\"0x77b327595fd5b8a5d16f4cb42187068288c82d21f17581117d07f449d7b75939\",\"license\":\"Apache-2.0\"}},\"version\":1}",
+  "bytecode": "0x60c060405234801561001057600080fd5b5060405161054d38038061054d83398101604081905261002f91610062565b6001600160a01b0391821660a05216608052610095565b80516001600160a01b038116811461005d57600080fd5b919050565b6000806040838503121561007557600080fd5b61007e83610046565b915061008c60208401610046565b90509250929050565b60805160a0516104936100ba60003960006101030152600061019f01526104936000f3fe6080604052600436106100295760003560e01c80632abfe7b31461002e5780635a78177d14610054575b600080fd5b61004161003c3660046102fd565b610084565b6040519081526020015b60405180910390f35b34801561006057600080fd5b5061007461006f3660046102fd565b610192565b604051901515815260200161004b565b6000803334858560405160200161009e949392919061036f565b60405160208183030381529060405290507fa9888e32d8ea552aaeb3018b9c85c77c66ecc61cf8d1989f9e3271a88205ee63333486866040516100e4949392919061036f565b60405180910390a1604051631e640f1d60e31b81526001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063f32078e8906101389084906004016103b7565b602060405180830381600087803b15801561015257600080fd5b505af1158015610166573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061018a919061040c565b949350505050565b6000336001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016146102075760405162461bcd60e51b81526020600482015260136024820152721bdb9b1e481bdd5d1c1d5d10dbdb9d1c9858dd606a1b60448201526064015b60405180910390fd5b60008061021684860186610425565b915091506000826001600160a01b03168260405160006040518083038185875af1925050503d8060008114610267576040519150601f19603f3d011682016040523d82523d6000602084013e61026c565b606091505b50509050806102af5760405162461bcd60e51b815260206004820152600f60248201526e1d1c985b9cd9995c8819985a5b1959608a1b60448201526064016101fe565b604080516001600160a01b0385168152602081018490527f06097061aeda806b5e9cb4133d9899f332ff0913956567fc0f7ea15e3d19947c910160405180910390a150600195945050505050565b6000806020838503121561031057600080fd5b823567ffffffffffffffff8082111561032857600080fd5b818501915085601f83011261033c57600080fd5b81358181111561034b57600080fd5b86602082850101111561035d57600080fd5b60209290920196919550909350505050565b6001600160a01b0385168152602081018490526060604082018190528101829052818360808301376000818301608090810191909152601f909201601f191601019392505050565b600060208083528351808285015260005b818110156103e4578581018301518582016040015282016103c8565b818111156103f6576000604083870101525b50601f01601f1916929092016040019392505050565b60006020828403121561041e57600080fd5b5051919050565b6000806040838503121561043857600080fd5b82356001600160a01b038116811461044f57600080fd5b94602093909301359350505056fea26469706673582212207fe9038a97b0ffdd6ca5910a4c2cde000e15c9c698cd3eaa3fe60ed29cf6f65164736f6c63430008090033",
+  "deployedBytecode": "0x6080604052600436106100295760003560e01c80632abfe7b31461002e5780635a78177d14610054575b600080fd5b61004161003c3660046102fd565b610084565b6040519081526020015b60405180910390f35b34801561006057600080fd5b5061007461006f3660046102fd565b610192565b604051901515815260200161004b565b6000803334858560405160200161009e949392919061036f565b60405160208183030381529060405290507fa9888e32d8ea552aaeb3018b9c85c77c66ecc61cf8d1989f9e3271a88205ee63333486866040516100e4949392919061036f565b60405180910390a1604051631e640f1d60e31b81526001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063f32078e8906101389084906004016103b7565b602060405180830381600087803b15801561015257600080fd5b505af1158015610166573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061018a919061040c565b949350505050565b6000336001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016146102075760405162461bcd60e51b81526020600482015260136024820152721bdb9b1e481bdd5d1c1d5d10dbdb9d1c9858dd606a1b60448201526064015b60405180910390fd5b60008061021684860186610425565b915091506000826001600160a01b03168260405160006040518083038185875af1925050503d8060008114610267576040519150601f19603f3d011682016040523d82523d6000602084013e61026c565b606091505b50509050806102af5760405162461bcd60e51b815260206004820152600f60248201526e1d1c985b9cd9995c8819985a5b1959608a1b60448201526064016101fe565b604080516001600160a01b0385168152602081018490527f06097061aeda806b5e9cb4133d9899f332ff0913956567fc0f7ea15e3d19947c910160405180910390a150600195945050505050565b6000806020838503121561031057600080fd5b823567ffffffffffffffff8082111561032857600080fd5b818501915085601f83011261033c57600080fd5b81358181111561034b57600080fd5b86602082850101111561035d57600080fd5b60209290920196919550909350505050565b6001600160a01b0385168152602081018490526060604082018190528101829052818360808301376000818301608090810191909152601f909201601f191601019392505050565b600060208083528351808285015260005b818110156103e4578581018301518582016040015282016103c8565b818111156103f6576000604083870101525b50601f01601f1916929092016040019392505050565b60006020828403121561041e57600080fd5b5051919050565b6000806040838503121561043857600080fd5b82356001600160a01b038116811461044f57600080fd5b94602093909301359350505056fea26469706673582212207fe9038a97b0ffdd6ca5910a4c2cde000e15c9c698cd3eaa3fe60ed29cf6f65164736f6c63430008090033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "etherDeposit(bytes)": {
+        "params": {
+          "_data": "information to be interpreted by L2"
+        },
+        "returns": {
+          "_0": "hash of input generated by deposit"
+        }
+      },
+      "executeRollupsVoucher(bytes)": {
+        "details": "can only be called by the Output contract",
+        "params": {
+          "_data": "data with information necessary to execute voucher"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "etherDeposit(bytes)": {
+        "notice": "deposit an amount of Ether in the portal contract and create Ether in L2"
+      },
+      "executeRollupsVoucher(bytes)": {
+        "notice": "executes a rollups voucher"
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}
