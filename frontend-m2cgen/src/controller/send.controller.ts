@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { SendInputViewModel, sendInput as sendInputService } from "../service/send";
+import { SendInputViewModel, sendInput as sendInputService } from "../service/send.service";
 import { ServiceReducerActions } from "./use-service/use-service.hook";
 
 export interface SendInputData {

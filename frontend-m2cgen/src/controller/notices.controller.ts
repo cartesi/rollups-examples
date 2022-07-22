@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import { NoticeKeys } from "../../generated/graphql";
-import { getNotices, NoticeViewModel } from "../service/notices";
+import { getNotices, NoticeViewModel } from "../service/notices.service";
 import { genTimerPromise } from "../utils/timer-promise";
 import { REFETCH_TIME_DEFAULT } from "./config/constants";
 import { ServiceReducerActions } from "./use-service/use-service.hook";
