@@ -14,8 +14,6 @@
         "@cartesi/rollups": "^0.4.0",
         "@ethersproject/providers": "^5.5.3",
         "@types/styled-components": "^5.1.25",
-        "@urql/core": "^2.4.3",
-        "cross-fetch": "^3.1.5",
         "ethers": "^5.5.4",
         "graphql": "^16.3.0",
         "react": "^18.2.0",
