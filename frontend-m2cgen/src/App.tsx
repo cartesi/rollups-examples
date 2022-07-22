@@ -11,7 +11,7 @@ export const App = () => {
 
     const handleResult = (notices: NoticeViewModel[]) => {
         const notice = notices[0];
-        const message = notice.payload_parsed === '1' ? 'You survived!' : 'You sank';
+        const message = notice.payload_parsed === '1' ? 'You survived!' : 'You sank...';
 
         return <h2>{message}</h2>;
     }
