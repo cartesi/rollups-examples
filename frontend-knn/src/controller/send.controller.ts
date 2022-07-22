@@ -15,6 +15,10 @@ export const sendInput = async (
 ) => {
     dispatch({ type: 'start_request' });
     try {
+        Object.keys(data).forEach((key) => {
+            const prop = key as keyof typeof data;
+            data[prop] = Number(data[prop]);
+        });
         const sendInputResult = await sendInputService({
             input: JSON.stringify(data)
         });
