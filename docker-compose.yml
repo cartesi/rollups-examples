@@ -132,6 +132,26 @@ services:
       - machine:/opt/cartesi/share/dapp-bin:ro
       - ./deployments:/deployments
 
+  rollups_inspect_server:
+    image: cartesi/rollups-inspect-server:0.5.0
+    command:
+      [
+        "--inspect-server-address",
+        "0.0.0.0:5005",
+        "--server-manager-address",
+        "server_manager:5001",
+        "--session-id",
+        "default_rollups_id",
+      ]
+    restart: always
+    ports:
+      - "5005:5005"
+    depends_on:
+      server_manager:
+        condition: service_started
+    environment:
+      RUST_LOG: debug
+
   rollups_indexer:
     image: cartesi/rollups-indexer:0.5.0
     command:
