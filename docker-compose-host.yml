@@ -1,14 +1,13 @@
-version: '3'
+version: "3"
 
 services:
   server_manager:
-    image: cartesi/host-server-manager:0.4.0
+    image: cartesi/host-server-manager:0.5.0
     ports:
       - "5004:5004"
 
   deployer:
-    command:
-      [
+    command: [
         "create",
         "--rpc",
         "http://hardhat:8545",
