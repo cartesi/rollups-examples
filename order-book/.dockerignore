@@ -1,0 +1,4 @@
+config
+contracts/node_modules
+frontend-console
+server

@@ -1,0 +1,13 @@
+[state_fold]
+
+# concurrent events fetch for state fold access
+concurrent_events_fetch = 16
+
+# genesis block number for state fold access
+genesis_block = "0x1"
+
+# query limit error for state fold access
+query_limit_error_codes = [-32005]
+
+# number of blocks (depth) before considering state finalized
+safety_margin = 0
