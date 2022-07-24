@@ -65,7 +65,7 @@ export const getNotices = async (
                 isPartialNotice
             );
         } else {
-            throw new Error(error?.message);
+            return [];
         }
     } else if (inputKeys.epoch_index !== undefined) {
         // list notices querying only by epoch
@@ -85,7 +85,7 @@ export const getNotices = async (
             }
             return ret;
         } else {
-            throw new Error(error?.message);
+            return [];
         }
     } else if (inputKeys.input_index !== undefined) {
         throw new Error(
@@ -97,7 +97,7 @@ export const getNotices = async (
         if (data?.notices) {
             return data.notices.nodes.filter<PartialNotice>(isPartialNotice);
         } else {
-            throw new Error(error?.message);
+            return [];
         }
     }
 };
