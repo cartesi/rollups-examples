@@ -3366,7 +3366,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.7.2:
+prop-types@^15.7.2, prop-types@^15.8.0:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -3387,6 +3387,13 @@ react-dom@^18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-grid-system@^8.1.5:
+  version "8.1.5"
+  resolved "https://registry.yarnpkg.com/react-grid-system/-/react-grid-system-8.1.5.tgz#a4807905b15b843a597eae799e1a162a1241eb85"
+  integrity sha512-Y6eUYpDPpBV/WrN1DYNjlHYO+Lmxxwzwj17j2wTzPKnoFjXYQc515GjcX8sLE9SEsWJ7rQc2AU1q358wukj8Sw==
+  dependencies:
+    prop-types "^15.8.0"
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
