@@ -149,7 +149,7 @@ export const parseArgs = (argv: string[]): TestOptions => {
 
 export const sendInput = async (input: string): Promise<string> => {
     const cmd = "yarn";
-    const args = ["start", "send", "--input", input];
+    const args = ["start", "input", "send", "--payload", input];
     const options = { cwd: CONSOLE };
     const io = await _execCommand(cmd, args, options);
 
@@ -165,7 +165,8 @@ export const queryNotices = async (
     const cmd = "yarn";
     const args = [
         "start",
-        "notices",
+        "notice",
+        "list",
         "--epoch",
         epoch.toString(),
         "--input",

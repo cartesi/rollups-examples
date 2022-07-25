@@ -32,9 +32,9 @@ The console application can be used to perform several operations. The available
 $ yarn start --help
 
 Commands:
-  index.ts erc20 <command>  Operations with ERC20 tokens
-  index.ts notices          List notices of an epoch and input
-  index.ts send             Send string input to DApp
+  index.ts erc20 <command>   Operations with ERC20 tokens
+  index.ts input <command>   Operations with inputs
+  index.ts notice <command>  Operations with notices
 
 Options:
   --help     Show help                                                 [boolean]
@@ -45,28 +45,28 @@ In general terms, the application communicates with a Cartesi DApp through two d
 
 ### Sending inputs
 
-The `send` command adds inputs to a Cartesi Rollups DApp and has the following format:
+The `input send` command adds inputs to a Cartesi Rollups DApp and has the following format:
 
 ```shell
-yarn start send --input [message] <options>
+yarn start input send --payload [message] <options>
 ```
 
 Examples:
 
 1. Send an input to the current locally deployed DApp using Hardhat's default funded account:
 
-   ```shell
-   yarn start send --input "my message"
-   ```
+    ```shell
+    yarn start input send --payload "my message"
+    ```
 
 1. Send an input to an instance of the `echo-python` DApp already deployed on Polygon Mumbai testnet, using a user's account and a user's gateway RPC on Alchemy:
 
-   ```shell
-   export MNEMONIC=<user sequence of twelve words>
-   export RPC_URL=https://polygon-mumbai.g.alchemy.com/v2/<USER_KEY>
+    ```shell
+    export MNEMONIC=<user sequence of twelve words>
+    export RPC_URL=https://polygon-mumbai.g.alchemy.com/v2/<USER_KEY>
 
-   yarn start send --input "my message" --dapp echo-python
-   ```
+    yarn start input send --payload "my message" --dapp echo-python
+    ```
 
 #### Options
 
@@ -86,22 +86,22 @@ The following parameters are available to specify this configuration, with some 
 The `notices` command lists DApp notices associated with the given epoch and input.
 
 ```shell
-yarn start notices <options>
+yarn start notice list <options>
 ```
 
 Examples:
 
 1. List all notices ever emitted for the current locally deployed DApp:
 
-   ```shell
-   yarn start notices
-   ```
+    ```shell
+    yarn start notice list
+    ```
 
 1. List notices for epoch `1` and input `3` of the `echo-python` DApp instance already deployed on Polygon Mumbai testnet:
 
-   ```shell
-   yarn start notices --url https://echo-python.polygon-mumbai.rollups.staging.cartesi.io/graphql --epoch 1 --input 3
-   ```
+    ```shell
+    yarn start notice list --url https://echo-python.polygon-mumbai.rollups.staging.cartesi.io/graphql --epoch 1 --input 3
+    ```
 
 Options are:
 
@@ -125,18 +125,18 @@ Examples:
 
 1. Deposit 10 CTSI in the locally deployed DApp:
 
-   ```shell
-   yarn start erc20 deposit --amount 10000000000000000000
-   ```
+    ```shell
+    yarn start erc20 deposit --amount 10000000000000000000
+    ```
 
 1. Deposit 10 CTSI in the `echo-python` DApp instance already deployed on Polygon Mumbai testnet, using a user's account and a user's gateway RPC on Alchemy:
 
-   ```shell
-   export MNEMONIC=<user sequence of twelve words>
-   export RPC_URL=https://polygon-mumbai.g.alchemy.com/v2/<USER_KEY>
-   
-   yarn start erc20 deposit --amount 10000000000000000000 --dapp echo-python
-   ```
+    ```shell
+    export MNEMONIC=<user sequence of twelve words>
+    export RPC_URL=https://polygon-mumbai.g.alchemy.com/v2/<USER_KEY>
+
+    yarn start erc20 deposit --amount 10000000000000000000 --dapp echo-python
+    ```
 
 Options are:
 

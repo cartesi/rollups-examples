@@ -10,7 +10,7 @@
 // specific language governing permissions and limitations under the License.
 
 import { Argv } from "yargs";
-import { getNotices } from "../graphql/notices";
+import { getNotices } from "../../graphql/notices";
 import { ethers } from "ethers";
 
 interface Args {
@@ -19,7 +19,7 @@ interface Args {
     input?: number;
 }
 
-export const command = "notices";
+export const command = "list";
 export const describe = "List notices of an epoch and input";
 
 const DEFAULT_URL = "http://localhost:4000/graphql";

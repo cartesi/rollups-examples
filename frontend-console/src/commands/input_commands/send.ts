@@ -12,20 +12,20 @@
 import { InputAddedEvent } from "@cartesi/rollups/dist/src/types/contracts/interfaces/IInput";
 import { ContractReceipt, ethers } from "ethers";
 import { Argv } from "yargs";
-import { InputKeys } from "./types";
+import { InputKeys } from "../types";
 import {
     connect,
     Args as ConnectArgs,
     builder as connectBuilder,
-} from "../connect";
+} from "../../connect";
 import {
     rollups,
     Args as RollupsArgs,
     builder as rollupsBuilder,
-} from "../rollups";
+} from "../../rollups";
 
 interface Args extends ConnectArgs, RollupsArgs {
-    input: string;
+    payload: string;
 }
 
 export const command = "send";
@@ -39,8 +39,8 @@ export const builder = (yargs: Argv<{}>): Argv<Args> => {
     const rollupsArgs = rollupsBuilder(connectArgs);
 
     // this command args
-    return rollupsArgs.option("input", {
-        describe: "Input message to send",
+    return rollupsArgs.option("payload", {
+        describe: "Input payload to send",
         type: "string",
         demandOption: true,
     });
@@ -69,7 +69,7 @@ export const getInputKeys = (receipt: ContractReceipt): InputKeys => {
 };
 
 export const handler = async (args: Args) => {
-    const { rpc, input, mnemonic, accountIndex } = args;
+    const { rpc, payload, mnemonic, accountIndex } = args;
 
     // connect to provider
     console.log(`connecting to ${rpc}`);
@@ -89,10 +89,10 @@ export const handler = async (args: Args) => {
     console.log(`using account "${signerAddress}"`);
 
     // use message from command line option, or from user prompt
-    console.log(`sending "${input}"`);
+    console.log(`sending "${payload}"`);
 
     // convert string to input bytes
-    const inputBytes = ethers.utils.toUtf8Bytes(input);
+    const inputBytes = ethers.utils.toUtf8Bytes(payload);
 
     // send transaction
     const tx = await inputContract.addInput(inputBytes);

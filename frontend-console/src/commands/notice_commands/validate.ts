@@ -10,17 +10,17 @@
 // specific language governing permissions and limitations under the License.
 
 import { Argv } from "yargs";
-import { getNotice } from "../graphql/notices";
+import { getNotice } from "../../graphql/notices";
 import {
     connect,
     Args as ConnectArgs,
     builder as connectBuilder,
-} from "../connect";
+} from "../../connect";
 import {
     rollups,
     Args as RollupsArgs,
     builder as rollupsBuilder,
-} from "../rollups";
+} from "../../rollups";
 import { OutputValidityProofStruct } from "@cartesi/rollups/dist/src/types/contracts/interfaces/IOutput";
 
 interface Args extends ConnectArgs, RollupsArgs {
