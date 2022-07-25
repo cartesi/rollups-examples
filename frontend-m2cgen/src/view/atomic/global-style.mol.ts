@@ -1,5 +1,5 @@
 import { createGlobalStyle } from "styled-components";
-import { typography } from "./styleguide.org";
+import { color, typography } from "./styleguide.org";
 
 export const GlobalStyle = createGlobalStyle`
     /***
@@ -89,6 +89,8 @@ export const GlobalStyle = createGlobalStyle`
         propietary
     */
     body {
+        font-family: ${typography.fontFamily};
         font-size: ${typography.fontSize};
+        background-color: ${color.main};
     }
 `;
