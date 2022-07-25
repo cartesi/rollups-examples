@@ -4,13 +4,21 @@ import { color as colorConstant, spacing } from "./styleguide.atm";
 interface SharedDefaultProps {
     color?: keyof typeof colorConstant;
     isBold?: boolean;
+    paddingX?: "sm" | "md" | "lg";
+    paddingY?: "sm" | "md" | "lg";
 }
 
 const sharedDefaultCss = css<SharedDefaultProps>`
-    padding: 0 ${spacing.padding.typography};
-    ${({ isBold, color }) => `
-        ${isBold ? 'font-weight: 500;' : ''}
-        color: ${colorConstant[color ?? 'white']};
+    word-break: break-all;
+    ${({ isBold, color, paddingY, paddingX }) => `
+        ${isBold ? "font-weight: 500;" : ""}
+        padding: ${
+            (paddingX || paddingX)
+                ? `${paddingY ? spacing.padding[paddingY] : "0"}
+                    ${paddingX ? spacing.padding[paddingX] : "0"}`
+                : `${spacing.padding.sm} 0`
+        };
+        color: ${colorConstant[color ?? "white"]};
     `};
 `;
 

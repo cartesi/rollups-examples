@@ -1,6 +1,9 @@
 import { FC, useCallback } from "react";
 import { Col } from "react-grid-system";
 import { SendInputData } from "../../../controller/send.controller";
+import { Separator } from "../../atomic/layout.mol/separator.mol/separator.atm";
+import { H1, Paragraph } from "../../atomic/typography.mol";
+import { brandName } from "./app.constants";
 
 interface ISendInputForm {
     handleSendInput: (data: SendInputData)=> void
@@ -28,6 +31,11 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
 
     return (
         <Col sm={6}>
+            <H1>{brandName}</H1>
+            <Paragraph color="gray">
+                LoremipsumLoremipsumLoremipsumLoremipsumLoremipsum.
+            </Paragraph>
+            <Separator />
             <form
                 onSubmit={handleInputData}
                 style={{ display: "flex", flexDirection: "column" }}

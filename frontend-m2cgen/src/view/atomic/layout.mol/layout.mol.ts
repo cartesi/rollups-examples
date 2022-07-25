@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { spacing } from "./styleguide.atm";
+import { spacing } from "../styleguide.atm";
 
 const sharedDefaultCss = css`
     padding: ${spacing.padding.layout};
