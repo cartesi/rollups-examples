@@ -20,3 +20,10 @@ export const typography = {
         bold: "500"
     }
 };
+
+export const spacing = {
+    padding: {
+        layout: "2.1875rem",
+        typography: "1rem"
+    },
+};
