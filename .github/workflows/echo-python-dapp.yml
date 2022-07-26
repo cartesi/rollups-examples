@@ -12,6 +12,7 @@ on:
             - ".github/workflows/echo-python-dapp.yml"
             - "echo-python/**"
             - "!**/*.md"
+            - "frontend-console/**"
 jobs:
     build:
         uses: ./.github/workflows/dapp-build.yml
