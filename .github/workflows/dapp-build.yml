@@ -41,9 +41,9 @@ jobs:
 
             - name: Build
               id: build
-              uses: tuler/bake-action@49296ad87bc0081ff6973a65aaa7335e8340e76f
+              uses: docker/bake-action@v2
               with:
-                  working-directory: ${{ inputs.dapp-name }}
+                  workdir: ${{ inputs.dapp-name }}
                   load: true
                   targets: server
                   files: |
