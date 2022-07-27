@@ -9,9 +9,9 @@ export const metadata = {
 export const id = {
     sendInputForm: {
         main: "sendInputForm",
-        ageInput: "AgeInput",
-        sexInput: "SexInput",
-        embarkedInput: "EmbarkedInput",
+        ageInput: "Age",
+        sexInput: "Sex",
+        embarkedInput: "Embarked",
     },
 };
 

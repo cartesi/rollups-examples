@@ -1,43 +1,31 @@
 import { FC, useCallback } from "react";
 import { Col, Row } from "react-grid-system";
+import { useForm } from "react-hook-form";
 import { SendInputData } from "../../../controller/send.controller";
 import { Button } from "../../atomic/button.mol/button.mol";
 import { FieldsetWrapper, FormWrapper } from "../../atomic/form.org/form.mol";
 import { Input, Option } from "../../atomic/form.org/input.mol";
 import { Separator } from "../../atomic/layout.org/separator.mol/separator.atm";
-import { H1, Label, Paragraph } from "../../atomic/typography.mol";
+import { H1, Paragraph } from "../../atomic/typography.mol";
 import { brandName, id, string } from "./constants";
 
 interface ISendInputForm {
     handleSendInput: (data: SendInputData)=> void
 }
 
-const options: Option[] = [
+const sexOptions: Option[] = [
+    { id: "female", name: "Female" },
+    { id: "male", name: "Male" }
+]
+
+const embarkedOptions: Option[] = [
     { id: "C", name: "Cherbourg" },
     { id: "Q", name: "Queenstown" },
     { id: "S", name: "Southampton" }
 ];
 
 export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
-    const handleInputData = useCallback((e: any) => {
-        e.preventDefault();
-        const form = e.target;
-        const elementsKeys = Object.keys(form);
-        let data: SendInputData = {
-            Age: null,
-            Embarked: null,
-            Sex: null,
-        };
-        elementsKeys
-            .filter((key) => !!form[key]?.value)
-            .forEach((key) => {
-                const { id, value } = form[key];
-                const parsedId: keyof typeof data = id.replace("Input", "");
-                data[parsedId] = value;
-            });
-        handleSendInput(data);
-    },[handleSendInput]);
-
+    const { handleSubmit, register } = useForm<SendInputData>();
     return (
         <Col sm={6}>
             <H1>{brandName}</H1>
@@ -45,13 +33,17 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                 {string.sendInputForm.description}
             </Paragraph>
             <Separator />
-            <FormWrapper id={id.sendInputForm.main} onSubmit={handleInputData}>
+            <FormWrapper
+                id={id.sendInputForm.main}
+                onSubmit={handleSubmit(handleSendInput)}
+            >
                 <Row>
                     <Col>
                         <FieldsetWrapper form={id.sendInputForm.main}>
                             <Input
                                 id={id.sendInputForm.ageInput}
                                 name={string.sendInputForm.ageInputText}
+                                register={register}
                                 type="number"
                                 isOutilined
                             />
@@ -62,7 +54,9 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                             <Input
                                 id={id.sendInputForm.sexInput}
                                 name={string.sendInputForm.sexInputText}
-                                type="text"
+                                register={register}
+                                options={sexOptions}
+                                type="select"
                                 isOutilined
                             />
                         </FieldsetWrapper>
@@ -73,9 +67,10 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                     <Col>
                         <FieldsetWrapper form={id.sendInputForm.main}>
                             <Input
-                                name={string.sendInputForm.embarkedInputText}
                                 id={id.sendInputForm.embarkedInput}
-                                options={options}
+                                name={string.sendInputForm.embarkedInputText}
+                                register={register}
+                                options={embarkedOptions}
                                 type="select"
                                 isOutilined
                             />

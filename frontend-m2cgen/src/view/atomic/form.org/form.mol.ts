@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { border, color, radius, spacing } from "../styleguide.atm";
+import { border, color, radius, spacing, zIndex } from "../styleguide.atm";
 
 export interface InputLayout {
     isOutilined?: boolean
@@ -29,9 +29,22 @@ export const FieldsetWrapper = styled.fieldset`
 export const InputWrapper = styled.input<InputLayout>`
     ${inputSharedCss}
 `;
-export const SelectWrapper = styled.select`
-    ${inputSharedCss}
+export const SelectWrapper = styled.div`
+    position: relative;
+    select {
+        ${inputSharedCss}
+        position: absolute;
+        right: 0;
+        left: 0;
+        z-index: ${zIndex.veryLow};
+    }
     option {
         background-color: ${color.main};
+    }
+    span {
+        position: absolute;
+        right: 0.8rem;
+        top: 0.8rem;
+        color: ${color.white};
     }
 `;

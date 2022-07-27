@@ -95,4 +95,13 @@ export const border = {
 
 export const radius = {
     md: "4px"
+};
+
+export const zIndex = {
+    ground: -1,
+    high: 3,
+    low: 2,
+    roof: 6,
+    veryHigh: 5,
+    veryLow: 1,
 }
