@@ -8,6 +8,9 @@ import { SharedLayout } from "../shared/shared-layout";
 import { SendInputForm } from "./send-input.form";
 import { Row } from "react-grid-system";
 import { FeedbackBoard } from "./feedback.board";
+import { ToastContainer, toast } from "react-toast";
+import { string } from "./constants";
+
 
 export const HomeView: FC = () => {
     const [noticesState, noticesDispatch] = useService<NoticeViewModel[]>();
@@ -15,6 +18,7 @@ export const HomeView: FC = () => {
         useService<SendInputViewModel>();
 
     const handleSendInput = (data: SendInputData) => {
+        toast.info(string.sendInputFeedback.requestStarted);
         sendInput(sendInputDispatch, data).then((result) =>
             fetchNotices(
                 noticesDispatch,
@@ -23,7 +27,7 @@ export const HomeView: FC = () => {
                     input_index: result?.inputIndex,
                 },
                 true
-            )
+            ).then(()=> toast.success(string.sendInputFeedback.onSucess))
         );
     };
 
@@ -33,6 +37,7 @@ export const HomeView: FC = () => {
                 <SendInputForm handleSendInput={handleSendInput} />
                 <FeedbackBoard data={noticesState.data ?? []} />
             </Row>
+            <ToastContainer position="bottom-center" delay={5000} />
         </SharedLayout>
     );
 }

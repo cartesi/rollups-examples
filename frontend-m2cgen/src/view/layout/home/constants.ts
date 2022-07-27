@@ -23,4 +23,9 @@ export const string = {
         submitButtonText: "See results",
         description: "LoremipsumLoremipsumLoremipsumLoremipsumLoremipsum.",
     },
+    sendInputFeedback: {
+        requestStarted:
+            "Sending infos, wait please. It may take a few minutes.",
+        onSucess: "Your result is ready!",
+    },
 };
