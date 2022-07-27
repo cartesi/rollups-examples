@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from "react";
 import { Container } from "react-grid-system";
-import { Header, Main } from "../../atomic/layout.mol/layout.mol";
+import { Header, Main } from "../../atomic/layout.org/layout.mol";
 import { H2 } from "../../atomic/typography.mol";
 import { text } from "./constants";
 

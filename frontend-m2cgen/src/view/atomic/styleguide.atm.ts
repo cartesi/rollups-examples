@@ -87,7 +87,10 @@ export const size = {
 };
 
 export const border = {
-    card: "2px solid",
-    separator: "1px solid",
-    button: "2px solid",
+    general: "2px solid",
+    separator: "1px solid"
 };
+
+export const radius = {
+    md: "4px"
+}
