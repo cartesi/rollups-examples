@@ -1,6 +1,7 @@
 import { FC, useCallback } from "react";
 import { Col, Row } from "react-grid-system";
 import { SendInputData } from "../../../controller/send.controller";
+import { Button } from "../../atomic/button.mol/button.mol";
 import { FieldsetWrapper, FormWrapper } from "../../atomic/form.org/form.mol";
 import { Input, Option } from "../../atomic/form.org/input.mol";
 import { Separator } from "../../atomic/layout.org/separator.mol/separator.atm";
@@ -67,6 +68,7 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                         </FieldsetWrapper>
                     </Col>
                 </Row>
+                <Separator />
                 <Row>
                     <Col>
                         <FieldsetWrapper form={id.sendInputForm.main}>
@@ -80,9 +82,18 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                         </FieldsetWrapper>
                     </Col>
                 </Row>
-                <button type="submit">
-                    {string.sendInputForm.submitButtonText}
-                </button>
+                <Separator large />
+                <Row>
+                    <Col>
+                        <Button
+                            form={id.sendInputForm.main}
+                            type="submit"
+                            sideElement="right"
+                        >
+                            {string.sendInputForm.submitButtonText}
+                        </Button>
+                    </Col>
+                </Row>
             </FormWrapper>
         </Col>
     );

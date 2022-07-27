@@ -34,7 +34,7 @@ const horizontalSeparatorBaseCss = css<SeparatorLayout>`
     }
 `;
 const horizontalSeparatorLargeCss = css`
-    margin: ${spacing.margin.separator.horizontal.lg};
+    margin: ${spacing.margin.separator.horizontal.xlg};
 `;
 export const SeparatorStyled = styled.div<SeparatorLayout>`
     ${({ vertical, large }) => css`

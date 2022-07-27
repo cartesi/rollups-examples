@@ -26,7 +26,8 @@ export const spacing = {
         layout: "2.1875rem",
         sm: "0.6rem",
         md: "1rem",
-        lg: "2.rem",
+        lg: "2.0rem",
+        xlg: "4.0rem"
     },
     margin: {
         general: {
@@ -36,6 +37,7 @@ export const spacing = {
             horizontal: {
                 lg: "1.5rem 0rem",
                 md: "0.75rem 0rem",
+                xlg: "2.8rem 0rem"
             },
             vertical: {
                 md: "0rem 0.125rem",
