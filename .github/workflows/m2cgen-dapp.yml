@@ -2,7 +2,7 @@
 ---
 name: "Build m2cgen DApp"
 on:
-    push:
+    pull_request:
         paths:
             - "config/**"
             - "docker/**"
@@ -11,6 +11,11 @@ on:
             - ".github/workflows/m2cgen-dapp.yml"
             - "m2cgen/**"
             - "!**/*.md"
+    push:
+        tags:
+            - v*
+        branches:
+            - develop
 jobs:
     build:
         uses: ./.github/workflows/dapp-build.yml

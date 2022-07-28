@@ -2,7 +2,7 @@
 ---
 name: "Build sqlite DApp"
 on:
-    push:
+    pull_request:
         paths:
             - "config/**"
             - "docker/**"
@@ -11,6 +11,11 @@ on:
             - ".github/workflows/sqlite-dapp.yml"
             - "sqlite/**"
             - "!**/*.md"
+    push:
+        tags:
+            - v*
+        branches:
+            - develop
 jobs:
     build:
         uses: ./.github/workflows/dapp-build.yml

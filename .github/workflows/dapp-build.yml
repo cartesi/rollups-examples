@@ -7,6 +7,10 @@ on:
             dapp-name:
                 required: true
                 type: string
+        outputs:
+            dapp-image:
+                description: "The DApp built container image"
+                value: ${{ jobs.build_package.outputs.dapp-image }}
         secrets:
             DOCKER_ORGANIZATION:
                 required: true
@@ -18,6 +22,8 @@ on:
 jobs:
     build_package:
         runs-on: ubuntu-20.04
+        outputs:
+            dapp-image: ${{ steps.set-dapp-image.outputs.dapp-image }}
         steps:
             - uses: actions/checkout@v3
 
@@ -30,8 +36,17 @@ jobs:
               with:
                   bake-target: server
                   images: ${{ secrets.DOCKER_ORGANIZATION }}/dapp
-                  tags: type=semver,prefix=${{ inputs.dapp-name }}-,pattern={{version}},suffix=-server
+                  tags: |
+                      type=semver,prefix=${{ inputs.dapp-name }}-,pattern={{version}},suffix=-server
+                      type=ref,event=branch,prefix=${{ inputs.dapp-name }}-,pattern={{branch}},suffix=-server
+                      type=ref,event=pr,prefix=${{ inputs.dapp-name }}-pr-,pattern=${{ github.event.number }},suffix=-server
                   flavor: latest=false
+
+            - name: Set dapp-image
+              id: set-dapp-image
+              run: |
+                  export tags=${{ steps.meta.outputs.tags }}
+                  echo ::set-output name=dapp-image::${tags#${{ secrets.DOCKER_ORGANIZATION }}/}
 
             - name: Login to Docker Hub
               uses: docker/login-action@v2
@@ -44,7 +59,7 @@ jobs:
               uses: docker/bake-action@v2
               with:
                   workdir: ${{ inputs.dapp-name }}
-                  load: true
+                  push: true
                   targets: server
                   files: |
                       docker-bake.hcl
@@ -53,24 +68,3 @@ jobs:
                   set: |
                       *.cache-from=type=gha
                       *.cache-to=type=gha,mode=max
-
-            - name: Get image hash
-              id: hash
-              run: |
-                  export IMAGE_HASH="${{ fromJSON(steps.build.outputs.metadata).server['containerimage.config.digest'] }}"
-                  echo "::set-output name=hash::${IMAGE_HASH#*:}"
-
-            - name: Export image
-              run: docker image save -o server_manager.tar ${{steps.hash.outputs.hash}}
-
-            - name: Upload image
-              uses: actions/upload-artifact@master
-              with:
-                  name: server_manager.tar
-                  path: ./server_manager.tar
-
-            - name: Push image to registry
-              if: startsWith(github.ref, 'refs/tags/v')
-              run: |
-                  docker image tag ${{ steps.hash.outputs.hash }} ${{ steps.meta.outputs.tags }}
-                  docker image push ${{ steps.meta.outputs.tags }}

@@ -3,7 +3,7 @@
 name: "Build echo-js DApp"
 on:
     workflow_dispatch:
-    push:
+    pull_request:
         paths:
             - "config/**"
             - "docker/**"
@@ -12,6 +12,11 @@ on:
             - ".github/workflows/echo-js-dapp.yml"
             - "echo-js/**"
             - "!**/*.md"
+    push:
+        tags:
+            - v*
+        branches:
+            - develop
 jobs:
     build:
         uses: ./.github/workflows/dapp-build.yml
