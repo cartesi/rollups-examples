@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { Col, Row, Visible } from "react-grid-system";
+import { FC, useCallback } from "react";
+import { Col, Hidden, Row, Visible } from "react-grid-system";
 import { useForm } from "react-hook-form";
 import { SendInputData } from "../../../controller/send.controller";
 import { Button } from "../../atomic/button.mol/button.mol";
@@ -10,13 +10,16 @@ import { H1, Paragraph } from "../../atomic/typography.mol";
 import { brandName, id, string } from "./constants";
 
 interface ISendInputForm {
-    handleSendInput: (data: SendInputData)=> void
+    handleSendInput: (data: SendInputData) => void,
+    onClearForm: () => void
+    isLoading: boolean,
+    canClearForm: boolean,
 }
 
 const sexOptions: Option[] = [
     { id: "female", name: "Female" },
     { id: "male", name: "Male" }
-]
+];
 
 const embarkedOptions: Option[] = [
     { id: "C", name: "Cherbourg" },
@@ -24,15 +27,55 @@ const embarkedOptions: Option[] = [
     { id: "S", name: "Southampton" }
 ];
 
-export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
-    const { handleSubmit, register, formState } = useForm<SendInputData>();
+const formString = string.sendInputForm;
+
+export const SendInputForm: FC<ISendInputForm> = ({
+    handleSendInput,
+    onClearForm,
+    isLoading,
+    canClearForm
+
+}) => {
+    const { handleSubmit, register, formState, clearErrors, reset } = useForm<SendInputData>();
+    const handleClearForm = useCallback((e: any) => {
+        e.preventDefault();
+        onClearForm();
+        clearErrors();
+        reset();
+    }, [onClearForm, clearErrors, reset])
+    const renderSubmitButton = useCallback(() => {
+        return (
+            <>
+                <Col xs="content">
+                    {canClearForm ? (
+                        <Button
+                            form={id.sendInputForm.main}
+                            type="reset"
+                            onClick={handleClearForm}
+                        >
+                            {formString.clearButtonText}
+                        </Button>
+                    ) : (
+                        <Button
+                            form={id.sendInputForm.main}
+                            type="submit"
+                            sideElement="right"
+                            disabled={!isLoading}
+                        >
+                            {!isLoading
+                                ? formString.loadingButtonText
+                                : formString.submitButtonText}
+                        </Button>
+                    )}
+                </Col>
+            </>
+        );
+    }, [canClearForm, handleClearForm, isLoading])
 
     return (
         <Col sm={12} md={6}>
             <H1>{brandName}</H1>
-            <Paragraph color="gray">
-                {string.sendInputForm.description}
-            </Paragraph>
+            <Paragraph color="gray">{formString.description}</Paragraph>
             <Separator />
             <FormWrapper
                 id={id.sendInputForm.main}
@@ -43,7 +86,7 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                         <FieldsetWrapper form={id.sendInputForm.main}>
                             <Input
                                 id={id.sendInputForm.ageInput}
-                                name={string.sendInputForm.ageInputText}
+                                name={formString.ageInputText}
                                 register={register}
                                 inputError={formState.errors.Age}
                                 type="number"
@@ -56,7 +99,7 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                         <FieldsetWrapper form={id.sendInputForm.main}>
                             <Input
                                 id={id.sendInputForm.sexInput}
-                                name={string.sendInputForm.sexInputText}
+                                name={formString.sexInputText}
                                 register={register}
                                 options={sexOptions}
                                 inputError={formState.errors.Sex}
@@ -73,7 +116,7 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                         <FieldsetWrapper form={id.sendInputForm.main}>
                             <Input
                                 id={id.sendInputForm.embarkedInput}
-                                name={string.sendInputForm.embarkedInputText}
+                                name={formString.embarkedInputText}
                                 register={register}
                                 options={embarkedOptions}
                                 inputError={formState.errors.Embarked}
@@ -85,17 +128,12 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                     </Col>
                 </Row>
                 <Separator large />
-                <Row>
-                    <Col>
-                        <Button
-                            form={id.sendInputForm.main}
-                            type="submit"
-                            sideElement="right"
-                        >
-                            {string.sendInputForm.submitButtonText}
-                        </Button>
-                    </Col>
-                </Row>
+                <Visible xs sm>
+                    <Row justify="center">{renderSubmitButton()}</Row>
+                </Visible>
+                <Hidden xs sm>
+                    <Row>{renderSubmitButton()}</Row>
+                </Hidden>
             </FormWrapper>
             <Visible xs sm>
                 <Separator />

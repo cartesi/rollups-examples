@@ -10,6 +10,7 @@ import { Row } from "react-grid-system";
 import { FeedbackBoard } from "./feedback.board";
 import { toast } from "react-toast";
 import { string } from "./constants";
+import { resetServiceState } from "../../../controller/common.controller";
 
 export const HomeView: FC = () => {
     const [noticesState, noticesDispatch] = useService<NoticeViewModel[]>();
@@ -28,11 +29,26 @@ export const HomeView: FC = () => {
             ).then(()=> toast.success(string.sendInputFeedback.onSucess))
         );
     };
+    const handleResetStates = () => {
+        resetServiceState(noticesDispatch);
+        resetServiceState(sendInputDispatch);
+    };
 
     return (
         <SharedLayout>
             <Row>
-                <SendInputForm handleSendInput={handleSendInput} />
+                <SendInputForm
+                    handleSendInput={handleSendInput}
+                    onClearForm={handleResetStates}
+                    isLoading={
+                        sendInputState.status !== "pending" &&
+                        noticesState.status !== "pending"
+                    }
+                    canClearForm={
+                        sendInputState.status === "resolved" &&
+                        noticesState.status === "resolved"
+                    }
+                />
                 <FeedbackBoard
                     data={noticesState.data ?? []}
                     status={noticesState.status}

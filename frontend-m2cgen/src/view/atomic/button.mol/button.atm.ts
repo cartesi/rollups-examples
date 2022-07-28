@@ -12,15 +12,12 @@ const buttonSharedCss = css`
     border-radius: ${radius.md};
     font-weight: 500;
     cursor: pointer;
-`
-
-const buttonDisabledCss = css`
-    &:hover {}
 `;
 
 const buttonVariantCss = {
     primary: css`
         ${buttonSharedCss}
+        border: ${border.general} ${color.white};
         background-color: ${color.white};
         &:hover:enabled {
             background-color: transparent;
@@ -51,5 +48,6 @@ export const ButtonWrapper = styled.button<ButtonLayout>`
 `;
 
 export const SideElement = styled.span<ButtonLayout>`
-    ${({sideElement})=> sideElementCss[sideElement ?? 'right']}
+    ${({ sideElement }) => sideElementCss[sideElement ?? 'right']}
+    vertical-align: middle;
 `;

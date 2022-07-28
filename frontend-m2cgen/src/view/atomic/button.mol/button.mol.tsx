@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren } from "react";
+import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { ButtonLayout, ButtonWrapper, SideElement } from "./button.atm";
 
 interface IButton extends
@@ -15,13 +16,13 @@ export const Button: FC<PropsWithChildren<IButton>> = ({
         <ButtonWrapper {...other}>
             {sideElement === "left" ?
                 <SideElement sideElement={sideElement}>
-                    {"<"}
+                    <AiOutlineLeft />
                 </SideElement> :
                 null}
             {children}
             {sideElement === "right" ?
                 <SideElement sideElement={sideElement}>
-                    {">"}
+                    <AiOutlineRight />
                 </SideElement> :
                 null}
         </ButtonWrapper>

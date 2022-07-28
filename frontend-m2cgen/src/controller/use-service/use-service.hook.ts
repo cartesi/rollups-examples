@@ -4,8 +4,7 @@ enum ServiceReducerAction {
     start_request = "start_request",
     resolve_request = "resolve_request",
     fail_request = "fail_request",
-    //TODO: implement reset state use cases
-    //reset = "reset",
+    reset = "reset",
     //reset_prop = "reset_prop",
 }
 
@@ -21,6 +20,12 @@ export interface ServiceReducerActions<
     type: keyof typeof ServiceReducerAction,
     propToReset?: keyof UseServiceState<Data, Error>
 }
+
+export const initialState: UseServiceState<any> = {
+    data: null,
+    error: null,
+    status: "idle",
+};
 
 const serviceReducer = <
     Data, Error = any
@@ -47,6 +52,10 @@ const serviceReducer = <
                 status: action.status ?? "rejected",
                 error: action.error
             };
+        case "reset":
+            return {
+                ...initialState
+            }
         default:
             throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -57,15 +66,8 @@ export const useService = <Data, Error = any>() => {
         Reducer<
             UseServiceState<Data, Error>,
             ServiceReducerActions<Data, Error>
-        >>
-    (
-        serviceReducer,
-        {
-            data: null,
-            error: null,
-            status: "idle",
-        }
-    );
+        >
+    >(serviceReducer, initialState);
 
     return handler;
 }
