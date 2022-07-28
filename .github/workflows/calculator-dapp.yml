@@ -4,7 +4,6 @@ name: "Build calculator DApp"
 on:
     pull_request:
         paths:
-            - "config/**"
             - "docker/**"
             - "base.hcl"
             - ".github/workflows/dapp-build.yml"

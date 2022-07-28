@@ -25,7 +25,6 @@ echo "Copying files from template..."
 cp -pr template ${dapp_name}
 
 echo "Copying common files..."
-cp -pr ../config ${dapp_name}
 cp -pr ../docker ${dapp_name}
 cp ../base.hcl ${dapp_name}/docker-bake.hcl
 cp ../deploy-testnet.yml ${dapp_name}
