@@ -74,6 +74,13 @@ export const size = {
             lg: "21.5rem",
         },
     },
+    input: {
+        select: {
+            wrapper: {
+                height: "2.636rem"
+            }
+        }
+    },
     separator: {
         vertical: {
             lg: {

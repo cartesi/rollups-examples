@@ -1,7 +1,10 @@
 import { FC } from "react";
-import { Label } from "../typography.mol";
+import { Label, Paragraph } from "../typography.mol";
 import { SelectWrapper, InputWrapper, InputLayout } from "./form.mol";
 import { AiOutlineDown } from "react-icons/ai";
+import { handleFormError } from "./helpers";
+import { Separator } from "../layout.org/separator.mol/separator.atm";
+import { FieldError } from "react-hook-form";
 
 export interface Option {
     id: string;
@@ -15,22 +18,27 @@ interface IInput
 {
     type?: React.HTMLInputTypeAttribute | "select";
     options?: Option[];
-    register?: Function
+    register?: Function;
+    inputError?: FieldError
 }
 
 export const Input: FC<IInput> = ({
     type,
     options = [],
+    inputError,
+    required,
     register,
     ...other
 }) => {
     const idFallback = other.id ?? "";
-    const registeredProps = register?.(idFallback);
+    const registeredProps = register?.(idFallback, { required });
+
     return (
         <>
             {other.name ? (
                 <Label htmlFor={idFallback ?? ""} color="mediumGray">
                     {other.name}
+                    {required ? " *" : null}
                 </Label>
             ) : null}
             {type === "select" ? (
@@ -58,6 +66,11 @@ export const Input: FC<IInput> = ({
                     {...registeredProps}
                 />
             )}
+            {inputError ? (
+                <Paragraph color="white">
+                    {handleFormError(inputError, other.name ?? idFallback)}
+                </Paragraph>
+            ) : null}
         </>
     );
 }

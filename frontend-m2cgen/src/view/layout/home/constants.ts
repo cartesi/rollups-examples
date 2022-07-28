@@ -19,7 +19,7 @@ export const string = {
     sendInputForm: {
         ageInputText: "Age",
         sexInputText: "Gender",
-        embarkedInputText: "Embarked",
+        embarkedInputText: "Embarked from",
         submitButtonText: "See results",
         description: "LoremipsumLoremipsumLoremipsumLoremipsumLoremipsum.",
     },

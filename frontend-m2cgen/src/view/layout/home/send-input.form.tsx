@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { SendInputData } from "../../../controller/send.controller";
 import { Button } from "../../atomic/button.mol/button.mol";
 import { FieldsetWrapper, FormWrapper } from "../../atomic/form.org/form.mol";
+import { handleFormError } from "../../atomic/form.org/helpers";
 import { Input, Option } from "../../atomic/form.org/input.mol";
 import { Separator } from "../../atomic/layout.org/separator.mol/separator.atm";
 import { H1, Paragraph } from "../../atomic/typography.mol";
@@ -25,7 +26,8 @@ const embarkedOptions: Option[] = [
 ];
 
 export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
-    const { handleSubmit, register } = useForm<SendInputData>();
+    const { handleSubmit, register, formState } = useForm<SendInputData>();
+
     return (
         <Col sm={6}>
             <H1>{brandName}</H1>
@@ -44,8 +46,10 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                                 id={id.sendInputForm.ageInput}
                                 name={string.sendInputForm.ageInputText}
                                 register={register}
+                                inputError={formState.errors.Age}
                                 type="number"
                                 isOutilined
+                                required
                             />
                         </FieldsetWrapper>
                     </Col>
@@ -56,8 +60,10 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                                 name={string.sendInputForm.sexInputText}
                                 register={register}
                                 options={sexOptions}
+                                inputError={formState.errors.Sex}
                                 type="select"
                                 isOutilined
+                                required
                             />
                         </FieldsetWrapper>
                     </Col>
@@ -71,8 +77,10 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                                 name={string.sendInputForm.embarkedInputText}
                                 register={register}
                                 options={embarkedOptions}
+                                inputError={formState.errors.Embarked}
                                 type="select"
                                 isOutilined
+                                required
                             />
                         </FieldsetWrapper>
                     </Col>

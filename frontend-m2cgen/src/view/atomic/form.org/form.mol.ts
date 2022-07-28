@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { border, color, radius, spacing, zIndex } from "../styleguide.atm";
+import { border, color, radius, size, spacing, zIndex } from "../styleguide.atm";
 
 export interface InputLayout {
     isOutilined?: boolean
@@ -31,6 +31,8 @@ export const InputWrapper = styled.input<InputLayout>`
 `;
 export const SelectWrapper = styled.div`
     position: relative;
+    height: ${size.input.select.wrapper.height};
+
     select {
         ${inputSharedCss}
         position: absolute;
