@@ -11,12 +11,10 @@ import { FeedbackBoard } from "./feedback.board";
 import { ToastContainer, toast } from "react-toast";
 import { string } from "./constants";
 
-
 export const HomeView: FC = () => {
     const [noticesState, noticesDispatch] = useService<NoticeViewModel[]>();
     const [sendInputState, sendInputDispatch] =
         useService<SendInputViewModel>();
-
     const handleSendInput = (data: SendInputData) => {
         toast.info(string.sendInputFeedback.requestStarted);
         sendInput(sendInputDispatch, data).then((result) =>
@@ -35,7 +33,10 @@ export const HomeView: FC = () => {
         <SharedLayout>
             <Row>
                 <SendInputForm handleSendInput={handleSendInput} />
-                <FeedbackBoard data={noticesState.data ?? []} />
+                <FeedbackBoard
+                    data={noticesState.data ?? []}
+                    status={noticesState.status}
+                />
             </Row>
             <ToastContainer position="bottom-center" delay={5000} />
         </SharedLayout>

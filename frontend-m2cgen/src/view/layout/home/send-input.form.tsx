@@ -1,10 +1,9 @@
 import { FC } from "react";
-import { Col, Row } from "react-grid-system";
+import { Col, Row, Visible } from "react-grid-system";
 import { useForm } from "react-hook-form";
 import { SendInputData } from "../../../controller/send.controller";
 import { Button } from "../../atomic/button.mol/button.mol";
 import { FieldsetWrapper, FormWrapper } from "../../atomic/form.org/form.mol";
-import { handleFormError } from "../../atomic/form.org/helpers";
 import { Input, Option } from "../../atomic/form.org/input.mol";
 import { Separator } from "../../atomic/layout.org/separator.mol/separator.atm";
 import { H1, Paragraph } from "../../atomic/typography.mol";
@@ -29,7 +28,7 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
     const { handleSubmit, register, formState } = useForm<SendInputData>();
 
     return (
-        <Col sm={6}>
+        <Col sm={12} md={6}>
             <H1>{brandName}</H1>
             <Paragraph color="gray">
                 {string.sendInputForm.description}
@@ -98,6 +97,9 @@ export const SendInputForm: FC<ISendInputForm> = ({ handleSendInput }) => {
                     </Col>
                 </Row>
             </FormWrapper>
+            <Visible xs sm>
+                <Separator />
+            </Visible>
         </Col>
     );
 };

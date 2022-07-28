@@ -2,6 +2,7 @@ const brandColor = {
     main: "#1E1941",
     lightMain: "#5E4E92",
     mediumMain: "#332C63",
+    sweetMain: "#C4A8FF",
 };
 
 export const color = {
@@ -70,9 +71,9 @@ export const size = {
         md: "40px",
     },
     image: {
-        brand: {
-            lg: "21.5rem",
-        },
+        lg: "18.5rem",
+        md: "10rem",
+        sm: "6rem"
     },
     input: {
         select: {
@@ -97,11 +98,13 @@ export const size = {
 
 export const border = {
     general: "2px solid",
-    separator: "1px solid"
+    separator: "1px solid",
+    small: "1px solid"
 };
 
 export const radius = {
-    md: "4px"
+    md: "4px",
+    lg: "8px"
 };
 
 export const zIndex = {

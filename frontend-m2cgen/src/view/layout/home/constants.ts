@@ -16,6 +16,13 @@ export const id = {
 };
 
 export const string = {
+    resultPreview: {
+        title: "Result preview",
+        idleFeedback: "Use the form to get started! 🤠",
+        pendingFeedback: "Waiting for result...",
+        survivedFeeback: "YOU SURVIVED!",
+        sankFeedback: "YOU SANK!",
+    },
     sendInputForm: {
         ageInputText: "Age",
         sexInputText: "Gender",

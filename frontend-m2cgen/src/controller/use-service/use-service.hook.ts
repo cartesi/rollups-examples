@@ -9,7 +9,7 @@ enum ServiceReducerAction {
     //reset_prop = "reset_prop",
 }
 
-interface UseServiceState<Data, Error = any> {
+export interface UseServiceState<Data, Error = any> {
     data?: Data | null,
     error?: Error | null,
     status?: 'idle' | 'pending' | 'resolved' | 'rejected'
