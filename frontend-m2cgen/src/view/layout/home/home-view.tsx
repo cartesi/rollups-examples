@@ -8,7 +8,7 @@ import { SharedLayout } from "../shared/shared-layout";
 import { SendInputForm } from "./send-input.form";
 import { Row } from "react-grid-system";
 import { FeedbackBoard } from "./feedback.board";
-import { ToastContainer, toast } from "react-toast";
+import { toast } from "react-toast";
 import { string } from "./constants";
 
 export const HomeView: FC = () => {
@@ -38,7 +38,6 @@ export const HomeView: FC = () => {
                     status={noticesState.status}
                 />
             </Row>
-            <ToastContainer position="bottom-center" delay={5000} />
         </SharedLayout>
     );
 }

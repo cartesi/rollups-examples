@@ -1,5 +1,5 @@
 import { createGlobalStyle } from "styled-components";
-import { color, typography } from "./styleguide.atm";
+import { color, typography, zIndex } from "./styleguide.atm";
 
 export const GlobalStyle = createGlobalStyle`
     /***
@@ -96,5 +96,9 @@ export const GlobalStyle = createGlobalStyle`
 
     body {
         background-color: ${color.main};
+
+        .toastContainer {
+            z-index: ${zIndex.roof};
+        }
     }
 `;
