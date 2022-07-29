@@ -10,7 +10,7 @@ export const App = () => {
         <>
             <GlobalStyle />
             <HomeView />
-            <ToastContainer position="bottom-center" delay={5000} />
+            <ToastContainer position="bottom-center" delay={6000} />
         </>
     );
 };

@@ -60,9 +60,9 @@ export const SendInputForm: FC<ISendInputForm> = ({
                             form={id.sendInputForm.main}
                             type="submit"
                             sideElement="right"
-                            disabled={!isLoading}
+                            disabled={isLoading}
                         >
-                            {!isLoading
+                            {isLoading
                                 ? formString.loadingButtonText
                                 : formString.submitButtonText}
                         </Button>

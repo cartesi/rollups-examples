@@ -18,21 +18,30 @@ export const HomeView: FC = () => {
         useService<SendInputViewModel>();
     const handleSendInput = (data: SendInputData) => {
         toast.info(string.sendInputFeedback.requestStarted);
-        sendInput(sendInputDispatch, data).then((result) =>
-            fetchNotices(
-                noticesDispatch,
-                {
-                    epoch_index: result?.epochNumber,
-                    input_index: result?.inputIndex,
-                },
-                true
-            ).then(()=> toast.success(string.sendInputFeedback.onSucess))
-        );
+        sendInput(sendInputDispatch, data)
+            .then((result) =>
+                fetchNotices(
+                    noticesDispatch,
+                    {
+                        epoch_index: result?.epochNumber,
+                        input_index: result?.inputIndex,
+                    },
+                    true
+                )
+                    .then(() =>
+                        toast.success(string.fetchNoticesFeedback.onSucess)
+                    )
+                    .catch(() =>
+                        toast.error(string.fetchNoticesFeedback.onError)
+                    )
+            )
+            .catch(() => toast.error(string.sendInputFeedback.onError));
     };
     const handleResetStates = () => {
         resetServiceState(noticesDispatch);
         resetServiceState(sendInputDispatch);
     };
+    console.log({sendInputState, noticesState});
 
     return (
         <SharedLayout>
@@ -41,8 +50,8 @@ export const HomeView: FC = () => {
                     handleSendInput={handleSendInput}
                     onClearForm={handleResetStates}
                     isLoading={
-                        sendInputState.status !== "pending" &&
-                        noticesState.status !== "pending"
+                        sendInputState.status === "pending" ||
+                        noticesState.status === "pending"
                     }
                     canClearForm={
                         sendInputState.status === "resolved" &&

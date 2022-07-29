@@ -36,6 +36,10 @@ export const string = {
     sendInputFeedback: {
         requestStarted:
             "Sending infos, wait please. It may take a few minutes.",
+        onError: "Sorry! An error occurred while send infos, try again later.",
+    },
+    fetchNoticesFeedback: {
         onSucess: "Your result is ready!",
+        onError: "Sorry! An error occurred while get result, try again later.",
     },
 };
