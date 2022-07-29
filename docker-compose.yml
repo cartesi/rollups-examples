@@ -63,7 +63,7 @@ services:
     depends_on:
       hardhat:
         condition: service_healthy
-      deployer:
+      hardhat_set_interval:
         condition: service_completed_successfully
       state_server:
         condition: service_started
@@ -141,6 +141,36 @@ services:
       - machine:/opt/cartesi/share/dapp-bin:ro
       - ./deployments:/deployments
 
+  hardhat_stop_automine:
+    image: curlimages/curl:7.84.0
+    restart: on-failure
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      deployer:
+        condition: service_completed_successfully
+    command:
+      [
+        "--data",
+        '{"id":1337,"jsonrpc":"2.0","method":"evm_setAutomine","params":[false]}',
+        "http://hardhat:8545",
+      ]
+
+  hardhat_set_interval:
+    image: curlimages/curl:7.84.0
+    restart: on-failure
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      hardhat_stop_automine:
+        condition: service_completed_successfully
+    command:
+      [
+        "--data",
+        '{"id":1337,"jsonrpc":"2.0","method":"evm_setIntervalMining","params":[5000]}',
+        "http://hardhat:8545",
+      ]
+
   rollups_inspect_server:
     image: cartesi/rollups-inspect-server:0.5.0
     command:
@@ -184,7 +214,7 @@ services:
     depends_on:
       hardhat:
         condition: service_healthy
-      deployer:
+      hardhat_set_interval:
         condition: service_completed_successfully
       state_server:
         condition: service_started
