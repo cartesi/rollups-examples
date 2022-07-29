@@ -2,14 +2,22 @@
 target "dapp" {
 }
 
+variable "TAG" {
+  default = "devel"
+}
+
+variable "DOCKER_ORGANIZATION" {
+  default = "cartesi"
+}
+
 target "server" {
-  tags = ["cartesi/dapp:echo-lua-devel-server"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-lua-${TAG}-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp:echo-lua-devel-console"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-lua-${TAG}-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp:echo-lua-devel-machine"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-lua-${TAG}-machine"]
 }

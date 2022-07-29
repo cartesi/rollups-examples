@@ -2,14 +2,22 @@
 target "dapp" {
 }
 
+variable "TAG" {
+  default = "devel"
+}
+
+variable "DOCKER_ORGANIZATION" {
+  default = "cartesi"
+}
+
 target "server" {
-  tags = ["cartesi/dapp:m2cgen-devel-server"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:m2cgen-${TAG}-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp:m2cgen-devel-console"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:m2cgen-${TAG}-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp:m2cgen-devel-machine"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:m2cgen-${TAG}-machine"]
 }

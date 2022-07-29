@@ -2,14 +2,22 @@
 target "dapp" {
 }
 
+variable "TAG" {
+  default = "devel"
+}
+
+variable "DOCKER_ORGANIZATION" {
+  default = "cartesi"
+}
+
 target "server" {
-  tags = ["cartesi/dapp:echo-low-level-devel-server"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-low-level-${TAG}-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp:echo-low-level-devel-console"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-low-level-${TAG}-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp:echo-low-level-devel-machine"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-low-level-${TAG}-machine"]
 }

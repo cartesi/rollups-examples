@@ -4,14 +4,22 @@ target "dapp" {
   # default dockerfile is "Dockerfile"
 }
 
+variable "TAG" {
+  default = "devel"
+}
+
+variable "DOCKER_ORGANIZATION" {
+  default = "cartesi"
+}
+
 target "server" {
-  tags = ["cartesi/dapp:echo-js-devel-server"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-js-${TAG}-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp:echo-js-devel-console"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-js-${TAG}-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp:echo-js-devel-machine"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-js-${TAG}-machine"]
 }
