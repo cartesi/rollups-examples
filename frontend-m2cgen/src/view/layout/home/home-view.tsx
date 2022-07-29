@@ -41,7 +41,6 @@ export const HomeView: FC = () => {
         resetServiceState(noticesDispatch);
         resetServiceState(sendInputDispatch);
     };
-    console.log({sendInputState, noticesState});
 
     return (
         <SharedLayout>
