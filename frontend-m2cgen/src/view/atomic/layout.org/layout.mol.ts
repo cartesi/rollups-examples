@@ -21,7 +21,7 @@ export const Main = styled.main`
 `;
 
 export const BoxWrapper = styled.div<Layout>`
-    padding: ${spacing.padding.md};
+    padding: 0 ${spacing.padding.md};
     border: ${border.small} ${color.mediumMain};
     border-radius: ${radius.lg};
     background: linear-gradient(

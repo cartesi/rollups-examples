@@ -73,7 +73,8 @@ export const size = {
     image: {
         lg: "18.5rem",
         md: "10rem",
-        sm: "6rem"
+        sm: "6rem",
+        xs: "3rem"
     },
     input: {
         select: {
@@ -114,4 +115,13 @@ export const zIndex = {
     roof: 6,
     veryHigh: 5,
     veryLow: 1,
-}
+};
+
+export const linearGradient = {
+    ocean: `linear-gradient(
+        165.59deg,
+        #abdbff95 -64.65%,
+        #a8ffff -2.09%,
+        #afa8ff00 74.49%
+    )`,
+};

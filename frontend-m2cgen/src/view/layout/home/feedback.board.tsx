@@ -2,12 +2,13 @@ import { FC } from "react";
 import { Col, Row } from "react-grid-system";
 import { NoticeViewModel } from "../../../service/notices.service";
 import { BoxWrapper } from "../../atomic/layout.org/layout.mol";
-import { H1, H4 } from "../../atomic/typography.mol";
+import { H1, H2, H4 } from "../../atomic/typography.mol";
 import { string } from "./constants";
 import SkullImgSVG from "../../../assets/img/skull.svg";
 import CelebrationImgSVG from "../../../assets/img/celebration.svg";
 import { UseServiceState } from "../../../controller/use-service/use-service.hook";
 import { Image } from "../../atomic/image.mol/image.mol";
+import { ShipCrashAnimation } from "./ship-crash/ship-crash.animation";
 
 interface IFeedbackBoard {
     data: NoticeViewModel[],
@@ -43,31 +44,51 @@ export const FeedbackBoard: FC<IFeedbackBoard> = ({
     return (
         <Col sm={12} md={6}>
             <BoxWrapper isFluid>
-                <Row justify="end">
-                    <Col xs="content">
-                        <H4 color="lightMain">{boardString.title}</H4>
-                    </Col>
-                </Row>
-                <Row justify="center">
-                    <Col xs="content">
-                        {status === "idle" || status === 'rejected' ? (
-                            <H1 color="sweetMain" justify="center">
-                                {boardString.idleFeedback}
-                            </H1>
-                        ) : null}
-                        {status === "pending" ? (
-                            <H1 color="sweetMain" justify="center">
-                                {boardString.pendingFeedback}
-                            </H1>
-                        ) : null}
-                        {img ? <Image src={img} justify="center" size="lg" /> : null}
-                        {message ? (
-                            <H1 color="sweetMain" justify="center" isBold>
-                                {message}
-                            </H1>
-                        ) : null}
-                    </Col>
-                </Row>
+                {status === "pending" ? (
+                    <>
+                        <Row>
+                            <Col>
+                                <H2 color="sweetMain" justify="center">
+                                    {boardString.pendingFeedback}
+                                </H2>
+                            </Col>
+                        </Row>
+                        <ShipCrashAnimation />
+                    </>
+                ) : (
+                    <>
+                        <Row justify="end">
+                            <Col xs="content">
+                                <H4 color="lightMain">{boardString.title}</H4>
+                            </Col>
+                        </Row>
+                        <Row justify="center">
+                            <Col xs="content">
+                                {status === "idle" || status === "rejected" ? (
+                                    <H1 color="sweetMain" justify="center">
+                                        {boardString.idleFeedback}
+                                    </H1>
+                                ) : null}
+                                {img ? (
+                                    <Image
+                                        src={img}
+                                        justify="center"
+                                        size="lg"
+                                    />
+                                ) : null}
+                                {message ? (
+                                    <H1
+                                        color="sweetMain"
+                                        justify="center"
+                                        isBold
+                                    >
+                                        {message}
+                                    </H1>
+                                ) : null}
+                            </Col>
+                        </Row>
+                    </>
+                )}
             </BoxWrapper>
         </Col>
     );
