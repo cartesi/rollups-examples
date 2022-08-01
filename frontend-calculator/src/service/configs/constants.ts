@@ -1,0 +1,13 @@
+const env = import.meta.env;
+
+export const DAPP_ADDRESS = env.VITE_DAPP_ADDRESS;
+
+export const DAPP_NAME = env.VITE_DAPP_NAME;
+
+export const HARDHAT_DEFAULT_MNEMONIC = env.VITE_HARDHAT_DEFAULT_MNEMONIC;
+
+export const HARDHAT_DEFAULT_RPC_URL = env.VITE_HARDHAT_DEFAULT_RPC_URL;
+
+export const ACCOUNT_INDEX = env.VITE_ACCOUNT_INDEX;
+
+export const DEFAULT_URL = env.VITE_SERVER_URL_DEFAULT;

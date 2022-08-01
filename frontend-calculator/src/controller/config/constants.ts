@@ -1,0 +1,1 @@
+export const REFETCH_TIME_DEFAULT = 5000;
