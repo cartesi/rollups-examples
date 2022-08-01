@@ -21,8 +21,11 @@ export const sendInput = async (
             type: 'resolve_request',
             data: sendInputResult
         });
+
         return sendInputResult;
     } catch (err) {
         dispatch({ type: 'fail_request', error: err });
+
+        throw err;
     }
 };

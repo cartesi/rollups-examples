@@ -26,5 +26,7 @@ export const fetchNotices = async (
         return fetchedNotices;
     } catch (err) {
         dispatch({ type: "fail_request", error: err });
+
+        throw err;
     }
 };
