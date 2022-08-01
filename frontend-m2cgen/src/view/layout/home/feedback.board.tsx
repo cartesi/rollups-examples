@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Col, Row } from "react-grid-system";
 import { NoticeViewModel } from "../../../service/notices.service";
 import { BoxWrapper } from "../../atomic/layout.org/layout.mol";
-import { H1, H2, H4 } from "../../atomic/typography.mol";
+import { H1, H4 } from "../../atomic/typography.mol";
 import { string } from "./constants";
 import SkullImgSVG from "../../../assets/img/skull.svg";
 import CelebrationImgSVG from "../../../assets/img/celebration.svg";
@@ -45,16 +45,7 @@ export const FeedbackBoard: FC<IFeedbackBoard> = ({
         <Col sm={12} md={6}>
             <BoxWrapper isFluid>
                 {status === "pending" ? (
-                    <>
-                        <Row>
-                            <Col>
-                                <H2 color="sweetMain" justify="center">
-                                    {boardString.pendingFeedback}
-                                </H2>
-                            </Col>
-                        </Row>
-                        <ShipCrashAnimation />
-                    </>
+                    <ShipCrashAnimation />
                 ) : (
                     <>
                         <Row justify="end">

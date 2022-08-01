@@ -12,7 +12,7 @@ export const ShipCrashAnimation: FC = () => {
                 <motion.div
                     initial={{
                         x: -10,
-                        y: -12,
+                        y: -14,
                     }}
                     animate={{
                         x: 50,
