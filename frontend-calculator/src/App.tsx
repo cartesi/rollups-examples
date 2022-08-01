@@ -21,7 +21,7 @@ export const App = () => {
         const form = e.target;
         const elementsKeys = Object.keys(form);
         let data: SendInputData = {
-            Operation: null
+            Operation: ''
         }
         elementsKeys
             .filter((key) => !!form[key]?.value)
@@ -30,7 +30,6 @@ export const App = () => {
                 const parsedId: keyof typeof data = id.replace('Input', '')
                 data[parsedId] = value;
             });
-        console.log(data)
         sendInput(sendInputDispatch, data).then((result) =>
             fetchNotices(noticesDispatch, {
                 epoch_index: result?.epochNumber,

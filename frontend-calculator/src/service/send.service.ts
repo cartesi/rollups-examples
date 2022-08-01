@@ -49,7 +49,6 @@ export const sendInput = async (params: SendInputParams): Promise<SendInputViewM
     await provider.getNetwork();
     
 
-    console.log(DAPP_NAME)
     // connect to rollups,
     const { inputContract } = await rollups(signer || provider, {
         ...params,
