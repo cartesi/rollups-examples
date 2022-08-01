@@ -1,12 +1,13 @@
-export const DAPP_ADDRESS = "0xa37aE2b259D35aF4aBdde122eC90B204323ED304";
+const env = import.meta.env;
 
-export const DAPP_NAME = "dapp";
+export const DAPP_ADDRESS = env.VITE_DAPP_ADDRESS;
 
-export const HARDHAT_DEFAULT_MNEMONIC =
-    "test test test test test test test test test test test junk";
+export const DAPP_NAME = env.VITE_DAPP_NAME;
 
-export const HARDHAT_DEFAULT_RPC_URL = "http://localhost:8545";
+export const HARDHAT_DEFAULT_MNEMONIC = env.VITE_HARDHAT_DEFAULT_MNEMONIC;
 
-export const ACCOUNT_INDEX = 0;
+export const HARDHAT_DEFAULT_RPC_URL = env.VITE_HARDHAT_DEFAULT_RPC_URL;
 
-export const DEFAULT_URL = "http://localhost:4000/graphql";
+export const ACCOUNT_INDEX = env.VITE_ACCOUNT_INDEX;
+
+export const DEFAULT_URL = env.VITE_SERVER_URL_DEFAULT;

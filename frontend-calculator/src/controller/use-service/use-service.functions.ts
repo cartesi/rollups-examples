@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { getNotices, NoticeViewModel } from "../../service/notices";
+import { getNotices, NoticeViewModel } from "../../service/notices.service";
 import { ServiceReducerActions } from "./use-service.hook";
 
 export const fetchNotices = async (

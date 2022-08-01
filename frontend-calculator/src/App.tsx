@@ -1,34 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import styled from "styled-components";
+import { fetchNotices } from "./controller/notices.controller";
+import { sendInput, SendInputData } from "./controller/send.controller";
+import { useService } from "./controller/use-service/use-service.hook";
+import { NoticeViewModel } from "./service/notices.service";
+import { SendInputViewModel } from "./service/send.service";
 
-function App() {
-  const [count, setCount] = useState(0)
+export const App = () => {
+    const [ noticesState, noticesDispatch ] = useService<NoticeViewModel[]>();
+    const [ sendInputState, sendInputDispatch ] = useService<SendInputViewModel>();
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
-}
+    const handleResult = (notices: NoticeViewModel[]) => {
+        const notice = notices[0];
+        const message = notice.payload_parsed;
 
-export default App
+        return <h2>{message}</h2>;
+    }
+
+    const handleSendInput = (e: any) => {
+        e.preventDefault()
+        const form = e.target;
+        const elementsKeys = Object.keys(form);
+        let data: SendInputData = {
+            Operation: null
+        }
+        elementsKeys
+            .filter((key) => !!form[key]?.value)
+            .forEach((key) => {
+                const { id, value } = form[key]
+                const parsedId: keyof typeof data = id.replace('Input', '')
+                data[parsedId] = value;
+            });
+        console.log(data)
+        sendInput(sendInputDispatch, data).then((result) =>
+            fetchNotices(noticesDispatch, {
+                epoch_index: result?.epochNumber,
+                input_index: result?.inputIndex,
+            }, true)
+        );
+    }
+
+    return (
+        <AppWrapper>
+            <Heading>Calculator</Heading>
+            {!!noticesState.data?.length ? (
+                handleResult(noticesState.data)
+            ) : null}
+            <div>
+                <form
+                    onSubmit={handleSendInput}
+                    style={{ display: "flex", flexDirection: "column" }}
+                >
+                    <label>Operation</label>
+                    <input id="OperationInput" type="text" />
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </AppWrapper>
+    );
+};
+
+const AppWrapper = styled.div``;
+const Heading = styled.h1`
+    color: red;
+`;
