@@ -59,7 +59,7 @@ export const HomeView: FC = () => {
                 />
                 <FeedbackBoard
                     data={noticesState.data ?? []}
-                    status={'pending'}
+                    status={noticesState.status}
                 />
             </Row>
         </SharedLayout>
