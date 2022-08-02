@@ -393,7 +393,8 @@ export class PollingServerManagerClient {
 
     async getProcessedInputs(
         epoch: number,
-        timeout: number
+        timeout: number,
+        expectedInputCount: number
     ): Promise<ProcessedInput[]> {
         let count = 0;
         let status: GetEpochStatusResponse;
@@ -406,7 +407,7 @@ export class PollingServerManagerClient {
                 let pendingInputsCount = status.pendingInputCount ?? 0;
                 let processedInputsCount = status.processedInputs?.length ?? 0;
 
-                if (pendingInputsCount == 0 && processedInputsCount > 0) {
+                if (pendingInputsCount == 0 && processedInputsCount >= expectedInputCount) {
                     return status.processedInputs ?? [];
                 }
             } catch (error: any) {

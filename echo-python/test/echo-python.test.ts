@@ -38,7 +38,8 @@ describe("Echo DApp Integration Tests", () => {
         await sendInput("cartesi");
         const inputs = await serverManager.getProcessedInputs(
             0,
-            pollingTimeout
+            pollingTimeout,
+            2
         );
         expect(inputs.length).to.eq(2);
 
