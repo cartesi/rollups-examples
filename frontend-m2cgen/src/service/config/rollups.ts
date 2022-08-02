@@ -8,7 +8,7 @@ import {
 } from "@cartesi/rollups";
 import { Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
-import { DAPP_ADDRESS } from "./constants";
+import { env } from "../../config/constants";
 
 export interface Args {
     dapp: string;
@@ -26,7 +26,7 @@ export const rollups = async (
     provider: Provider | Signer,
     args: Args
 ): Promise<Contracts> => {
-    const address = args?.address ?? DAPP_ADDRESS;
+    const address = args?.address ?? env.DAPP_ADDRESS;
     //TODO: figure out how to get the address without node:fs module?
 
     if (!address) {

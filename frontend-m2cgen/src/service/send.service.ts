@@ -1,15 +1,9 @@
-import { connect } from "./configs/connect";
-import { rollups } from "./configs/rollups";
+import { connect } from "./config/connect";
+import { rollups } from "./config/rollups";
 import { ContractReceipt, ethers } from "ethers";
 import { InputMaybe, NoticeKeys } from "../../generated/graphql";
 import { InputAddedEvent } from "@cartesi/rollups/dist/src/types/contracts/interfaces/IInput";
-import {
-    ACCOUNT_INDEX,
-    DAPP_ADDRESS,
-    DAPP_NAME,
-    HARDHAT_DEFAULT_MNEMONIC,
-    HARDHAT_DEFAULT_RPC_URL
-} from "./configs/constants";
+import { env } from "../config/constants";
 
 interface SendInputParams {
     input: string;
@@ -42,17 +36,17 @@ export const sendInput = async (params: SendInputParams): Promise<SendInputViewM
 
     // connect to provider
     const { provider, signer } = connect(
-        HARDHAT_DEFAULT_RPC_URL,
-        HARDHAT_DEFAULT_MNEMONIC,
-        ACCOUNT_INDEX
+        env.HARDHAT_DEFAULT_RPC_URL,
+        env.HARDHAT_DEFAULT_MNEMONIC,
+        env.ACCOUNT_INDEX
     );
     await provider.getNetwork();
 
     // connect to rollups,
     const { inputContract } = await rollups(signer || provider, {
         ...params,
-        dapp: DAPP_NAME,
-        address: DAPP_ADDRESS,
+        dapp: env.DAPP_NAME,
+        address: env.DAPP_ADDRESS,
     });
     await inputContract.signer.getAddress();
 
