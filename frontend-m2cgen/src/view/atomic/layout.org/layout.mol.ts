@@ -14,6 +14,8 @@ export const Header = styled.header`
     top: 0px;
     left: 0px;
     right: 0px;
+    display: flex;
+    justify-content: space-between;
 `;
 
 export const Main = styled.main`

@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import { border, color, radius, size, spacing } from "../styleguide.atm";
 
 export interface ButtonLayout {
-    variant?: "primary" | "secondary";
+    variant?: "primary" | "secondary" | "link";
     sideElement?: "left" | "right";
     disabled?: boolean;
 }
@@ -24,12 +24,20 @@ const buttonVariantCss = {
             border: ${border.general} ${color.white};
             color: ${color.white};
         }
-
     `,
     secondary: css`
         ${buttonSharedCss}
-    `
-}
+    `,
+    link: css`
+        ${buttonSharedCss}
+        color: ${color.lightMain};
+        text-decoration: underline;
+        &:hover:enabled {
+            color: ${color.white};
+        }
+        padding: 0;
+    `,
+};
 
 const sideElementCss = {
     left: css`
