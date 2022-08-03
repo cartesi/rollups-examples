@@ -1,3 +1,5 @@
+# NOTICES
+
 query notice($id: ID!) {
   notice(id: $id) {
     id
@@ -65,6 +67,93 @@ query noticesByEpoch($epoch_index: Int!) {
           nodes {
             id
             index
+            payload
+            input {
+              index
+              epoch {
+                index
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+# VOUCHERS
+
+query voucher($id: ID!) {
+  voucher(id: $id) {
+    id
+    destination
+    payload
+    index
+    proof {
+      outputHashesRootHash
+      vouchersEpochRootHash
+      noticesEpochRootHash
+      machineStateHash
+      keccakInHashesSiblings
+      outputHashesInEpochSiblings
+    }
+    input {
+      index
+      epoch {
+        index
+      }
+    }
+  }
+}
+
+query vouchers {
+  vouchers {
+    nodes {
+      id
+      index
+      destination
+      payload
+      input {
+        index
+        epoch {
+          index
+        }
+      }
+    }
+  }
+}
+
+query vouchersByEpochAndInput($epoch_index: Int!, $input_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    input(index: $input_index) {
+      vouchers {
+        nodes {
+          id
+          index
+          destination
+          payload
+          input {
+            index
+            epoch {
+              index
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query vouchersByEpoch($epoch_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    inputs {
+      nodes {
+        vouchers {
+          nodes {
+            id
+            index
+            destination
             payload
             input {
               index
