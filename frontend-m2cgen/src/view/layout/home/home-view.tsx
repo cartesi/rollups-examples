@@ -11,31 +11,41 @@ import { FeedbackBoard } from "./feedback.board";
 import { toast } from "react-toast";
 import { string } from "./constants";
 import { resetServiceState } from "../../../controller/common.controller";
+import { useOnboardedService } from "../../../controller/use-service/use-onboarded-service";
 
 export const HomeView: FC = () => {
     const [noticesState, noticesDispatch] = useService<NoticeViewModel[]>();
     const [sendInputState, sendInputDispatch] =
-        useService<SendInputViewModel>();
+        useOnboardedService<SendInputViewModel>();
     const handleSendInput = (data: SendInputData) => {
-        toast.info(string.sendInputFeedback.requestStarted);
-        sendInput(sendInputDispatch, data)
-            .then((result) =>
-                fetchNotices(
-                    noticesDispatch,
-                    {
-                        epoch_index: result?.epochNumber,
-                        input_index: result?.inputIndex,
-                    },
-                    true
-                )
-                    .then(() =>
-                        toast.success(string.fetchNoticesFeedback.onSucess)
-                    )
-                    .catch(() =>
-                        toast.error(string.fetchNoticesFeedback.onError)
-                    )
+        if (sendInputState.chain) {
+            toast.info(string.sendInputFeedback.requestStarted);
+            sendInput(
+                sendInputDispatch,
+                data,
+                sendInputState.chain?.id,
+                sendInputState.wallet.provider
             )
-            .catch(() => toast.error(string.sendInputFeedback.onError));
+                .then((result) =>
+                    fetchNotices(
+                        noticesDispatch,
+                        {
+                            epoch_index: result?.epochNumber,
+                            input_index: result?.inputIndex,
+                        },
+                        true
+                    )
+                        .then(() =>
+                            toast.success(string.fetchNoticesFeedback.onSucess)
+                        )
+                        .catch(() =>
+                            toast.error(string.fetchNoticesFeedback.onError)
+                        )
+                )
+                .catch(() => toast.error(string.sendInputFeedback.onError));
+        } else toast.error(
+            string.sendInputFeedback.web3OnboardError
+        );
     };
     const handleResetStates = () => {
         resetServiceState(noticesDispatch);

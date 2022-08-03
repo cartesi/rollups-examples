@@ -1,36 +1,16 @@
-import { JsonRpcProvider, Provider } from "@ethersproject/providers";
-import { ethers, Signer } from "ethers";
-
-export interface Args {
-    rpc: string;
-    mnemonic?: string;
-    accountIndex: number;
-}
-
-export type Connection = {
-    provider: Provider;
-    signer?: Signer;
-};
+import { ethers } from "ethers";
+import { genRollupsContracts, RollupsContracts } from "./rollups";
+import { WalletState, ConnectedChain } from "@web3-onboard/core";
 
 export const connect = (
-    rpc: string,
-    mnemonic?: string,
-    accountIndex?: number
-): Connection => {
-    // connect to JSON-RPC provider
-    const provider = new JsonRpcProvider(rpc);
+    chainId: ConnectedChain['id'],
+    walletProvider: WalletState['provider']
+): RollupsContracts => {
+    const provider = new ethers.providers.Web3Provider(
+        walletProvider
+    );
 
-    // create signer to be used to send transactions
-    const signer = mnemonic
-        ? ethers.Wallet.fromMnemonic(
-              mnemonic,
-              //TODO: where does this wallet mnemonic come from?
-              `m/44'/60'/0'/0/${accountIndex ?? 0}`
-          ).connect(provider)
-        : undefined;
+    const rollupContract = genRollupsContracts(chainId, provider);
 
-    return {
-        provider,
-        signer,
-    };
+    return rollupContract;
 };

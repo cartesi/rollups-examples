@@ -1,9 +1,8 @@
 import { connect } from "./config/connect";
-import { rollups } from "./config/rollups";
 import { ContractReceipt, ethers } from "ethers";
 import { InputMaybe, NoticeKeys } from "../../generated/graphql";
 import { InputAddedEvent } from "@cartesi/rollups/dist/src/types/contracts/interfaces/IInput";
-import { env } from "../config/constants";
+import { WalletState, ConnectedChain } from "@web3-onboard/core";
 
 interface SendInputParams {
     input: string;
@@ -31,24 +30,15 @@ export const findNoticeKeys = (receipt: ContractReceipt): NoticeKeys => {
     };
 };
 
-export const sendInput = async (params: SendInputParams): Promise<SendInputViewModel> => {
+export const sendInput = async (
+    params: SendInputParams,
+    chainId: ConnectedChain["id"],
+    walletProvider: WalletState["provider"]
+): Promise<SendInputViewModel> => {
     const { input } = params;
 
     // connect to provider
-    const { provider, signer } = connect(
-        env.HARDHAT_DEFAULT_RPC_URL,
-        env.HARDHAT_DEFAULT_MNEMONIC,
-        env.ACCOUNT_INDEX
-    );
-    await provider.getNetwork();
-
-    // connect to rollups,
-    const { inputContract } = await rollups(signer || provider, {
-        ...params,
-        dapp: env.DAPP_NAME,
-        address: env.DAPP_ADDRESS,
-    });
-    await inputContract.signer.getAddress();
+    const { inputContract } = connect(chainId, walletProvider);
 
     // convert string to input bytes
     const inputBytes = ethers.utils.toUtf8Bytes(input);
@@ -62,6 +52,6 @@ export const sendInput = async (params: SendInputParams): Promise<SendInputViewM
     const noticeKeys = findNoticeKeys(receipt);
     return {
         epochNumber: noticeKeys.epoch_index,
-        inputIndex: noticeKeys.input_index
+        inputIndex: noticeKeys.input_index,
     };
 };

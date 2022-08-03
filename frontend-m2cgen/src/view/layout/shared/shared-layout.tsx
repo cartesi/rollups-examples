@@ -2,7 +2,6 @@ import { FC, PropsWithChildren, useState } from "react";
 import { Container } from "react-grid-system";
 import { Button } from "../../atomic/button.mol/button.mol";
 import { Header, Main } from "../../atomic/layout.org/layout.mol";
-import { Modal } from "../../atomic/layout.org/modal.mol/modal.mol";
 import { H2 } from "../../atomic/typography.mol";
 import { string } from "./constants";
 import { WalletManagerModal } from "./wallet-manager.modal";

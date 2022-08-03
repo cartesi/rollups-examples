@@ -29,6 +29,8 @@ export const string = {
     sendInputFeedback: {
         requestStarted:
             "Sending infos, wait please. It may take a few minutes.",
+        web3OnboardError:
+            "You need to connect the wallet to proceed with this action!",
         onError: "Sorry! An error occurred while send infos, try again later.",
     },
     fetchNoticesFeedback: {

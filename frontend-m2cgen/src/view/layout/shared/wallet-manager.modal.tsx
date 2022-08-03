@@ -6,7 +6,7 @@ import { FieldsetWrapper } from "../../atomic/form.org/form.mol";
 import { Input } from "../../atomic/form.org/input.mol";
 import { Modal, IModal } from "../../atomic/layout.org/modal.mol/modal.mol";
 import { Separator } from "../../atomic/layout.org/separator.mol/separator.atm";
-import { H1, H2 } from "../../atomic/typography.mol";
+import { H1 } from "../../atomic/typography.mol";
 import { string } from "./constants";
 
 const modalString = string.manageWalletModal;

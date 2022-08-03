@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { border, color, radius, size, spacing } from "../styleguide.atm";
+import { border, color, radius, spacing } from "../styleguide.atm";
 
 export interface ButtonLayout {
     variant?: "primary" | "secondary" | "link";

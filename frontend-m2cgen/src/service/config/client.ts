@@ -5,6 +5,6 @@ import {
 import { env } from '../../config/constants';
 
 export const client = new ApolloClient({
-    uri: env.DEFAULT_URL,
+    uri: env.VITE_SERVER_URL_DEFAULT,
     cache: new InMemoryCache(),
 });
