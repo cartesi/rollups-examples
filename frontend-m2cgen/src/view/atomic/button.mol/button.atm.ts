@@ -27,6 +27,14 @@ const buttonVariantCss = {
     `,
     secondary: css`
         ${buttonSharedCss}
+        border: ${border.general} ${color.sweetMain};
+        background-color: ${color.sweetMain};
+        color: ${color.white};
+        &:hover:enabled {
+            background-color: transparent;
+            border: ${border.general} ${color.lightMain};
+            color: ${color.lightMain};
+        }
     `,
     link: css`
         ${buttonSharedCss}

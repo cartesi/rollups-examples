@@ -8,6 +8,7 @@ const brandColor = {
 export const color = {
     ...brandColor,
     white: "#FFFFFF",
+    dark: "#000",
     gray: "#9E9E9E",
     mediumGray: "#7A7A7A",
 };

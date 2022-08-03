@@ -4,7 +4,7 @@ import { Button } from "../../atomic/button.mol/button.mol";
 import { Header, Main } from "../../atomic/layout.org/layout.mol";
 import { Modal } from "../../atomic/layout.org/modal.mol/modal.mol";
 import { H2 } from "../../atomic/typography.mol";
-import { text } from "./constants";
+import { string } from "./constants";
 import { WalletManagerModal } from "./wallet-manager.modal";
 
 export const SharedLayout: FC<PropsWithChildren> = ({ children }) => {
@@ -13,12 +13,12 @@ export const SharedLayout: FC<PropsWithChildren> = ({ children }) => {
     return (
         <>
             <Header>
-                <H2 color="lightMain" paddingX="md" isBold>{text.header}</H2>
+                <H2 color="lightMain" paddingX="md" isBold>{string.header}</H2>
                 <Button
                     variant="link"
                     onClick={() => { setIsModalOpen(true) }}
                 >
-                    {text.connectWalletButton.text}
+                    {string.manageWalletButton.text}
                 </Button>
                 <WalletManagerModal
                     isOpen={isModalOpen}

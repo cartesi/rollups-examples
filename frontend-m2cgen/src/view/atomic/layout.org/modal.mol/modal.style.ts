@@ -26,6 +26,8 @@ export const ModalContent = styled(DialogContent)`
     background-color: ${color.white};
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
 `;
 
 export const ModalCloseButton = styled(Button).attrs({ variant: "link" })`
