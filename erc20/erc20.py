@@ -26,9 +26,9 @@ logger.info(f"HTTP rollup_server url is {rollup_server}")
 # to the Keccak256-encoded string "ERC20_Transfer", as defined at
 # https://github.com/cartesi/rollups/blob/main/onchain/rollups/contracts/facets/ERC20PortalFacet.sol.
 ERC20_TRANSFER_HEADER =  b'Y\xda*\x98N\x16Z\xe4H|\x99\xe5\xd1\xdc\xa7\xe0L\x8a\x990\x1b\xe6\xbc\t)2\xcb]\x7f\x03Cx'
-# Function selector to be called during the execution of a voucher, which
-# corresponds to the Keccak256-encoded result of Web3.keccak(text='transfer')
-TRANSFER_FUNCTION_SELECTOR = b'\xb4\x83\xaf\xd3\xf4\xca\xed\xc6\xee\xbfD$o\xe5N8\xc9^1y\xa5\xec\x9e\xa8\x17@\xec\xa5\xb4\x82\xd1.'
+# Function selector to be called during the execution of a voucher that transfers funds,
+# which corresponds to the first 4 bytes of the Keccak256-encoded result of "transfer(address,uint256)"
+TRANSFER_FUNCTION_SELECTOR = b'\xa9\x05\x9c\xbb'
 
 def str2hex(str):
     """
@@ -76,12 +76,10 @@ def handle_advance(data):
         logger.info(f"Received notice status {response.status_code} body {response.content}")
 
         # Encode a transfer function call that returns the amount back to the depositor
-        transfer_payload = encode_abi(['bytes','address','uint256'], [TRANSFER_FUNCTION_SELECTOR, depositor, amount])
-        # Encode voucher to execute the transfer on the ERC-20 contract
-        encodedVoucher = encode_abi(['address', 'bytes'], [erc20, transfer_payload])
-        # Post voucher returning the deposited amount back to the depositor: "I don't want your money"!
-        logger.info("Issuing voucher")
-        voucher = {"address": depositor, "payload": "0x" + encodedVoucher.hex()}
+        transfer_payload = TRANSFER_FUNCTION_SELECTOR + encode_abi(['address','uint256'], [depositor, amount])
+        # Post voucher executing the transfer on the ERC-20 contract: "I don't want your money"!
+        voucher = {"address": erc20, "payload": "0x" + transfer_payload.hex()}
+        logger.info(f"Issuing voucher {voucher}")
         response = requests.post(rollup_server + "/voucher", json=voucher)
         logger.info(f"Received voucher status {response.status_code} body {response.content}")
 
