@@ -112,7 +112,7 @@ There are a few ways to get free Goerli testnet funds using _token faucets_. Som
 
 Aside from the account to use, submitting transactions also requires you to provide the URL of an appropriate RPC gateway node for the target network. There are many options for that, and several services provide private nodes with free tiers that are more than enough for running these examples. Some options include [Alchemy](https://www.alchemy.com/), [Infura](https://infura.io/) and [Moralis](https://moralis.io/).
 
-Finally, to query the layer-2 Cartesi Node for DApp outputs, you will need to specify the URL of its GraphQL endpoint. The Echo Python example has its endpoint available at `https://echo-python.goerli.rollups.staging.cartesi.io/graphql`. Please refer to the [frontend-console](./frontend-console)'s documentation for details on how to use it to [send inputs](./frontend-console/README.md#sending-inputs), [list notices](./frontend-console/README.md#listing-notices) and [deposit tokens](./frontend-console/README.md#depositing-erc-20-tokens).
+Finally, to query the layer-2 Cartesi Node for DApp outputs, you will need to specify the URL of its GraphQL endpoint. The Echo Python example has its endpoint available at `https://echo-python.goerli.rollups.staging.cartesi.io/graphql`. Please refer to the [frontend-console](./frontend-console)'s documentation for details on how to use it to [send inputs](./frontend-console/README.md#sending-inputs), [list notices and vouchers](./frontend-console/README.md#listing-notices-and-vouchers), [deposit tokens](./frontend-console/README.md#depositing-erc-20-tokens), and more.
 
 ### Deploying DApps
 
