@@ -69,7 +69,10 @@ export const HomeView: FC = () => {
                 />
                 <FeedbackBoard
                     data={noticesState.data ?? []}
-                    status={noticesState.status}
+                    status={
+                        sendInputState.status === 'pending' ?
+                            'pending' : noticesState.status
+                    }
                 />
             </Row>
         </SharedLayout>

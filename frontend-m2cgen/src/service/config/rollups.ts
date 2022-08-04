@@ -5,20 +5,12 @@ import {
     OutputFacet__factory,
     RollupsFacet,
     RollupsFacet__factory,
-
 } from "@cartesi/rollups";
-import polygon_mumbai from "@cartesi/rollups/export/abi/polygon_mumbai.json";
-import goerli from "@cartesi/rollups/export/abi/goerli.json";
 import { Web3Provider } from "@ethersproject/providers";
-import { env } from "../../config/constants";
 import { ConnectedChain } from "@web3-onboard/core";
+import { ChainId } from "../../config/types";
+import { env } from "../../config/constants";
 
-
-export interface Args {
-    dapp: string;
-    address?: string;
-    addressFile?: string;
-}
 
 export interface RollupsContracts {
     rollupsContract: RollupsFacet;
@@ -26,10 +18,9 @@ export interface RollupsContracts {
     outputContract: OutputFacet;
 }
 
-export const rollupsAddress: Record<string, any> = {
-    "0x7a69": env.VITE_DAPP_ADDRESS, // local hardhat
-    "0x13881": "0xe219A4Ee9e1dFD132ED9F8e38B3519368cC9494F", // polygon_mumbai,
-    "0x5": "0xea055Bc7BC53A63E1C018Ceea5B6AddA75016064", // goerli,
+export const addressMap: Record<ChainId, string> = {
+    [ChainId.localhost]: env.VITE_LOCAL_DAPP_ADDRESS,
+    [ChainId.testnet]: env.VITE_TESTNET_DAPP_ADDRESS,
 };
 
 export const genRollupsContracts = (
@@ -37,7 +28,7 @@ export const genRollupsContracts = (
     provider: Web3Provider
 ): RollupsContracts => {
     // TODO: get programatically instead of this hardcode
-    const address = rollupsAddress[chainId];
+    const address = addressMap[chainId as ChainId];
 
     if (!address) {
         throw new Error("unable to resolve DApp address");

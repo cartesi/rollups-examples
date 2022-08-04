@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toast";
 import { initWeb3Wallet } from "./config/web3-wallet.setup";
 
 // Grid system setup
-setConfiguration({ maxScreenClass: 'xl' })
+setConfiguration({ maxScreenClass: 'xl' });
 // web3 wallet setup
 initWeb3Wallet();
 
