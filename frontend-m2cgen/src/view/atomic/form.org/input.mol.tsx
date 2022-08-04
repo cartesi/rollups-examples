@@ -19,7 +19,8 @@ interface IInput
     type?: React.HTMLInputTypeAttribute | "select";
     options?: Option[];
     register?: Function;
-    inputError?: FieldError
+    inputError?: FieldError;
+    handleChange?: (value: string) => void;
 }
 
 export const Input: FC<IInput> = ({
@@ -28,6 +29,8 @@ export const Input: FC<IInput> = ({
     inputError,
     required,
     register,
+    value,
+    handleChange,
     ...other
 }) => {
     const idFallback = other.id ?? "";
@@ -36,14 +39,34 @@ export const Input: FC<IInput> = ({
     return (
         <>
             {other.name ? (
-                <Label htmlFor={idFallback ?? ""} color="mediumGray">
+                <Label
+                    htmlFor={idFallback ?? ""}
+                    color={
+                        other.variant === "secondary" ? "dark" : "mediumGray"
+                    }
+                >
                     {other.name}
                     {required ? " *" : null}
                 </Label>
             ) : null}
             {type === "select" ? (
-                <SelectWrapper isOutilined={other.isOutilined}>
-                    <select id={idFallback} {...registeredProps}>
+                <SelectWrapper
+                    isOutilined={other.isOutilined}
+                    variant={other.variant}
+                >
+                    <select
+                        id={idFallback}
+                        disabled={other.disabled}
+                        value={value}
+                        onChange={
+                            !!handleChange
+                                ? (e) => {
+                                      handleChange(e.target.value);
+                                  }
+                                : null
+                        }
+                        {...registeredProps}
+                    >
                         <option>{undefined}</option>
                         {options.map((embarkedOption) => (
                             <option
@@ -62,6 +85,14 @@ export const Input: FC<IInput> = ({
                 <InputWrapper
                     id={idFallback}
                     type={type}
+                    value={value}
+                    onChange={
+                        !!handleChange
+                            ? (e) => {
+                                  handleChange(e.target.value);
+                              }
+                            : null
+                    }
                     {...other}
                     {...registeredProps}
                 />

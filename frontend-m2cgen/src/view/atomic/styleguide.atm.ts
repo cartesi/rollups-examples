@@ -8,6 +8,7 @@ const brandColor = {
 export const color = {
     ...brandColor,
     white: "#FFFFFF",
+    dark: "#000",
     gray: "#9E9E9E",
     mediumGray: "#7A7A7A",
 };
@@ -74,14 +75,18 @@ export const size = {
         lg: "18.5rem",
         md: "10rem",
         sm: "6rem",
-        xs: "3rem"
+        xs: "3rem",
     },
     input: {
         select: {
             wrapper: {
-                height: "2.636rem"
-            }
-        }
+                height: "2.636rem",
+            },
+        },
+    },
+    modal: {
+        minHeight: "296px",
+        minWidth: "296px",
     },
     separator: {
         vertical: {
@@ -100,7 +105,8 @@ export const size = {
 export const border = {
     general: "2px solid",
     separator: "1px solid",
-    small: "1px solid"
+    small: "1px solid",
+    large: "4px solid"
 };
 
 export const radius = {

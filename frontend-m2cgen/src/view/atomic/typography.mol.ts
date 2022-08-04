@@ -10,7 +10,7 @@ interface SharedDefaultProps {
 }
 
 const sharedDefaultCss = css<SharedDefaultProps>`
-    word-break: break-all;
+    word-break: keep-all;
     ${({ isBold, color, paddingY, paddingX, justify }) => `
         ${isBold ? "font-weight: 500;" : ""}
         padding: ${

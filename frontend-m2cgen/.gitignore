@@ -28,3 +28,4 @@ generated
 .env
 .env.dev*
 .env.prod*
+.env.stag*

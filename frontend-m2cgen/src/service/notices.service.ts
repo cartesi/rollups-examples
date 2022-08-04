@@ -11,7 +11,7 @@
 
 import { ethers } from "ethers";
 import { GetNoticeDocument, Notice, NoticeKeys } from "../../generated/graphql";
-import { client } from "./configs/client";
+import { client } from "./config/client";
 
 // we don't get every field of Notice
 export type PartialNotice = Pick<

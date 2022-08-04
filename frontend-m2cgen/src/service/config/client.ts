@@ -2,9 +2,9 @@ import {
     ApolloClient,
     InMemoryCache
 } from '@apollo/client';
-import { DEFAULT_URL } from './constants';
+import { env } from '../../config/constants';
 
 export const client = new ApolloClient({
-    uri: DEFAULT_URL,
+    uri: env.VITE_SERVER_URL,
     cache: new InMemoryCache(),
 });

@@ -1,13 +1,14 @@
 import { FC, useCallback } from "react";
 import { Col, Hidden, Row, Visible } from "react-grid-system";
 import { useForm } from "react-hook-form";
+import { brandName } from "../../../config/constants";
 import { SendInputData } from "../../../controller/send.controller";
 import { Button } from "../../atomic/button.mol/button.mol";
 import { FieldsetWrapper, FormWrapper } from "../../atomic/form.org/form.mol";
 import { Input, Option } from "../../atomic/form.org/input.mol";
 import { Separator } from "../../atomic/layout.org/separator.mol/separator.atm";
 import { H1, Paragraph } from "../../atomic/typography.mol";
-import { brandName, id, string } from "./constants";
+import { id, string } from "./constants";
 
 interface ISendInputForm {
     handleSendInput: (data: SendInputData) => void,
