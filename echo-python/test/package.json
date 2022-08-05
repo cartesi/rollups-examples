@@ -14,6 +14,7 @@
         "startEnvironment:prod": "cd .. && docker-compose -f ../docker-compose.yml -f docker-compose.override.yml up -d",
         "startEnvironment:host": "cd .. && docker-compose -f ../docker-compose.yml -f docker-compose.override.yml -f ../docker-compose-host.yml up -d && cd test",
         "stopEnvironment": "cd .. && docker-compose -f ../docker-compose.yml -f docker-compose.override.yml down -v",
+        "saveLogs":"saveLogs () { mkdirp logs && docker-compose -f ../../docker-compose.yml -f ../docker-compose.override.yml logs --timestamps --no-log-prefix --no-color $1 > logs/$1.log; }; saveLogs",
         "pretest:prod": "yarn prepareEnvironment && yarn startEnvironment:prod",
         "pretest:host": "yarn prepareEnvironment && yarn startEnvironment:host && yarn startBackend",
         "pretest:ci": "yarn generateTypes && yarn setupConsole && yarn startEnvironment:prod",
@@ -24,8 +25,7 @@
         "test": "wrap () { yarn test:prod \"$@\" && yarn test:host \"$@\"; }; wrap",
         "posttest": "yarn stopEnvironment",
         "posttest:prod": "yarn posttest",
-        "posttest:host": "yarn posttest && yarn cleanEnvironment",
-        "posttest:ci": "yarn posttest"
+        "posttest:host": "yarn posttest && yarn cleanEnvironment"
     },
     "devDependencies": {
         "@grpc/grpc-js": "^1.6.7",
@@ -39,6 +39,7 @@
         "chai-as-promised": "^7.1.1",
         "mocha": "^9.2.2",
         "ts-node": "^10.7.0",
-        "typescript": "^4.6.4"
+        "typescript": "^4.6.4",
+        "mkdirp": "^1.0.4"
     }
 }

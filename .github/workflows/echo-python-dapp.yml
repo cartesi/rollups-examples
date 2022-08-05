@@ -52,3 +52,23 @@ jobs:
                   yarn install
                   yarn test:ci --verbose
               working-directory: ./echo-python/test
+
+            - name: Save docker logs
+              if: always()
+              run: |
+                  yarn saveLogs hardhat
+                  yarn saveLogs rollups_dispatcher
+                  yarn saveLogs state_server
+                  yarn saveLogs server_manager
+                  yarn saveLogs rollups_inspect_server
+                  yarn saveLogs rollups_indexer
+                  yarn saveLogs query_server
+                  yarn saveLogs database
+              working-directory: ./echo-python/test
+
+            - name: Upload docker logs
+              if: always()
+              uses: actions/upload-artifact@master
+              with:
+                  name: echo-python-test-logs
+                  path: ./echo-python/test/logs/
