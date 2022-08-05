@@ -91,9 +91,6 @@ export const handler = async (args: Args) => {
         outputIndex: voucher.index,
     };
     try {
-        // Revert order of siblings to match what the onchain code expects
-        proof.keccakInHashesSiblings.reverse();
-        proof.outputHashesInEpochSiblings.reverse();
         // console.log(`Would check: ${JSON.stringify(proof)}`);
         const tx = await outputContract.executeVoucher(
             voucher.destination,
