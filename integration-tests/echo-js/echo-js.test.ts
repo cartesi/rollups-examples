@@ -33,7 +33,7 @@ describe("Echo DApp Echo-JS Integration Tests", () => {
         if (environment == "host") {
             //Execute Server Manager on host mode
             this.runBackendProcess = await spawnCommandAsync(
-                " ROLLUP_HTTP_SERVER_URL=http://127.0.0.1:5004 tjs ../echo-js/echo.js > ./echo-js/echo.log 2>&1 &",
+                "cd ../echo-js/ && yarn && yarn start > ../integration-tests/echo.log 2>&1 &",
                 [],
                 { shell: true, detached: true }
             );

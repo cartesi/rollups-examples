@@ -1,5 +1,5 @@
 {
   "fs": {
-    "files": ["echo.js", "entrypoint.sh"]
+    "files": ["dist/main.js", "entrypoint.sh"]
   }
 }
