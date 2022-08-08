@@ -52,12 +52,10 @@ services:
         "http://hardhat:8545",
         "--tx-mnemonic",
         "test test test test test test test test test test test junk",
-        "--tx-sender",
-        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
         "--tx-chain-id",
         "31337",
         "--tx-default-confirmations",
-        "2"
+        "2",
       ]
     restart: always
     depends_on:
@@ -83,10 +81,12 @@ services:
         "0x1",
         "--sf-safety-margin",
         "1",
+        "--bh-http-endpoint",
+        "http://hardhat:8545",
         "--bh-ws-endpoint",
         "ws://hardhat:8545",
         "--bh-block-timeout",
-        "120"
+        "120",
       ]
     restart: always
     #    healthcheck:
