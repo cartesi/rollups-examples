@@ -34,6 +34,7 @@ $ yarn start --help
 Commands:
   index.ts erc20 <command>    Operations with ERC-20 tokens
   index.ts input <command>    Operations with inputs
+  index.ts inspect            Inspect the state of the DApp
   index.ts notice <command>   Operations with notices
   index.ts voucher <command>  Operations with vouchers
 
@@ -122,7 +123,7 @@ Options are:
 --input    Input index
 ```
 
-If the `url` parameter is absent, the console application will use a default value of "http://localhost:4000/graphql", which provides connectivity to a local Cartesi Node.
+If the `url` parameter is absent, the console application will use a default value of "http://localhost:4000/graphql", which provides connectivity to the local Cartesi Node.
 
 ### Validating notices and executing vouchers
 
@@ -176,6 +177,37 @@ Options are:
 ```
 
 The `url` parameter has the same behavior as described for the [notice/voucher list](#listing-notices-and-vouchers) commands, whereas the other parameters behave as in the [input send](#options) command.
+
+### Inspecting DApp state
+
+The `inspect` command directly queries the DApp state within the Cartesi Machine. It can be used to send DApp-specific payloads that are interpreted by the application logic to yield a synchronous response.
+In practice, this command simply sends an HTTP GET request to the specified inspect URL, and does a little bit of parsing on the response.
+
+```shell
+yarn start inspect --payload [payload] <options>
+```
+
+Examples:
+
+1. Inspect the state of the locally deployed DApp using a REST-like query:
+
+    ```shell
+    yarn start inspect --payload "myresource?attr1=value1&attr2=value2"
+    ```
+
+1. Inspect the state of the `echo-python` DApp instance already deployed to the Ethereum Goerli testnet:
+
+    ```shell
+    yarn start inspect --payload "mypayload" --url https://echo-python.goerli.rollups.staging.cartesi.io/inspect
+    ```
+
+Options are:
+
+```shell
+--url      Reader inspect URL
+```
+
+If the `url` parameter is absent, the console application will use a default value of "http://localhost:5005/inspect", which provides connectivity to the local Cartesi Node.
 
 ### Depositing ERC-20 tokens
 

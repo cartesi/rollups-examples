@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Inspect Server allowing clients to directly query internal DApp state
 - Echo JavaScript DApp example
-- Documentation and tools to validate notices and execute vouchers
+- Documentation and tools to validate notices, execute vouchers and inspect DApp state
 
 ### Changed
 
