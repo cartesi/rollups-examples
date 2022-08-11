@@ -96,7 +96,7 @@ void handle_advance(int fd, rollup_bytes payload_buffer) {
 }
 
 void handle_inspect(int fd, rollup_bytes payload_buffer) {
-    struct rollup_advance_state request{};
+    struct rollup_inspect_state request{};
     request.payload = payload_buffer;
     rollup_ioctl(fd, IOCTL_ROLLUP_READ_INSPECT_STATE, &request);
     auto data = std::string_view{reinterpret_cast<const char *>(request.payload.data), request.payload.length};
