@@ -6,6 +6,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] 2022-08-12
+
+### Added
+
+- Inspect Server allowing clients to directly query internal DApp state
+- Echo JavaScript DApp example
+- Documentation and tools to validate notices and execute vouchers
+
+### Changed
+
+- Major refactor in Indexer service, with significant improvements to the GraphQL API
+- Major refactor in State Fold service, with significant improvements to resource consumption
+- Use interval mining mode in Hardhat service for local development
+- Use Ethereum Goerli instead of Polygon Mumbai for live testnet deployments
+- Fix withdrawal voucher encoding in ERC-20 DApp example
+- Refactor of frontend-console commands structure
+
 ## [0.7.2] 2022-07-28
 
 ### Changed
@@ -152,6 +169,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove machine-emulator-tools submodule
 - Remove openapi-interfaces submodule
 
+[0.8.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.8.0
+[0.7.2]: https://github.com/cartesi/rollups-examples/releases/tag/v0.7.2
+[0.7.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.7.1
 [0.7.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.7.0
 [0.6.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.6.0
 [0.5.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.5.1
