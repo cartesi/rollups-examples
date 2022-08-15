@@ -36,20 +36,28 @@ services:
     image: cartesi/rollups-dispatcher:0.5.0
     command:
       [
-        "--dapp-contract-address-file",
+        "--rd-dapp-contract-address-file",
         "/deployments/localhost/dapp.address",
-        "--logic-config-path",
-        "/opt/cartesi/share/config/logic-config.toml",
-        "--sf-config",
-        "/opt/cartesi/share/config/sf-config.toml",
-        "--bs-config",
-        "/opt/cartesi/share/config/bs-config.toml",
-        "--tm-config",
-        "/opt/cartesi/share/config/tm-config.toml",
-        "--mnemonic",
+        "--mm-endpoint",
+        "http://server_manager:5001",
+        "--mm-session-id",
+        "default_rollups_id",
+        "--rd-initial-epoch",
+        "0",
+        "--sc-grpc-endpoint",
+        "http://state_server:50051",
+        "--sc-default-confirmations",
+        "1",
+        "--tx-provider-http-endpoint",
+        "http://hardhat:8545",
+        "--tx-mnemonic",
         "test test test test test test test test test test test junk",
-        "--chain-id",
+        "--tx-sender",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "--tx-chain-id",
         "31337",
+        "--tx-default-confirmations",
+        "2"
       ]
     restart: always
     depends_on:
@@ -62,23 +70,23 @@ services:
       server_manager:
         condition: service_started
     environment:
-      RUST_LOG: info
+      RUST_LOG: "dispatcher::main_loop=trace,dispatcher::rollups_dispatcher=trace"
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
-      - ./config:/opt/cartesi/share/config/
       - ./deployments:/deployments
 
   state_server:
-    image: cartesi/delegate-server:0.5.0
+    image: cartesi/rollups-state-server:0.5.0
     command:
       [
-        "--sf-config",
-        "/opt/cartesi/share/config/sf-config.toml",
-        "--url",
-        "http://hardhat:8545",
-        "--ws-url",
+        "--sf-genesis-block",
+        "0x1",
+        "--sf-safety-margin",
+        "1",
+        "--bh-ws-endpoint",
         "ws://hardhat:8545",
-        "rollups",
+        "--bh-block-timeout",
+        "120"
       ]
     restart: always
     #    healthcheck:
@@ -91,7 +99,8 @@ services:
         condition: service_healthy
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
-      - ./config:/opt/cartesi/share/config/
+    environment:
+      RUST_LOG: info
 
   server_manager:
     restart: always
@@ -150,7 +159,7 @@ services:
       server_manager:
         condition: service_started
     environment:
-      RUST_LOG: debug
+      RUST_LOG: info
 
   rollups_indexer:
     image: cartesi/rollups-indexer:0.5.0
@@ -158,8 +167,18 @@ services:
       [
         "--dapp-contract-address-file",
         "/deployments/localhost/dapp.address",
-        "--indexer-config-path",
-        "/opt/cartesi/share/config/indexer-config.toml",
+        "--session-id",
+        "default_rollups_id",
+        "--initial-epoch",
+        "0",
+        "--interval",
+        "10",
+        "--confirmations",
+        "1",
+        "--state-server-endpoint",
+        "http://state_server:50051",
+        "--mm-endpoint",
+        "http://server_manager:5001",
       ]
     restart: always
     depends_on:
@@ -178,7 +197,6 @@ services:
       RUST_LOG: info
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
-      - ./config:/opt/cartesi/share/config/
       - ./deployments:/deployments
 
   query_server:
