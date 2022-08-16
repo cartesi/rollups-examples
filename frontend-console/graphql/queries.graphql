@@ -167,3 +167,78 @@ query vouchersByEpoch($epoch_index: Int!) {
     }
   }
 }
+
+
+# REPORTS
+
+query report($id: ID!) {
+  report(id: $id) {
+    id
+    payload
+    index
+    input {
+      index
+      epoch {
+        index
+      }
+    }
+  }
+}
+
+query reports {
+  reports {
+    nodes {
+      id
+      index
+      payload
+      input {
+        index
+        epoch {
+          index
+        }
+      }
+    }
+  }
+}
+
+query reportsByEpochAndInput($epoch_index: Int!, $input_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    input(index: $input_index) {
+      reports {
+        nodes {
+          id
+          index
+          payload
+          input {
+            index
+            epoch {
+              index
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query reportsByEpoch($epoch_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    inputs {
+      nodes {
+        reports {
+          nodes {
+            id
+            index
+            payload
+            input {
+              index
+              epoch {
+                index
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

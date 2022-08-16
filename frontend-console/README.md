@@ -83,9 +83,9 @@ The following parameters are available to specify this configuration, with some 
 - **`--mnemonic`**: determines an account for submitting transactions; when using the `localhost` network, the application will use the default `mnemonic` for the local Hardhat node, which is already funded; otherwise, you must define a mnemonic for an account that has funds in the specified network; you can also define this parameter by setting the `MNEMONIC` environment variable;
 - **`--accountIndex`**: specifies an account index to use from the provided mnemonic; if absent, index `0` is used;
 
-### Listing notices and vouchers
+### Listing notices, vouchers and reports
 
-The `notice list` and `voucher list` commands display DApp notices and vouchers associated with the given epoch and input.
+The `notice list`, `voucher list` and `report list` commands display DApp notices, vouchers and reports associated with the given epoch and input.
 
 ```shell
 yarn start notice list <options>
@@ -93,6 +93,10 @@ yarn start notice list <options>
 
 ```shell
 yarn start voucher list <options>
+```
+
+```shell
+yarn start report list <options>
 ```
 
 Examples:
@@ -107,6 +111,12 @@ Examples:
 
     ```shell
     yarn start voucher list --epoch 0
+    ```
+
+1. List all reports emitted for epoch `0` and input `1` of the current locally deployed DApp:
+
+    ```shell
+    yarn start report list --epoch 0 --input 1
     ```
 
 1. List notices for epoch `1` and input `3` of the `echo-python` DApp instance already deployed to the Ethereum Goerli testnet:
