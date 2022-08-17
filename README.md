@@ -49,7 +49,7 @@ This will also build the example's Cartesi Machine containing the DApp's back-en
 
 ## Running
 
-Each application can be executed in 2 modes, as explained below.
+Each application can be executed in Production and Host modes, as explained below.
 
 ### Production mode
 
@@ -91,6 +91,19 @@ docker compose -f ../docker-compose.yml -f ./docker-compose.override.yml -f ../d
 ```
 
 _Note_: When running in host mode, localhost ports `5003` and `5004` will be used by default for the communication between the Cartesi Rollups framework and the DApp's back-end.
+
+### Interactive console
+
+It is possible to start an interactive console for the Cartesi Machine containing the application's back-end logic.
+This allows you to experiment with the back-end's software stacks within its production environment, allowing you to evaluate performance and explore the most adequate technology choices for its implementation.
+
+After the [Building](#building) step above is executed, a corresponding console Docker image is made available for that purpose. To run it and start your interactive console, type the following command:
+
+```shell
+docker run --rm -it cartesi/dapp:<example>-devel-console
+```
+
+The example's specific resources can generally be found within the `/mnt/dapp` directory.
 
 ### Advancing time
 
