@@ -30,6 +30,8 @@ As mentioned before, it is possible to interact with all the examples in this re
 
 Docker version `20.10.14` is required for building the environment and executing the examples.
 
+The below instructions have been tested in systems running both Linux (Ubuntu), MacOS, and Windows (using [WSL](https://docs.microsoft.com/en-us/windows/wsl/install), which is highly recommended for Windows users).
+
 ## Building
 
 To run the examples, first clone the repository as follows:
