@@ -35,7 +35,9 @@ jobs:
               uses: docker/metadata-action@v4
               with:
                   bake-target: server
-                  images: ${{ secrets.DOCKER_ORGANIZATION }}/dapp
+                  images: |
+                      name=ghcr.io/${{ github.repository_owner }}/dapp
+                      name=docker.io/${{ github.repository_owner }}/dapp,enable=${{ github.repository_owner == 'cartesi' }}
                   tags: |
                       type=semver,prefix=${{ inputs.dapp-name }}-,pattern={{version}},suffix=-server
                       type=ref,event=branch,prefix=${{ inputs.dapp-name }}-,pattern={{branch}},suffix=-server
@@ -45,14 +47,21 @@ jobs:
             - name: Set dapp-image
               id: set-dapp-image
               run: |
-                  export tags=${{ steps.meta.outputs.tags }}
-                  echo ::set-output name=dapp-image::${tags#${{ secrets.DOCKER_ORGANIZATION }}/}
+                  export version=${{ steps.meta.outputs.version }}
+                  echo ::set-output name=dapp-image::ghcr.io/${{ github.repository_owner }}/dapp:$version
 
             - name: Login to Docker Hub
               uses: docker/login-action@v2
               with:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
+
+            - name: Login to GitHub Container Registry
+              uses: docker/login-action@v2
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Build
               id: build
