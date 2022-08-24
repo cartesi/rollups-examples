@@ -83,7 +83,7 @@ services:
       - machine:/opt/cartesi/share/dapp-bin
 
   rollups_inspect_server:
-    image: cartesicorp/rollups-inspect-server:develop
+    image: cartesi/rollups-inspect-server:0.5.0
     command:
       [
         "--inspect-server-address",

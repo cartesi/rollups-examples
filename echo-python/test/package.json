@@ -1,6 +1,6 @@
 {
     "name": "echo-test",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "description": "Tests for Echo DApp",
     "author": "Victor Yves Crispim <victor.yves@cartesi.io>",
     "license": "Apache-2.0",
@@ -14,7 +14,7 @@
         "startEnvironment:prod": "cd .. && docker-compose -f ../docker-compose.yml -f docker-compose.override.yml up -d",
         "startEnvironment:host": "cd .. && docker-compose -f ../docker-compose.yml -f docker-compose.override.yml -f ../docker-compose-host.yml up -d && cd test",
         "stopEnvironment": "cd .. && docker-compose -f ../docker-compose.yml -f docker-compose.override.yml down -v",
-        "saveLogs":"saveLogs () { mkdirp logs && docker-compose -f ../../docker-compose.yml -f ../docker-compose.override.yml logs --timestamps --no-log-prefix --no-color $1 > logs/$1.log; }; saveLogs",
+        "saveLogs": "saveLogs () { mkdirp logs && docker-compose -f ../../docker-compose.yml -f ../docker-compose.override.yml logs --timestamps --no-log-prefix --no-color $1 > logs/$1.log; }; saveLogs",
         "pretest:prod": "yarn prepareEnvironment && yarn startEnvironment:prod",
         "pretest:host": "yarn prepareEnvironment && yarn startEnvironment:host && yarn startBackend",
         "pretest:ci": "yarn generateTypes && yarn setupConsole && yarn startEnvironment:prod",
