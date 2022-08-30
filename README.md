@@ -51,7 +51,10 @@ cd <example>
 docker buildx bake --load
 ```
 
-This will also build the example's Cartesi Machine containing the DApp's back-end logic. For certain examples, this may include special [procedures for downloading and installing additional dependencies](./calculator/README.md#installing-extra-dependencies) required by the application.
+This will also build the example's Cartesi Machine containing the DApp's back-end logic.
+
+The file `<example>/dapp.json` contains some configurations for building the application. In particular, it defines the back-end's entry-point executable, along with any other files that should be made available inside the Cartesi Machine.
+For certain examples, the build process also includes special [procedures for downloading and installing additional dependencies](./calculator/README.md#installing-extra-dependencies) required by the application.
 
 ## Running
 
@@ -112,6 +115,12 @@ docker run --rm -it cartesi/dapp:<example>-devel-console
 ```
 
 The example's specific resources can generally be found within the `/mnt/dapp` directory.
+
+To run the console as the `root` user, type the following command:
+
+```shell
+docker run --rm -it cartesi/dapp:<example>-devel-console run-machine-console.sh --run-as-root
+```
 
 ### Advancing time
 
