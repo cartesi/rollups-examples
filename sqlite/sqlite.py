@@ -24,6 +24,9 @@ logger = logging.getLogger(__name__)
 rollup_server = environ["ROLLUP_HTTP_SERVER_URL"]
 logger.info(f"HTTP rollup_server url is {rollup_server}")
 
+# connects to internal database
+con = sqlite3.connect("data.db")
+
 
 def hex2str(hex):
     """
@@ -51,11 +54,10 @@ def handle_request(data, request_type):
     try:
         # retrieves SQL statement from input payload
         statement = hex2str(data["payload"])
-        logger.info(f"Received statement: '{statement}'")
+        logger.info(f"Processing statement: '{statement}'")
 
-        # connects to internal database
+        # retrieves a cursor to the internal database
         try:
-            con = sqlite3.connect("data.db")
             cur = con.cursor()
         except Exception as e:
             # critical error if database is no longer accessible: DApp can no longer proceed
@@ -74,11 +76,6 @@ def handle_request(data, request_type):
             status = "reject"
             msg = f"Error executing statement '{statement}': {e}"
             post("report", msg, logging.ERROR)
-
-        finally:
-            # closes connection to database
-            con.commit()
-            con.close()
 
         if result:
             # if there is a result, converts it to JSON and posts it as a notice or report
