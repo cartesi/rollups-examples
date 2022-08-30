@@ -37,7 +37,7 @@ services:
     restart: always
     depends_on:
       state_server:
-        condition: service_started
+        condition: service_healthy
       server_manager:
         condition: service_started
     environment:
@@ -63,14 +63,16 @@ services:
         "120",
       ]
     restart: always
-    #    healthcheck:
-    #      test: ["CMD", "curl", "-f", "http://locahost:50051"]
-    #      interval: 10s
-    #      timeout: 5s
-    #      retries: 5
+    healthcheck:
+      test: ["CMD", "grpc-health-probe", "-addr=:50051"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
+    environment:
+      RUST_LOG: info
 
   server_manager:
     restart: always

@@ -64,7 +64,7 @@ services:
       hardhat_set_interval:
         condition: service_completed_successfully
       state_server:
-        condition: service_started
+        condition: service_healthy
       server_manager:
         condition: service_started
     environment:
@@ -89,11 +89,11 @@ services:
         "120",
       ]
     restart: always
-    #    healthcheck:
-    #      test: ["CMD", "curl", "-f", "http://locahost:50051"]
-    #      interval: 10s
-    #      timeout: 5s
-    #      retries: 5
+    healthcheck:
+      test: ["CMD", "grpc-health-probe", "-addr=:50051"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       hardhat:
         condition: service_healthy
