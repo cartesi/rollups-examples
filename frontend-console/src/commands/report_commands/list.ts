@@ -12,6 +12,7 @@
 import { Argv } from "yargs";
 import { getReports } from "../../graphql/reports";
 import { ethers } from "ethers";
+import { hex2str } from "../utils";
 
 interface Args {
     url: string;
@@ -70,12 +71,7 @@ export const handler = async (args: Args) => {
             output.epoch = n.input.epoch.index;
             output.input = n.input.index;
             output.report = n.index;
-            try {
-                output.payload = ethers.utils.toUtf8String(n.payload);
-            } catch (e) {
-                // cannot decode hex payload as a UTF-8 string
-                output.payload = n.payload;
-            }
+            output.payload = hex2str(n.payload);
             return output;
         });
 

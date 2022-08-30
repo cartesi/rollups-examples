@@ -13,6 +13,7 @@ import fetch from "cross-fetch";
 import { ethers } from "ethers";
 import path from "path";
 import { Argv } from "yargs";
+import { hex2str } from "./utils";
 
 interface Args {
     payload: string;
@@ -50,22 +51,12 @@ export const handler = async (args: Args) => {
         console.log(`Metadata: ${JSON.stringify(result.metadata)}`);
         console.log(`Reports:`);
         for (let i in result.reports) {
-            let output = result.reports[i].payload;
-            try {
-                output = ethers.utils.toUtf8String(output);
-            } catch (e) {
-                // cannot decode hex payload as a UTF-8 string
-            }
-            console.log(`${i}: ${output}`);
+            let payload = result.reports[i].payload;
+            console.log(`${i}: ${hex2str(payload)}`);
         }
         if (result.exception_payload) {
             let payload = result.exception_payload;
-            try {
-                payload = ethers.utils.toUtf8String(payload);
-            } catch (e) {
-                // cannot decode hex payload as a UTF-8 string
-            }
-            console.log(`Exception payload: ${payload}`);
+            console.log(`Exception payload: ${hex2str(payload)}`);
         }
     } else {
         console.log(JSON.stringify(await response.text()));
