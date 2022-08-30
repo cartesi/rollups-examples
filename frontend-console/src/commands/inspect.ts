@@ -43,9 +43,10 @@ export const handler = async (args: Args) => {
 
     const response = await fetch(path.join(url, payload));
 
-    console.log(`Returned status: ${response.status}`);
+    console.log(`HTTP status: ${response.status}`);
     if (response.status == 200) {
         const result = await response.json();
+        console.log(`Inspect status: ${JSON.stringify(result.status)}`);
         console.log(`Metadata: ${JSON.stringify(result.metadata)}`);
         console.log(`Reports:`);
         for (let i in result.reports) {
@@ -55,7 +56,16 @@ export const handler = async (args: Args) => {
             } catch (e) {
                 // cannot decode hex payload as a UTF-8 string
             }
-            console.log(`${i}: "${output}"`);
+            console.log(`${i}: ${output}`);
+        }
+        if (result.exception_payload) {
+            let payload = result.exception_payload;
+            try {
+                payload = ethers.utils.toUtf8String(payload);
+            } catch (e) {
+                // cannot decode hex payload as a UTF-8 string
+            }
+            console.log(`Exception payload: ${payload}`);
         }
     } else {
         console.log(JSON.stringify(await response.text()));

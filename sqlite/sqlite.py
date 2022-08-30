@@ -37,9 +37,15 @@ def str2hex(str):
     """
     return "0x" + str.encode("utf-8").hex()
 
+def post(endpoint, payloadStr, logLevel):
+    logger.log(logLevel, f"Adding {endpoint} with payload: {payloadStr}")
+    payload = str2hex(payloadStr)
+    response = requests.post(f"{rollup_server}/{endpoint}", json={"payload": payload})
+    logger.info(f"Received {endpoint} status {response.status_code} body {response.content}")
 
-def handle_advance(data):
-    logger.info(f"Received advance request data {data}")
+
+def handle_request(data, request_type):
+    logger.info(f"Received {request_type} data {data}")
 
     status = "accept"
     try:
@@ -54,8 +60,7 @@ def handle_advance(data):
         except Exception as e:
             # critical error if database is no longer accessible: DApp can no longer proceed
             msg = f"Critical error connecting to database: {e}"
-            logger.error(msg)
-            requests.post(rollup_server + "/exception", json={"payload": str2hex(msg)})
+            post("exception", msg, logging.ERROR)
             sys.exit(1)
 
         result = None
@@ -68,45 +73,28 @@ def handle_advance(data):
         except Exception as e:
             status = "reject"
             msg = f"Error executing statement '{statement}': {e}"
-            logger.error(msg)
-            response = requests.post(rollup_server + "/report", json={"payload": str2hex(msg)})
-            logger.info(f"Received report status {response.status_code} body {response.content}")
+            post("report", msg, logging.ERROR)
 
         finally:
             # closes connection to database
             con.commit()
             con.close()
 
-        if (result):
-            # if there is a result, converts it to JSON and posts it as a notice
+        if result:
+            # if there is a result, converts it to JSON and posts it as a notice or report
             payloadJson = json.dumps(result)
-            payload = str2hex(payloadJson)
-            logger.info(f"Adding notice with payload: {payloadJson}")
-            response = requests.post(rollup_server + "/notice", json={"payload": payload})
-            logger.info(f"Received notice status {response.status_code} body {response.content}")
+            if request_type == "advance_state":
+                post("notice", payloadJson, logging.INFO)
+            else:
+                post("report", payloadJson, logging.INFO)
 
     except Exception as e:
         status = "reject"
         msg = f"Error processing data {data}\n{traceback.format_exc()}"
-        logger.error(msg)
-        response = requests.post(rollup_server + "/report", json={"payload": str2hex(msg)})
-        logger.info(f"Received report status {response.status_code} body {response.content}")
+        post("report", msg, logging.ERROR)
 
     return status
 
-
-def handle_inspect(data):
-    logger.info(f"Received inspect request data {data}")
-    logger.info("Adding report")
-    response = requests.post(rollup_server + "/report", json={"payload": data["payload"]})
-    logger.info(f"Received report status {response.status_code}")
-    return "accept"
-
-
-handlers = {
-    "advance_state": handle_advance,
-    "inspect_state": handle_inspect,
-}
 
 finish = {"status": "accept"}
 rollup_address = None
@@ -126,5 +114,4 @@ while True:
                 rollup_address = metadata["msg_sender"]
                 logger.info(f"Captured rollup address: {rollup_address}")
                 continue
-        handler = handlers[rollup_request["request_type"]]
-        finish["status"] = handler(rollup_request["data"])
+        finish["status"] = handle_request(data, rollup_request["request_type"])
