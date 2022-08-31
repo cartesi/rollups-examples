@@ -91,8 +91,10 @@ export const handler = async (args: Args) => {
     // use message from command line option, or from user prompt
     console.log(`sending "${payload}"`);
 
-    // convert string to input bytes
-    const inputBytes = ethers.utils.toUtf8Bytes(payload);
+    // convert string to input bytes (if it's not already bytes-like)
+    const inputBytes = ethers.utils.isBytesLike(payload)
+        ? payload
+        : ethers.utils.toUtf8Bytes(payload);
 
     // send transaction
     const tx = await inputContract.addInput(inputBytes);
