@@ -66,7 +66,7 @@ services:
       state_server:
         condition: service_healthy
       server_manager:
-        condition: service_started
+        condition: service_healthy
     environment:
       RUST_LOG: "dispatcher::main_loop=trace,dispatcher::rollups_dispatcher=trace"
     volumes:
@@ -106,11 +106,11 @@ services:
     restart: always
     ports:
       - "5001:5001"
-    #    healthcheck:
-    #      test: ["CMD", "curl", "-f", "http://locahost:5001"]
-    #      interval: 10s
-    #      timeout: 5s
-    #      retries: 5
+    healthcheck:
+      test: ["CMD", "grpc-health-probe", "-addr=:5001"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - machine:/opt/cartesi/share/dapp-bin
 
@@ -121,7 +121,7 @@ services:
       hardhat:
         condition: service_healthy
       server_manager:
-        condition: service_started
+        condition: service_healthy
     command:
       [
         "create",
@@ -187,7 +187,7 @@ services:
       - "5005:5005"
     depends_on:
       server_manager:
-        condition: service_started
+        condition: service_healthy
     environment:
       RUST_LOG: info
 
@@ -219,7 +219,7 @@ services:
       state_server:
         condition: service_started
       server_manager:
-        condition: service_started
+        condition: service_healthy
       database:
         condition: service_healthy
     environment:
