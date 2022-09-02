@@ -6,7 +6,7 @@ COPY ./model .
 RUN pip3 install -r requirements.txt
 RUN python3 build_model.py
 
-FROM cartesi/toolchain:0.10.0 as dapp-build
+FROM cartesi/toolchain:0.11.0 as dapp-build
 
 WORKDIR /opt/cartesi/dapp
 COPY . .

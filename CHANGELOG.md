@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- Bump toolchain to 0.11.0
+- Bump rootfs to 0.14.1
+- Bump kernel to linux-5.5.19-ctsi-6
+- Bump rom to 0.12.0
+- Bump server-manager to 0.4.0
+
 ## [0.8.1] 2022-08-24
 
 ### Changed
