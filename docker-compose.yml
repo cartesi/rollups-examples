@@ -217,7 +217,7 @@ services:
       hardhat_set_interval:
         condition: service_completed_successfully
       state_server:
-        condition: service_started
+        condition: service_healthy
       server_manager:
         condition: service_healthy
       database:
