@@ -68,7 +68,7 @@ services:
       server_manager:
         condition: service_healthy
     environment:
-      RUST_LOG: "dispatcher::main_loop=trace,dispatcher::rollups_dispatcher=trace"
+      RUST_LOG: info
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./deployments:/deployments
