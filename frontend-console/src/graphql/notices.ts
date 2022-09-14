@@ -97,7 +97,9 @@ export const getNotices = async (
         );
     } else {
         // list notices using top-level query
-        const { data, error } = await client.query(NoticesDocument).toPromise();
+        const { data, error } = await client
+            .query(NoticesDocument, {})
+            .toPromise();
         if (data?.notices) {
             return data.notices.nodes.filter<PartialNotice>(isPartialNotice);
         } else {

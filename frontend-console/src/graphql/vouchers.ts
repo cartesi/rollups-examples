@@ -100,7 +100,7 @@ export const getVouchers = async (
     } else {
         // list vouchers using top-level query
         const { data, error } = await client
-            .query(VouchersDocument)
+            .query(VouchersDocument, {})
             .toPromise();
         if (data?.vouchers) {
             return data.vouchers.nodes.filter<PartialVoucher>(isPartialVoucher);
