@@ -2,6 +2,7 @@
 ---
 name: "Build echo-lua DApp"
 on:
+    workflow_dispatch:
     pull_request:
         paths:
             - "docker/**"
@@ -10,6 +11,7 @@ on:
             - ".github/workflows/echo-lua-dapp.yml"
             - "echo-lua/**"
             - "!**/*.md"
+            - "frontend-console/**"
     push:
         tags:
             - v*
@@ -21,3 +23,52 @@ jobs:
         with:
             dapp-name: echo-lua
         secrets: inherit
+    test:
+        needs: build
+        runs-on: ubuntu-20.04
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v3
+              with:
+                  submodules: recursive
+                  token: ${{ secrets.CI_TOKEN }}
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 14
+
+            - name: Login to GitHub Container Registry
+              uses: docker/login-action@v2
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Run tests
+              env:
+                  DAPP_IMAGE: ${{ needs.build.outputs.dapp-image }}
+              run: |
+                  yarn install
+                  yarn test:ci --verbose
+              working-directory: ./echo-lua/test
+
+            - name: Save docker logs
+              if: always()
+              run: |
+                  yarn saveLogs hardhat
+                  yarn saveLogs rollups_dispatcher
+                  yarn saveLogs state_server
+                  yarn saveLogs server_manager
+                  yarn saveLogs rollups_inspect_server
+                  yarn saveLogs rollups_indexer
+                  yarn saveLogs query_server
+                  yarn saveLogs database
+              working-directory: ./echo-lua/test
+
+            - name: Upload docker logs
+              if: always()
+              uses: actions/upload-artifact@master
+              with:
+                  name: echo-lua-test-logs
+                  path: ./echo-lua/test/logs/
