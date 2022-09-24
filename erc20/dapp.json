@@ -1,6 +1,6 @@
 {
   "fs": {
-    "files": [".env", "erc20.py", "entrypoint.sh"],
+    "files": [".venv", "erc20.py", "entrypoint.sh"],
     "size": 131072
   }
 }

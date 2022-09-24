@@ -5,7 +5,7 @@ WORKDIR /opt/cartesi/dapp
 COPY . .
 
 RUN <<EOF
-python3 -m crossenv $(which python3) .env
-. ./.env/bin/activate
+python3 -m crossenv $(which python3) .venv
+. ./.venv/bin/activate
 pip install -r requirements.txt
 EOF

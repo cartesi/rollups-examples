@@ -44,8 +44,8 @@ WORKDIR /opt/cartesi/dapp
 COPY . .
 
 RUN <<EOF
-python3 -m crossenv $(which python3) .env
-. ./.env/bin/activate
+python3 -m crossenv $(which python3) .venv
+. ./.venv/bin/activate
 pip install -r requirements.txt
 EOF
 ```
@@ -58,7 +58,7 @@ The DApp file system size must be increased in order to accommodate the new modu
 
 This is accomplished by adjusting the DApp's own configuration file, [`dapp.json`](./dapp.json), as follows:
 
-- Include directory `.env`, where the modules were installed, in the file system;
+- Include directory `.venv`, where the modules were installed, in the file system;
 - Overriding the default file system size, defined as `fs.size` at [`../docker/default.json`](../docker/default.json). Values are stated in bytes.
 
 The resulting [`dapp.json`](./dapp.json) file is listed below:
@@ -66,7 +66,7 @@ The resulting [`dapp.json`](./dapp.json) file is listed below:
 ```json
 {
   "fs": {
-    "files": [".env", "calculator.py", "entrypoint.sh"],
+    "files": [".venv", "calculator.py", "entrypoint.sh"],
     "size": 128000
   }
 }
@@ -78,7 +78,7 @@ In order to make the installed modules available, `PYTHONPATH` must be defined i
 
 ```shell
 set -e
-PYTHONPATH=/mnt/dapp/.env/cross/lib/python3.10/site-packages python3 calculator.py
+PYTHONPATH=/mnt/dapp/.venv/cross/lib/python3.10/site-packages python3 calculator.py
 ```
 
 ## Interacting with the application

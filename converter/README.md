@@ -53,8 +53,8 @@ In order to start the converter back-end, run the following commands in a dedica
 
 ```shell
 cd converter/
-python3 -m venv .env
-. .env/bin/activate
+python3 -m venv .venv
+. .venv/bin/activate
 pip install -r requirements.txt
 ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 converter.py
 ```

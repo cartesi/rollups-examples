@@ -12,4 +12,4 @@
 # specific language governing permissions and limitations under the License.
 
 set -e
-PYTHONPATH=/mnt/dapp/.env/cross/lib/python3.10/site-packages rollup-init python3 calculator.py
+PYTHONPATH=/mnt/dapp/.venv/cross/lib/python3.10/site-packages rollup-init python3 calculator.py
