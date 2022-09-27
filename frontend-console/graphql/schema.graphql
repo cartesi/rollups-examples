@@ -1,327 +1,187 @@
-# Query types
-type Version {
-    id: Int!
-    version: String!
+type Proof {
+  "Hashes given in Ethereum hex binary format (32 bytes), starting with '0x'"
+  outputHashesRootHash: String!
+  vouchersEpochRootHash: String!
+  noticesEpochRootHash: String!
+  machineStateHash: String!
+  keccakInHashesSiblings: [String!]!
+  outputHashesInEpochSiblings: [String!]!
 }
 
-type ImmutableState {
-    id: ID!
-    input_duration: String!
-    challenge_period: String!
-    contract_creation_timestamp: String!
-    dapp_contract_address: String!
+type EpochConnection {
+  totalCount: Int!
+  edges: [EpochEdge!]!
+  nodes: [Epoch!]!
+  pageInfo: PageInfo!
 }
 
 type Input {
-    id: ID!
-    sender: String!
-    timestamp: String!
-    payload: [String]!
-}
-
-type EpochInputState {
-    id: ID!
-    epoch_number: String!
-    inputs: [Input]!
-}
-
-type FinalizedEpoch {
-    id: ID!
-    epoch_number: String!
-    hash: String!
-    inputs: EpochInputState!
-    finalized_block_hash: String!
-    finalized_block_number: String!
-}
-
-type FinalizedEpochs {
-    id: ID!
-    finalized_epochs: [FinalizedEpoch]!
-    initial_epoch: String!
-    dapp_contract_address: String!
-}
-
-type AccumulatingEpoch {
-    id: ID!
-    epoch_number: String!
-    inputs: EpochInputState!
-    dapp_contract_address: String!
-}
-
-enum PhaseState {
-    InputAccumulation
-    EpochSealedAwaitingFirstClaim
-    AwaitingConsensusNoConflict
-    AwaitingConsensusAfterConflict
-    ConsensusTimeout
-    AwaitingDispute
-}
-
-type IntegerBool {
-    integer: Boolean!
-}
-
-type IntegerInnerObject {
-    integer: IntegerBool
-}
-
-type IntegerObject {
-    integer: IntegerInnerObject
-}
-
-type VoucherState {
-    id: ID!
-    voucher_address: String!
-    vouchers: IntegerObject
-}
-
-type RollupsState {
-    id: ID!
-    block_hash: String!
-    constants: ImmutableState!
-    initial_epoch: String!
-    current_epoch: AccumulatingEpoch!
-    current_phase: PhaseState!
-    voucher_state: VoucherState!
-}
-
-type GetStatusResponse {
-    session_id: [String]!
-}
-
-type TaintStatus {
-    error_code: Int!
-    error_message: String!
-}
-
-type GetSessionStatusResponse {
-    session_id: ID!
-    active_epoch_index: Int!
-    epoch_index: [Int]!
-    taint_status: TaintStatus!
-}
-
-type Hash {
-    data: String!
-}
-
-type CartesiMachineHash {
-    data: String!
-}
-
-type MerkleTreeProof {
-    id: ID!
-    target_address: String!
-    log2_target_size: String!
-    target_hash: String!
-    log2_root_size: String!
-    root_hash: String!
-    sibling_hashes: [[Int]]!
-}
-
-enum EpochState {
-    ACTIVE
-    FINISHED
-}
-
-type Report {
-    payload: String!
+  id: ID!
+  index: Int!
+  epoch: Epoch!
+  msgSender: String!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  "Get voucher from this particular input given the voucher's index"
+  voucher(index: Int!): Voucher!
+  "Get notice from this particular input given the notice's index"
+  notice(index: Int!): Notice!
+  "Get report from this particular input given report's index"
+  report(index: Int!): Report!
+  "Get vouchers from this particular input with additional ability to filter and paginate them"
+  vouchers(first: Int, last: Int, after: String, before: String, where: VoucherFilter): VoucherConnection!
+  "Get notices from this particular input with additional ability to filter and paginate them"
+  notices(first: Int, last: Int, after: String, before: String, where: NoticeFilter): NoticeConnection!
+  "Get reports from this particular input with additional ability to filter and paginate them"
+  reports(first: Int, last: Int, after: String, before: String, where: ReportFilter): ReportConnection!
 }
 
 type Voucher {
-    session_id: String!
-    epoch_index: String!
-    input_index: String!
-    voucher_index: String!
-    keccak: String!
-    Address: String!
-    payload: String!
-    keccak_in_voucher_hashes: MerkleTreeProof!
-}
-
-type Notice {
-    session_id: String!
-    epoch_index: String!
-    input_index: String!
-    notice_index: String!
-    keccak: String!
-    payload: String!
-    keccak_in_notice_hashes: MerkleTreeProof!
-}
-
-type InputResult {
-    session_id: String!
-    epoch_index: String!
-    input_index: String!
-    voucher_hashes_in_machine: MerkleTreeProof!
-    vouchers: [Voucher]!
-    notice_hashes_in_machine: MerkleTreeProof!
-    notices: [Notice]!
-}
-
-enum CompletionStatus {
-    ACCEPTED
-    CYCLE_LIMIT_EXCEEDED
-    REJECTED_BY_MACHINE
-    MACHINE_HALTED
-    TIME_LIMIT_EXCEEDED
-}
-
-type ProcessedInput {
-    session_id: String!
-    epoch_index: String!
-    input_index: String!
-    most_recent_machine_hash: String!
-    voucher_hashes_in_epoch: MerkleTreeProof!
-    notice_hashes_in_epoch: MerkleTreeProof!
-    reports: [Report]!
-    # is supposed to be "oneof"
-    result: InputResult
-    skip_reason: CompletionStatus
-}
-
-type GetEpochStatusResponse {
-    session_id: String!
-    epoch_index: String!
-    state: EpochState!
-    most_recent_machine_hash: String!
-    most_recent_vouchers_epoch_root_hash: String!
-    most_recent_notices_epoch_root_hash: String!
-    processed_inputs: [ProcessedInput]!
-    pending_input_count: String!
-    taint_status: TaintStatus!
-}
-
-type GetProcessedInputsVouchersAndNotices {
-    processed_input: ProcessedInput
-    voucher: Voucher
-    report: Report
-}
-
-type Metrics {
-    block_number: String
-    block_hash: String
-    number_of_processed_inputs: Int
-    dapp_contract_address: String
-    prometheus_metrics: String
-}
-
-# Mutation Inputs
-input ImmutableStateInput {
-    input_duration: String!
-    challenge_period: String!
-    dapp_contract_address: String!
-}
-
-input InputData {
-    sender: String!
-    timestamp: String!
-    payload: [String]!
-}
-
-input EpochInputStateInput {
-    epoch_number: String!
-    inputs: [InputData]!
-}
-
-input FinalizedEpochInput {
-    epoch_number: String!
-    hash: String!
-    inputs: EpochInputStateInput!
-    finalized_block_hash: String!
-    finalized_block_number: String!
-}
-
-input FinalizedEpochsInput {
-    initial_epoch: String!
-    dapp_contract_address: String!
-    finalized_epochs: [FinalizedEpochInput]!
-}
-input AccumulatingEpochInput {
-    epoch_number: String!
-    dapp_contract_address: String!
-    inputs: EpochInputStateInput!
-}
-
-input IntegerBoolInput {
-    integer: Boolean!
-}
-
-input IntegerInnerObjectInput {
-    integer: IntegerBoolInput!
-}
-
-input IntegerObjectInput {
-    integer: IntegerInnerObjectInput!
-}
-
-input VoucherStateInput {
-    voucher_address: String!
-    vouchers: IntegerObjectInput!
-}
-
-input RollupsInput {
-    block_hash: String!
-    constants: ImmutableStateInput!
-    initial_epoch: String!
-    current_epoch: AccumulatingEpochInput!
-    current_phase: PhaseState!
-    voucher_state: VoucherStateInput!
-}
-
-input GetSessionStatusRequest {
-    session_id: ID!
-}
-
-input GetEpochStatusRequest {
-    session_id: String!
-    epoch_index: String!
-}
-
-input Keys {
-    session_id: String
-    epoch_index: String
-    input_index: String
-}
-
-input VoucherKeys {
-    session_id: String
-    epoch_index: String
-    input_index: String
-    voucher_index: String
-}
-
-input NoticeKeys {
-    session_id: String
-    epoch_index: String
-    input_index: String
-    notice_index: String
+  id: ID!
+  index: Int!
+  input: Input!
+  proof: Proof
+  "Destination address as an Ethereum hex binary format (20 bytes), starting with '0x'"
+  destination: String!
+  "Payload in Ethereum hex binary format, starting with '0x'"
+  payload: String!
 }
 
 type Query {
-    constants: [ImmutableState]!
-    initial_epoch: String!
-    finalized_epochs: [FinalizedEpochs]!
-    current_epoch: [AccumulatingEpoch]!
-    current_phase: [PhaseState]!
-    voucher_state: [VoucherState]!
-    RollupsState: [RollupsState]!
-    GetVersion: Version!
-    GetStatus: GetStatusResponse!
-    GetSessionStatus(query: GetSessionStatusRequest!): GetSessionStatusResponse!
-    GetEpochStatus(query: GetEpochStatusRequest!): GetEpochStatusResponse!
-    GetProcessedInput(query: Keys): [ProcessedInput]
-    GetVoucher(query: VoucherKeys): [Voucher]
-    GetNotice(query: NoticeKeys): [Notice]
-    getMetrics: Metrics
+  epoch(id: ID!): Epoch!
+  epochI(index: Int!): Epoch!
+  input(id: ID!): Input!
+  notice(id: ID!): Notice!
+  report(id: ID!): Report!
+  voucher(id: ID!): Voucher!
+  epochs(first: Int, last: Int, after: String, before: String): EpochConnection!
+  "Get all available inputs with additional ability to filter and paginate them"
+  inputs(first: Int, last: Int, after: String, before: String, where: InputFilter): InputConnection!
+  "Get all available vouchers with additional ability to filter and paginate them"
+  vouchers(first: Int, last: Int, after: String, before: String, where: VoucherFilter): VoucherConnection!
+  "Get all available notices with additional ability to filter and paginate them"
+  notices(first: Int, last: Int, after: String, before: String, where: NoticeFilter): NoticeConnection!
+  "Get all available reports with additional ability to filter and paginate them"
+  reports(first: Int, last: Int, after: String, before: String, where: ReportFilter): ReportConnection!
 }
 
-type Mutation {
-    constants(input: [ImmutableStateInput]!): [ImmutableState]!
-    initial_epoch(input: String!): String!
-    finalized_epochs(input: [FinalizedEpochsInput]!): [FinalizedEpochs]!
-    current_epoch(input: AccumulatingEpochInput!): AccumulatingEpoch!
-    current_phase(input: PhaseState!): PhaseState!
-    voucher_state(input: VoucherStateInput!): VoucherState!
-    RollupsState(input: RollupsInput!): RollupsState!
+type NoticeEdge {
+  node: Notice!
+  cursor: String!
+}
+
+input NoticeFilter {
+  dummy: String!
+}
+
+type Epoch {
+  id: ID!
+  index: Int!
+  "Get input from this particular epoch given the input's index"
+  input(index: Int!): Input!
+  inputs(first: Int, last: Int, after: String, before: String, where: InputFilter): InputConnection!
+  "Get vouchers from this particular epoch with additional ability to filter and paginate them"
+  vouchers(first: Int, last: Int, after: String, before: String, where: VoucherFilter): VoucherConnection!
+  "Get notices from this particular input with additional ability to filter and paginate them"
+  notices(first: Int, last: Int, after: String, before: String, where: NoticeFilter): NoticeConnection!
+  "Get reports from this particular epoch with additional ability to filter and paginate them"
+  reports(first: Int, last: Int, after: String, before: String, where: ReportFilter): ReportConnection!
+}
+
+input VoucherFilter {
+  destination: String!
+}
+
+type InputConnection {
+  totalCount: Int!
+  edges: [InputEdge!]!
+  nodes: [Input!]!
+  pageInfo: PageInfo!
+}
+
+input ReportFilter {
+  dummy: String!
+}
+
+type EpochEdge {
+  node: Epoch!
+  cursor: String!
+}
+
+type VoucherConnection {
+  totalCount: Int!
+  edges: [VoucherEdge!]!
+  nodes: [Voucher!]!
+  pageInfo: PageInfo!
+}
+
+type Notice {
+  id: ID!
+  index: Int!
+  proof: Proof
+  input: Input!
+  "Keccak in Ethereum hex binary format, starting with '0x'"
+  keccak: String!
+  "Payload in Ethereum hex binary format, starting with '0x'"
+  payload: String!
+}
+
+type ReportEdge {
+  node: Report!
+  cursor: String!
+}
+
+type ReportConnection {
+  totalCount: Int!
+  edges: [ReportEdge!]!
+  nodes: [Report!]!
+  pageInfo: PageInfo!
+}
+
+input InputFilter {
+  msgSender: String
+  blockNumber: BigInt
+  blockNumberLowerThan: BigInt
+  blockNumberGreaterThan: BigInt
+  timestampLowerThan: BigInt
+  timestampGreaterThan: BigInt
+}
+
+scalar BigInt
+
+type NoticeConnection {
+  totalCount: Int!
+  edges: [NoticeEdge!]!
+  nodes: [Notice!]!
+  pageInfo: PageInfo!
+}
+
+type InputEdge {
+  node: Input!
+  cursor: String!
+}
+
+"Connection pattern cursor based pagination page info"
+type PageInfo {
+  startCursor: String!
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+type VoucherEdge {
+  node: Voucher!
+  cursor: String!
+}
+
+type Report {
+  id: ID!
+  index: Int!
+  input: Input!
+  "Payload in Ethereum hex binary format, starting with '0x'"
+  payload: String!
+}
+
+schema {
+  query: Query
 }

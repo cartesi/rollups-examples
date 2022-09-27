@@ -1,9 +1,244 @@
-query GetNotice($query: NoticeKeys) {
-    GetNotice(query: $query) {
-        session_id
-        epoch_index
-        input_index
-        notice_index
-        payload
+# NOTICES
+
+query notice($id: ID!) {
+  notice(id: $id) {
+    id
+    payload
+    index
+    keccak
+    proof {
+      outputHashesRootHash
+      vouchersEpochRootHash
+      noticesEpochRootHash
+      machineStateHash
+      keccakInHashesSiblings
+      outputHashesInEpochSiblings
     }
+    input {
+      index
+      epoch {
+        index
+      }
+    }
+  }
+}
+
+query notices {
+  notices {
+    nodes {
+      id
+      index
+      payload
+      input {
+        index
+        epoch {
+          index
+        }
+      }
+    }
+  }
+}
+
+query noticesByEpochAndInput($epoch_index: Int!, $input_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    input(index: $input_index) {
+      notices {
+        nodes {
+          id
+          index
+          payload
+          input {
+            index
+            epoch {
+              index
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query noticesByEpoch($epoch_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    inputs {
+      nodes {
+        notices {
+          nodes {
+            id
+            index
+            payload
+            input {
+              index
+              epoch {
+                index
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+# VOUCHERS
+
+query voucher($id: ID!) {
+  voucher(id: $id) {
+    id
+    destination
+    payload
+    index
+    proof {
+      outputHashesRootHash
+      vouchersEpochRootHash
+      noticesEpochRootHash
+      machineStateHash
+      keccakInHashesSiblings
+      outputHashesInEpochSiblings
+    }
+    input {
+      index
+      epoch {
+        index
+      }
+    }
+  }
+}
+
+query vouchers {
+  vouchers {
+    nodes {
+      id
+      index
+      destination
+      payload
+      input {
+        index
+        epoch {
+          index
+        }
+      }
+    }
+  }
+}
+
+query vouchersByEpochAndInput($epoch_index: Int!, $input_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    input(index: $input_index) {
+      vouchers {
+        nodes {
+          id
+          index
+          destination
+          payload
+          input {
+            index
+            epoch {
+              index
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query vouchersByEpoch($epoch_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    inputs {
+      nodes {
+        vouchers {
+          nodes {
+            id
+            index
+            destination
+            payload
+            input {
+              index
+              epoch {
+                index
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+# REPORTS
+
+query report($id: ID!) {
+  report(id: $id) {
+    id
+    payload
+    index
+    input {
+      index
+      epoch {
+        index
+      }
+    }
+  }
+}
+
+query reports {
+  reports {
+    nodes {
+      id
+      index
+      payload
+      input {
+        index
+        epoch {
+          index
+        }
+      }
+    }
+  }
+}
+
+query reportsByEpochAndInput($epoch_index: Int!, $input_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    input(index: $input_index) {
+      reports {
+        nodes {
+          id
+          index
+          payload
+          input {
+            index
+            epoch {
+              index
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query reportsByEpoch($epoch_index: Int!) {
+  epoch: epochI(index: $epoch_index) {
+    inputs {
+      nodes {
+        reports {
+          nodes {
+            id
+            index
+            payload
+            input {
+              index
+              epoch {
+                index
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

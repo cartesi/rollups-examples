@@ -1,0 +1,24 @@
+# yaml-language-server: =https://json.schemastore.org/github-workflow.json
+---
+name: "Build echo-js DApp"
+on:
+    workflow_dispatch:
+    pull_request:
+        paths:
+            - "docker/**"
+            - "base.hcl"
+            - ".github/workflows/dapp-build.yml"
+            - ".github/workflows/echo-js-dapp.yml"
+            - "echo-js/**"
+            - "!**/*.md"
+    push:
+        tags:
+            - v*
+        branches:
+            - develop
+jobs:
+    build:
+        uses: ./.github/workflows/dapp-build.yml
+        with:
+            dapp-name: echo-js
+        secrets: inherit

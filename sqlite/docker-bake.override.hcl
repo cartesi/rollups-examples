@@ -2,14 +2,22 @@
 target "dapp" {
 }
 
+variable "TAG" {
+  default = "devel"
+}
+
+variable "DOCKER_ORGANIZATION" {
+  default = "cartesi"
+}
+
 target "server" {
-  tags = ["cartesi/dapp:sqlite-devel-server"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:sqlite-${TAG}-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp:sqlite-devel-console"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:sqlite-${TAG}-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp:sqlite-devel-machine"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:sqlite-${TAG}-machine"]
 }

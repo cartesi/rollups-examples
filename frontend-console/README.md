@@ -32,9 +32,11 @@ The console application can be used to perform several operations. The available
 $ yarn start --help
 
 Commands:
-  index.ts erc20 <command>  Operations with ERC20 tokens
-  index.ts notices          List notices of an epoch and input
-  index.ts send             Send string input to DApp
+  index.ts erc20 <command>    Operations with ERC-20 tokens
+  index.ts input <command>    Operations with inputs
+  index.ts inspect            Inspect the state of the DApp
+  index.ts notice <command>   Operations with notices
+  index.ts voucher <command>  Operations with vouchers
 
 Options:
   --help     Show help                                                 [boolean]
@@ -45,28 +47,28 @@ In general terms, the application communicates with a Cartesi DApp through two d
 
 ### Sending inputs
 
-The `send` command adds inputs to a Cartesi Rollups DApp and has the following format:
+The `input send` command adds inputs to a Cartesi Rollups DApp and has the following format:
 
 ```shell
-yarn start send --input [message] <options>
+yarn start input send --payload [message] <options>
 ```
 
 Examples:
 
 1. Send an input to the current locally deployed DApp using Hardhat's default funded account:
 
-   ```shell
-   yarn start send --input "my message"
-   ```
+    ```shell
+    yarn start input send --payload "my message"
+    ```
 
-1. Send an input to an instance of the `echo-python` DApp already deployed on Polygon Mumbai testnet, using a user's account and a user's gateway RPC on Alchemy:
+1. Send an input to an instance of the `echo-python` DApp already deployed to the Ethereum Goerli testnet, using a user's account and a user's gateway RPC on Alchemy:
 
-   ```shell
-   export MNEMONIC=<user sequence of twelve words>
-   export RPC_URL=https://polygon-mumbai.g.alchemy.com/v2/<USER_KEY>
+    ```shell
+    export MNEMONIC=<user sequence of twelve words>
+    export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
 
-   yarn start send --input "my message" --dapp echo-python
-   ```
+    yarn start input send --payload "my message" --dapp echo-python
+    ```
 
 #### Options
 
@@ -81,27 +83,47 @@ The following parameters are available to specify this configuration, with some 
 - **`--mnemonic`**: determines an account for submitting transactions; when using the `localhost` network, the application will use the default `mnemonic` for the local Hardhat node, which is already funded; otherwise, you must define a mnemonic for an account that has funds in the specified network; you can also define this parameter by setting the `MNEMONIC` environment variable;
 - **`--accountIndex`**: specifies an account index to use from the provided mnemonic; if absent, index `0` is used;
 
-### Listing notices
+### Listing notices, vouchers and reports
 
-The `notices` command lists DApp notices associated with the given epoch and input.
+The `notice list`, `voucher list` and `report list` commands display DApp notices, vouchers and reports associated with the given epoch and input.
 
 ```shell
-yarn start notices <options>
+yarn start notice list <options>
+```
+
+```shell
+yarn start voucher list <options>
+```
+
+```shell
+yarn start report list <options>
 ```
 
 Examples:
 
 1. List all notices ever emitted for the current locally deployed DApp:
 
-   ```shell
-   yarn start notices
-   ```
+    ```shell
+    yarn start notice list
+    ```
 
-1. List notices for epoch `1` and input `3` of the `echo-python` DApp instance already deployed on Polygon Mumbai testnet:
+1. List all vouchers emitted for epoch `0` of the current locally deployed DApp:
 
-   ```shell
-   yarn start notices --url https://echo-python.polygon-mumbai.rollups.staging.cartesi.io/graphql --epoch 1 --input 3
-   ```
+    ```shell
+    yarn start voucher list --epoch 0
+    ```
+
+1. List all reports emitted for epoch `0` and input `1` of the current locally deployed DApp:
+
+    ```shell
+    yarn start report list --epoch 0 --input 1
+    ```
+
+1. List notices for epoch `1` and input `3` of the `echo-python` DApp instance already deployed to the Ethereum Goerli testnet:
+
+    ```shell
+    yarn start notice list --url https://echo-python.goerli.rollups.staging.cartesi.io/graphql --epoch 1 --input 3
+    ```
 
 Options are:
 
@@ -111,7 +133,91 @@ Options are:
 --input    Input index
 ```
 
-If the `url` parameter is absent, the console application will use a default value of "http://localhost:4000/graphql", which provides connectivity to a local Cartesi Node.
+If the `url` parameter is absent, the console application will use a default value of "http://localhost:4000/graphql", which provides connectivity to the local Cartesi Node.
+
+### Validating notices and executing vouchers
+
+The `notice validate` command can be used to check if a given notice is authentic, meaning that its associated proof can be successfully verified by the Cartesi Rollups framework.
+In a similar way, the `voucher execute` command can be used to submit a transaction on layer-1 as an output of a Cartesi DApp (e.g., to withdraw funds back from the Rollups framework).
+
+Both commands can only be executed if a proof is available for the specified notice or voucher. Proofs are only effectively produced when its associated epoch finishes, which happens after the DApp's configured epoch period elapses (e.g., after one week). In a local development environment, it is possible to explicitly [advance time](../README.md#advancing-time) in order to finish an epoch and have proofs be generated by the framework.
+
+```shell
+yarn start notice validate --id [id] <options>
+```
+
+```shell
+yarn start voucher execute --id [id] <options>
+```
+
+Examples:
+
+1. Validate notice with id `1` for the current locally deployed DApp, using Hardhat's default funded account:
+
+    ```shell
+    yarn start notice validate --id 1
+    ```
+
+1. Execute voucher with id `3` for the current locally deployed DApp, using Hardhat's default funded account:
+
+    ```shell
+    yarn start voucher execute --id 1
+    ```
+
+1. Validate notice with id `5` for the `echo-python` DApp already deployed to the Ethereum Goerli testnet, using a user's account and a user's gateway RPC on Alchemy:
+
+    ```shell
+    export MNEMONIC=<user sequence of twelve words>
+    export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
+
+    yarn start notice validate --id 5 --dapp echo-python --url https://echo-python.goerli.rollups.staging.cartesi.io/graphql
+    ```
+
+Options are:
+
+```shell
+--id            Notice or Voucher ID
+--rpc           URL of the RPC gateway to use
+--address       DApp Rollups contract address
+--addressFile   Path to a file containing the DApp Rollups contract address
+--dapp          DApp name
+--mnemonic      Wallet mnemonic
+--accountIndex  Account index from mnemonic
+--url           Reader URL
+```
+
+The `url` parameter has the same behavior as described for the [notice/voucher list](#listing-notices-and-vouchers) commands, whereas the other parameters behave as in the [input send](#options) command.
+
+### Inspecting DApp state
+
+The `inspect` command directly queries the DApp state within the Cartesi Machine. It can be used to send DApp-specific payloads that are interpreted by the application logic to yield a synchronous response.
+In practice, this command simply sends an HTTP GET request to the specified inspect URL, and does a little bit of parsing on the response.
+
+```shell
+yarn start inspect --payload [payload] <options>
+```
+
+Examples:
+
+1. Inspect the state of the locally deployed DApp using a REST-like query:
+
+    ```shell
+    yarn start inspect --payload "myresource?attr1=value1&attr2=value2"
+    ```
+
+1. Inspect the state of the `echo-python` DApp instance already deployed to the Ethereum Goerli testnet:
+
+    ```shell
+    yarn start inspect --payload "mypayload" --url https://echo-python.goerli.rollups.staging.cartesi.io/inspect
+    ```
+
+Options are:
+
+```shell
+--url      Reader inspect URL
+```
+
+If the `url` parameter is absent, the console application will use a default value of "http://localhost:5005/inspect", which provides connectivity to the local Cartesi Node.
 
 ### Depositing ERC-20 tokens
 
@@ -125,18 +231,18 @@ Examples:
 
 1. Deposit 10 CTSI in the locally deployed DApp:
 
-   ```shell
-   yarn start erc20 deposit --amount 10000000000000000000
-   ```
+    ```shell
+    yarn start erc20 deposit --amount 10000000000000000000
+    ```
 
-1. Deposit 10 CTSI in the `echo-python` DApp instance already deployed on Polygon Mumbai testnet, using a user's account and a user's gateway RPC on Alchemy:
+1. Deposit 10 CTSI in the `echo-python` DApp instance already deployed to the Ethereum Goerli testnet, using a user's account and a user's gateway RPC on Alchemy:
 
-   ```shell
-   export MNEMONIC=<user sequence of twelve words>
-   export RPC_URL=https://polygon-mumbai.g.alchemy.com/v2/<USER_KEY>
-   
-   yarn start erc20 deposit --amount 10000000000000000000 --dapp echo-python
-   ```
+    ```shell
+    export MNEMONIC=<user sequence of twelve words>
+    export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
+
+    yarn start erc20 deposit --amount 10000000000000000000 --dapp echo-python
+    ```
 
 Options are:
 
@@ -152,4 +258,4 @@ Options are:
 
 If the `erc20` address is unspecified, the appropriate address for the CTSI token will be used for the target blockchain being specified.
 
-Aside from that, the other parameters have the same behavior as described for the [send](#options) command.
+Aside from that, the other parameters have the same behavior as described for the [input send](#options) command.

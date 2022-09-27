@@ -7,6 +7,10 @@ on:
             dapp-name:
                 required: true
                 type: string
+        outputs:
+            dapp-image:
+                description: "The DApp built container image"
+                value: ${{ jobs.build_package.outputs.dapp-image }}
         secrets:
             DOCKER_ORGANIZATION:
                 required: true
@@ -18,6 +22,8 @@ on:
 jobs:
     build_package:
         runs-on: ubuntu-20.04
+        outputs:
+            dapp-image: ${{ steps.set-dapp-image.outputs.dapp-image }}
         steps:
             - uses: actions/checkout@v3
 
@@ -29,8 +35,20 @@ jobs:
               uses: docker/metadata-action@v4
               with:
                   bake-target: server
-                  images: ${{ secrets.DOCKER_ORGANIZATION }}/dapp
-                  tags: type=semver,prefix=${{ inputs.dapp-name }}-,pattern={{version}},suffix=-server
+                  images: |
+                      name=ghcr.io/${{ github.repository_owner }}/dapp
+                      name=docker.io/${{ github.repository_owner }}/dapp,enable=${{ github.repository_owner == 'cartesi' }}
+                  tags: |
+                      type=semver,prefix=${{ inputs.dapp-name }}-,pattern={{version}},suffix=-server
+                      type=ref,event=branch,prefix=${{ inputs.dapp-name }}-,pattern={{branch}},suffix=-server
+                      type=ref,event=pr,prefix=${{ inputs.dapp-name }}-pr-,pattern=${{ github.event.number }},suffix=-server
+                  flavor: latest=false
+
+            - name: Set dapp-image
+              id: set-dapp-image
+              run: |
+                  export version=${{ steps.meta.outputs.version }}
+                  echo ::set-output name=dapp-image::ghcr.io/${{ github.repository_owner }}/dapp:$version
 
             - name: Login to Docker Hub
               uses: docker/login-action@v2
@@ -38,11 +56,19 @@ jobs:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
 
-            - name: Build and push
-              uses: tuler/bake-action@49296ad87bc0081ff6973a65aaa7335e8340e76f
+            - name: Login to GitHub Container Registry
+              uses: docker/login-action@v2
               with:
-                  working-directory: ${{ inputs.dapp-name }}
-                  push: ${{ startsWith(github.ref, 'refs/tags/v') }}
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Build
+              id: build
+              uses: docker/bake-action@v2
+              with:
+                  workdir: ${{ inputs.dapp-name }}
+                  push: true
                   targets: server
                   files: |
                       docker-bake.hcl

@@ -2,15 +2,19 @@
 ---
 name: "Build echo-rust DApp"
 on:
-    push:
+    pull_request:
         paths:
-            - "config/**"
             - "docker/**"
             - "base.hcl"
             - ".github/workflows/dapp-build.yml"
             - ".github/workflows/echo-rust-dapp.yml"
             - "echo-rust/**"
             - "!**/*.md"
+    push:
+        tags:
+            - v*
+        branches:
+            - develop
 jobs:
     build:
         uses: ./.github/workflows/dapp-build.yml

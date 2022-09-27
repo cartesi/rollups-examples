@@ -2,7 +2,7 @@
 
 This repository includes examples of decentralized applications implemented using [Cartesi Rollups](https://github.com/cartesi/rollups).
 
-You can use [Gitpod](https://www.gitpod.io/) to immediately open this repository within a working development environment with all [required dependencies](https://cartesi.io/docs/build-dapps/requirements) already installed.
+You can use online development environments such as [Gitpod](https://gitpod.io/) and [CodeSandbox](https://codesandbox.io) to open this repository directly in your browser with all [required dependencies](https://cartesi.io/docs/build-dapps/requirements) already installed. These services allow you to start experimenting immediately, but keep in mind that they are provided by third-parties and are subject to unavailability and policy changes. They may also require access to your GitHub account in order to work properly.
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#prebuild/https://github.com/cartesi/rollups-examples/)
 
@@ -34,6 +34,8 @@ As mentioned before, it is possible to interact with all the examples in this re
 
 Docker version `20.10.14` is required for building the environment and executing the examples.
 
+The below instructions have been tested in systems running both Linux (Ubuntu), MacOS, and Windows (using [WSL](https://docs.microsoft.com/en-us/windows/wsl/install), which is highly recommended for Windows users).
+
 ## Building
 
 To run the examples, first clone the repository as follows:
@@ -49,11 +51,14 @@ cd <example>
 docker buildx bake --load
 ```
 
-This will also build the example's Cartesi Machine containing the DApp's back-end logic. For certain examples, this may include special [procedures for downloading and installing additional dependencies](./calculator/README.md#installing-extra-dependencies) required by the application.
+This will also build the example's Cartesi Machine containing the DApp's back-end logic.
+
+The file `<example>/dapp.json` contains some configurations for building the application. In particular, it defines the back-end's entry-point executable, along with any other files that should be made available inside the Cartesi Machine.
+For certain examples, the build process also includes special [procedures for downloading and installing additional dependencies](./calculator/README.md#installing-extra-dependencies) required by the application.
 
 ## Running
 
-Each application can be executed in 2 modes, as explained below.
+Each application can be executed in Production and Host modes, as explained below.
 
 ### Production mode
 
@@ -94,7 +99,28 @@ The host environment can be executed with the following command:
 docker compose -f ../docker-compose.yml -f ./docker-compose.override.yml -f ../docker-compose-host.yml up
 ```
 
+_Note_: In production mode, rejected inputs are guaranteed to have no effect on the back-end, since in that case the Cartesi Machine is completely rolled back to its previous state. However, in host mode there is no such guarantee and it is possible for changes to persist, for instance if the DApp allows an invalid input to change a global variable or produce a database write before it is rejected.
+
 _Note_: When running in host mode, localhost ports `5003` and `5004` will be used by default for the communication between the Cartesi Rollups framework and the DApp's back-end.
+
+### Interactive console
+
+It is possible to start an interactive console for the Cartesi Machine containing the application's back-end logic.
+This allows you to experiment with the back-end's software stacks within its production environment, allowing you to evaluate performance and explore the most adequate technology choices for its implementation.
+
+After the [Building](#building) step above is executed, a corresponding console Docker image is made available for that purpose. To run it and start your interactive console, type the following command:
+
+```shell
+docker run --rm -it cartesi/dapp:<example>-devel-console
+```
+
+The example's specific resources can generally be found within the `/mnt/dapp` directory.
+
+To run the console as the `root` user, type the following command:
+
+```shell
+docker run --rm -it cartesi/dapp:<example>-devel-console run-machine-console.sh --run-as-root
+```
 
 ### Advancing time
 
@@ -109,13 +135,15 @@ curl --data '{"id":1337,"jsonrpc":"2.0","method":"evm_increaseTime","params":[86
 <!-- markdownlint-disable MD024 -->
 ### Interacting with deployed DApps
 
-The [Echo Python](./echo-python/) example committed to this repository is also already deployed to the Polygon Mumbai testnet. In order to interact with it, you can simply use the [frontend-console](./frontend-console) tool mentioned before, but this time specifying a few connectivity configurations appropriate for the target network.
+Several examples committed to this repository are already deployed to the Ethereum Goerli testnet: [echo-python](./echo-python/README.md), [echo-cpp](./echo-cpp/README.md), [echo-lua](./echo-lua/README.md), [echo-js](./echo-js/README.md), [echo-low-level](./echo-low-level/README.md), [sqlite](./sqlite/README.md) and [knn](./knn/README.md). In order to interact with them, you can simply use the [frontend-console](./frontend-console) tool mentioned before, but this time specifying a few connectivity configurations appropriate for the target network.
 
-First of all, you will need to provide an account with some funds for submitting transactions. This can be accomplished by specifying a mnemonic string, and optionally an account index to use from that mnemonic. Please refer to Polygon's documentation on how to [get free testnet tokens](https://docs.polygon.technology/docs/develop/tools/polygon-faucet/).
+First of all, you will need to provide an account with some funds for submitting transactions. This can be accomplished by specifying a mnemonic string, and optionally an account index to use from that mnemonic.
+There are a few ways to get free Goerli testnet funds using _token faucets_. Sometimes you will be required to [use social media accounts](https://goerli-faucet.mudit.blog/) to request tokens, but in other cases you can just [directly specify an account address](https://goerli-faucet.slock.it/). Do keep in mind that individual faucets are kept by third-parties, are not guaranteed to be functioning at all times, and may be discontinued.
 
 Aside from the account to use, submitting transactions also requires you to provide the URL of an appropriate RPC gateway node for the target network. There are many options for that, and several services provide private nodes with free tiers that are more than enough for running these examples. Some options include [Alchemy](https://www.alchemy.com/), [Infura](https://infura.io/) and [Moralis](https://moralis.io/).
 
-Finally, to query the layer-2 Cartesi Node for DApp outputs, you will need to specify the URL of its GraphQL endpoint. The Echo Python example has its endpoint available at `https://echo-python.polygon-mumbai.rollups.staging.cartesi.io/graphql`. Please refer to the [frontend-console](./frontend-console)'s documentation for details on how to use it to [send inputs](./frontend-console/README.md#sending-inputs), [list notices](./frontend-console/README.md#listing-notices) and [deposit tokens](./frontend-console/README.md#depositing-erc-20-tokens).
+Finally, to query the layer-2 Cartesi Node for DApp outputs, you will need to specify the URL of its GraphQL endpoint. As a general rule, the examples deployed to Goerli have their endpoints available at `https://<example>.goerli.rollups.staging.cartesi.io/graphql`.
+As such, the Echo Python DApp has its endpoint available at `https://echo-python.goerli.rollups.staging.cartesi.io/graphql`. Please refer to the [frontend-console](./frontend-console)'s documentation for details on how to use it to [send inputs](./frontend-console/README.md#sending-inputs), [list outputs](./frontend-console/README.md#listing-notices-vouchers-and-reports), [deposit tokens](./frontend-console/README.md#depositing-erc-20-tokens), and more.
 
 ### Deploying DApps
 
@@ -170,7 +198,13 @@ export CHAIN_ID=5
 Then, the node itself can be started by running a docker compose as follows:
 
 ```shell
-docker compose -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml up
+DAPP_NAME=<example> docker compose -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml up
+```
+
+Alternatively, you can also run the node on host mode by executing:
+
+```shell
+DAPP_NAME=<example> docker compose -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml -f ../docker-compose-host-testnet.yml up
 ```
 
 ## Examples
@@ -187,26 +221,40 @@ Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) abov
 
 Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) above, but with a back-end written in Rust.
 
-### 4. [Converter DApp](./converter)
+### 4. [Echo Lua DApp](./echo-lua)
+
+Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) above, but with a back-end written in Lua.
+
+### 5. [Echo JS DApp](./echo-js)
+
+Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) above, but with a back-end written in JavaScript.
+
+### 6. [Echo Low-Level DApp](./echo-low-level)
+
+Implements the same behavior as the [Echo Python DApp](#1-echo-python-dapp) above, but with a back-end written in C++ using the low-level Cartesi Rollups API.
+
+### 7. [Converter DApp](./converter)
 
 An extension of the Echo DApp that handles complex input in the form of JSON strings, in order to perform transformations on text messages.
 
-### 5. [Calculator DApp](./calculator)
+### 8. [Calculator DApp](./calculator)
 
 The Calculator DApp is a simple mathematical expression evaluator that illustrates how to incorporate a pure Python dependency into an application.
 
-### 6. [SQLite DApp](./sqlite)
+### 9. [SQLite DApp](./sqlite)
 
 Demonstrates how a DApp can easily leverage standard mainstream capabilities by building a minimalistic "decentralized SQL database" just by using the Cartesi Machine's built-in support for [SQLite](https://www.sqlite.org/index.html). This application will receive arbitrary SQL commands as input and execute them in an internal database, allowing users to insert data and query them later on. This example also highlights how errors should be handled, in the case of invalid SQL statements.
 
-### 7. [k-NN DApp](./knn)
+### 10. [k-NN DApp](./knn)
 
 A Machine Learning Python application that implements the k-Nearest Neighbors supervised classification algorithm, and applies it to the classic Iris flower dataset.
 
-### 8. [m2cgen DApp](./m2cgen)
+### 11. [m2cgen DApp](./m2cgen)
 
 A more generic Machine Learning DApp that illustrates how to use the [m2cgen (Model to Code Generator)](https://github.com/BayesWitnesses/m2cgen) library to easily leverage widely used Python ML tools such as [scikit-learn](https://scikit-learn.org/), [NumPy](https://numpy.org/) and [pandas](https://pandas.pydata.org/).
 
-### 9. [ERC-20 Deposit](./erc20deposit)
+### 12. [ERC-20 DApp](./erc20)
 
-Demonstrates how to parse ERC-20 deposits sent from the Portal.
+Demonstrates how to handle ERC-20 deposits and withdrawals.
+The application parses ERC-20 deposits received from the Portal and emits a notice confirming receipt.
+It then issues corresponding vouchers to return the assets back to the depositor.

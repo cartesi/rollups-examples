@@ -1,35 +1,45 @@
 version: "3.9"
 
+x-credentials: &postgres-config
+  POSTGRES_HOSTNAME: database
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: password
+  POSTGRES_DB: postgres
+  POSTGRES_MIGRATION_FOLDER: /usr/local/bin/migrations/
+
 services:
   rollups_dispatcher:
-    image: cartesi/rollups-dispatcher:0.3.0
+    image: cartesi/rollups-dispatcher:0.6.0
     command:
       [
-        "--dapp-contract-address-file",
+        "--rd-dapp-contract-address-file",
         "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.address",
-        "--logic-config-path",
-        "/opt/cartesi/share/config/logic-config.toml",
-        "--sf-config",
-        "/opt/cartesi/share/config/sf-config.toml",
-        "--bs-config",
-        "/opt/cartesi/share/config/bs-config.toml",
-        "--tm-config",
-        "/opt/cartesi/share/config/tm-config.toml",
-        "--mnemonic",
-        "${MNEMONIC:?undefined MNEMONIC}",
-        "--provider-http-endpoint",
+        "--mm-endpoint",
+        "http://server_manager:5001",
+        "--mm-session-id",
+        "default_rollups_id",
+        "--rd-initial-epoch",
+        "0",
+        "--sc-grpc-endpoint",
+        "http://state_server:50051",
+        "--sc-default-confirmations",
+        "10",
+        "--tx-provider-http-endpoint",
         "${RPC_URL:?undefined RPC_URL}",
-        "--ws-endpoint",
-        "${WSS_URL:?undefined WSS_URL}",
-        "--chain-id",
+        "--tx-mnemonic",
+        "${MNEMONIC:?undefined MNEMONIC}",
+        "--tx-chain-id",
         "${CHAIN_ID:?undefined CHAIN_ID}",
+        "--tx-default-confirmations",
+        "11",
       ]
     restart: always
     depends_on:
       state_server:
-        condition: service_started
+        condition: service_healthy
       server_manager:
-        condition: service_started
+        condition: service_healthy
     environment:
       RUST_LOG: info
     volumes:
@@ -38,55 +48,91 @@ services:
       - ./deployments:/deployments
 
   state_server:
-    image: cartesi/delegate-server:0.3.0
+    image: cartesi/rollups-state-server:0.6.0
     command:
       [
-        "--sf-config",
-        "/opt/cartesi/share/config/sf-config.toml",
-        "--url",
+        "--sf-genesis-block",
+        "0x1",
+        "--sf-safety-margin",
+        "20",
+        "--bh-http-endpoint",
         "${RPC_URL:?undefined RPC_URL}",
-        "--ws-url",
+        "--bh-ws-endpoint",
         "${WSS_URL:?undefined WSS_URL}",
-        "rollups",
+        "--bh-block-timeout",
+        "120",
       ]
     restart: always
-    #    healthcheck:
-    #      test: ["CMD", "curl", "-f", "http://locahost:50051"]
-    #      interval: 10s
-    #      timeout: 5s
-    #      retries: 5
+    healthcheck:
+      test: ["CMD", "grpc-health-probe", "-addr=:50051"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain:ro
       - ./config:/opt/cartesi/share/config/
+    environment:
+      RUST_LOG: info
 
   server_manager:
     restart: always
-    #    healthcheck:
-    #      test: ["CMD", "curl", "-f", "http://locahost:5001"]
-    #      interval: 10s
-    #      timeout: 5s
-    #      retries: 5
+    healthcheck:
+      test: ["CMD", "grpc-health-probe", "-addr=:5001"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - machine:/opt/cartesi/share/dapp-bin
 
+  rollups_inspect_server:
+    image: cartesi/rollups-inspect-server:0.6.0
+    command:
+      [
+        "--inspect-server-address",
+        "0.0.0.0:5005",
+        "--server-manager-address",
+        "server_manager:5001",
+        "--session-id",
+        "default_rollups_id",
+      ]
+    restart: always
+    ports:
+      - "5005:5005"
+    depends_on:
+      server_manager:
+        condition: service_healthy
+    environment:
+      RUST_LOG: info
+
   rollups_indexer:
-    image: cartesi/rollups-indexer:0.3.0
+    image: cartesi/rollups-indexer:0.6.0
     command:
       [
         "--dapp-contract-address-file",
         "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.address",
-        "--indexer-config-path",
-        "/opt/cartesi/share/config/indexer-config.toml",
+        "--session-id",
+        "default_rollups_id",
+        "--initial-epoch",
+        "0",
+        "--interval",
+        "10",
+        "--confirmations",
+        "10",
+        "--state-server-endpoint",
+        "http://state_server:50051",
+        "--mm-endpoint",
+        "http://server_manager:5001",
       ]
     restart: always
     depends_on:
       state_server:
-        condition: service_started
+        condition: service_healthy
       server_manager:
-        condition: service_started
+        condition: service_healthy
       database:
         condition: service_healthy
     environment:
+      <<: *postgres-config
       RUST_LOG: info
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
@@ -94,19 +140,17 @@ services:
       - ./deployments:/deployments
 
   query_server:
-    image: cartesi/query-server:0.3.0
+    image: cartesi/query-server:0.6.0
     ports:
       - "4000:4000"
     depends_on:
       database:
         condition: service_healthy
     environment:
-      - DB_USER=postgres
-      - DB_NAME=postgres
-      - DB_PASSWORD=password
-      - DB_HOST=database
-      - DB_PORT=5432
-      - DB_TEST_NAME=postgres
+      RUST_LOG: info
+      GRAPHQL_HOST: "0.0.0.0"
+      GRAPHQL_PORT: "4000"
+      <<: *postgres-config
 
   database:
     image: postgres:13-alpine

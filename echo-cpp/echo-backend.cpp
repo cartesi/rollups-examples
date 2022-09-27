@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
             picojson::value rollup_request;
             picojson::parse(rollup_request, r.value().body);
             picojson::value metadata = rollup_request.get("data").get("metadata");
-            if (metadata.get("epoch_index").get<double>() == 0 && metadata.get("input_index").get<double>() == 0) {
+            if (!metadata.is<picojson::null>() && metadata.get("epoch_index").get<double>() == 0 && metadata.get("input_index").get<double>() == 0) {
                 rollup_address = metadata.get("msg_sender").get<std::string>();
                 std::cout << "Captured rollup address: " << rollup_address << std::endl;
             } else {

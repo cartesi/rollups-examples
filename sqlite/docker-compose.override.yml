@@ -2,4 +2,4 @@ version: "3"
 
 services:
   server_manager:
-    image: cartesi/dapp:sqlite-devel-server
+    image: ${DAPP_IMAGE:-cartesi/dapp:sqlite-devel-server}

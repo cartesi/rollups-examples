@@ -47,4 +47,12 @@ export const networks: Record<number, Chain> = {
         name: "polygon_mumbai",
         explorer: "https://mumbai.polygonscan.com",
     },
+    420: {
+        name: "optimism_goerli",
+        explorer: "https://goerli-optimism.etherscan.io",
+    },
+    421613: {
+        name: "arbitrum_goerli",
+        explorer: "https://goerli-rollup-explorer.arbitrum.io",
+    },
 };

@@ -4,14 +4,22 @@ target "dapp" {
   # default dockerfile is "Dockerfile"
 }
 
+variable "TAG" {
+  default = "devel"
+}
+
+variable "DOCKER_ORGANIZATION" {
+  default = "cartesi"
+}
+
 target "server" {
-  tags = ["cartesi/dapp:echo-python-devel-server"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-python-${TAG}-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp:echo-python-devel-console"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-python-${TAG}-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp:echo-python-devel-machine"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-python-${TAG}-machine"]
 }

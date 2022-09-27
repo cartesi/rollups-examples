@@ -2,14 +2,22 @@
 target "dapp" {
 }
 
+variable "TAG" {
+  default = "devel"
+}
+
+variable "DOCKER_ORGANIZATION" {
+  default = "cartesi"
+}
+
 target "server" {
-  tags = ["cartesi/dapp:template-devel-server"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:template-${TAG}-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp:template-devel-console"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:template-${TAG}-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp:template-devel-machine"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:template-${TAG}-machine"]
 }

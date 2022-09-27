@@ -2,14 +2,22 @@
 target "dapp" {
 }
 
+variable "TAG" {
+  default = "devel"
+}
+
+variable "DOCKER_ORGANIZATION" {
+  default = "cartesi"
+}
+
 target "server" {
-  tags = ["cartesi/dapp:converter-devel-server"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:converter-${TAG}-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp:converter-devel-console"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:converter-${TAG}-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp:converter-devel-machine"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:converter-${TAG}-machine"]
 }

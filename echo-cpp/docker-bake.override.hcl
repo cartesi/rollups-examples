@@ -2,14 +2,22 @@
 target "dapp" {
 }
 
+variable "TAG" {
+  default = "devel"
+}
+
+variable "DOCKER_ORGANIZATION" {
+  default = "cartesi"
+}
+
 target "server" {
-  tags = ["cartesi/dapp:echo-cpp-devel-server"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-cpp-${TAG}-server"]
 }
 
 target "console" {
-  tags = ["cartesi/dapp:echo-cpp-devel-console"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-cpp-${TAG}-console"]
 }
 
 target "machine" {
-  tags = ["cartesi/dapp:echo-cpp-devel-machine"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:echo-cpp-${TAG}-machine"]
 }
