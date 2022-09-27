@@ -1,0 +1,5 @@
+{
+  "fs": {
+    "files": ["biometrics.py", "entrypoint.sh"]
+  }
+}

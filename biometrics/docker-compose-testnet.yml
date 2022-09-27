@@ -1,0 +1,172 @@
+version: "3.9"
+
+x-credentials: &postgres-config
+  POSTGRES_HOSTNAME: database
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: password
+  POSTGRES_DB: postgres
+  POSTGRES_MIGRATION_FOLDER: /usr/local/bin/migrations/
+
+services:
+  rollups_dispatcher:
+    image: cartesi/rollups-dispatcher:0.6.0
+    command:
+      [
+        "--rd-dapp-contract-address-file",
+        "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.address",
+        "--mm-endpoint",
+        "http://server_manager:5001",
+        "--mm-session-id",
+        "default_rollups_id",
+        "--rd-initial-epoch",
+        "0",
+        "--sc-grpc-endpoint",
+        "http://state_server:50051",
+        "--sc-default-confirmations",
+        "10",
+        "--tx-provider-http-endpoint",
+        "${RPC_URL:?undefined RPC_URL}",
+        "--tx-mnemonic",
+        "${MNEMONIC:?undefined MNEMONIC}",
+        "--tx-chain-id",
+        "${CHAIN_ID:?undefined CHAIN_ID}",
+        "--tx-default-confirmations",
+        "11",
+      ]
+    restart: always
+    depends_on:
+      state_server:
+        condition: service_healthy
+      server_manager:
+        condition: service_healthy
+    environment:
+      RUST_LOG: info
+    volumes:
+      - blockchain-data:/opt/cartesi/share/blockchain:ro
+      - ./config:/opt/cartesi/share/config/
+      - ./deployments:/deployments
+
+  state_server:
+    image: cartesi/rollups-state-server:0.6.0
+    command:
+      [
+        "--sf-genesis-block",
+        "0x1",
+        "--sf-safety-margin",
+        "20",
+        "--bh-http-endpoint",
+        "${RPC_URL:?undefined RPC_URL}",
+        "--bh-ws-endpoint",
+        "${WSS_URL:?undefined WSS_URL}",
+        "--bh-block-timeout",
+        "120",
+      ]
+    restart: always
+    healthcheck:
+      test: ["CMD", "grpc-health-probe", "-addr=:50051"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - blockchain-data:/opt/cartesi/share/blockchain:ro
+      - ./config:/opt/cartesi/share/config/
+    environment:
+      RUST_LOG: info
+
+  server_manager:
+    restart: always
+    healthcheck:
+      test: ["CMD", "grpc-health-probe", "-addr=:5001"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - machine:/opt/cartesi/share/dapp-bin
+
+  rollups_inspect_server:
+    image: cartesi/rollups-inspect-server:0.6.0
+    command:
+      [
+        "--inspect-server-address",
+        "0.0.0.0:5005",
+        "--server-manager-address",
+        "server_manager:5001",
+        "--session-id",
+        "default_rollups_id",
+      ]
+    restart: always
+    ports:
+      - "5005:5005"
+    depends_on:
+      server_manager:
+        condition: service_healthy
+    environment:
+      RUST_LOG: info
+
+  rollups_indexer:
+    image: cartesi/rollups-indexer:0.6.0
+    command:
+      [
+        "--dapp-contract-address-file",
+        "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.address",
+        "--session-id",
+        "default_rollups_id",
+        "--initial-epoch",
+        "0",
+        "--interval",
+        "10",
+        "--confirmations",
+        "10",
+        "--state-server-endpoint",
+        "http://state_server:50051",
+        "--mm-endpoint",
+        "http://server_manager:5001",
+      ]
+    restart: always
+    depends_on:
+      state_server:
+        condition: service_healthy
+      server_manager:
+        condition: service_healthy
+      database:
+        condition: service_healthy
+    environment:
+      <<: *postgres-config
+      RUST_LOG: info
+    volumes:
+      - blockchain-data:/opt/cartesi/share/blockchain
+      - ./config:/opt/cartesi/share/config/
+      - ./deployments:/deployments
+
+  query_server:
+    image: cartesi/query-server:0.6.0
+    ports:
+      - "4000:4000"
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      RUST_LOG: info
+      GRAPHQL_HOST: "0.0.0.0"
+      GRAPHQL_PORT: "4000"
+      <<: *postgres-config
+
+  database:
+    image: postgres:13-alpine
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - database-data:/var/lib/postgresql/data
+
+volumes:
+  blockchain-data: {}
+  machine: {}
+  database-data: {}

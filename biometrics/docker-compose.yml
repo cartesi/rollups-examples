@@ -1,0 +1,262 @@
+version: "3.9"
+
+x-credentials: &postgres-config
+  POSTGRES_HOSTNAME: database
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: password
+  POSTGRES_DB: postgres
+  POSTGRES_MIGRATION_FOLDER: /usr/local/bin/migrations/
+
+services:
+  hardhat:
+    image: cartesi/rollups-hardhat:0.6.0
+    command:
+      [
+        "node",
+        "--network",
+        "hardhat",
+        "--export",
+        "/opt/cartesi/share/blockchain/localhost.json",
+      ]
+    init: true
+    ports:
+      - "8545:8545"
+    healthcheck:
+      test:
+        ["CMD", "test", "-f", "/opt/cartesi/share/blockchain/localhost.json"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+    volumes:
+      - blockchain-data:/opt/cartesi/share/blockchain
+      - ./deployments:/app/deployments
+
+  rollups_dispatcher:
+    image: cartesi/rollups-dispatcher:0.6.0
+    command:
+      [
+        "--rd-dapp-contract-address-file",
+        "/deployments/localhost/dapp.address",
+        "--mm-endpoint",
+        "http://server_manager:5001",
+        "--mm-session-id",
+        "default_rollups_id",
+        "--rd-initial-epoch",
+        "0",
+        "--sc-grpc-endpoint",
+        "http://state_server:50051",
+        "--sc-default-confirmations",
+        "1",
+        "--tx-provider-http-endpoint",
+        "http://hardhat:8545",
+        "--tx-mnemonic",
+        "test test test test test test test test test test test junk",
+        "--tx-chain-id",
+        "31337",
+        "--tx-default-confirmations",
+        "2",
+      ]
+    restart: always
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      hardhat_set_interval:
+        condition: service_completed_successfully
+      state_server:
+        condition: service_healthy
+      server_manager:
+        condition: service_healthy
+    environment:
+      RUST_LOG: info
+    volumes:
+      - blockchain-data:/opt/cartesi/share/blockchain:ro
+      - ./deployments:/deployments
+
+  state_server:
+    image: cartesi/rollups-state-server:0.6.0
+    command:
+      [
+        "--sf-genesis-block",
+        "0x1",
+        "--sf-safety-margin",
+        "1",
+        "--bh-http-endpoint",
+        "http://hardhat:8545",
+        "--bh-ws-endpoint",
+        "ws://hardhat:8545",
+        "--bh-block-timeout",
+        "120",
+      ]
+    restart: always
+    healthcheck:
+      test: ["CMD", "grpc-health-probe", "-addr=:50051"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      hardhat:
+        condition: service_healthy
+    volumes:
+      - blockchain-data:/opt/cartesi/share/blockchain:ro
+    environment:
+      RUST_LOG: info
+
+  server_manager:
+    restart: always
+    ports:
+      - "5001:5001"
+    healthcheck:
+      test: ["CMD", "grpc-health-probe", "-addr=:5001"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - machine:/opt/cartesi/share/dapp-bin
+
+  deployer:
+    image: cartesi/rollups-cli:0.6.0
+    restart: on-failure
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      server_manager:
+        condition: service_healthy
+    command:
+      [
+        "create",
+        "--rpc",
+        "http://hardhat:8545",
+        "--deploymentFile",
+        "/opt/cartesi/share/blockchain/localhost.json",
+        "--mnemonic",
+        "test test test test test test test test test test test junk",
+        "--templateHashFile",
+        "/opt/cartesi/share/dapp-bin/hash",
+        "--outputFile",
+        "/deployments/localhost/dapp.address",
+      ]
+    volumes:
+      - blockchain-data:/opt/cartesi/share/blockchain
+      - machine:/opt/cartesi/share/dapp-bin:ro
+      - ./deployments:/deployments
+
+  hardhat_stop_automine:
+    image: curlimages/curl:7.84.0
+    restart: on-failure
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      deployer:
+        condition: service_completed_successfully
+    command:
+      [
+        "--data",
+        '{"id":1337,"jsonrpc":"2.0","method":"evm_setAutomine","params":[false]}',
+        "http://hardhat:8545",
+      ]
+
+  hardhat_set_interval:
+    image: curlimages/curl:7.84.0
+    restart: on-failure
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      hardhat_stop_automine:
+        condition: service_completed_successfully
+    command:
+      [
+        "--data",
+        '{"id":1337,"jsonrpc":"2.0","method":"evm_setIntervalMining","params":[5000]}',
+        "http://hardhat:8545",
+      ]
+
+  rollups_inspect_server:
+    image: cartesi/rollups-inspect-server:0.6.0
+    command:
+      [
+        "--inspect-server-address",
+        "0.0.0.0:5005",
+        "--server-manager-address",
+        "server_manager:5001",
+        "--session-id",
+        "default_rollups_id",
+      ]
+    restart: always
+    ports:
+      - "5005:5005"
+    depends_on:
+      server_manager:
+        condition: service_healthy
+    environment:
+      RUST_LOG: info
+
+  rollups_indexer:
+    image: cartesi/rollups-indexer:0.6.0
+    command:
+      [
+        "--dapp-contract-address-file",
+        "/deployments/localhost/dapp.address",
+        "--session-id",
+        "default_rollups_id",
+        "--initial-epoch",
+        "0",
+        "--interval",
+        "10",
+        "--confirmations",
+        "1",
+        "--state-server-endpoint",
+        "http://state_server:50051",
+        "--mm-endpoint",
+        "http://server_manager:5001",
+      ]
+    restart: always
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      hardhat_set_interval:
+        condition: service_completed_successfully
+      state_server:
+        condition: service_healthy
+      server_manager:
+        condition: service_healthy
+      database:
+        condition: service_healthy
+    environment:
+      <<: *postgres-config
+      RUST_LOG: info
+    volumes:
+      - blockchain-data:/opt/cartesi/share/blockchain
+      - ./deployments:/deployments
+
+  query_server:
+    image: cartesi/query-server:0.6.0
+    ports:
+      - "4000:4000"
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      RUST_LOG: info
+      GRAPHQL_HOST: "0.0.0.0"
+      GRAPHQL_PORT: "4000"
+      <<: *postgres-config
+
+  database:
+    image: postgres:13-alpine
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - database-data:/var/lib/postgresql/data
+
+volumes:
+  blockchain-data: {}
+  machine: {}
+  database-data: {}
