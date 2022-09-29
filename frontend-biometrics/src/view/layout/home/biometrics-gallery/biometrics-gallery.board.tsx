@@ -56,7 +56,7 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
                         <Row justify="center">
                             <Col md={6}>
                                 <H2 justify="center" color="dark" isBold>
-                                    Confirm this biometric to send?
+                                    {galleryStrings.confirmationTitle}
                                 </H2>
                             </Col>
                         </Row>
@@ -65,17 +65,17 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
                                 <Image src={selectedItem.imgUrl} size="md" />
                                 <Separator />
                                 <Paragraph color="dark" noPadding>
-                                    id: {selectedItem.id}
+                                    {`${galleryStrings.confirmationIdLabel} ${selectedItem.id}`}
                                 </Paragraph>
                                 <Paragraph color="dark" noPadding>
-                                    type: {selectedItem.type}
+                                    {`${galleryStrings.confirmationTypeLabel} ${selectedItem.type}`}
                                 </Paragraph>
                                 <Separator />
                                 <Button
                                     onClick={() => handleConfirm(selectedItem)}
                                     variant="secondary"
                                 >
-                                    OK
+                                    {galleryStrings.confirmationCTA}
                                 </Button>
                             </Col>
                         </Row>
@@ -91,7 +91,9 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
                         <Col key={item.id} xs={6} sm={4} lg={3}>
                             <Card
                                 aria-disabled={isLoading}
-                                onClick={() => isLoading ? null : handleClick(item)}
+                                onClick={() =>
+                                    isLoading ? null : handleClick(item)
+                                }
                             >
                                 <Image
                                     src={item.imgUrl}

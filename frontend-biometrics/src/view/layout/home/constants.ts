@@ -5,7 +5,11 @@ export const string = {
         pendingFeedback: "Waiting for result...",
     },
     biometricsGallery: {
-        description: 'Lorem ipsum dolor sit amet'
+        description: "Lorem ipsum dolor sit amet",
+        confirmationTitle: "Confirm this biometrics to send?",
+        confirmationCTA: "OK",
+        confirmationIdLabel: "id:",
+        confirmationTypeLabel: "type:",
     },
     sendInputFeedback: {
         requestStarted:
