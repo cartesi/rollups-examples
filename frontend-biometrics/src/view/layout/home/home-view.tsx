@@ -1,14 +1,17 @@
 import { FC } from "react";
 import { Row } from "react-grid-system";
 import { SharedLayout } from "../shared/shared-layout";
-import { BiometricsGalleryBoard } from "./biometrics-gallery.board";
+import { BiometricsGalleryBoard, GalleryItem } from "./biometrics-gallery/biometrics-gallery.board";
 
 export const HomeView: FC = () => {
+    const handleSendInput = (data: GalleryItem) => {
+        console.log({data});
+    }
     return (
         <SharedLayout>
             <Row>
                 <BiometricsGalleryBoard
-                    handleSendInput={(d) => { console.log(d) }}
+                    handleSendInput={handleSendInput}
                     isLoading={false}
                 />
             </Row>

@@ -36,7 +36,7 @@ export const ModalWrapper = styled(DialogOverlay)`
 export const ModalContent = styled(DialogContent)`
     border-radius: ${radius.lg};
     border: ${border.large} ${color.sweetMain};
-    padding: 0 ${spacing.padding.sm};
+    padding: ${spacing.padding.sm};
     min-height: ${size.modal.minHeight};
     min-width: ${size.modal.minWidth};
     width: 60%;
