@@ -15,6 +15,7 @@ import { color as colorConstant, spacing } from "./styleguide.atm";
 interface SharedDefaultProps {
     color?: keyof typeof colorConstant;
     isBold?: boolean;
+    noPadding?: boolean;
     paddingX?: "sm" | "md" | "lg";
     paddingY?: "sm" | "md" | "lg";
     justify?: "start" | "center" | "end";
@@ -22,13 +23,15 @@ interface SharedDefaultProps {
 
 const sharedDefaultCss = css<SharedDefaultProps>`
     word-break: keep-all;
-    ${({ isBold, color, paddingY, paddingX, justify }) => `
+    ${({ isBold, color, noPadding, paddingY, paddingX, justify }) => `
         ${isBold ? "font-weight: 500;" : ""}
         padding: ${
-            paddingX || paddingX
+            noPadding ? '0' : (
+                paddingX || paddingX
                 ? `${paddingY ? spacing.padding[paddingY] : "0"}
                     ${paddingX ? spacing.padding[paddingX] : "0"}`
                 : `${spacing.padding.sm} 0`
+                )
         };
         ${justify ? `text-align: ${justify};` : ""}
         color: ${colorConstant[color ?? "white"]};
