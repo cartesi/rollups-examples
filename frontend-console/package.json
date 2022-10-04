@@ -1,6 +1,6 @@
 {
     "name": "frontend-console",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "description": "Simple console front-end for Cartesi DApp",
     "author": "Danilo Tuler <danilo.tuler@cartesi.io>",
     "license": "Apache-2.0",
@@ -32,7 +32,7 @@
         "typescript": "^4.8.3"
     },
     "dependencies": {
-        "@cartesi/rollups": "^0.6.0",
+        "@cartesi/rollups": "^0.6.1",
         "@ethersproject/providers": "^5.7.1",
         "@urql/core": "^3.0.3",
         "cross-fetch": "^3.1.5",
