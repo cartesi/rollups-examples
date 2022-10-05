@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.1] 2022-10-04
+
+### Changed
+
+- Fix issue with Python virtual environments due to conflicts with Docker Buildx
+- Bump server-manager to 0.4.1: fix issue that taints the session
+
 ## [0.9.0] 2022-09-14
 
 ### Added
@@ -196,6 +203,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove machine-emulator-tools submodule
 - Remove openapi-interfaces submodule
 
+[0.9.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.9.1
 [0.9.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.9.0
 [0.8.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.8.1
 [0.8.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.8.0
