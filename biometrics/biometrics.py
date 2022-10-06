@@ -97,11 +97,10 @@ def handle_advance(data):
         loaded = False
         text_fn = input_json["imageId"]+'.txt'
 
-        with open('temp.txt', "a") as text_file:
+        with open(text_fn, "a") as text_file:
             text_file.write(input_json["content"])
         if(input_json["chunk"]=="final"):
             loaded = True
-            os.rename('temp.txt', text_fn)
             print("You can now load opencv")
 
         #if loaded = true, convert string64 to img and then calls opencv. At the end, turn loaded = false.
@@ -134,7 +133,7 @@ def handle_advance(data):
             logger.info(f"Received notice status {response.status_code} body {response.content}")
         else:
         # emits output notice with "Image not loaded"
-            output = "Image not loaded"
+            output = str2hex("Image not loaded")
             logger.info(f"Adding notice with payload: {output}")
             response = requests.post(rollup_server + "/notice", json={"payload": output})
             logger.info(f"Received notice status {response.status_code} body {response.content}")
