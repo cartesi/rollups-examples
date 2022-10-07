@@ -11,10 +11,11 @@
 
 import { Col } from "react-grid-system";
 import styled, { css } from "styled-components";
-import { border, color, radius, spacing } from "../styleguide.atm";
+import { border, color, radius, size, spacing } from "../styleguide.atm";
 
 interface Layout {
     isFluid?: boolean;
+    shouldMaxSize?: boolean;
 }
 
 const sharedDefaultCss = css`
@@ -43,7 +44,22 @@ export const BoxWrapper = styled(Col)<Layout>`
         ${color.main} 60%,
         ${color.mediumMain} 100%
     );
-    ${({ isFluid }) => `
-        ${isFluid ? "width: 100%; height: auto;" : ""}
+    ${({ isFluid, shouldMaxSize }) => `
+        ${
+            isFluid
+                ? `
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        `
+                : ""
+        }
+        ${
+            shouldMaxSize
+                ? `
+            max-height: ${size.card.height};
+        `
+                : ""
+        }
     `}
 `;

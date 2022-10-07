@@ -65,7 +65,7 @@ export const size = {
         width: "121px",
     },
     card: {
-        height: "164px",
+        height: "26rem",
         width: "445px",
     },
     general: {

@@ -12,6 +12,7 @@ import { BiometricsGalleryBoard, GalleryItem } from "./biometrics-gallery/biomet
 import { string } from "./constants";
 import { toast } from "react-toast";
 import { handleGalleryInput } from "./helpers/send-input.helpers";
+import { FeedbackBoard } from "./feedback-board";
 
 export const HomeView: FC = () => {
     const [noticesState, noticesDispatch] = useService<NoticeViewModel[]>();
@@ -66,6 +67,14 @@ export const HomeView: FC = () => {
                 <BiometricsGalleryBoard
                     handleSelectItem={handleSelectItem}
                     isLoading={false}
+                />
+                <FeedbackBoard
+                    data={noticesState.data ?? []}
+                    status={
+                        sendInputState.status === "pending"
+                            ? "pending"
+                            : noticesState.status
+                    }
                 />
             </Row>
         </SharedLayout>
