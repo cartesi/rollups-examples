@@ -24,12 +24,12 @@ export interface GalleryItem {
 }
 
 interface IBiometricsGalleryBoard {
-    handleSendInput: (item: GalleryItem) => void;
+    handleSelectItem: (item: GalleryItem) => void;
     isLoading: boolean;
 }
 
 export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
-    handleSendInput,
+    handleSelectItem,
     isLoading
 }) => {
     const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
@@ -37,7 +37,7 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
 
     const handleClick = (item: GalleryItem) => setSelectedItem(item);
     const handleConfirm = (item: GalleryItem) => {
-        handleSendInput?.(item);
+        handleSelectItem(item);
     };
     const handleCancel = () => setSelectedItem(undefined);
 
