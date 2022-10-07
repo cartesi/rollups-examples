@@ -37,7 +37,7 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
     canClearResult,
     isLoading
 }) => {
-    const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
+    const galleryItems = getGalleryItems();
     const [selectedItem, setSelectedItem] = useState<GalleryItem>();
 
     const handleClick = (item: GalleryItem) => setSelectedItem(item);
@@ -46,13 +46,6 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
         setSelectedItem(undefined);
     };
     const handleCancel = () => setSelectedItem(undefined);
-
-    useEffect(() => {
-        getGalleryItems()
-            .then(result => {
-                setGalleryItems(result);
-            })
-    }, [])
 
     return (
         <>
