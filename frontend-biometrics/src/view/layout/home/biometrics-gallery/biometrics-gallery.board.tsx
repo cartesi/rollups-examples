@@ -38,6 +38,7 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
     const handleClick = (item: GalleryItem) => setSelectedItem(item);
     const handleConfirm = (item: GalleryItem) => {
         handleSelectItem(item);
+        setSelectedItem(undefined);
     };
     const handleCancel = () => setSelectedItem(undefined);
 

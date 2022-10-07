@@ -1,11 +1,11 @@
 export const string = {
     resultPreview: {
         title: "Result preview",
-        idleFeedback: "Use the form to get started! 🧊🚢",
+        idleFeedback: "Select a biometrics from gallery to get started! 🔎🖐",
         pendingFeedback: "Waiting for result...",
     },
     biometricsGallery: {
-        description: "Lorem ipsum dolor sit amet",
+        description: "Try to investigate these biometrics authenticity! 🧐",
         confirmationTitle: "Confirm this biometrics to send?",
         confirmationCTA: "OK",
         confirmationIdLabel: "id:",
