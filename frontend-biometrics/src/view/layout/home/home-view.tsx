@@ -66,7 +66,15 @@ export const HomeView: FC = () => {
             <Row>
                 <BiometricsGalleryBoard
                     handleSelectItem={handleSelectItem}
-                    isLoading={false}
+                    onClearResult={handleResetStates}
+                    isLoading={
+                        sendInputState.status === "pending" ||
+                        noticesState.status === "pending"
+                    }
+                    canClearResult={
+                        sendInputState.status === "resolved" &&
+                        noticesState.status === "resolved"
+                    }
                 />
                 <FeedbackBoard
                     data={noticesState.data ?? []}

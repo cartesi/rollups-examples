@@ -25,11 +25,15 @@ export interface GalleryItem {
 
 interface IBiometricsGalleryBoard {
     handleSelectItem: (item: GalleryItem) => void;
+    onClearResult: () => void;
     isLoading: boolean;
+    canClearResult: boolean;
 }
 
 export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
     handleSelectItem,
+    onClearResult,
+    canClearResult,
     isLoading
 }) => {
     const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
@@ -106,7 +110,18 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
                         </Col>
                     ))}
                 </Row>
+                <Row>
+                    {canClearResult ? (
+                        <Col xs="content" sm={6}>
+                            <Button
+                                onClick={onClearResult}
+                            >
+                                {galleryStrings.clearResultButtonText}
+                            </Button>
+                        </Col>
+                    ) : null}
+                </Row>
             </Col>
         </>
     );
-}
+};
