@@ -10,6 +10,7 @@ export const string = {
         confirmationCTA: "OK",
         confirmationIdLabel: "id:",
         confirmationTypeLabel: "type:",
+        clearResultButtonText: "Clear result",
     },
     sendInputFeedback: {
         requestStarted:
