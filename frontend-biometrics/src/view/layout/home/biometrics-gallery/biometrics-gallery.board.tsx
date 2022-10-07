@@ -8,6 +8,7 @@ import { Modal } from "../../../atomic/layout.org/modal.mol/modal.mol";
 import { Separator } from "../../../atomic/layout.org/separator.mol/separator.atm";
 import { H1, H2, Paragraph } from "../../../atomic/typography.mol";
 import { string } from "../constants";
+import { GalleryWrapper, ItemsWrapper } from "./biometrics-gallery.style";
 import { getGalleryItems } from "./helpers";
 
 const galleryStrings = string.biometricsGallery;
@@ -87,11 +88,11 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
                     </>
                 ) : null}
             </Modal>
-            <Col sm={12} md={6}>
+            <GalleryWrapper sm={12} md={6}>
                 <H1>{brandName}</H1>
                 <Paragraph color="gray">{galleryStrings.description}</Paragraph>
                 <Separator />
-                <Row>
+                <ItemsWrapper>
                     {galleryItems.map((item) => (
                         <Col key={item.id} xs={6} sm={4} lg={3}>
                             <Card
@@ -109,19 +110,23 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
                             <Separator />
                         </Col>
                     ))}
-                </Row>
-                <Row>
-                    {canClearResult ? (
-                        <Col xs="content" sm={6}>
-                            <Button
-                                onClick={onClearResult}
-                            >
-                                {galleryStrings.clearResultButtonText}
-                            </Button>
-                        </Col>
-                    ) : null}
-                </Row>
-            </Col>
+                </ItemsWrapper>
+                {canClearResult ? (
+                    <>
+                        <Separator />
+                        <Row justify="center">
+                            {canClearResult ? (
+                                <Col xs="content" sm={6}>
+                                    <Button onClick={onClearResult}>
+                                        {galleryStrings.clearResultButtonText}
+                                    </Button>
+                                </Col>
+                            ) : null}
+                        </Row>
+                        <Separator />
+                    </>
+                ) : null}
+            </GalleryWrapper>
         </>
     );
 };
