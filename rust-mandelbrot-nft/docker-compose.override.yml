@@ -1,0 +1,5 @@
+version: "3"
+
+services:
+  server_manager:
+    image: ${DAPP_IMAGE:-cartesi/dapp:echo-rust-0.9.1-server}

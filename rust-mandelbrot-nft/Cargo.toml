@@ -1,0 +1,11 @@
+[package]
+name = "rust-mandelbrot-nft"
+version = "0.1.0"
+edition = "2021"
+authors = ["Andy Thomason<andy@atomicincrement.com>"]
+
+[dependencies]
+json = "0.12"
+hyper = { version = "0.14", features = ["http1", "runtime", "client"] }
+tokio = { version = "1.18", features = ["macros", "rt-multi-thread"] }
+png = "0.17"
