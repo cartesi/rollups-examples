@@ -11,7 +11,8 @@
 // specific language governing permissions and limitations under the License.
 
 
-// yarn start input send --payload "(-0.1,0.9,4.0)"
+// Example submission:
+// yarn start input send --payload "(-0.1:0.9:4.0)"
 
 
 use json::{object, JsonValue};
