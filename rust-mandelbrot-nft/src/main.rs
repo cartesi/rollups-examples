@@ -30,6 +30,18 @@ fn from_hex(s: &str) -> String {
         }).collect::<String>()
 }
 
+fn from_hex_vec(s: &str) -> Vec<u8> {
+    assert!(s.starts_with("0x"));
+
+    s[2..].as_bytes()
+        .chunks_exact(2)
+        .map(|c| {
+            let d0 = if c[0] > b'9' { c[0] + 9 } else { c[0] } & 0x0f;
+            let d1 = if c[1] > b'9' { c[1] + 9 } else { c[1] } & 0x0f;
+            d0 * 16 + d1
+        }).collect::<Vec<u8>>()
+}
+
 fn to_hex(b: &[u8]) -> String {
     let mut res = String::with_capacity(b.len()*2+2);
     res.push_str("0x");
@@ -62,17 +74,38 @@ fn escape_time(cx: f64, cy: f64) -> u8 {
 
 fn gen_nft(params: &str) -> Vec<u8> {
     const SIZE : usize = 1024;
+    println!("params={}", params);
 
-    println!("gen_bft: params={}", params);
-    let params = params.strip_prefix("(").unwrap();
-    let params = params.strip_suffix(")").unwrap();
-    let mut it = params.split(":").map(|x| x.parse().unwrap());
+    let (px, py, zoom, id) = if params.starts_with("0x28") {
+        // Command line: use text.
+        // Question: how do we send hex from the command line tool?
+        let params = from_hex(params);
+        println!("gen_bft: params={}", params);
+        let params = params.strip_prefix("(").unwrap();
+        let params = params.strip_suffix(")").unwrap();
+        let mut it = params.split(":").map(|x| x.parse().unwrap());
+    
+        let px : f64 = it.next().unwrap();
+        let py : f64 = it.next().unwrap();
+        let zoom : f64 = it.next().unwrap();
+    
+        (px, py, zoom, 0)
+    } else {
+        // In-chain: use binary. 4x256 bit fixed point integers.
+        let bytes = from_hex_vec(params);
+        let mut it = bytes
+            .chunks(32)
+            .map(|x| u64::from_be_bytes(x[24..32].try_into().unwrap()));
+        let px = it.next().unwrap() as f64 / 1000000.0;
+        let py = it.next().unwrap() as f64 / 1000000.0;
+        let zoom = it.next().unwrap() as f64 / 1000000.0;
+        let id = it.next().unwrap();
+        (px, py, zoom, id)
+    };
 
-    let px : f64 = it.next().unwrap();
-    let py : f64 = it.next().unwrap();
-    let zoom : f64 = 1.0 / it.next().unwrap() / (SIZE as f64) / 2.0;
+    println!("x,y,zoom,id={},{},{},{}", px, py, zoom, id);
 
-    println!("x,y,z={},{},{}", px, py, zoom);
+    let zoom : f64 = 1.0 / zoom / (SIZE as f64) / 2.0;
 
     let mut w = Vec::new();
     {
@@ -148,7 +181,7 @@ pub async fn handle_advance(
 
     println!("Adding notice");
     
-    let res = gen_nft(&from_hex(&payload));
+    let res = gen_nft(payload);
     
     let notice = object! {"payload" => to_hex(&res)};
 
