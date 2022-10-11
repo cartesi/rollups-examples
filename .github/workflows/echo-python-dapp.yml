@@ -12,6 +12,7 @@ on:
             - "echo-python/**"
             - "!**/*.md"
             - "frontend-console/**"
+            - "integration-tests/**"
     push:
         tags:
             - v*
@@ -51,25 +52,25 @@ jobs:
                   DAPP_IMAGE: ${{ needs.build.outputs.dapp-image }}
               run: |
                   yarn install
-                  yarn test:ci --verbose
-              working-directory: ./echo-python/test
+                  yarn test:ci echo-python --verbose
+              working-directory: ./integration-tests/
 
             - name: Save docker logs
               if: always()
               run: |
-                  yarn saveLogs hardhat
-                  yarn saveLogs rollups_dispatcher
-                  yarn saveLogs state_server
-                  yarn saveLogs server_manager
-                  yarn saveLogs rollups_inspect_server
-                  yarn saveLogs rollups_indexer
-                  yarn saveLogs query_server
-                  yarn saveLogs database
-              working-directory: ./echo-python/test
+                  yarn saveLogs echo-python hardhat
+                  yarn saveLogs echo-python rollups_dispatcher
+                  yarn saveLogs echo-python state_server
+                  yarn saveLogs echo-python server_manager
+                  yarn saveLogs echo-python rollups_inspect_server
+                  yarn saveLogs echo-python rollups_indexer
+                  yarn saveLogs echo-python query_server
+                  yarn saveLogs echo-python database
+              working-directory: ./integration-tests
 
             - name: Upload docker logs
               if: always()
               uses: actions/upload-artifact@master
               with:
                   name: echo-python-test-logs
-                  path: ./echo-python/test/logs/
+                  path: ./integration-tests/logs/

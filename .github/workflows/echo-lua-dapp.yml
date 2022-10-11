@@ -12,6 +12,7 @@ on:
             - "echo-lua/**"
             - "!**/*.md"
             - "frontend-console/**"
+            - "integration-tests/**"
     push:
         tags:
             - v*
@@ -50,25 +51,25 @@ jobs:
                   DAPP_IMAGE: ${{ needs.build.outputs.dapp-image }}
               run: |
                   yarn install
-                  yarn test:ci --verbose
-              working-directory: ./echo-lua/test
+                  yarn test:ci echo-lua --verbose
+              working-directory: ./integration-tests
 
             - name: Save docker logs
               if: always()
               run: |
-                  yarn saveLogs hardhat
-                  yarn saveLogs rollups_dispatcher
-                  yarn saveLogs state_server
-                  yarn saveLogs server_manager
-                  yarn saveLogs rollups_inspect_server
-                  yarn saveLogs rollups_indexer
-                  yarn saveLogs query_server
-                  yarn saveLogs database
-              working-directory: ./echo-lua/test
+                  yarn saveLogs echo-lua hardhat
+                  yarn saveLogs echo-lua rollups_dispatcher
+                  yarn saveLogs echo-lua state_server
+                  yarn saveLogs echo-lua server_manager
+                  yarn saveLogs echo-lua rollups_inspect_server
+                  yarn saveLogs echo-lua rollups_indexer
+                  yarn saveLogs echo-lua query_server
+                  yarn saveLogs echo-lua database
+              working-directory: ./integration-tests
 
             - name: Upload docker logs
               if: always()
               uses: actions/upload-artifact@master
               with:
                   name: echo-lua-test-logs
-                  path: ./echo-lua/test/logs/
+                  path: ./integration-tests/logs/
