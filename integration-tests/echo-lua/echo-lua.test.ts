@@ -24,7 +24,7 @@ let runBackendProcess: CommandOutput;
 const { logLevel, pollingTimeout, address, environment } = parseArgs(process.argv);
 logger.logLevel = logLevel;
 
-describe("Echo DApp Integration Tests", () => {
+describe("Echo-Lua DApp Integration Tests", () => {
     before(async function () {
 
         if(environment == "host"){

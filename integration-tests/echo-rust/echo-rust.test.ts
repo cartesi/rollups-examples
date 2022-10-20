@@ -12,8 +12,8 @@ import {
     PollingServerManagerClient,
     assertEpoch,
     parseArgs,
-    spawnCommandAsync,
-    CommandOutput
+    CommandOutput,
+    spawnCommandAsync
 } from "../test-util";
 
 const SERVER_MANAGER_PROTO = `../grpc-interfaces/server-manager.proto`;
@@ -24,18 +24,16 @@ let runBackendProcess: CommandOutput;
 const { logLevel, pollingTimeout, address, environment } = parseArgs(process.argv);
 logger.logLevel = logLevel;
 
-describe("Echo-Python DApp Integration Tests", () => {
-    
+describe("Echo-Rust DApp Integration Tests", () => {
     before(async function () {
-       if(environment == "host"){
-            //Prepare Virtual Environment
-            const prepareEnv = await spawnCommandAsync("python3",["-m","venv","./echo-python/.venv"],{});
-            expect(prepareEnv.stderr).to.be.empty
 
+        if(environment == "host"){
+            
             //Execute Server Manager on host mode
-            this.runBackendProcess = await spawnCommandAsync(". ./echo-python/.venv/bin/activate && pip install -r ../echo-python/requirements.txt && ROLLUP_HTTP_SERVER_URL=http://127.0.0.1:5004 python3 ../echo-python/echo.py > ./echo-python/.venv/echo.log 2>&1 &",[],{shell: true, detached:true})
+            this.runBackendProcess = await spawnCommandAsync("cd ../echo-rust && ROLLUP_HTTP_SERVER_URL=http://127.0.0.1:5004 cargo run > ../integration-tests/echo.log 2>&1 &",[],{shell: true, detached:true})
        }
-         
+
+
         serverManager = new PollingServerManagerClient(
             address,
             SERVER_MANAGER_PROTO
@@ -52,8 +50,6 @@ describe("Echo-Python DApp Integration Tests", () => {
             
             this.runBackendProcess?.process.kill();
 
-            const runHost = await spawnCommandAsync("rm",["-rf","./echo-python/.venv"],{});
-            expect(runHost.stderr).to.be.empty
        }
     })
 
@@ -93,6 +89,4 @@ describe("Echo-Python DApp Integration Tests", () => {
         return expect(assertEpoch(1, serverManager, pollingTimeout)).to
             .eventually.be.true;
     });
-
-    
 });
