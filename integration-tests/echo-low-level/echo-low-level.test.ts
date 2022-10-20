@@ -1,7 +1,5 @@
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
-import { spawn } from "child_process";
-import { stdin, stdout } from "process";
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
@@ -14,8 +12,8 @@ import {
     PollingServerManagerClient,
     assertEpoch,
     parseArgs,
-    spawnCommandAsync,
     CommandOutput,
+    spawnCommandAsync,
 } from "../test-util";
 
 const SERVER_MANAGER_PROTO = `../grpc-interfaces/server-manager.proto`;
@@ -28,15 +26,10 @@ const { logLevel, pollingTimeout, address, environment } = parseArgs(
 );
 logger.logLevel = logLevel;
 
-describe("Echo DApp Echo-JS Integration Tests", () => {
+describe("Echo-Low-Level DApp Integration Tests", () => {
     before(async function () {
         if (environment == "host") {
-            //Execute Server Manager on host mode
-            this.runBackendProcess = await spawnCommandAsync(
-                " ROLLUP_HTTP_SERVER_URL=http://127.0.0.1:5004 tjs ../echo-js/echo.js > ./echo-js/echo.log 2>&1 &",
-                [],
-                { shell: true, detached: true }
-            );
+            logger.log("******* This DApp does not support HOST MODE *******");
         }
 
         serverManager = new PollingServerManagerClient(

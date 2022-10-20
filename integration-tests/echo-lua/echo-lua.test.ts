@@ -13,7 +13,7 @@ import {
     assertEpoch,
     parseArgs,
     CommandOutput,
-    spawnCommandAsync
+    spawnCommandAsync,
 } from "../test-util";
 
 const SERVER_MANAGER_PROTO = `../grpc-interfaces/server-manager.proto`;
@@ -21,21 +21,28 @@ const SERVER_MANAGER_PROTO = `../grpc-interfaces/server-manager.proto`;
 let serverManager: PollingServerManagerClient;
 let runBackendProcess: CommandOutput;
 
-const { logLevel, pollingTimeout, address, environment } = parseArgs(process.argv);
+const { logLevel, pollingTimeout, address, environment } = parseArgs(
+    process.argv
+);
 logger.logLevel = logLevel;
 
 describe("Echo-Lua DApp Integration Tests", () => {
     before(async function () {
-
-        if(environment == "host"){
+        if (environment == "host") {
             //Prepare Environment
-            await spawnCommandAsync("luarocks install luasocket --local && luarocks install lpeg --local && luarocks install dkjson --local",[],{shell:true});
-            
+            await spawnCommandAsync(
+                "luarocks install luasocket --local && luarocks install lpeg --local && luarocks install dkjson --local",
+                [],
+                { shell: true }
+            );
 
             //Execute Server Manager on host mode
-            this.runBackendProcess = await spawnCommandAsync("eval $(luarocks path) && ROLLUP_HTTP_SERVER_URL=http://127.0.0.1:5004 lua5.3 ../echo-lua/echo.lua > echo.log 2>&1 &",[],{shell: true, detached:true})
-       }
-
+            this.runBackendProcess = await spawnCommandAsync(
+                "eval $(luarocks path) && ROLLUP_HTTP_SERVER_URL=http://127.0.0.1:5004 lua5.3 ../echo-lua/echo.lua > echo.log 2>&1 &",
+                [],
+                { shell: true, detached: true }
+            );
+        }
 
         serverManager = new PollingServerManagerClient(
             address,
@@ -49,12 +56,10 @@ describe("Echo-Lua DApp Integration Tests", () => {
     });
 
     after(async function () {
-        if(environment == "host"){
-            
+        if (environment == "host") {
             this.runBackendProcess?.process.kill();
-
-       }
-    })
+        }
+    });
 
     it("should process an input", async () => {
         await sendInput("cartesi");

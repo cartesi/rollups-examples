@@ -10,6 +10,8 @@ on:
             - ".github/workflows/echo-low-level-dapp.yml"
             - "echo-low-level/**"
             - "!**/*.md"
+            - "frontend-console/**"
+            - "integration-tests/**"
     push:
         tags:
             - v*
@@ -21,3 +23,52 @@ jobs:
         with:
             dapp-name: echo-low-level
         secrets: inherit
+    test:
+        needs: build
+        runs-on: ubuntu-20.04
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v3
+              with:
+                  submodules: recursive
+                  token: ${{ secrets.CI_TOKEN }}
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 14
+
+            - name: Login to GitHub Container Registry
+              uses: docker/login-action@v2
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Run tests
+              env:
+                  DAPP_IMAGE: ${{ needs.build.outputs.dapp-image }}
+              run: |
+                  yarn install
+                  yarn test:ci echo-low-level --verbose
+              working-directory: ./integration-tests
+
+            - name: Save docker logs
+              if: always()
+              run: |
+                  yarn saveLogs echo-low-level hardhat
+                  yarn saveLogs echo-low-level rollups_dispatcher
+                  yarn saveLogs echo-low-level state_server
+                  yarn saveLogs echo-low-level server_manager
+                  yarn saveLogs echo-low-level rollups_inspect_server
+                  yarn saveLogs echo-low-level rollups_indexer
+                  yarn saveLogs echo-low-level query_server
+                  yarn saveLogs echo-low-level database
+              working-directory: ./integration-tests
+
+            - name: Upload docker logs
+              if: always()
+              uses: actions/upload-artifact@master
+              with:
+                  name: echo-low-level-test-logs
+                  path: ./integration-tests/logs/

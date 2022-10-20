@@ -13,7 +13,7 @@ import {
     assertEpoch,
     parseArgs,
     CommandOutput,
-    spawnCommandAsync
+    spawnCommandAsync,
 } from "../test-util";
 
 const SERVER_MANAGER_PROTO = `../grpc-interfaces/server-manager.proto`;
@@ -21,18 +21,21 @@ const SERVER_MANAGER_PROTO = `../grpc-interfaces/server-manager.proto`;
 let serverManager: PollingServerManagerClient;
 let runBackendProcess: CommandOutput;
 
-const { logLevel, pollingTimeout, address, environment } = parseArgs(process.argv);
+const { logLevel, pollingTimeout, address, environment } = parseArgs(
+    process.argv
+);
 logger.logLevel = logLevel;
 
 describe("Echo-Rust DApp Integration Tests", () => {
     before(async function () {
-
-        if(environment == "host"){
-            
+        if (environment == "host") {
             //Execute Server Manager on host mode
-            this.runBackendProcess = await spawnCommandAsync("cd ../echo-rust && ROLLUP_HTTP_SERVER_URL=http://127.0.0.1:5004 cargo run > ../integration-tests/echo.log 2>&1 &",[],{shell: true, detached:true})
-       }
-
+            this.runBackendProcess = await spawnCommandAsync(
+                "cd ../echo-rust && ROLLUP_HTTP_SERVER_URL=http://127.0.0.1:5004 cargo run > ../integration-tests/echo.log 2>&1 &",
+                [],
+                { shell: true, detached: true }
+            );
+        }
 
         serverManager = new PollingServerManagerClient(
             address,
@@ -46,12 +49,10 @@ describe("Echo-Rust DApp Integration Tests", () => {
     });
 
     after(async function () {
-        if(environment == "host"){
-            
+        if (environment == "host") {
             this.runBackendProcess?.process.kill();
-
-       }
-    })
+        }
+    });
 
     it("should process an input", async () => {
         await sendInput("cartesi");
