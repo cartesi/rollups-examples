@@ -1,5 +1,7 @@
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
+import { spawn } from "child_process";
+import { stdin, stdout } from "process";
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
@@ -24,16 +26,13 @@ let runBackendProcess: CommandOutput;
 const { logLevel, pollingTimeout, address, environment } = parseArgs(process.argv);
 logger.logLevel = logLevel;
 
-describe("Echo DApp Echo-Python Integration Tests", () => {
+describe("Echo DApp Echo-JS Integration Tests", () => {
     
     before(async function () {
        if(environment == "host"){
-            //Prepare Virtual Environment
-            const prepareEnv = await spawnCommandAsync("python3",["-m","venv","./echo-python/.venv"],{});
-            expect(prepareEnv.stderr).to.be.empty
-
+            
             //Execute Server Manager on host mode
-            this.runBackendProcess = await spawnCommandAsync(". ./echo-python/.venv/bin/activate && pip install -r ../echo-python/requirements.txt && ROLLUP_HTTP_SERVER_URL=http://127.0.0.1:5004 python3 ../echo-python/echo.py > ./echo-python/.venv/echo.log 2>&1 &",[],{shell: true, detached:true})
+            this.runBackendProcess = await spawnCommandAsync(" ROLLUP_HTTP_SERVER_URL=http://127.0.0.1:5004 tjs ../echo-js/echo.js > ./echo-js/echo.log 2>&1 &",[],{shell: true, detached:true})
        }
          
         serverManager = new PollingServerManagerClient(
@@ -52,8 +51,6 @@ describe("Echo DApp Echo-Python Integration Tests", () => {
             
             this.runBackendProcess?.process.kill();
 
-            const runHost = await spawnCommandAsync("rm",["-rf","./echo-python/.venv"],{});
-            expect(runHost.stderr).to.be.empty
        }
     })
 

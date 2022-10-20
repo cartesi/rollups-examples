@@ -11,6 +11,8 @@ on:
             - ".github/workflows/echo-js-dapp.yml"
             - "echo-js/**"
             - "!**/*.md"
+            - "frontend-console/**"
+            - "integration-tests/**"
     push:
         tags:
             - v*
@@ -22,3 +24,52 @@ jobs:
         with:
             dapp-name: echo-js
         secrets: inherit
+    test:
+        needs: build
+        runs-on: ubuntu-20.04
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v3
+              with:
+                  submodules: recursive
+                  token: ${{ secrets.CI_TOKEN }}
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 14
+
+            - name: Login to GitHub Container Registry
+              uses: docker/login-action@v2
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Run tests
+              env:
+                  DAPP_IMAGE: ${{ needs.build.outputs.dapp-image }}
+              run: |
+                  yarn install
+                  yarn test:ci echo-js --verbose
+              working-directory: ./integration-tests
+
+            - name: Save docker logs
+              if: always()
+              run: |
+                  yarn saveLogs echo-js hardhat
+                  yarn saveLogs echo-js rollups_dispatcher
+                  yarn saveLogs echo-js state_server
+                  yarn saveLogs echo-js server_manager
+                  yarn saveLogs echo-js rollups_inspect_server
+                  yarn saveLogs echo-js rollups_indexer
+                  yarn saveLogs echo-js query_server
+                  yarn saveLogs echo-js database
+              working-directory: ./integration-tests
+
+            - name: Upload docker logs
+              if: always()
+              uses: actions/upload-artifact@master
+              with:
+                  name: echo-js-test-logs
+                  path: ./integration-tests/logs/
