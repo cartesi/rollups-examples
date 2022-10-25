@@ -34,7 +34,7 @@ As mentioned before, it is possible to interact with all the examples in this re
 
 ## Requirements
 
-Docker version `20.10.14` is required for building the environment and executing the examples.
+Docker version `20.10.14` is required for building the environment and executing the examples. We encourage the use of the Docker Desktop application, but if it is not possible or desired, [Docker Buildkit](https://github.com/moby/buildkit) must be enabled because in some cases `docker build` is used in some scripts. In order to do that, an environment variable with value `DOCKER_BUILDKIT=1` must be set.
 
 The below instructions have been tested in systems running both Linux (Ubuntu), MacOS, and Windows (using [WSL](https://docs.microsoft.com/en-us/windows/wsl/install), which is highly recommended for Windows users).
 
