@@ -10,6 +10,27 @@
 // specific language governing permissions and limitations under the License.
 
 export const string = {
+    aboutButton: {
+        text: "About",
+    },
+    aboutModal: {
+        title: "About",
+        aria: {
+            labelledById: "about-modal",
+        },
+        textTitle:
+            "Biometrics Classifier - An DApp by Locus Powered By Cartesi",
+        textContent1: `This DApp is one from a series of DApps born from the partnership of Locus Custom Software and Cartesi.
+            The main objective was to bring common concepts from the web2 to the web3 through the Cartesi rollups technology.`,
+        textContent2: `
+        This DApp is the ultimate result of all concepts present in the other DApps plus machine learning, computer vision and feature extraction.
+        All this is used to perform a decentralized biometrics spoof detection, and all the computation is done inside the blockchain, thanks to the Cartesi API.
+        Bringing those kind of concepts to the blockchain, one of the beneficts of using the Cartesi solution.
+        `,
+        CTAButton: {
+            text: "OK",
+        },
+    },
     header: "Locus DApp | Powered By Cartesi",
     manageWalletButton: {
         text: "Manage wallet",
