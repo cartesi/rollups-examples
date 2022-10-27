@@ -45,6 +45,7 @@ export const spacing = {
     margin: {
         general: {
             lg: "1.8rem",
+            sm: "0.8rem",
         },
         separator: {
             horizontal: {
