@@ -8,6 +8,7 @@ import { Modal } from "../../../atomic/layout.org/modal.mol/modal.mol";
 import { Separator } from "../../../atomic/layout.org/separator.mol/separator.atm";
 import { H1, H2, Paragraph } from "../../../atomic/typography.mol";
 import { string } from "../constants";
+import { onboardTourCSSClass } from "../onboard-tour/onboard-tour.style";
 import { GalleryWrapper, ItemsWrapper } from "./biometrics-gallery.style";
 import { getGalleryItems } from "./helpers";
 
@@ -81,7 +82,11 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
                     </>
                 ) : null}
             </Modal>
-            <GalleryWrapper sm={12} md={6}>
+            <GalleryWrapper
+                className={onboardTourCSSClass['onboard-tour-element-2']}
+                sm={12}
+                md={6}
+            >
                 <H1>{brandName}</H1>
                 <Paragraph color="gray">{galleryStrings.description}</Paragraph>
                 <Separator />

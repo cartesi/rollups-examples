@@ -35,6 +35,13 @@ export const Main = styled.main`
     ${sharedDefaultCss}
 `;
 
+export const Footer = styled.footer`
+    ${sharedDefaultCss}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+
 export const BoxWrapper = styled(Col)<Layout>`
     padding: 0 ${spacing.padding.md};
     border: ${border.small} ${color.mediumMain};
