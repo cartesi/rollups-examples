@@ -10,7 +10,8 @@
 // specific language governing permissions and limitations under the License.
 
 import { createGlobalStyle } from "styled-components";
-import { color, typography, zIndex } from "./styleguide.atm";
+import { buttonVariantCss } from "./button.mol/button.atm";
+import { border, color, radius, spacing, typography, zIndex } from "./styleguide.atm";
 
 export const GlobalStyle = createGlobalStyle`
     /***
@@ -95,9 +96,68 @@ export const GlobalStyle = createGlobalStyle`
         }
     }
     body {
+        //General styles
         background-color: ${color.main};
+        //Toast styles
         .toastContainer {
             z-index: ${zIndex.roof};
+        }
+        //Shepherd tour styles
+        .shepherd-modal-overlay-container {
+            z-index: ${zIndex.veryHigh};
+            filter: alpha(opacity=50);
+            height: 100%;
+            left: 0;
+            opacity: 0.5;
+            position: fixed;
+            top: 0;
+            -webkit-transition: all 0.3s ease-out;
+            transition: all 0.3s ease-out;
+            width: 100%;
+        }
+        .shepherd-element.shepherd-enabled {
+            z-index: ${zIndex.roof};
+            position: relative;
+            font-family: ${typography.fontFamily};
+            color: ${color.dark};
+            background-color: ${color.white};
+            border: ${border.general} ${color.sweetMain};
+            border-radius: ${radius.md};
+            padding: ${spacing.padding.md};
+            header {
+                display: flex;
+                justify-content: space-between;
+                font-weight: ${typography.weight.bold};
+                button {
+                    color: ${color.lightMain};
+                    cursor: pointer;
+                    &:hover:enabled {
+                        color: ${color.sweetMain};
+                    }
+                }
+            }
+            .shepherd-text {
+                padding: ${spacing.padding.md} 0;
+            }
+            footer {
+                button.onboard-tour-button-primary {
+                    ${buttonVariantCss.secondary}
+                }
+                button.onboard-tour-button-secondary {
+                    ${buttonVariantCss.link}
+                    &:hover:enabled {
+                        color: ${color.sweetMain};
+                    }
+                }
+                button {
+                    padding: ${spacing.padding.sm} !important;
+                    margin-right: ${spacing.margin.general.sm};
+                    &:disabled {
+                        cursor: not-allowed;
+                        opacity: 0.4;
+                    }
+                }
+            }
         }
     }
 `;
