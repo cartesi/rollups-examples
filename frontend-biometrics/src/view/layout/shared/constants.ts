@@ -28,4 +28,7 @@ export const string = {
             text: "Disconnect",
         },
     },
+    onboardTourButton: {
+        text: "Start DApp tour",
+    },
 };

@@ -5,6 +5,7 @@ import { BoxWrapper } from "../../atomic/layout.org/layout.mol";
 import { H1, H4 } from "../../atomic/typography.mol";
 import { string } from "./constants";
 import { UseServiceState } from "../../../controller/use-service/use-service.hook";
+import { onboardTourCSSClass } from "./onboard-tour/onboard-tour.style";
 
 interface IFeedbackBoard {
     data: NoticeViewModel[];
@@ -32,7 +33,11 @@ export const FeedbackBoard: FC<IFeedbackBoard> = ({ data, status }) => {
 
     return (
         <Col sm={12} md={6}>
-            <BoxWrapper isFluid shouldMaxSize>
+            <BoxWrapper
+                className={onboardTourCSSClass['onboard-tour-element-3']}
+                isFluid
+                shouldMaxSize
+            >
                 <Row justify="end">
                     <Col xs="content">
                         <H4 color="lightMain">{boardString.title}</H4>
