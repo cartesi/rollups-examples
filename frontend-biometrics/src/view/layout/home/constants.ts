@@ -1,7 +1,9 @@
 export const string = {
     resultPreview: {
         title: "Result preview",
-        idleFeedback: "Select a biometrics from gallery to get started! 🔎🖐",
+        idleFeedback:
+            "Select a biometrics from gallery to get started! 🔎🖐",
+        idleFeedbackComplement: "Be sure to have at least 1.5 ETH",
         pendingFeedback: "Waiting for result...",
     },
     biometricsGallery: {

@@ -56,9 +56,14 @@ export const FeedbackBoard: FC<IFeedbackBoard> = ({ data, status }) => {
                         <Row justify="center">
                             <Col xs="content">
                                 {status === "idle" || status === "rejected" ? (
-                                    <H1 color="sweetMain" justify="center">
-                                        {boardString.idleFeedback}
-                                    </H1>
+                                    <>
+                                        <H1 color="sweetMain" justify="center">
+                                            {boardString.idleFeedback}
+                                        </H1>
+                                        <H4 color="sweetMain" justify="center">
+                                            {boardString.idleFeedbackComplement}
+                                        </H4>
+                                    </>
                                 ) : null}
                                 {message ? (
                                     <H1
