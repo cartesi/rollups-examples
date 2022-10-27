@@ -20,7 +20,7 @@ import { string } from "./constants";
 import { WalletManagerModal } from "./wallet-manager.modal";
 
 export const SharedLayout: FC<PropsWithChildren> = ({ children }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
     const onboardTour = useOnboardTour();
 
     return (
@@ -30,18 +30,18 @@ export const SharedLayout: FC<PropsWithChildren> = ({ children }) => {
                     {string.header}
                 </H2>
                 <Button
-                    className={onboardTourCSSClass['onboard-tour-element-1']}
+                    className={onboardTourCSSClass["onboard-tour-element-1"]}
                     variant="link"
                     onClick={() => {
-                        setIsModalOpen(true);
+                        setIsWalletModalOpen(true);
                     }}
                 >
                     {string.manageWalletButton.text}
                 </Button>
                 <WalletManagerModal
-                    isOpen={isModalOpen}
+                    isOpen={isWalletModalOpen}
                     onClose={() => {
-                        setIsModalOpen(false);
+                        setIsWalletModalOpen(false);
                     }}
                 />
             </Header>

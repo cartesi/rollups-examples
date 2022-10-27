@@ -17,22 +17,26 @@ import { FieldsetWrapper } from "../../atomic/form.org/form.mol";
 import { Input } from "../../atomic/form.org/input.mol";
 import { Modal, IModal } from "../../atomic/layout.org/modal.mol/modal.mol";
 import { Separator } from "../../atomic/layout.org/separator.mol/separator.atm";
-import { H1 } from "../../atomic/typography.mol";
 import { string } from "./constants";
 
 const modalString = string.manageWalletModal;
 
-export const WalletManagerModal: FC<IModal> = ({ isOpen, onClose }) => {
+type IWalletManagerModal = Pick<IModal, "isOpen" | "onClose">;
+
+export const WalletManagerModal: FC<IWalletManagerModal> = ({
+    isOpen,
+    onClose,
+}) => {
     const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
     const [{ chains, connectedChain, settingChain }, setChain] = useSetChain();
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <Row justify="center">
-                <Col xs="content">
-                    <H1 color="dark">{modalString.title}</H1>
-                </Col>
-            </Row>
+        <Modal
+            isOpen={isOpen}
+            title={modalString.title}
+            labelledBy={modalString.aria.labelledById}
+            onClose={onClose}
+        >
             <Separator large />
             {!!wallet ? (
                 <>
