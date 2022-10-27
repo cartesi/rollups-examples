@@ -50,40 +50,35 @@ export const BiometricsGalleryBoard: FC<IBiometricsGalleryBoard> = ({
 
     return (
         <>
-            <Modal isOpen={!!selectedItem} onClose={handleCancel}>
+            <Modal
+                title={galleryStrings.confirmationTitle}
+                isOpen={!!selectedItem}
+                onClose={handleCancel}
+            >
                 {!!selectedItem ? (
-                    <>
-                        <Row justify="center">
-                            <Col md={6}>
-                                <H2 justify="center" color="dark" isBold>
-                                    {galleryStrings.confirmationTitle}
-                                </H2>
-                            </Col>
-                        </Row>
-                        <Row justify="center">
-                            <Col xs={6} sm={4} lg={3}>
-                                <Image src={selectedItem.imgUrl} size="md" />
-                                <Separator />
-                                <Paragraph color="dark" noPadding>
-                                    {`${galleryStrings.confirmationIdLabel} ${selectedItem.id}`}
-                                </Paragraph>
-                                <Paragraph color="dark" noPadding>
-                                    {`${galleryStrings.confirmationTypeLabel} ${selectedItem.type}`}
-                                </Paragraph>
-                                <Separator />
-                                <Button
-                                    onClick={() => handleConfirm(selectedItem)}
-                                    variant="secondary"
-                                >
-                                    {galleryStrings.confirmationCTA}
-                                </Button>
-                            </Col>
-                        </Row>
-                    </>
+                    <Row justify="center">
+                        <Col xs={6} sm={4} lg={3}>
+                            <Image src={selectedItem.imgUrl} size="md" />
+                            <Separator />
+                            <Paragraph color="dark" noPadding>
+                                {`${galleryStrings.confirmationIdLabel} ${selectedItem.id}`}
+                            </Paragraph>
+                            <Paragraph color="dark" noPadding>
+                                {`${galleryStrings.confirmationTypeLabel} ${selectedItem.type}`}
+                            </Paragraph>
+                            <Separator />
+                            <Button
+                                onClick={() => handleConfirm(selectedItem)}
+                                variant="secondary"
+                            >
+                                {galleryStrings.confirmationCTA}
+                            </Button>
+                        </Col>
+                    </Row>
                 ) : null}
             </Modal>
             <GalleryWrapper
-                className={onboardTourCSSClass['onboard-tour-element-2']}
+                className={onboardTourCSSClass["onboard-tour-element-2"]}
                 sm={12}
                 md={6}
             >
