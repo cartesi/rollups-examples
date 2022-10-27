@@ -18,7 +18,7 @@ interface SharedDefaultProps {
     noPadding?: boolean;
     paddingX?: "sm" | "md" | "lg";
     paddingY?: "sm" | "md" | "lg";
-    justify?: "start" | "center" | "end";
+    justify?: true | "start" | "center" | "end";
 }
 
 const sharedDefaultCss = css<SharedDefaultProps>`
@@ -26,14 +26,18 @@ const sharedDefaultCss = css<SharedDefaultProps>`
     ${({ isBold, color, noPadding, paddingY, paddingX, justify }) => `
         ${isBold ? "font-weight: 500;" : ""}
         padding: ${
-            noPadding ? '0' : (
-                paddingX || paddingX
+            noPadding
+                ? "0"
+                : paddingX || paddingX
                 ? `${paddingY ? spacing.padding[paddingY] : "0"}
                     ${paddingX ? spacing.padding[paddingX] : "0"}`
                 : `${spacing.padding.sm} 0`
-                )
         };
-        ${justify ? `text-align: ${justify};` : ""}
+        ${
+            justify
+                ? `text-align: ${justify === true ? "justify" : justify};`
+                : ""
+        }
         color: ${colorConstant[color ?? "white"]};
     `};
 `;
