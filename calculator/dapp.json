@@ -1,6 +1,6 @@
 {
   "fs": {
-    "files": [".venv", "calculator.py", "entrypoint.sh"],
+    "files": [".crossenv", "calculator.py", "entrypoint.sh"],
     "size": 128000
   }
 }
