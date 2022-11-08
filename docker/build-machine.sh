@@ -17,6 +17,7 @@ MACHINE_DIR=$1
 ROLLUP_HTTP_SERVER_PORT=5004
 
 cartesi-machine \
+    --assert-rolling-template \
     --ram-length=128Mi \
     --rollup \
     --flash-drive=label:dapp,filename:dapp.ext2 \
