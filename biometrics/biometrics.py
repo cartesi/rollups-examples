@@ -26,6 +26,14 @@ logger = logging.getLogger(__name__)
 rollup_server = environ["ROLLUP_HTTP_SERVER_URL"]
 logger.info(f"HTTP rollup_server url is {rollup_server}")
 
+def verify_payload(data):
+    try:
+        input = hex2str(data["payload"])
+        input_json = json.loads(input)
+        return input_json
+    except:
+        logger.info("Not a valid Payload for Image processing")
+
 def str642img(str,name):
     try:
         imgdata = base64.b64decode(str)
@@ -87,10 +95,13 @@ def classify(input):
 
 def handle_advance(data):
     status = "accept"
+    
     try:
         # retrieves input as string
-        input = hex2str(data["payload"])
-        input_json = json.loads(input)
+        input_json = verify_payload(data)
+        if input_json is None:
+            status = "reject"
+            return status
 
         #check if the image is divided in chunks or it is only one chunk
         #Start check inputs. When we receive a chunk with final tag we turn loaded for true and call opencv. Otherwise we just add the content in the temporary file.
@@ -150,7 +161,8 @@ def handle_advance(data):
 def handle_inspect(data):
     logger.info(f"Received inspect request data {data}")
     logger.info("Adding report")
-    response = requests.post(rollup_server + "/report", json={"payload": data["payload"]})
+    report = {"payload": data["payload"]}
+    response = requests.post(rollup_server + "/report", json=report)
     logger.info(f"Received report status {response.status_code}")
     return "accept"
 
