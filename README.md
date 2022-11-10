@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # Cartesi Rollups Examples
 
 This repository includes examples of decentralized applications implemented using [Cartesi Rollups](https://github.com/cartesi/rollups).
@@ -32,7 +34,9 @@ As mentioned before, it is possible to interact with all the examples in this re
 
 ## Requirements
 
-Docker version `20.10.14` is required for building the environment and executing the examples.
+Docker version `20.10.14` with [Docker Buildkit](https://github.com/moby/buildkit) enabled is required for building the environment and executing the examples.
+We recommend using [Docker Desktop](https://www.docker.com/products/docker-desktop/), which already enables Buildkit by default.
+Alternatively, an environment variable with value `DOCKER_BUILDKIT=1` can also be set.
 
 The below instructions have been tested in systems running both Linux (Ubuntu), MacOS, and Windows (using [WSL](https://docs.microsoft.com/en-us/windows/wsl/install), which is highly recommended for Windows users).
 
@@ -101,7 +105,7 @@ docker compose -f ../docker-compose.yml -f ./docker-compose.override.yml -f ../d
 
 _Note_: In production mode, rejected inputs are guaranteed to have no effect on the back-end, since in that case the Cartesi Machine is completely rolled back to its previous state. However, in host mode there is no such guarantee and it is possible for changes to persist, for instance if the DApp allows an invalid input to change a global variable or produce a database write before it is rejected.
 
-_Note_: When running in host mode, localhost ports `5003` and `5004` will be used by default for the communication between the Cartesi Rollups framework and the DApp's back-end.
+_Note_: When running in host mode, localhost port `5004` will be used by default to allow the DApp's back-end to communicate with the Cartesi Rollups framework.
 
 ### Interactive console
 
@@ -258,3 +262,10 @@ A more generic Machine Learning DApp that illustrates how to use the [m2cgen (Mo
 Demonstrates how to handle ERC-20 deposits and withdrawals.
 The application parses ERC-20 deposits received from the Portal and emits a notice confirming receipt.
 It then issues corresponding vouchers to return the assets back to the depositor.
+
+### 13. [Auction DApp](./auction)
+
+Demonstrates how to create simple auctions for NFTs.
+The application comes with an integrated wallet and is capable of handling deposits, transfers and withdrawals for ERC-20 and ERC-721 tokens.
+It also implements a simple auction engine, which is responsible for creating auctions and handling bids, as well as transferring the auctioned NFTs to the winning bidder when the auction ends.
+It exercises the Rollups API, showing how to process advance and inspect requests, as well as how to generate Notices, Vouchers, and Reports.

@@ -1,0 +1,15 @@
+/artifacts
+cache
+contracts.json
+coverage*
+deployments/localhost
+deployments/*/solcInputs/*.json
+dist
+node_modules
+src/types
+test/*/
+.vscode
+.node*
+.env
+.DS_Store
+

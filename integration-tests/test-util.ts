@@ -6,14 +6,14 @@ import { ProtoGrpcType } from "./generated-src/proto/server-manager";
 import { ServerManagerClient } from "./generated-src/proto/CartesiServerManager/ServerManager";
 import { GetEpochStatusRequest } from "./generated-src/proto/CartesiServerManager/GetEpochStatusRequest";
 import { GetEpochStatusResponse } from "./generated-src/proto/CartesiServerManager/GetEpochStatusResponse";
-import { spawn, SpawnOptions } from "child_process";
+import { ChildProcess, spawn, SpawnOptions } from "child_process";
 import { ProcessedInput } from "./generated-src/proto/CartesiServerManager/ProcessedInput";
 import { GetSessionStatusResponse } from "./generated-src/proto/CartesiServerManager/GetSessionStatusResponse";
 import { GetSessionStatusRequest } from "./generated-src/proto/CartesiServerManager/GetSessionStatusRequest";
 
 // Utilities
 
-const CONSOLE = `../../frontend-console`;
+const CONSOLE = `../frontend-console`;
 
 export enum LogLevel {
     VERBOSE = "verbose",
@@ -47,12 +47,13 @@ class Logger {
 }
 export const logger = new Logger();
 
-interface CommandOutput {
-    stderr: string,
-    stdout: string
+export interface CommandOutput {
+    stderr: string;
+    stdout: string;
+    process: ChildProcess;
 }
 
-const _execCommand = async (
+export const spawnCommandAsync = async (
     cmd: string,
     args: string[] = [],
     options: SpawnOptions = {}
@@ -99,43 +100,36 @@ const _execCommand = async (
     return {
         stdout: stdout,
         stderr: stderr,
+        process: process,
     };
-}
+};
 
 export interface TestOptions {
     logLevel: LogLevel;
     pollingTimeout: number;
     address: string;
+    environment: string;
 }
 
 export const parseArgs = (argv: string[]): TestOptions => {
     let options: TestOptions = {
         logLevel: LogLevel.DEFAULT,
         pollingTimeout: 60,
-        address: ""
+        address: "",
+        environment: "prod",
     };
 
-    let index = argv.indexOf("--address");
-    if (index >= 0) {
-        try {
-            console.log(argv[index + 1]);
-            let address = argv[index + 1];
-            options.address = address.toString();
-        } catch (error) {
-            throw new Error(`Failed to parse arguments. ${error}`);
-        }
+    let address = captureStringArg(argv, "--address");
+    if (address) {
+        options.address = address;
     }
-
-    index = argv.indexOf("--pollingTimeout");
-    if (index >= 0) {
-        try {
-            let timeout = Number(argv[index + 1]);
-            if (timeout >= 0) {
-                options.pollingTimeout = timeout;
-            }
-        } catch (error) {
-            throw new Error(`Failed to parse arguments. ${error}`);
-        }
+    let environment = captureStringArg(argv, "--environment");
+    if (environment) {
+        options.environment = environment;
+    }
+    let timeout = captureNumberArg(argv, "--pollingTimeout");
+    if (timeout >= 0) {
+        options.pollingTimeout = timeout;
     }
 
     if (argv.includes("--verbose")) {
@@ -143,7 +137,35 @@ export const parseArgs = (argv: string[]): TestOptions => {
     }
 
     return options;
-}
+};
+
+const captureStringArg = (argv: string[], argName: string): string => {
+    let index = argv.indexOf(argName);
+    if (index >= 0) {
+        try {
+            console.log(argv[index + 1]);
+            return argv[index + 1];
+        } catch (error) {
+            throw new Error(`Failed to parse arguments. ${error}`);
+        }
+    }
+    return "";
+};
+
+const captureNumberArg = (argv: string[], argName: string): number => {
+    let index = argv.indexOf(argName);
+    if (index >= 0) {
+        try {
+            let value = Number(argv[index + 1]);
+            if (value >= 0) {
+                return value;
+            }
+        } catch (error) {
+            throw new Error(`Failed to parse arguments. ${error}`);
+        }
+    }
+    return -1;
+};
 
 // General
 
@@ -151,12 +173,12 @@ export const sendInput = async (input: string): Promise<string> => {
     const cmd = "yarn";
     const args = ["start", "input", "send", "--payload", input];
     const options = { cwd: CONSOLE };
-    const io = await _execCommand(cmd, args, options);
+    const io = await spawnCommandAsync(cmd, args, options);
 
     return io.stdout;
-}
+};
 
-//FIXME: keeps sending commands even after mocha dies with timeout 
+//FIXME: keeps sending commands even after mocha dies with timeout
 export const queryNotices = async (
     epoch: number,
     input: number,
@@ -178,7 +200,7 @@ export const queryNotices = async (
     do {
         await timer(1);
         logger.verbose(`Attempt: ${count}`);
-        const output = await _execCommand(cmd, args, options);
+        const output = await spawnCommandAsync(cmd, args, options);
 
         if (output.stderr) {
             throw new Error(`Failed to get notices. ${output.stderr}`);
@@ -196,10 +218,10 @@ export const queryNotices = async (
         }
     } while (count < timeout);
     return [];
-}
+};
 
 /**
- * Extracts Notices as a JSON array from the output generated by front-end console 
+ * Extracts Notices as a JSON array from the output generated by front-end console
  * @param output the command line output from front-end console
  * @returns JSON array with the Notices
  */
@@ -209,7 +231,7 @@ const _parseNoticesOutput = (output: string): any => {
     const noticesStr = splitOut.pop() ?? "[]";
     logger.verbose(`Notices: ${noticesStr}`);
     return JSON.parse(noticesStr);
-}
+};
 
 export const isQueryServerReady = async (timeout: number): Promise<boolean> => {
     let count = 0;
@@ -227,7 +249,7 @@ export const isQueryServerReady = async (timeout: number): Promise<boolean> => {
         count++;
     } while (count < timeout);
     return false;
-}
+};
 
 export function pingQueryServer(): Promise<boolean> {
     const options = {
@@ -243,7 +265,7 @@ export function pingQueryServer(): Promise<boolean> {
 export const advanceEpoch = async (time = 864010): Promise<void> => {
     await _hardhatAdvanceTime(time);
     await _hardhatEvmMine();
-}
+};
 
 const _hardhatAdvanceTime = async (time: number): Promise<void> => {
     const data = JSON.stringify({
@@ -263,7 +285,7 @@ const _hardhatAdvanceTime = async (time: number): Promise<void> => {
     };
 
     await _sendRequest(options, data);
-}
+};
 
 const _hardhatEvmMine = async (): Promise<void> => {
     const data = JSON.stringify({
@@ -282,7 +304,7 @@ const _hardhatEvmMine = async (): Promise<void> => {
     };
 
     await _sendRequest(options, data);
-}
+};
 
 const _sendRequest = async (
     options: http.RequestOptions,
@@ -306,7 +328,7 @@ const _sendRequest = async (
         }
         req.end();
     });
-}
+};
 
 export async function assertEpoch(
     epoch: number,
@@ -407,7 +429,10 @@ export class PollingServerManagerClient {
                 let pendingInputsCount = status.pendingInputCount ?? 0;
                 let processedInputsCount = status.processedInputs?.length ?? 0;
 
-                if (pendingInputsCount == 0 && processedInputsCount >= expectedInputCount) {
+                if (
+                    pendingInputsCount == 0 &&
+                    processedInputsCount >= expectedInputCount
+                ) {
                     return status.processedInputs ?? [];
                 }
             } catch (error: any) {

@@ -9,10 +9,9 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-import { IERC20__factory, IInput } from "@cartesi/rollups";
-import { ContractReceipt, ethers } from "ethers";
+import { IERC20__factory } from "@cartesi/rollups";
+import { ethers } from "ethers";
 import { Argv } from "yargs";
-import { InputKeys } from "../types";
 import { networks } from "../../networks";
 import {
     connect,
@@ -24,6 +23,7 @@ import {
     Args as RollupsArgs,
     builder as rollupsBuilder,
 } from "../../rollups";
+import { findInputAddedInfo } from "../util";
 
 interface Args extends ConnectArgs, RollupsArgs {
     erc20?: string;
@@ -70,35 +70,6 @@ export const builder = (yargs: Argv<Args>) => {
             type: "string",
             describe: "Amount of ERC-20 tokens to deposit",
         });
-};
-
-/**
- * Retrieve InputKeys from InputAddedEvent
- * @param receipt Blockchain transaction receipt
- * @returns input identification keys
- */
-export const findInputAddedInfo = (
-    receipt: ContractReceipt,
-    inputContract: IInput
-): InputKeys => {
-    if (receipt.events) {
-        for (const event of receipt.events) {
-            try {
-                const parsedLog = inputContract.interface.parseLog(event);
-                if (parsedLog.name == "InputAdded") {
-                    return {
-                        epoch_index: parsedLog.args.epochNumber.toNumber(),
-                        input_index: parsedLog.args.inputIndex.toNumber(),
-                    };
-                }
-            } catch (e) {
-                // do nothing, just skip to try parsing the next event
-            }
-        }
-    }
-    throw new Error(
-        `InputAdded event not found in receipt of transaction ${receipt.transactionHash}`
-    );
 };
 
 export const handler = async (args: Args) => {

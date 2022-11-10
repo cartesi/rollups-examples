@@ -12,17 +12,26 @@ import {
     PollingServerManagerClient,
     assertEpoch,
     parseArgs,
-} from "./test-util";
+    CommandOutput,
+    spawnCommandAsync,
+} from "../test-util";
 
-const SERVER_MANAGER_PROTO = `../../grpc-interfaces/server-manager.proto`;
+const SERVER_MANAGER_PROTO = `../grpc-interfaces/server-manager.proto`;
 
 let serverManager: PollingServerManagerClient;
+let runBackendProcess: CommandOutput;
 
-const { logLevel, pollingTimeout, address } = parseArgs(process.argv);
+const { logLevel, pollingTimeout, address, environment } = parseArgs(
+    process.argv
+);
 logger.logLevel = logLevel;
 
-describe("Echo DApp Integration Tests", () => {
+describe("Echo-Low-Level DApp Integration Tests", () => {
     before(async function () {
+        if (environment == "host") {
+            logger.log("******* This DApp does not support HOST MODE *******");
+        }
+
         serverManager = new PollingServerManagerClient(
             address,
             SERVER_MANAGER_PROTO
@@ -32,6 +41,12 @@ describe("Echo DApp Integration Tests", () => {
             await serverManager.isReady(pollingTimeout),
             "Failed to connect to Server Manager"
         ).to.be.true;
+    });
+
+    after(async function () {
+        if (environment == "host") {
+            this.runBackendProcess?.process.kill();
+        }
     });
 
     it("should process an input", async () => {
