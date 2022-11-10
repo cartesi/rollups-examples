@@ -86,7 +86,7 @@ services:
         "--bh-ws-endpoint",
         "ws://hardhat:8545",
         "--bh-block-timeout",
-        "120",
+        "8", # just a few seconds more than the configured automatic interval mining
       ]
     restart: always
     healthcheck:
