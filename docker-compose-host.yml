@@ -19,5 +19,5 @@ services:
         "--templateHash",
         "0x0000000000000000000000000000000000000000000000000000000000000000",
         "--outputFile",
-        "/deployments/localhost/dapp.address",
+        "/deployments/localhost/dapp.json",
       ]

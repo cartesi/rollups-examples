@@ -61,13 +61,14 @@ export const builder = <T>(yargs: Argv<T>): Argv<Args & T> => {
 };
 
 /**
- * Read address from text file
- * @param path Path of file with only address inside as string
+ * Read address from json file
+ * @param path Path of file with address in json file
  * @returns address or undefined if file does not exist
  */
 const readFromFile = (path: string | undefined): string | undefined => {
     if (path && fs.existsSync(path)) {
-        return fs.readFileSync(path, "utf8");
+        const json = JSON.parse(fs.readFileSync(path, "utf8"));
+        return json.address;
     }
 };
 
@@ -83,7 +84,7 @@ const readDApp = (
 ): string | undefined => {
     const network = networks[chainId];
     if (network && dapp) {
-        return readFromFile(`../deployments/${network.name}/${dapp}.address`);
+        return readFromFile(`../deployments/${network.name}/${dapp}.json`);
     }
 };
 

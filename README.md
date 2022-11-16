@@ -137,6 +137,7 @@ curl --data '{"id":1337,"jsonrpc":"2.0","method":"evm_increaseTime","params":[86
 ## Using testnets
 
 <!-- markdownlint-disable MD024 -->
+
 ### Interacting with deployed DApps
 
 Several examples committed to this repository are already deployed to the Ethereum Goerli testnet: [echo-python](./echo-python/README.md), [echo-cpp](./echo-cpp/README.md), [echo-lua](./echo-lua/README.md), [echo-js](./echo-js/README.md), [echo-low-level](./echo-low-level/README.md), [sqlite](./sqlite/README.md) and [knn](./knn/README.md). In order to interact with them, you can simply use the [frontend-console](./frontend-console) tool mentioned before, but this time specifying a few connectivity configurations appropriate for the target network.
@@ -187,7 +188,7 @@ Here, `env.<network>` specifies general parameters for the target network, like 
 DAPP_NAME=<example> docker compose --env-file ../env.goerli -f ../deploy-testnet.yml up
 ```
 
-This will create a file at `../deployments/<network>/<example>.address` with the deployed contract's address.
+This will create a file at `../deployments/<network>/<example>.json` with the deployed contract's address.
 Once the command finishes, it is advisable to stop the docker compose and remove the volumes created when executing it.
 
 ```shell

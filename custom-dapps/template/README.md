@@ -86,7 +86,7 @@ With that in place, you can submit a deploy transaction to the Cartesi DApp Fact
 DAPP_NAME=template docker compose -f ./deploy-testnet.yml up
 ```
 
-This will create a file at `./deployments/<network>/template.address` with the deployed contract's address.
+This will create a file at `./deployments/<network>/template.json` with the deployed contract's address.
 Once the command finishes, it is advisable to stop the docker compose and remove the volumes created when executing it.
 
 ```shell
@@ -124,7 +124,7 @@ export RPC_URL=<https://your.rpc.gateway>
 Then, inputs can be sent by specifying the DApp contract's address, as follows:
 
 ```shell
-yarn start input send --payload "Hello there" --addressFile path/to/template/deployments/<network>/template.address
+yarn start input send --payload "Hello there" --addressFile path/to/template/deployments/<network>/template.json
 ```
 
 Resulting notices can then be retrieved by querying the local Cartesi Node, as before:

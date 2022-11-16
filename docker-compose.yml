@@ -37,7 +37,7 @@ services:
     command:
       [
         "--rd-dapp-contract-address-file",
-        "/deployments/localhost/dapp.address",
+        "/deployments/localhost/dapp.json",
         "--mm-endpoint",
         "http://server_manager:5001",
         "--mm-session-id",
@@ -75,8 +75,7 @@ services:
 
   state_server:
     image: cartesi/rollups-state-server:0.7.0
-    command:
-      [
+    command: [
         "--sf-genesis-block",
         "0x1",
         "--sf-safety-margin",
@@ -134,7 +133,7 @@ services:
         "--templateHashFile",
         "/opt/cartesi/share/dapp-bin/hash",
         "--outputFile",
-        "/deployments/localhost/dapp.address",
+        "/deployments/localhost/dapp.json",
       ]
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
@@ -196,7 +195,7 @@ services:
     command:
       [
         "--dapp-contract-address-file",
-        "/deployments/localhost/dapp.address",
+        "/deployments/localhost/dapp.json",
         "--session-id",
         "default_rollups_id",
         "--initial-epoch",

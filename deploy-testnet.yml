@@ -22,7 +22,7 @@ services:
         "--templateHashFile",
         "/opt/cartesi/share/dapp-bin/hash",
         "--outputFile",
-        "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.address",
+        "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.json",
       ]
     volumes:
       - machine:/opt/cartesi/share/dapp-bin:ro

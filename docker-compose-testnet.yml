@@ -14,7 +14,7 @@ services:
     command:
       [
         "--rd-dapp-contract-address-file",
-        "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.address",
+        "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.json",
         "--mm-endpoint",
         "http://server_manager:5001",
         "--mm-session-id",
@@ -109,7 +109,7 @@ services:
     command:
       [
         "--dapp-contract-address-file",
-        "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.address",
+        "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.json",
         "--session-id",
         "default_rollups_id",
         "--initial-epoch",
