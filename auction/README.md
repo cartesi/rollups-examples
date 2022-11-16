@@ -11,7 +11,7 @@ Its business logic mostly follows the [English auction](https://en.wikipedia.org
 - There's no reserve price. The item will be sold by the highest bid, no matter how low.
 - When time runs out the highest bidder wins the auction.
 
-# Application components
+## Application components
 
 The DApp is comprised of:
 
@@ -25,24 +25,24 @@ For more information about how to mint example NFTs, refer to the [`common-contr
 - A Command-line tool to send commands to the DApp.
 Please refer to the [Front-end console documentation](../frontend-console) for more details.
 
-# Application life-cycle
+## Application life-cycle
 
 An auction can be created by a user for any ERC-721 token (NFT) they possess.
 In order to create an auction, a user must first mint an NFT and deposit it in the DApp wallet. After that, any other user may place bids on the auction until the auction is finished and the NFT may be transferred to the winning bidder.
 
-# DApp Operations
+## DApp Operations
 
 The DApp operations are split between wallet and auction operations.
 
-## Wallet operations
+### Wallet operations
 
 Wallet operations concern depositing, transferring, and withdrawing of ERC-20 tokens or NFTs.
 
 They may be executed with the help of the front-end console application, as mentioned bofore.
 
-### ERC-20 operations
+#### ERC-20 operations
 
-#### How to deposit ERC-20 funds
+##### How to deposit ERC-20 funds
 
 Any kind of ERC-20 token may be used to place bids against an auction, depending on what token address is chosen during its creation.
 
@@ -56,7 +56,7 @@ As a result, the funds are deposited in the account wallet and made available fo
 After the deposit is successful, a `Notice` will be issued.
 One can [query the account balance via an inspect state call](#how-to-query-an-account-balance).
 
-#### How to withdraw ERC-20 funds
+##### How to withdraw ERC-20 funds
 
 Withdrawals are also executed with the help of the front-end console, by [sending inputs](../frontend-console/README.md#sending-inputs) with the command `erc20withdrawal` to the DApp.
 
@@ -76,7 +76,7 @@ After the command is successfully processed, the change will be reflected in the
 
 Any failure will make the request being rejected and the reason will be reported as a `Report`.
 
-#### How to transfer ERC-20 funds
+##### How to transfer ERC-20 funds
 
 Similarly to withdrawing, a transfer is executed with the help of the front-end console, by [sending inputs](../frontend-console#sending-inputs) with the command `erc20withdrawal` to the DApp.
 
@@ -97,16 +97,16 @@ After the command is successfully processed, the change will be reflected in the
 
 Any failure will make the request being rejected and the reason will be reported as a `Report`.
 
-### ERC-721 operations
+#### ERC-721 operations
 
 Before executing any operation related to NFTs, one must first create them as explained in the section below.
 
-#### How to mint NFTs to be auctioned
+##### How to mint NFTs to be auctioned
 
 Simply proceed and [mint a CartesiNFT](../common-contracts/README.md#how-to-mint-a-cartesinft) and take note of the `token_id`.
 It will be used when [depositing NFTs into a user account](#how-to-deposit-nfts) using the front-end console.
 
-#### How to deposit NFTs
+##### How to deposit NFTs
 
 In order to [deposit NFTs](../frontend-console#depositing-erc-721-tokens), they must have been minted beforehand as explained above.
 
@@ -120,7 +120,7 @@ As a result, the token will be deposited in the account wallet and be available 
 After the deposit is successful, a `Notice` will be issued.
 One can [query the account balance via an inspect state call](#how-to-query-an-account-balance).
 
-#### How to withdraw NFTs
+##### How to withdraw NFTs
 
 Withdrawals can also be executed with the help of the front-end console, by [sending inputs](../frontend-console#sending-inputs) command `erc721withdrawal` to the DApp.
 
@@ -138,7 +138,7 @@ yarn start input send --payload '{
 
 After the command is successfully processed, the change will be reflected in the account balance and the NFT will be retrievable by [executing the resulting `Voucher`](../frontend-console#validating-notices-and-executing-vouchers). Any failure will make the request be rejected, and the reason will be reported as a `Report`.
 
-#### How to transfer NFTs
+##### How to transfer NFTs
 
 Similarly to withdrawing, a transfer is executed with the help of the front-end console, by [sending inputs](../frontend-console#sending-inputs) with the command `erc721transfer` to the DApp.
 
@@ -159,11 +159,11 @@ After the command is successfully processed, the change will be reflected in the
 
 Any failure will make the request being rejected and the reason will be reported as a `Report`.
 
-### Querying the wallet state
+#### Querying the wallet state
 
 The state of any account may be queried at any time via [inspect state calls](../frontend-console#inspecting-dapp-state).
 
-#### How to query an account balance
+##### How to query an account balance
 
 In order to retrieve an account balance, send an inspect request against `balance` passing the account address as part of the URL.
 The example below shows how to query the balance of default account `0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266`:
@@ -187,7 +187,7 @@ Reports:
 ✨  Done in 3.88s.
 ```
 
-## Auction operations
+### Auction operations
 
 Auction operations cover:
 
@@ -195,7 +195,7 @@ Auction operations cover:
 - Placing bids on auctions; and
 - Finishing auctions.
 
-### How to create an auction
+#### How to create an auction
 
 In order to create an auction a user MUST provide the following data as part of an input:
 
@@ -228,7 +228,7 @@ yarn start input send --payload '{
 *NOTE*: An auction may only be created for NFTs belonging to the user who requests its creation.
 See [how to deposit NFTs](#how-to-deposit-nfts) above.
 
-### How to place bids
+#### How to place bids
 
 In order to place a bid, a user must inform:
 
@@ -249,7 +249,7 @@ yarn start input send --payload '{
 
 *NOTE*: A bid may only be placed against auctions that are currently active.
 
-### How to finish an auction
+#### How to finish an auction
 
 An auction will only be ended after its end date has passed. After that, no bids will be accepted.
 However, in order to set an auction as complete, a user must issue a command informing:
@@ -271,11 +271,11 @@ yarn start input send --payload '{
 }'
 ```
 
-## Querying auction data
+### Querying auction data
 
 The DApp state may be queried at any time via *inspect state* calls, which may be easily performed with the help of the [front-end console](../frontend-console) application.
 
-### How to query a single auction
+#### How to query a single auction
 
 In order to query data from an auction, simply send an inspect request specifying the auction `id`.
 
@@ -285,7 +285,7 @@ As an example, the following request queries data from auction `0`:
 yarn start inspect --payload auctions/0
 ```
 
-### How to list the existing bids for a given auction
+#### How to list the existing bids for a given auction
 
 Similarly, one can list the bids of a given auction by specifying its `id` through an *inspect state* request.
 
@@ -295,7 +295,7 @@ The following example shows how to list all bids from auction `0`:
 yarn start inspect --payload auctions/0/bids
 ```
 
-### How to list auctions
+#### How to list auctions
 
 In order to list all existing auctions, simply send an inspect state request with the URL `auctions` as follows:
 
@@ -317,7 +317,7 @@ Reports:
 ✨  Done in 3.27s.
 ```
 
-#### How to sort auctions
+##### How to sort auctions
 
 Auction lists are sorted by their IDs in ascending order by default.
 However, that order may be changed by providing any other auction attribute as value to the parameter `sort` when querying the available auctions.
@@ -330,7 +330,7 @@ yarn start inspect --payload "auctions?sort=start_date"
 
 *NOTE:* In case multiple `sort` parameters are provided, only the first one will be considered.
 
-#### How to traverse auctions
+##### How to traverse auctions
 
 A list of auctions may also be traversed by means of parameters `offset`, which defines how many entries are to be skipped in the auction list, and `limit`, which limits the size of the list.
 
@@ -346,7 +346,7 @@ Auctions may also be sorted and traversed by combining `sort`, `limit`, and `off
 yarn start inspect --payload "auctions?sort=end_date&limit=20&offset=40"
 ```
 
-## Running the back-end in host mode
+### Running the back-end in host mode
 
 When developing an application, it is often important to easily test and debug it. For that matter, it is possible to run the Cartesi Rollups environment in [host mode](https://github.com/cartesi/rollups-examples/tree/main/README.md#host-mode), so that the DApp's back-end can be executed directly on the host machine, allowing it to be debugged using regular development tools such as an IDE.
 
