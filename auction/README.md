@@ -1,5 +1,3 @@
-<!-- markdownlint-disable MD013 -->
-
 # Auction DApp
 
 The Auction DApp demonstrates how to implement an auction application on top of Cartesi Rollups.
@@ -74,7 +72,7 @@ yarn start input send --payload '{
 }'
 ```
 
-After the command is successfully processed, the change will be reflected in the account balance and the amount will be able to be retrieved by [executing the resulting `Voucher`](https://github.com/cartesi-corp/rollups-examples/tree/feature/refactor_auction_manual/frontend-console#validating-notices-and-executing-vouchers).
+After the command is successfully processed, the change will be reflected in the account balance and the amount will be able to be retrieved by [executing the resulting `Voucher`](../frontend-console#validating-notices-and-executing-vouchers).
 
 Any failure will make the request being rejected and the reason will be reported as a `Report`.
 
