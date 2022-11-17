@@ -7,6 +7,7 @@ on:
         paths:
             - "config/**"
             - "docker/**"
+            - "docker-compose*.yml"
             - "base.hcl"
             - ".github/workflows/dapp-build.yml"
             - ".github/workflows/auction-dapp.yml"

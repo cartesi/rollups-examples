@@ -5,6 +5,7 @@ on:
     pull_request:
         paths:
             - "docker/**"
+            - "docker-compose*.yml"
             - "base.hcl"
             - ".github/workflows/dapp-build.yml"
             - ".github/workflows/erc20-dapp.yml"
