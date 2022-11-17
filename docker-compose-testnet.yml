@@ -31,6 +31,8 @@ services:
         "${MNEMONIC:?undefined MNEMONIC}",
         "--tx-chain-id",
         "${CHAIN_ID:?undefined CHAIN_ID}",
+        "--tx-chain-is-legacy",
+        "${TX_LEGACY:-false}",
         "--tx-default-confirmations",
         "${BLOCK_CONFIRMATIONS_TX:?undefined BLOCK_CONFIRMATIONS_TX}",
       ]

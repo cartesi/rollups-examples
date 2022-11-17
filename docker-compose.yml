@@ -54,6 +54,8 @@ services:
         "test test test test test test test test test test test junk",
         "--tx-chain-id",
         "31337",
+        "--tx-chain-is-legacy",
+        "${TX_LEGACY:-false}",
         "--tx-default-confirmations",
         "2",
       ]
