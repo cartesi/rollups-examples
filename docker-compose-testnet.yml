@@ -24,7 +24,7 @@ services:
         "--sc-grpc-endpoint",
         "http://state_server:50051",
         "--sc-default-confirmations",
-        "10",
+        "${BLOCK_CONFIRMATIONS:?undefined BLOCK_CONFIRMATIONS}",
         "--tx-provider-http-endpoint",
         "${RPC_URL:?undefined RPC_URL}",
         "--tx-mnemonic",
@@ -32,7 +32,7 @@ services:
         "--tx-chain-id",
         "${CHAIN_ID:?undefined CHAIN_ID}",
         "--tx-default-confirmations",
-        "11",
+        "${BLOCK_CONFIRMATIONS_TX:?undefined BLOCK_CONFIRMATIONS_TX}",
       ]
     restart: always
     depends_on:
@@ -117,7 +117,7 @@ services:
         "--interval",
         "10",
         "--confirmations",
-        "10",
+        "${BLOCK_CONFIRMATIONS:?undefined BLOCK_CONFIRMATIONS}",
         "--state-server-endpoint",
         "http://state_server:50051",
         "--mm-endpoint",

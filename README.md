@@ -160,10 +160,10 @@ cd <example>
 docker buildx bake machine --load
 ```
 
-Once the machine docker image is ready, we can use it to deploy a corresponding Rollups smart contract. This requires you to define a few environment variables to specify which network you are deploying to, which account to use, and which RPC gateway to use when submitting the deploy transaction.
+Once the machine docker image is ready, we can use it to deploy a corresponding Rollups smart contract.
+This requires you to specify the account and RPC gateway to use when submitting the deploy transaction on the target network, which can be done by defining the following environment variables:
 
 ```shell
-export NETWORK=<network>
 export MNEMONIC=<user sequence of twelve words>
 export RPC_URL=<https://your.rpc.gateway>
 ```
@@ -171,7 +171,6 @@ export RPC_URL=<https://your.rpc.gateway>
 For example, to deploy to the Goerli testnet using an Alchemy RPC node, you could execute:
 
 ```shell
-export NETWORK=goerli
 export MNEMONIC=<user sequence of twelve words>
 export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
 ```
@@ -179,36 +178,41 @@ export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
 With that in place, you can submit a deploy transaction to the Cartesi DApp Factory contract on the target network by executing the following command:
 
 ```shell
-DAPP_NAME=<example> docker compose -f ../deploy-testnet.yml up
+DAPP_NAME=<example> docker compose --env-file ../env.<network> -f ../deploy-testnet.yml up
+```
+
+Here, `env.<network>` specifies general parameters for the target network, like its name and chain ID. In the case of Goerli, the command would be:
+
+```shell
+DAPP_NAME=<example> docker compose --env-file ../env.goerli -f ../deploy-testnet.yml up
 ```
 
 This will create a file at `../deployments/<network>/<example>.address` with the deployed contract's address.
 Once the command finishes, it is advisable to stop the docker compose and remove the volumes created when executing it.
 
 ```shell
-DAPP_NAME=<example> docker compose -f ../deploy-testnet.yml down -v
+DAPP_NAME=<example> docker compose --env-file ../env.<network> -f ../deploy-testnet.yml down -v
 ```
 
 After that, a corresponding Cartesi Validator Node must also be instantiated in order to interact with the deployed smart contract on the target network and handle the back-end logic of the DApp.
-Aside from the environment variables defined above, the node will also need a secure websocket endpoint for the RPC gateway (WSS URL) and the chain ID of the target network.
+Aside from the environment variables defined before, the node will also need a secure websocket endpoint for the RPC gateway (WSS URL).
 
-For example, for Goerli and Alchemy, you would set the following additional variables:
+For example, for Goerli and Alchemy, you would set the following additional variable:
 
 ```shell
 export WSS_URL=wss://eth-goerli.alchemyapi.io/v2/<USER_KEY>
-export CHAIN_ID=5
 ```
 
 Then, the node itself can be started by running a docker compose as follows:
 
 ```shell
-DAPP_NAME=<example> docker compose -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml up
+DAPP_NAME=<example> docker compose --env-file ../env.<network> -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml up
 ```
 
 Alternatively, you can also run the node on host mode by executing:
 
 ```shell
-DAPP_NAME=<example> docker compose -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml -f ../docker-compose-host-testnet.yml up
+DAPP_NAME=<example> docker compose --env-file ../env.<network> -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml -f ../docker-compose-host-testnet.yml up
 ```
 
 ## Examples
