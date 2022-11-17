@@ -490,13 +490,13 @@
     "@babel/helper-validator-identifier" "^7.18.6"
     to-fast-properties "^2.0.0"
 
-"@cartesi/rollups@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-0.6.1.tgz#2f6b39f0a1d3226b3ac5028917d7e06a7cc965e6"
-  integrity sha512-CIJIkMWAtagZ6qmssFsv+5WTAboSMAYxxXJDkOH1i2wfR2uIId44TYDjXrEdaqEgLMJdhzwWMWYMv6pCDis/xw==
+"@cartesi/rollups@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-0.7.0.tgz#e721f4eb5ab1b263aefc7f0819bf4c4aa8fa2d49"
+  integrity sha512-U4yZ8C2K7mJORia1qGpUAFx3XumGk7Hrmrtw2EcGgZvJ09M1BWq4dh65g0+QOodVgDSDHk6qrvZl1KU9cYqlow==
   dependencies:
     "@cartesi/token" "^1.7.0"
-    "@cartesi/util" "^4.1.0"
+    "@cartesi/util" "^5.0.0"
     "@openzeppelin/contracts" "^4.7.1"
 
 "@cartesi/token@^1.7.0":
@@ -506,10 +506,10 @@
   dependencies:
     "@openzeppelin/contracts" "^2.5.0"
 
-"@cartesi/util@^4.1.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@cartesi/util/-/util-4.2.0.tgz#222dfac6870702b0204f949e2d4be33fbbd41b04"
-  integrity sha512-VgON6nI6Be3v/H1xbUmCDuOXe6Y14qCwBKKeOEUsE+GOTNbBEOpFkzmWkTGOl365h08WAhPmWP6ImlaXrKlm3w==
+"@cartesi/util@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@cartesi/util/-/util-5.0.0.tgz#98b1d85aa9949fab3e0b6f1e630026375c31cc6b"
+  integrity sha512-JUZqvlPQgAA6SpHU0svnK3us2k112CN2o1QI4C4BHnqc0QdSDHyw6qlfVGic1DlUq1rVq8c68I4XvsgChn3ZgQ==
   dependencies:
     "@openzeppelin/contracts" "3.2.1-solc-0.7"
 
