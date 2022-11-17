@@ -1,6 +1,6 @@
 {
   "name": "@cartesi/echo-dapp",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Cartesi Echo JS DApp",
   "dependencies": {
     "ethers": "^5.5.4"
