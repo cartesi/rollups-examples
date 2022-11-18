@@ -6,6 +6,10 @@ import { H1, H4 } from "../../atomic/typography.mol";
 import { string } from "./constants";
 import { UseServiceState } from "../../../controller/use-service/use-service.hook";
 import { onboardTourCSSClass } from "./onboard-tour/onboard-tour.style";
+import { motion } from "framer-motion";
+import { Image } from "../../atomic/image.mol/image.mol";
+import fingerprintFail from "../../../assets/img/feedback/fingerprint_fail.svg";
+import fingerprintOk from "../../../assets/img/feedback/fingerprint_ok.svg";
 
 interface IFeedbackBoard {
     data: NoticeViewModel[];
@@ -26,15 +30,16 @@ export const FeedbackBoard: FC<IFeedbackBoard> = ({ data, status }) => {
 
         //TODO: adjust message
         const message = `Your result is: ${notice.payload_parsed}!`;
-
-        return { message };
+        const isFake = notice.payload_parsed.toLowerCase() === "fake";
+        const img = isFake ? fingerprintFail : fingerprintOk;
+        return { message, img };
     };
-    const { message } = handleResult(data, status);
+    const { message, img } = handleResult(data, status);
 
     return (
         <Col sm={12} md={6}>
             <BoxWrapper
-                className={onboardTourCSSClass['onboard-tour-element-3']}
+                className={onboardTourCSSClass["onboard-tour-element-3"]}
                 isFluid
                 shouldMaxSize
             >
@@ -66,13 +71,28 @@ export const FeedbackBoard: FC<IFeedbackBoard> = ({ data, status }) => {
                                     </>
                                 ) : null}
                                 {message ? (
-                                    <H1
-                                        color="sweetMain"
-                                        justify="center"
-                                        isBold
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.5 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{
+                                            duration: 0.8,
+                                            delay: 0.5,
+                                            ease: [0, 0.71, 0.2, 1.01],
+                                        }}
                                     >
-                                        {message}
-                                    </H1>
+                                        <Image
+                                            src={img}
+                                            justify="center"
+                                            size="lg"
+                                        />
+                                        <H1
+                                            color="sweetMain"
+                                            justify="center"
+                                            isBold
+                                        >
+                                            {message}
+                                        </H1>
+                                    </motion.div>
                                 ) : null}
                             </Col>
                         </Row>
