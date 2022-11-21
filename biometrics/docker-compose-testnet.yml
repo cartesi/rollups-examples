@@ -33,6 +33,8 @@ services:
         "${CHAIN_ID:?undefined CHAIN_ID}",
         "--tx-default-confirmations",
         "11",
+        "--validators",
+        "0x18930e8a66a1DbE21D00581216789AAB7460Afd0"
       ]
     restart: always
     depends_on:

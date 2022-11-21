@@ -23,10 +23,12 @@ services:
         "/opt/cartesi/share/dapp-bin/hash",
         "--outputFile",
         "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.address",
+        "--validators",
+        "0x18930e8a66a1DbE21D00581216789AAB7460Afd0"
       ]
     volumes:
       - machine:/opt/cartesi/share/dapp-bin:ro
-      - ./deployments:/deployments
+      - ../deployments:/deployments
 
 volumes:
   machine: {}
