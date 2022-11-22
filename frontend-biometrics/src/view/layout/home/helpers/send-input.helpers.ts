@@ -4,7 +4,10 @@ import { GalleryItem } from "../biometrics-gallery/biometrics-gallery.board";
 
 export const handleGalleryInput = async (
     data: GalleryItem,
-    requestHandler: (data: SendInputData, shouldAvoidNotices: boolean) => Promise<void>
+    requestHandler: (
+        data: SendInputData,
+        shouldAvoidNotices: boolean
+    ) => Promise<void>
 ) => {
     const maxChukLength = 50000;
     const getImage = await fetch(data.imgUrl);
@@ -20,9 +23,14 @@ export const handleGalleryInput = async (
             currentChunkStart,
             currentChunkEnd
         );
+        const isFirstIteration = idx === 0;
         const isLastIteration = currentChunkEnd > convertedResult.length;
         const sendInputData: SendInputData = {
-            chunk: isLastIteration ? "final" : idx + 1,
+            chunk: isFirstIteration
+                ? "initial"
+                : isLastIteration
+                ? "final"
+                : idx + 1,
             imageId: data.id,
             content,
         };
