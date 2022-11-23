@@ -18,7 +18,7 @@ import { ServiceReducerActions } from "./use-service/use-service.hook";
 import { WalletState, ConnectedChain } from "@web3-onboard/core";
 
 export interface SendInputData {
-    chunk: number | "final";
+    chunk: "initial" | number | "final";
     content: string;
     imageId: string;
 }
