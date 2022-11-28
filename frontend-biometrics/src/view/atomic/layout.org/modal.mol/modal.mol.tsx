@@ -9,10 +9,17 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-import { FC, PropsWithChildren, useEffect } from "react";
+import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { Row, Col } from "react-grid-system";
 import { H1 } from "../../typography.mol";
-import { ModalCloseButton, ModalContent, ModalWrapper } from "./modal.style";
+import {
+    ModalCloseButton,
+    ModalContent,
+    ModalContentWrapper,
+    ModalWrapper,
+} from "./modal.style";
+import { genTimerPromise } from "../../../../utils/timer-promise";
+import { MODAL_FADEOUT_DELAY } from "./constants";
 
 export interface IModal {
     isOpen: boolean;
@@ -30,27 +37,54 @@ export const Modal: FC<PropsWithChildren<IModal>> = ({
     onClose,
     onOpen,
 }) => {
+    const [showModal, setShowModal] = useState(false);
+    const closeModalFadeoutDelay = MODAL_FADEOUT_DELAY;
+    const closeModalFadeoutTransitionDelayInSeconds =
+        (MODAL_FADEOUT_DELAY - 100) / 1000;
+
     useEffect(() => {
-        if (onOpen) onOpen();
-    }, []);
+        if (isOpen) {
+            setShowModal(true);
+            onOpen?.();
+        } else {
+            genTimerPromise(closeModalFadeoutDelay).then(() =>
+                setShowModal(false)
+            );
+        }
+    }, [isOpen]);
 
     return (
-        <ModalWrapper isOpen={isOpen} onDismiss={onClose}>
-            <ModalContent aria-labelledby={labelledBy}>
-                <ModalCloseButton
-                    onClick={() => {
-                        onClose?.();
-                    }}
-                />
-                <Row justify="center">
-                    <Col xs="content">
-                        <H1 id={labelledBy} color="dark" justify="center">
-                            {title}
-                        </H1>
-                    </Col>
-                </Row>
-                {children}
-            </ModalContent>
+        <ModalWrapper isOpen={showModal} onDismiss={onClose}>
+            <ModalContentWrapper
+                initial={{ y: isOpen ? -100 : 1 }}
+                animate={{
+                    y: isOpen ? 1 : -1000,
+                    transition: isOpen
+                        ? undefined
+                        : {
+                              delay: closeModalFadeoutTransitionDelayInSeconds,
+                              default: {
+                                  ease: "linear",
+                              },
+                          },
+                }}
+            >
+                <ModalContent aria-labelledby={labelledBy}>
+                    <ModalCloseButton
+                        onClick={() => {
+                            onClose?.();
+                        }}
+                    />
+                    <Row justify="center">
+                        <Col xs="content">
+                            <H1 id={labelledBy} color="dark">
+                                {title}
+                            </H1>
+                        </Col>
+                    </Row>
+                    {children}
+                </ModalContent>
+            </ModalContentWrapper>
         </ModalWrapper>
     );
 };

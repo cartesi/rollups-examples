@@ -20,6 +20,7 @@ import {
     zIndex,
 } from "../../styleguide.atm";
 import { Button } from "../../button.mol/button.mol";
+import { motion } from "framer-motion";
 
 export const ModalWrapper = styled(DialogOverlay)`
     position: fixed;
@@ -33,14 +34,29 @@ export const ModalWrapper = styled(DialogOverlay)`
     z-index: ${zIndex.veryHigh};
     background-color: rgba(0, 0, 0, 0.5);
 `;
-export const ModalContent = styled(DialogContent)`
-    border-radius: ${radius.lg};
-    border: ${border.large} ${color.sweetMain};
-    padding: ${spacing.padding.sm};
+export const ModalContentWrapper = styled(motion.div)`
+    display: flex;
+    justify-content: center;
     min-height: ${size.modal.minHeight};
     min-width: ${size.modal.minWidth};
     width: 60%;
     height: 60%;
+`;
+export const Test = styled(motion.div)`
+    display: flex;
+    justify-content: center;
+    min-height: ${size.modal.minHeight};
+    min-width: ${size.modal.minWidth};
+    width: 60%;
+    height: 60%;
+`;
+
+export const ModalContent = styled(DialogContent)`
+    width: 100%;
+    height: 100%;
+    border-radius: ${radius.lg};
+    border: ${border.large} ${color.sweetMain};
+    padding: 0 ${spacing.padding.sm};
     background-color: ${color.white};
     display: flex;
     flex-direction: column;
