@@ -1,7 +1,7 @@
 {
   "fs": {
     "files": [
-      "target/riscv64ima-cartesi-linux-gnu/release/echo-backend",
+      "target/riscv64g-cartesi-linux-gnu/release/echo-backend",
       "entrypoint.sh"
     ]
   }

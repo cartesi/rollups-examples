@@ -12,4 +12,4 @@
 # specific language governing permissions and limitations under the License.
 
 set -e
-rollup-init ./target/riscv64ima-cartesi-linux-gnu/release/echo-backend
+rollup-init ./target/riscv64g-cartesi-linux-gnu/release/echo-backend
