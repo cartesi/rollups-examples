@@ -7,8 +7,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.11.0] 2022-11-29
+## [Unreleased]
 
+### Added
+
+- Support for network-specific configurations
+- Support for legacy transactions (allows networks that do not support EIP-1559)
+
+### Changed
+
+- Store DApp deployment information in JSON files instead of plain text
 - Bump toolchain to 0.12.0
 - Bump rootfs to 0.15.0
 - Bump kernel to linux-5.15.63-ctsi-1
