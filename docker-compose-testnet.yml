@@ -110,6 +110,9 @@ services:
       retries: 5
     volumes:
       - machine:/opt/cartesi/share/dapp-bin
+    environment:
+      - SERVER_MANAGER_LOG_LEVEL=warning
+      - REMOTE_CARTESI_MACHINE_LOG_LEVEL=info
 
   rollups_inspect_server:
     image: cartesi/rollups-inspect-server:0.8.0

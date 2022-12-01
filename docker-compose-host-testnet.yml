@@ -5,3 +5,5 @@ services:
     image: cartesi/host-server-manager:0.7.0
     ports:
       - "5004:5004"
+    environment:
+      - RUST_LOG=warn
