@@ -76,15 +76,13 @@ docker compose -f ../docker-compose.yml -f ./docker-compose.override.yml up
 ```
 
 Allow some time for the infrastructure to be ready.
-How much will depend on your system, but after some time showing the error `"concurrent call in session"`, eventually the container logs will repeatedly show the following:
+How much will depend on your system, but eventually the container logs will only show the continuous production of empty blocks in the local blockchain, as displayed below:
 
 ```shell
-rollups-examples-server_manager_1      | Received GetVersion
-rollups-examples-server_manager_1      | Received GetStatus
-rollups-examples-server_manager_1      |   default_rollups_id
-rollups-examples-server_manager_1      | Received GetSessionStatus for session default_rollups_id
-rollups-examples-server_manager_1      |   0
-rollups-examples-server_manager_1      | Received GetEpochStatus for session default_rollups_id epoch 0
+rollups-examples-hardhat-1                      | Mined empty block range #32 to #33
+rollups-examples-hardhat-1                      | Mined empty block range #32 to #34
+rollups-examples-hardhat-1                      | Mined empty block range #32 to #35
+rollups-examples-hardhat-1                      | Mined empty block range #32 to #36
 ```
 
 The environment can be shut down with the following command:
