@@ -105,6 +105,17 @@ _Note_: In production mode, rejected inputs are guaranteed to have no effect on 
 
 _Note_: When running in host mode, localhost port `5004` will be used by default to allow the DApp's back-end to communicate with the Cartesi Rollups framework.
 
+### Logging configuration
+
+Whether in production mode or in host mode, it is possible to configure the level of logging information printed by the environment components.
+The main [docker-compose.yml](./docker-compose.yml) file specifies the environment services and their configurations, and these include environment variables that can be used to control the level of logging detail for each service.
+
+For most services, the variable `RUST_LOG` defines the log level. The possible values for it are the following: `trace`, `debug`, `info`, `warn`, and `error`.
+
+In production mode, the `server_manager` service has two different variables to control logging levels. `SERVER_MANAGER_LOG_LEVEL` controls the level of detail for the service itself, while `REMOTE_CARTESI_MACHINE_LOG_LEVEL` controls it for the Cartesi Machine in which the back-end is executing. The possible values for these variables are slightly different: `trace`, `debug`, `info`, `warning`, `error`, and `fatal`. Note that these definitions do not affect the output printed by the back-end code itself, which has independent control of its logging level.
+
+...
+
 ### Interactive console
 
 It is possible to start an interactive console for the Cartesi Machine containing the application's back-end logic.
