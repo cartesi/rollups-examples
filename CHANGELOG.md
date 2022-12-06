@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support for network-specific configurations
 - Support for legacy transactions (allows networks that do not support EIP-1559)
+- Support for Gnosis Chiado Testnet
 
 ### Changed
 

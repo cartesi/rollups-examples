@@ -55,4 +55,8 @@ export const networks: Record<number, Chain> = {
         name: "arbitrum_goerli",
         explorer: "https://goerli-rollup-explorer.arbitrum.io",
     },
+    10200: {
+        name: "gnosis_chiado",
+        explorer: "https://blockscout.chiadochain.net/",
+    },
 };
