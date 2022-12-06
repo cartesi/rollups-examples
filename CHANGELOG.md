@@ -7,13 +7,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.11.0] 2022-12-06
 
 ### Added
 
 - Support for network-specific configurations
 - Support for legacy transactions (allows networks that do not support EIP-1559)
 - Support for Gnosis Chiado Testnet
+- Log level configurations for all Rollups services
 
 ### Changed
 
@@ -239,6 +240,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove machine-emulator-tools submodule
 - Remove openapi-interfaces submodule
 
+[0.11.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.11.0
 [0.10.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.10.1
 [0.10.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.10.0
 [0.9.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.9.1
