@@ -127,6 +127,8 @@ services:
         condition: service_healthy
       server_manager:
         condition: service_healthy
+      deployer:
+        condition: service_completed_successfully
     volumes:
       - ./deployments:/deployments
     environment:
