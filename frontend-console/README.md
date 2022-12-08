@@ -163,7 +163,7 @@ Examples:
 1. Execute voucher with id `3` for the current locally deployed DApp, using Hardhat's default funded account:
 
     ```shell
-    yarn start voucher execute --id 1
+    yarn start voucher execute --id 3
     ```
 
 1. Validate notice with id `5` for the `echo-python` DApp already deployed to the Ethereum Goerli testnet, using a user's account and a user's gateway RPC on Alchemy:
