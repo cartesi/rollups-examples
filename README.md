@@ -6,7 +6,7 @@ This repository includes examples of decentralized applications implemented usin
 
 You can use online development environments such as [Gitpod](https://gitpod.io/) and [CodeSandbox](https://codesandbox.io) to open this repository directly in your browser with all [required dependencies](https://cartesi.io/docs/build-dapps/requirements) already installed. These services allow you to start experimenting immediately, but keep in mind that they are provided by third-parties and are subject to unavailability and policy changes. They may also require access to your GitHub account in order to work properly.
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#prebuild/https://github.com/cartesi/rollups-examples/)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#/https://github.com/cartesi/rollups-examples/)
 
 ## Introduction
 
@@ -113,8 +113,6 @@ The main [docker-compose.yml](./docker-compose.yml) file specifies the environme
 For most services, the variable `RUST_LOG` defines the log level. The possible values for it are the following: `trace`, `debug`, `info`, `warn`, and `error`.
 
 In production mode, the `server_manager` service has two different variables to control logging levels. `SERVER_MANAGER_LOG_LEVEL` controls the level of detail for the service itself, while `REMOTE_CARTESI_MACHINE_LOG_LEVEL` controls it for the Cartesi Machine in which the back-end is executing. The possible values for these variables are slightly different: `trace`, `debug`, `info`, `warning`, `error`, and `fatal`. Note that these definitions do not affect the output printed by the back-end code itself, which has independent control of its logging level.
-
-...
 
 ### Interactive console
 
