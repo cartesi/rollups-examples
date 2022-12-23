@@ -131,6 +131,7 @@ services:
         condition: service_completed_successfully
     volumes:
       - ./deployments:/deployments
+      - machine:/opt/cartesi/share/dapp-bin
     environment:
       RUST_LOG: info
 
@@ -167,7 +168,7 @@ services:
         "--mnemonic",
         "test test test test test test test test test test test junk",
         "--templateHashFile",
-        "/opt/cartesi/share/dapp-bin/hash",
+        "/opt/cartesi/share/dapp-bin/0/hash",
         "--outputFile",
         "/deployments/localhost/dapp.json",
       ]

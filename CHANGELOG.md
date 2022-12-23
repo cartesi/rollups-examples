@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support for Node.js and adaptation of Echo JS DApp to use it
 
+## [Unreleased]
+
+### Added
+
+- Added support to machine snapshots
+
 ## [0.13.0] 2023-03-10
 
 ### Added

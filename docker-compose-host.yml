@@ -8,6 +8,10 @@ services:
     environment:
       - RUST_LOG=warn
 
+  server_manager_broker_proxy:
+    environment:
+      - SNAPSHOT_ENABLED=false
+
   deployer:
     command: [
         "create",
