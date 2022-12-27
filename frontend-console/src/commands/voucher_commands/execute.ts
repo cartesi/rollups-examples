@@ -10,6 +10,9 @@
 // specific language governing permissions and limitations under the License.
 
 import { Argv } from "yargs";
+import { defaultAbiCoder } from "@ethersproject/abi";
+import { OutputValidityProofStruct } from "@cartesi/rollups/dist/src/types/contracts/dapp/ICartesiDApp";
+
 import { getVoucher } from "../../graphql/vouchers";
 import {
     connect,
@@ -21,7 +24,6 @@ import {
     Args as RollupsArgs,
     builder as rollupsBuilder,
 } from "../../rollups";
-import { OutputValidityProofStruct } from "@cartesi/rollups/dist/src/types/contracts/interfaces/IOutput";
 
 interface Args extends ConnectArgs, RollupsArgs {
     url: string;
@@ -86,15 +88,20 @@ export const handler = async (args: Args) => {
     console.log(`executing voucher "${id}"`);
     const proof: OutputValidityProofStruct = {
         ...voucher.proof,
-        epochIndex: voucher.input.epoch.index,
-        inputIndex: voucher.input.index,
         outputIndex: voucher.index,
     };
     try {
+        // XXX: this will change
+        const claimQuery = defaultAbiCoder.encode(
+            ["uint8", "uint8"],
+            [voucher.input.index, voucher.input.epoch.index]
+        );
+
         // console.log(`Would check: ${JSON.stringify(proof)}`);
         const tx = await outputContract.executeVoucher(
             voucher.destination,
             voucher.payload,
+            claimQuery,
             proof
         );
         const receipt = await tx.wait();

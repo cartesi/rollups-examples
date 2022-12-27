@@ -1,6 +1,7 @@
 version: "3.9"
 
-x-credentials: &postgres-config
+x-credentials:
+  &postgres-config
   POSTGRES_HOSTNAME: database
   POSTGRES_PORT: "5432"
   POSTGRES_USER: postgres
@@ -10,7 +11,7 @@ x-credentials: &postgres-config
 
 services:
   rollups_dispatcher:
-    image: cartesi/rollups-dispatcher:0.8.2
+    image: ghcr.io/cartesi-corp/rollups-dispatcher:develop
     command:
       [
         "--rd-dapp-contract-address-file",
@@ -32,7 +33,7 @@ services:
         "--tx-default-confirmations",
         "${BLOCK_CONFIRMATIONS_TX:?undefined BLOCK_CONFIRMATIONS_TX}",
         "--redis-endpoint",
-        "redis://redis:6379",
+        "redis://redis:6379"
       ]
     restart: always
     depends_on:
@@ -47,7 +48,7 @@ services:
       - ./deployments:/deployments
 
   state_server:
-    image: cartesi/rollups-state-server:0.8.2
+    image: ghcr.io/cartesi-corp/rollups-state-server:develop
     command:
       [
         "--sf-genesis-block",
@@ -59,11 +60,11 @@ services:
         "--bh-ws-endpoint",
         "${WSS_URL:?undefined WSS_URL}",
         "--bh-block-timeout",
-        "120",
+        "120"
       ]
     restart: always
     healthcheck:
-      test: ["CMD", "grpc-health-probe", "-addr=:50051"]
+      test: [ "CMD", "grpc-health-probe", "-addr=:50051" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -73,7 +74,7 @@ services:
       RUST_LOG: info
 
   server_manager_broker_proxy:
-    image: cartesi/rollups-server-manager-broker-proxy:0.8.2
+    image: ghcr.io/cartesi-corp/rollups-server-manager-broker-proxy:develop
     command:
       [
         "--chain-id",
@@ -85,11 +86,11 @@ services:
         "--server-manager-endpoint",
         "http://server_manager:5001",
         "--session-id",
-        "default_rollups_id",
+        "default_rollups_id"
       ]
     restart: always
     healthcheck:
-      test: ["CMD", "curl", "--fail", "localhost:8080/healthz"]
+      test: [ "CMD", "curl", "--fail", "localhost:8080/healthz" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -106,7 +107,7 @@ services:
   server_manager:
     restart: always
     healthcheck:
-      test: ["CMD", "grpc-health-probe", "-addr=:5001"]
+      test: [ "CMD", "grpc-health-probe", "-addr=:5001" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -117,7 +118,7 @@ services:
       - REMOTE_CARTESI_MACHINE_LOG_LEVEL=info
 
   rollups_inspect_server:
-    image: cartesi/rollups-inspect-server:0.8.2
+    image: ghcr.io/cartesi-corp/rollups-inspect-server:develop
     command:
       [
         "--inspect-server-address",
@@ -125,7 +126,7 @@ services:
         "--server-manager-address",
         "server_manager:5001",
         "--session-id",
-        "default_rollups_id",
+        "default_rollups_id"
       ]
     restart: always
     ports:
@@ -137,7 +138,7 @@ services:
       RUST_LOG: info
 
   rollups_indexer:
-    image: cartesi/rollups-indexer:0.8.2
+    image: ghcr.io/cartesi-corp/rollups-indexer:develop
     command:
       [
         "--dapp-contract-address-file",
@@ -153,7 +154,7 @@ services:
         "--state-server-endpoint",
         "http://state_server:50051",
         "--mm-endpoint",
-        "http://server_manager:5001",
+        "http://server_manager:5001"
       ]
     restart: always
     depends_on:
@@ -171,7 +172,7 @@ services:
       - ./deployments:/deployments
 
   query_server:
-    image: cartesi/query-server:0.8.2
+    image: ghcr.io/cartesi-corp/query-server:develop
     ports:
       - "4000:4000"
     depends_on:
@@ -188,7 +189,7 @@ services:
     ports:
       - 5432:5432
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres || exit 1"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -203,7 +204,7 @@ services:
       - 6379:6379
     restart: always
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -73,7 +73,7 @@ export const builder = (yargs: Argv<Args>) => {
 };
 
 export const handler = async (args: Args) => {
-    const { rpc, address, mnemonic, accountIndex, erc20, amount } = args;
+    const { rpc, mnemonic, accountIndex, erc20, amount } = args;
 
     // connect to provider
     console.log(`connecting to ${rpc}`);
@@ -83,7 +83,7 @@ export const handler = async (args: Args) => {
     console.log(`connected to chain ${network.chainId}`);
 
     // connect to rollups,
-    const { inputContract, erc20Portal } = await rollups(
+    const { dapp, inputContract, erc20Portal } = await rollups(
         network.chainId,
         signer || provider,
         args
@@ -126,7 +126,12 @@ export const handler = async (args: Args) => {
 
     // send deposit transaction
     console.log(`depositing ${amount} tokens...`);
-    const tx = await erc20Portal.erc20Deposit(erc20Address, erc20Amount, "0x");
+    const tx = await erc20Portal.depositERC20Tokens(
+        erc20Address,
+        dapp,
+        erc20Amount,
+        "0x"
+    );
     console.log(`transaction: ${tx.hash}`);
     console.log("waiting for confirmation...");
     const receipt = await tx.wait();

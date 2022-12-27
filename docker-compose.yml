@@ -1,6 +1,7 @@
 version: "3.9"
 
-x-credentials: &postgres-config
+x-credentials:
+  &postgres-config
   POSTGRES_HOSTNAME: database
   POSTGRES_PORT: "5432"
   POSTGRES_USER: postgres
@@ -10,21 +11,26 @@ x-credentials: &postgres-config
 
 services:
   hardhat:
-    image: cartesi/rollups-hardhat:0.8.2
+    image: ghcr.io/cartesi-corp/rollups-hardhat:develop
     command:
       [
         "node",
         "--network",
         "hardhat",
         "--export",
-        "/opt/cartesi/share/blockchain/localhost.json",
+        "/opt/cartesi/share/blockchain/localhost.json"
       ]
     init: true
     ports:
       - "8545:8545"
     healthcheck:
       test:
-        ["CMD", "test", "-f", "/opt/cartesi/share/blockchain/localhost.json"]
+        [
+          "CMD",
+          "test",
+          "-f",
+          "/opt/cartesi/share/blockchain/localhost.json"
+        ]
       interval: 30s
       timeout: 30s
       retries: 5
@@ -33,13 +39,15 @@ services:
       - ./deployments:/app/rollups/deployments
 
   rollups_dispatcher:
-    image: cartesi/rollups-dispatcher:0.8.2
+    image: ghcr.io/cartesi-corp/rollups-dispatcher:develop
     command:
       [
-        "--rd-dapp-contract-address-file",
+        "--rd-dapp-deployment-file",
         "/deployments/localhost/dapp.json",
-        "--rd-initial-epoch",
-        "0",
+        "--rd-rollups-deployment-file",
+        "/opt/cartesi/share/blockchain/localhost.json",
+        "--rd-epoch-duration",
+        "86400",
         "--sc-grpc-endpoint",
         "http://state_server:50051",
         "--sc-default-confirmations",
@@ -55,7 +63,7 @@ services:
         "--tx-default-confirmations",
         "2",
         "--redis-endpoint",
-        "redis://redis:6379",
+        "redis://redis:6379"
       ]
     restart: always
     depends_on:
@@ -74,8 +82,9 @@ services:
       - ./deployments:/deployments
 
   state_server:
-    image: cartesi/rollups-state-server:0.8.2
-    command: [
+    image: ghcr.io/cartesi-corp/rollups-state-server:develop
+    command:
+      [
         "--sf-genesis-block",
         "0x1",
         "--sf-safety-margin",
@@ -85,11 +94,11 @@ services:
         "--bh-ws-endpoint",
         "ws://hardhat:8545",
         "--bh-block-timeout",
-        "8", # just a few seconds more than the configured automatic interval mining
+        "8"
       ]
     restart: always
     healthcheck:
-      test: ["CMD", "grpc-health-probe", "-addr=:50051"]
+      test: [ "CMD", "grpc-health-probe", "-addr=:50051" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -102,7 +111,7 @@ services:
       RUST_LOG: info
 
   server_manager_broker_proxy:
-    image: cartesi/rollups-server-manager-broker-proxy:0.8.2
+    image: ghcr.io/cartesi-corp/rollups-server-manager-broker-proxy:develop
     command:
       [
         "--chain-id",
@@ -114,11 +123,11 @@ services:
         "--server-manager-endpoint",
         "http://server_manager:5001",
         "--session-id",
-        "default_rollups_id",
+        "default_rollups_id"
       ]
     restart: always
     healthcheck:
-      test: ["CMD", "curl", "--fail", "localhost:8080/healthz"]
+      test: [ "CMD", "curl", "--fail", "localhost:8080/healthz" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -140,7 +149,7 @@ services:
     ports:
       - "5001:5001"
     healthcheck:
-      test: ["CMD", "grpc-health-probe", "-addr=:5001"]
+      test: [ "CMD", "grpc-health-probe", "-addr=:5001" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -151,7 +160,7 @@ services:
       - REMOTE_CARTESI_MACHINE_LOG_LEVEL=info
 
   deployer:
-    image: cartesi/rollups-cli:0.8.2
+    image: ghcr.io/cartesi-corp/rollups-cli:develop
     restart: on-failure
     depends_on:
       hardhat:
@@ -170,7 +179,7 @@ services:
         "--templateHashFile",
         "/opt/cartesi/share/dapp-bin/0/hash",
         "--outputFile",
-        "/deployments/localhost/dapp.json",
+        "/deployments/localhost/dapp.json"
       ]
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
@@ -189,7 +198,7 @@ services:
       [
         "--data",
         '{"id":1337,"jsonrpc":"2.0","method":"evm_setAutomine","params":[false]}',
-        "http://hardhat:8545",
+        "http://hardhat:8545"
       ]
 
   hardhat_set_interval:
@@ -204,11 +213,11 @@ services:
       [
         "--data",
         '{"id":1337,"jsonrpc":"2.0","method":"evm_setIntervalMining","params":[5000]}',
-        "http://hardhat:8545",
+        "http://hardhat:8545"
       ]
 
   rollups_inspect_server:
-    image: cartesi/rollups-inspect-server:0.8.2
+    image: ghcr.io/cartesi-corp/rollups-inspect-server:develop
     command:
       [
         "--inspect-server-address",
@@ -216,7 +225,7 @@ services:
         "--server-manager-address",
         "server_manager:5001",
         "--session-id",
-        "default_rollups_id",
+        "default_rollups_id"
       ]
     restart: always
     ports:
@@ -228,15 +237,15 @@ services:
       RUST_LOG: info
 
   rollups_indexer:
-    image: cartesi/rollups-indexer:0.8.2
+    image: ghcr.io/cartesi-corp/rollups-indexer:develop
     command:
       [
-        "--dapp-contract-address-file",
+        "--rd-dapp-deployment-file",
         "/deployments/localhost/dapp.json",
+        "--rd-rollups-deployment-file",
+        "/opt/cartesi/share/blockchain/localhost.json",
         "--session-id",
         "default_rollups_id",
-        "--initial-epoch",
-        "0",
         "--interval",
         "10",
         "--confirmations",
@@ -244,7 +253,7 @@ services:
         "--state-server-endpoint",
         "http://state_server:50051",
         "--mm-endpoint",
-        "http://server_manager:5001",
+        "http://server_manager:5001"
       ]
     restart: always
     depends_on:
@@ -266,7 +275,7 @@ services:
       - ./deployments:/deployments
 
   query_server:
-    image: cartesi/query-server:0.8.2
+    image: ghcr.io/cartesi-corp/query-server:develop
     ports:
       - "4000:4000"
     depends_on:
@@ -283,7 +292,7 @@ services:
     ports:
       - 5432:5432
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres || exit 1"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -298,7 +307,7 @@ services:
       - 6379:6379
     restart: always
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5

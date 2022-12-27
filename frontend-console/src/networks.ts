@@ -19,21 +19,9 @@ export const networks: Record<number, Chain> = {
     31337: {
         name: "localhost",
     },
-    3: {
-        name: "ropsten",
-        explorer: "https://ropsten.etherscan.io",
-    },
-    4: {
-        name: "rinkeby",
-        explorer: "https://rinkeby.etherscan.io",
-    },
     5: {
         name: "goerli",
         explorer: "https://goerli.etherscan.io",
-    },
-    42: {
-        name: "kovan",
-        explorer: "https://kovan.etherscan.io",
     },
     97: {
         name: "bsc_testnet",
@@ -56,7 +44,7 @@ export const networks: Record<number, Chain> = {
         explorer: "https://goerli-rollup-explorer.arbitrum.io",
     },
     10200: {
-        name: "gnosis_chiado",
+        name: "chiado",
         explorer: "https://blockscout.chiadochain.net/",
     },
 };

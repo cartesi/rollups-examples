@@ -10,6 +10,9 @@
 // specific language governing permissions and limitations under the License.
 
 import { Argv } from "yargs";
+import { defaultAbiCoder } from "@ethersproject/abi";
+import { OutputValidityProofStruct } from "@cartesi/rollups/dist/src/types/contracts/dapp/ICartesiDApp";
+
 import { getNotice } from "../../graphql/notices";
 import {
     connect,
@@ -21,7 +24,6 @@ import {
     Args as RollupsArgs,
     builder as rollupsBuilder,
 } from "../../rollups";
-import { OutputValidityProofStruct } from "@cartesi/rollups/dist/src/types/contracts/interfaces/IOutput";
 
 interface Args extends ConnectArgs, RollupsArgs {
     url: string;
@@ -86,13 +88,21 @@ export const handler = async (args: Args) => {
     console.log(`validating notice "${id}"`);
     const proof: OutputValidityProofStruct = {
         ...notice.proof,
-        epochIndex: notice.input.epoch.index,
-        inputIndex: notice.input.index,
         outputIndex: notice.index,
     };
     try {
+        // XXX: this will change
+        const claimQuery = defaultAbiCoder.encode(
+            ["uint8", "uint8"],
+            [notice.input.index, notice.input.epoch.index]
+        );
+
         // console.log(`Would check: ${JSON.stringify(proof)}`);
-        const ret = await outputContract.validateNotice(notice.payload, proof);
+        const ret = await outputContract.validateNotice(
+            notice.payload,
+            claimQuery,
+            proof
+        );
         console.log(`notice is valid! (ret="${ret}")`);
     } catch (e) {
         console.log(`COULD NOT VALIDATE NOTICE: ${JSON.stringify(e)}`);

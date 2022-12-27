@@ -1,4 +1,4 @@
-import { IInput } from "@cartesi/rollups";
+import { IInputBox } from "@cartesi/rollups";
 import { ContractReceipt } from "ethers";
 import { InputKeys } from "./types";
 
@@ -10,7 +10,7 @@ import { InputKeys } from "./types";
 
 export const findInputAddedInfo = (
     receipt: ContractReceipt,
-    inputContract: IInput
+    inputContract: IInputBox
 ): InputKeys => {
     if (receipt.events) {
         for (const event of receipt.events) {

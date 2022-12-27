@@ -11,7 +11,6 @@
 
 import { Argv } from "yargs";
 import { getReports } from "../../graphql/reports";
-import { ethers } from "ethers";
 import { hex2str } from "../utils";
 
 interface Args {

@@ -10,7 +10,6 @@
 // specific language governing permissions and limitations under the License.
 
 import fetch from "cross-fetch";
-import { ethers } from "ethers";
 import path from "path";
 import { Argv } from "yargs";
 import { hex2str } from "./utils";

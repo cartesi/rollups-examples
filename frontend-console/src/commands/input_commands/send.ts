@@ -9,7 +9,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-import { InputAddedEvent } from "@cartesi/rollups/dist/src/types/contracts/interfaces/IInput";
+import { InputAddedEvent } from "@cartesi/rollups/dist/src/types/contracts/inputs/IInputBox";
 import { ContractReceipt, ethers } from "ethers";
 import { Argv } from "yargs";
 import { InputKeys } from "../types";
@@ -63,7 +63,6 @@ export const getInputKeys = (receipt: ContractReceipt): InputKeys => {
 
     const inputAdded = event as InputAddedEvent;
     return {
-        epoch_index: inputAdded.args.epochNumber.toNumber(),
         input_index: inputAdded.args.inputIndex.toNumber(),
     };
 };
@@ -79,7 +78,7 @@ export const handler = async (args: Args) => {
     console.log(`connected to chain ${network.chainId}`);
 
     // connect to rollups,
-    const { inputContract } = await rollups(
+    const { dapp, inputContract } = await rollups(
         network.chainId,
         signer || provider,
         args
@@ -97,7 +96,7 @@ export const handler = async (args: Args) => {
         : ethers.utils.toUtf8Bytes(payload);
 
     // send transaction
-    const tx = await inputContract.addInput(inputBytes);
+    const tx = await inputContract.addInput(dapp, inputBytes);
     console.log(`transaction: ${tx.hash}`);
     console.log("waiting for confirmation...");
     const receipt = await tx.wait(1);
