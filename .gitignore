@@ -1,3 +1,0 @@
-echo-lua/test/generated-src/**
-echo-lua/test/node_modules/**
-echo-lua/echo.log
