@@ -7,6 +7,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] 2023-01-09
+
+### Added
+
+- Simple frontend-echo web application for Echo DApps
+
+### Changed
+
+- Fix Gitpod URL (prebuilds no longer supported)
+- Fix directory used for sharing deployed contracts in development environment
+- Bump rollups to 0.8.2: fixes to Server Manager Broker Proxy
+
 ## [0.11.1] 2022-12-07
 
 ### Changed
@@ -246,6 +258,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove machine-emulator-tools submodule
 - Remove openapi-interfaces submodule
 
+[0.12.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.12.0
 [0.11.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.11.1
 [0.11.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.11.0
 [0.10.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.10.1
