@@ -490,10 +490,10 @@
     "@babel/helper-validator-identifier" "^7.18.6"
     to-fast-properties "^2.0.0"
 
-"@cartesi/rollups@^0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-0.8.1.tgz#12739774699801d01086106ff24bf80409e76c44"
-  integrity sha512-UpmXODsotEgGyUDOJ3xCUr6l+J8yp2DLaZsdOEJO/3152xqT7boJpawJrNRXW0/fvKCn474Ph7Ux9WhDktFsOw==
+"@cartesi/rollups@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-0.8.2.tgz#9f8323926e9c823b331b539d6e104eb4804d5e03"
+  integrity sha512-EiBJn2ZmkafCJSs7J02W/3xfhpThJrEx0S/+KQaEeC8r5O5JqIPHS9B34D2VcCevkLR+51VNv8O3O/aBl15Q4Q==
   dependencies:
     "@cartesi/token" "^1.8.0"
     "@cartesi/util" "^5.0.1"
