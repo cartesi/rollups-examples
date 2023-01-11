@@ -1,0 +1,214 @@
+{
+  "address": "0x20BfA50d25ad25d7989eeAe9b0ed9F8bDcFb78bd",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "dapp",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "inputIndex",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "input",
+          "type": "bytes"
+        }
+      ],
+      "name": "InputAdded",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_dapp",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_input",
+          "type": "bytes"
+        }
+      ],
+      "name": "addInput",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_dapp",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getInputHash",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_dapp",
+          "type": "address"
+        }
+      ],
+      "name": "getNumberOfInputs",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x7b2bca2424e4af0ce21dd04bbd2d9c3ec950e89acec9ba83f5d2b38335a139aa",
+  "receipt": {
+    "to": "0x4e59b44847b379578588920cA78FbF26c0B4956C",
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "contractAddress": null,
+    "transactionIndex": 0,
+    "gasUsed": "271804",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xc9734f07c646906aa6cbc55109ffffacd0f85fc536d01f063ffbabe4fdf8479a",
+    "transactionHash": "0x7b2bca2424e4af0ce21dd04bbd2d9c3ec950e89acec9ba83f5d2b38335a139aa",
+    "logs": [],
+    "blockNumber": 13,
+    "cumulativeGasUsed": "271804",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "5b784b24510fae6f20086d6daee4d1ee",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.13+commit.abaa5c0e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"dapp\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"inputIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"input\",\"type\":\"bytes\"}],\"name\":\"InputAdded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_dapp\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_input\",\"type\":\"bytes\"}],\"name\":\"addInput\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_dapp\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"getInputHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_dapp\",\"type\":\"address\"}],\"name\":\"getNumberOfInputs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"addInput(address,bytes)\":{\"params\":{\"_dapp\":\"The address of the DApp\",\"_input\":\"The contents of the input\"},\"returns\":{\"_0\":\"The hash of the input plus some extra metadata\"}},\"getInputHash(address,uint256)\":{\"params\":{\"_dapp\":\"The address of the DApp\",\"_index\":\"The index of the input in the DApp's input box\"},\"returns\":{\"_0\":\"The hash of the input at the provided index in the DApp's input box\"}},\"getNumberOfInputs(address)\":{\"params\":{\"_dapp\":\"The address of the DApp\"},\"returns\":{\"_0\":\"Number of inputs in the DApp's input box\"}}},\"version\":1},\"userdoc\":{\"events\":{\"InputAdded(address,uint256,address,bytes)\":{\"notice\":\"Emitted when an input is added to a DApp's input box\"}},\"kind\":\"user\",\"methods\":{\"addInput(address,bytes)\":{\"notice\":\"Add an input to a DApp's input box\"},\"getInputHash(address,uint256)\":{\"notice\":\"Get the hash of an input in a DApp's input box\"},\"getNumberOfInputs(address)\":{\"notice\":\"Get the number of inputs in a DApp's input box\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/inputs/InputBox.sol\":\"InputBox\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/common/CanonicalMachine.sol\":{\"content\":\"// Copyright 2022 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\n/// @title Canonical Machine Constants\\npragma solidity ^0.8.13;\\n\\nlibrary CanonicalMachine {\\n    // Log base 2 of size in bytes\\n    type Log2Size is uint64;\\n\\n    // Machine word size (8 bytes)\\n    Log2Size constant WORD_LOG2_SIZE = Log2Size.wrap(3);\\n\\n    // Machine address space size (2^64 bytes)\\n    Log2Size constant MACHINE_LOG2_SIZE = Log2Size.wrap(64);\\n\\n    // Keccak-256 output size (32 bytes)\\n    Log2Size constant KECCAK_LOG2_SIZE = Log2Size.wrap(5);\\n\\n    // Maximum input size (32 megabytes)\\n    Log2Size constant INPUT_MAX_LOG2_SIZE = Log2Size.wrap(25);\\n\\n    // Maximum voucher metadata memory range (2 megabytes)\\n    Log2Size constant VOUCHER_METADATA_LOG2_SIZE = Log2Size.wrap(21);\\n\\n    // Maximum notice metadata memory range (2 megabytes)\\n    Log2Size constant NOTICE_METADATA_LOG2_SIZE = Log2Size.wrap(21);\\n\\n    // Maximum epoch voucher memory range (128 megabytes)\\n    Log2Size constant EPOCH_VOUCHER_LOG2_SIZE = Log2Size.wrap(37);\\n\\n    // Maximum epoch notice memory range (128 megabytes)\\n    Log2Size constant EPOCH_NOTICE_LOG2_SIZE = Log2Size.wrap(37);\\n\\n    /// @notice Convert a Log2Size value into its underlying uint64 value\\n    /// @param s the Log2Size value\\n    function uint64OfSize(Log2Size s) internal pure returns (uint64) {\\n        return Log2Size.unwrap(s);\\n    }\\n\\n    /// @notice Return the position of an intra memory range on a memory range\\n    //          with contents with the same size\\n    /// @param _index index of intra memory range\\n    /// @param _log2Size size of intra memory range\\n    function getIntraMemoryRangePosition(\\n        uint64 _index,\\n        Log2Size _log2Size\\n    ) internal pure returns (uint64) {\\n        return _index << Log2Size.unwrap(_log2Size);\\n    }\\n}\\n\",\"keccak256\":\"0xbd1b4b7ab297e7aead766b8c479a6d823f80835004579da39b9c0c8ba66c3cdc\",\"license\":\"Apache-2.0\"},\"contracts/inputs/IInputBox.sol\":{\"content\":\"// Copyright 2022 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\n/// @title Input Box interface\\npragma solidity ^0.8.13;\\n\\ninterface IInputBox {\\n    /// @notice Emitted when an input is added to a DApp's input box\\n    /// @param dapp The address of the DApp\\n    /// @param inputIndex The index of the input\\n    /// @param sender The address that sent the input\\n    /// @param input The contents of the input\\n    event InputAdded(\\n        address indexed dapp,\\n        uint256 indexed inputIndex,\\n        address sender,\\n        bytes input\\n    );\\n\\n    /// @notice Add an input to a DApp's input box\\n    /// @param _dapp The address of the DApp\\n    /// @param _input The contents of the input\\n    /// @return The hash of the input plus some extra metadata\\n    function addInput(\\n        address _dapp,\\n        bytes calldata _input\\n    ) external returns (bytes32);\\n\\n    /// @notice Get the number of inputs in a DApp's input box\\n    /// @param _dapp The address of the DApp\\n    /// @return Number of inputs in the DApp's input box\\n    function getNumberOfInputs(address _dapp) external view returns (uint256);\\n\\n    /// @notice Get the hash of an input in a DApp's input box\\n    /// @param _dapp The address of the DApp\\n    /// @param _index The index of the input in the DApp's input box\\n    /// @return The hash of the input at the provided index in the DApp's input box\\n    function getInputHash(\\n        address _dapp,\\n        uint256 _index\\n    ) external view returns (bytes32);\\n}\\n\",\"keccak256\":\"0x023bdabe4d55e248482f7fa9cb8bf3428f56bcd3106de4322f70dbbf1d425488\",\"license\":\"Apache-2.0\"},\"contracts/inputs/InputBox.sol\":{\"content\":\"// Copyright 2022 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\n/// @title Input Box\\npragma solidity ^0.8.13;\\n\\nimport {IInputBox} from \\\"./IInputBox.sol\\\";\\nimport {LibInput} from \\\"../library/LibInput.sol\\\";\\n\\ncontract InputBox is IInputBox {\\n    mapping(address => bytes32[]) inputBoxes;\\n\\n    function addInput(\\n        address _dapp,\\n        bytes calldata _input\\n    ) external override returns (bytes32) {\\n        bytes32[] storage inputBox = inputBoxes[_dapp];\\n        uint256 inputIndex = inputBox.length;\\n\\n        bytes32 inputHash = LibInput.computeInputHash(\\n            msg.sender,\\n            block.number,\\n            block.timestamp,\\n            _input,\\n            inputIndex\\n        );\\n\\n        // add input to correct inbox\\n        inputBox.push(inputHash);\\n\\n        // block.number and timestamp can be retrieved by the event metadata itself\\n        emit InputAdded(_dapp, inputIndex, msg.sender, _input);\\n\\n        return inputHash;\\n    }\\n\\n    function getNumberOfInputs(\\n        address _dapp\\n    ) external view override returns (uint256) {\\n        return inputBoxes[_dapp].length;\\n    }\\n\\n    function getInputHash(\\n        address _dapp,\\n        uint256 _index\\n    ) external view override returns (bytes32) {\\n        return inputBoxes[_dapp][_index];\\n    }\\n}\\n\",\"keccak256\":\"0x91b5095dc1e698d66d86b31e11ec2ef23d4d0052d979b18912a5d753d2adea48\",\"license\":\"Apache-2.0\"},\"contracts/library/LibInput.sol\":{\"content\":\"// Copyright 2022 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\n/// @title Input Library\\npragma solidity ^0.8.13;\\n\\nimport {CanonicalMachine} from \\\"../common/CanonicalMachine.sol\\\";\\n\\nlibrary LibInput {\\n    using CanonicalMachine for CanonicalMachine.Log2Size;\\n\\n    function computeInputHash(\\n        address sender,\\n        uint256 blockNumber,\\n        uint256 blockTimestamp,\\n        bytes calldata input,\\n        uint256 inputIndex\\n    ) internal pure returns (bytes32) {\\n        // Currently sending an input larger than driveSize surpasses the block gas limit\\n        // But we keep the following check in case this changes in the future\\n        require(\\n            input.length <=\\n                (1 << CanonicalMachine.INPUT_MAX_LOG2_SIZE.uint64OfSize()),\\n            \\\"input len: [0,driveSize]\\\"\\n        );\\n\\n        bytes32 keccakMetadata = keccak256(\\n            abi.encode(\\n                sender,\\n                blockNumber,\\n                blockTimestamp,\\n                0, //TODO decide how to deal with epoch index\\n                inputIndex // input index\\n            )\\n        );\\n\\n        bytes32 keccakInput = keccak256(input);\\n\\n        return keccak256(abi.encode(keccakMetadata, keccakInput));\\n    }\\n}\\n\",\"keccak256\":\"0xd628563e071b6c24ebf4c2a9b16360814917cc313064592832c73cdc22c80a36\",\"license\":\"Apache-2.0\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506103f2806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c80631789cd631461004657806361a93c871461006b578063677087c914610094575b600080fd5b610059610054366004610287565b6100a7565b60405190815260200160405180910390f35b61005961007936600461030a565b6001600160a01b031660009081526020819052604090205490565b6100596100a236600461032c565b61013b565b6001600160a01b03831660009081526020819052604081208054826100d0334342898987610178565b83546001810185556000858152602090200181905560405190915082906001600160a01b038916907f6aaa400068bf4ca337265e2a1e1e841f66b8597fd5b452fdc52a44bed28a0784906101299033908b908b90610356565b60405180910390a39695505050505050565b6001600160a01b038216600090815260208190526040812080548390811061016557610165610396565b9060005260206000200154905092915050565b600063020000008311156101d25760405162461bcd60e51b815260206004820152601860248201527f696e707574206c656e3a205b302c647269766553697a655d0000000000000000604482015260640160405180910390fd5b604080516001600160a01b03891660208201529081018790526060810186905260006080820181905260a082018490529060c001604051602081830303815290604052805190602001209050600085856040516102309291906103ac565b604080519182900382206020808401959095528282015280518083038201815260609092019052805192019190912098975050505050505050565b80356001600160a01b038116811461028257600080fd5b919050565b60008060006040848603121561029c57600080fd5b6102a58461026b565b9250602084013567ffffffffffffffff808211156102c257600080fd5b818601915086601f8301126102d657600080fd5b8135818111156102e557600080fd5b8760208285010111156102f757600080fd5b6020830194508093505050509250925092565b60006020828403121561031c57600080fd5b6103258261026b565b9392505050565b6000806040838503121561033f57600080fd5b6103488361026b565b946020939093013593505050565b6001600160a01b03841681526040602082018190528101829052818360608301376000818301606090810191909152601f909201601f1916010192915050565b634e487b7160e01b600052603260045260246000fd5b818382376000910190815291905056fea2646970667358221220bf99112815870d27effa2107e08f567cb240c1c3e5eb8b179c7acb6e6a7da24b64736f6c634300080d0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c80631789cd631461004657806361a93c871461006b578063677087c914610094575b600080fd5b610059610054366004610287565b6100a7565b60405190815260200160405180910390f35b61005961007936600461030a565b6001600160a01b031660009081526020819052604090205490565b6100596100a236600461032c565b61013b565b6001600160a01b03831660009081526020819052604081208054826100d0334342898987610178565b83546001810185556000858152602090200181905560405190915082906001600160a01b038916907f6aaa400068bf4ca337265e2a1e1e841f66b8597fd5b452fdc52a44bed28a0784906101299033908b908b90610356565b60405180910390a39695505050505050565b6001600160a01b038216600090815260208190526040812080548390811061016557610165610396565b9060005260206000200154905092915050565b600063020000008311156101d25760405162461bcd60e51b815260206004820152601860248201527f696e707574206c656e3a205b302c647269766553697a655d0000000000000000604482015260640160405180910390fd5b604080516001600160a01b03891660208201529081018790526060810186905260006080820181905260a082018490529060c001604051602081830303815290604052805190602001209050600085856040516102309291906103ac565b604080519182900382206020808401959095528282015280518083038201815260609092019052805192019190912098975050505050505050565b80356001600160a01b038116811461028257600080fd5b919050565b60008060006040848603121561029c57600080fd5b6102a58461026b565b9250602084013567ffffffffffffffff808211156102c257600080fd5b818601915086601f8301126102d657600080fd5b8135818111156102e557600080fd5b8760208285010111156102f757600080fd5b6020830194508093505050509250925092565b60006020828403121561031c57600080fd5b6103258261026b565b9392505050565b6000806040838503121561033f57600080fd5b6103488361026b565b946020939093013593505050565b6001600160a01b03841681526040602082018190528101829052818360608301376000818301606090810191909152601f909201601f1916010192915050565b634e487b7160e01b600052603260045260246000fd5b818382376000910190815291905056fea2646970667358221220bf99112815870d27effa2107e08f567cb240c1c3e5eb8b179c7acb6e6a7da24b64736f6c634300080d0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "addInput(address,bytes)": {
+        "params": {
+          "_dapp": "The address of the DApp",
+          "_input": "The contents of the input"
+        },
+        "returns": {
+          "_0": "The hash of the input plus some extra metadata"
+        }
+      },
+      "getInputHash(address,uint256)": {
+        "params": {
+          "_dapp": "The address of the DApp",
+          "_index": "The index of the input in the DApp's input box"
+        },
+        "returns": {
+          "_0": "The hash of the input at the provided index in the DApp's input box"
+        }
+      },
+      "getNumberOfInputs(address)": {
+        "params": {
+          "_dapp": "The address of the DApp"
+        },
+        "returns": {
+          "_0": "Number of inputs in the DApp's input box"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "events": {
+      "InputAdded(address,uint256,address,bytes)": {
+        "notice": "Emitted when an input is added to a DApp's input box"
+      }
+    },
+    "kind": "user",
+    "methods": {
+      "addInput(address,bytes)": {
+        "notice": "Add an input to a DApp's input box"
+      },
+      "getInputHash(address,uint256)": {
+        "notice": "Get the hash of an input in a DApp's input box"
+      },
+      "getNumberOfInputs(address)": {
+        "notice": "Get the number of inputs in a DApp's input box"
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 2825,
+        "contract": "contracts/inputs/InputBox.sol:InputBox",
+        "label": "inputBoxes",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_mapping(t_address,t_array(t_bytes32)dyn_storage)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_bytes32)dyn_storage": {
+        "base": "t_bytes32",
+        "encoding": "dynamic_array",
+        "label": "bytes32[]",
+        "numberOfBytes": "32"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_address,t_array(t_bytes32)dyn_storage)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => bytes32[])",
+        "numberOfBytes": "32",
+        "value": "t_array(t_bytes32)dyn_storage"
+      }
+    }
+  }
+}
