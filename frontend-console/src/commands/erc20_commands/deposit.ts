@@ -12,7 +12,6 @@
 import { IERC20__factory } from "@cartesi/rollups";
 import { ethers } from "ethers";
 import { Argv } from "yargs";
-import { networks } from "../../networks";
 import {
     connect,
     Args as ConnectArgs,
@@ -33,24 +32,6 @@ interface Args extends ConnectArgs, RollupsArgs {
 export const command = "deposit";
 export const describe = "Deposit ERC-20 tokens in DApp";
 
-const tokenAddress = (chainId: number): string | undefined => {
-    const network = networks[chainId];
-    if (!network) {
-        return; // undefined
-    }
-
-    try {
-        if (network.name == "localhost") {
-            return require("../../../../deployments/localhost/CartesiToken.json")
-                .address;
-        } else if (network) {
-            return require(`@cartesi/token/deployments/${network.name}/CartesiToken.json`)
-                .address;
-        }
-    } catch (e) {
-        return; // undefined
-    }
-};
 
 export const builder = (yargs: Argv<Args>) => {
     // args regarding connecting to provider
@@ -83,14 +64,14 @@ export const handler = async (args: Args) => {
     console.log(`connected to chain ${network.chainId}`);
 
     // connect to rollups,
-    const { dapp, inputContract, erc20Portal } = await rollups(
+    const { dapp, inputContract, erc20Portal, deployment } = await rollups(
         network.chainId,
         signer || provider,
         args
     );
 
     // connect to provider, use deployment address based on returned chain id of provider
-    const erc20Address = erc20 ?? tokenAddress(network.chainId);
+    const erc20Address = erc20 ?? deployment?.contracts["SimpleERC20"]?.address;
     if (!erc20Address) {
         throw new Error(
             `cannot resolve ERC-20 address for chain ${network.chainId}`
@@ -139,6 +120,6 @@ export const handler = async (args: Args) => {
     // find added input information from transaction receipt
     const inputAddedInfo = findInputAddedInfo(receipt, inputContract);
     console.log(
-        `deposit successfully executed as input ${inputAddedInfo.input_index} of epoch ${inputAddedInfo.epoch_index}`
+        `deposit successfully executed as input ${inputAddedInfo.input_index}`
     );
 };

@@ -24,7 +24,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
     await deployments.deploy("SimpleERC20", {
         ...opts,
-        args: [deployer, 0x1ffffffffffffe]
+        args: [deployer, "0xffffffffffffffffffffffffffffffffffff"]
     });
 };
 

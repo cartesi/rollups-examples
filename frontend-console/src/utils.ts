@@ -7,7 +7,7 @@ import { Contract } from "./abi";
  * @returns address or undefined if file does not exist
  */
 export const readAddressFromFile = (path: string | undefined): string | undefined => {
-    return readObjectFromFile(path).address;
+    return readObjectFromFile(path)?.address;
 };
 
 /**
@@ -37,7 +37,7 @@ export const readAllContractsFromDir = (path: string | undefined): Record<string
         localhostDeployContents.forEach(localhostDeployEntry => {
             if (localhostDeployEntry.isFile()) {
                 const filename = localhostDeployEntry.name;
-                if (filename.endsWith(".json")) {
+                if (filename.endsWith(".json") && filename !== "dapp.json") {
                     const contractName = filename.substring(0, filename.lastIndexOf("."));
                     contracts[contractName] = readContractFromFile(`${path}/${filename}`)
                 }

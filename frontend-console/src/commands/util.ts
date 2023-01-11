@@ -18,7 +18,6 @@ export const findInputAddedInfo = (
                 const parsedLog = inputContract.interface.parseLog(event);
                 if (parsedLog.name == "InputAdded") {
                     return {
-                        epoch_index: parsedLog.args.epochNumber.toNumber(),
                         input_index: parsedLog.args.inputIndex.toNumber(),
                     };
                 }

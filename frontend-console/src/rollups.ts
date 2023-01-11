@@ -43,6 +43,8 @@ interface Contracts {
     outputContract: ICartesiDApp;
     erc20Portal: IERC20Portal;
     erc721Portal: IERC721Portal;
+    deployment: Deployment
+
 }
 
 /**
@@ -106,7 +108,7 @@ const readDeployment = (chainId: number, args: Args): Deployment => {
 
         if (network.name === "localhost") {
 
-            const contracts: Record<string, Contract> = readAllContractsFromDir("../../deployments/localhost");
+            const contracts: Record<string, Contract> = readAllContractsFromDir("../deployments/localhost");
 
             const deployment = { chainId: chainId.toString(), name: "localhost", contracts: contracts };
             return deployment as Deployment;
@@ -168,5 +170,6 @@ export const rollups = async (
         outputContract,
         erc20Portal,
         erc721Portal,
+        deployment
     };
 };
