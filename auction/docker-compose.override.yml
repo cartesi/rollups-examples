@@ -15,18 +15,23 @@ services:
         "--network",
         "localhost_docker",
         "--export",
-        "/deployments/localhost/localhost_aux.json",
+        "/deployments/localhost/localhost_aux.json"
       ]
     init: true
     healthcheck:
       test:
-        ["CMD", "test", "-f", "/opt/cartesi/share/blockchain/localhost_aux.json"]
+        [
+          "CMD",
+          "test",
+          "-f",
+          "/opt/cartesi/share/blockchain/localhost_aux.json"
+        ]
       interval: 30s
       timeout: 30s
       retries: 5
     volumes:
       - blockchain-data:/opt/cartesi/share/blockchain
-      - ./common-contracts/deployments:/deployments
+      - ./deployments/localhost:/app/deployments/localhost_docker
 
   rollups_dispatcher:
     depends_on:
