@@ -24,7 +24,11 @@ import {
 } from "@cartesi/rollups";
 import { Argv } from "yargs";
 import { networks } from "./networks";
-import { Deployment } from "./abi";
+import { Deployment, Contract } from "./abi";
+import {
+    readAddressFromFile,
+    readAllContractsFromDir
+} from "./utils"
 
 export interface Args {
     dapp: string;
@@ -67,17 +71,6 @@ export const builder = <T>(yargs: Argv<T>): Argv<Args & T> => {
         });
 };
 
-/**
- * Read address from json file
- * @param path Path of file with address in json file
- * @returns address or undefined if file does not exist
- */
-const readFromFile = (path: string | undefined): string | undefined => {
-    if (path && fs.existsSync(path)) {
-        const json = JSON.parse(fs.readFileSync(path, "utf8"));
-        return json.address;
-    }
-};
 
 /**
  * Read address from file located at deployment path
@@ -91,9 +84,10 @@ const readDApp = (
 ): string | undefined => {
     const network = networks[chainId];
     if (network && dapp) {
-        return readFromFile(`../deployments/${network.name}/${dapp}.json`);
+        return readAddressFromFile(`../deployments/${network.name}/${dapp}.json`);
     }
 };
+
 
 const readDeployment = (chainId: number, args: Args): Deployment => {
     if (args.deploymentFile) {
@@ -109,6 +103,15 @@ const readDeployment = (chainId: number, args: Args): Deployment => {
         if (!network) {
             throw new Error(`unsupported chain ${chainId}`);
         }
+
+        if (network.name === "localhost") {
+
+            const contracts: Record<string, Contract> = readAllContractsFromDir("../../deployments/localhost");
+
+            const deployment = { chainId: chainId.toString(), name: "localhost", contracts: contracts };
+            return deployment as Deployment;
+        }
+
         const deployment = require(`@cartesi/rollups/export/abi/${network.name}.json`);
         if (!deployment) {
             throw new Error(`rollups not deployed to network ${network.name}`);
@@ -131,7 +134,7 @@ export const rollups = async (
 ): Promise<Contracts> => {
     const address =
         args.address ||
-        readFromFile(args.addressFile) ||
+        readAddressFromFile(args.addressFile) ||
         readDApp(args.dapp, chainId);
 
     if (!address) {
@@ -157,6 +160,7 @@ export const rollups = async (
         ERC721Portal.address,
         provider
     );
+
 
     return {
         dapp: address,
