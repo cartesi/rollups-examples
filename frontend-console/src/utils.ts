@@ -30,19 +30,22 @@ export const readContractFromFile = (path: string | undefined): Contract => {
     return readObjectFromFile(path) as Contract
 }
 
-export const readAllContractsFromDir = (path: string | undefined): Record<string, Contract> => {
+export const readAllContractsFromDir = (...paths: string[]): Record<string, Contract> => {
     const contracts: Record<string, Contract> = {};
-    if (path && fs.existsSync(path)) {
-        const localhostDeployContents: fs.Dirent[] = fs.readdirSync(path, { withFileTypes: true })
-        localhostDeployContents.forEach(localhostDeployEntry => {
-            if (localhostDeployEntry.isFile()) {
-                const filename = localhostDeployEntry.name;
-                if (filename.endsWith(".json") && filename !== "dapp.json") {
-                    const contractName = filename.substring(0, filename.lastIndexOf("."));
-                    contracts[contractName] = readContractFromFile(`${path}/${filename}`)
+    for (let i = 0; i < paths.length; i++) {
+        let path = paths[i];
+        if (path && fs.existsSync(path)) {
+            const deployContents: fs.Dirent[] = fs.readdirSync(path, { withFileTypes: true })
+            deployContents.forEach(deployEntry => {
+                if (deployEntry.isFile()) {
+                    const filename = deployEntry.name;
+                    if (filename.endsWith(".json") && filename !== "dapp.json") {
+                        const contractName = filename.substring(0, filename.lastIndexOf("."));
+                        contracts[contractName] = readContractFromFile(`${path}/${filename}`)
+                    }
                 }
-            }
-        });
+            });
+        }
     }
     return contracts
 }
