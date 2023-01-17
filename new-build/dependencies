@@ -1,0 +1,3 @@
+https://github.com/cartesi/image-rootfs/releases/download/v0.15.0/rootfs-v0.15.0.ext2
+https://github.com/cartesi/image-kernel/releases/download/v0.14.0/linux-5.15.63-ctsi-1.bin
+https://github.com/cartesi/machine-emulator-rom/releases/download/v0.13.0/rom-v0.13.0.bin
