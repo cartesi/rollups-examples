@@ -65,6 +65,7 @@ jobs:
                   yarn saveLogs echo-rust rollups_indexer
                   yarn saveLogs echo-rust query_server
                   yarn saveLogs echo-rust database
+                  yarn saveLogs echo-rust server_manager_broker_proxy
               working-directory: ./integration-tests
 
             - name: Upload docker logs

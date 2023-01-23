@@ -67,6 +67,7 @@ jobs:
                   yarn saveLogs echo-python rollups_indexer
                   yarn saveLogs echo-python query_server
                   yarn saveLogs echo-python database
+                  yarn saveLogs echo-python server_manager_broker_proxy
               working-directory: ./integration-tests
 
             - name: Upload docker logs

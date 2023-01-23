@@ -22,7 +22,7 @@
         "test:host": "wrap () { yarn saveTarget $1 && yarn startEnvironment:host $1 && yarn mocha:host $*  ;}; wrap",
         "test": "wrap () { yarn test:prod $* && yarn test:host $* ;}; wrap",
         "posttest:prod": "wrap(){ yarn stopEnvironment && rm ./target;};wrap",
-        "posttest:ci": "wrap(){ yarn stopEnvironment && rm ./target;};wrap",
+        "posttest:ci": "wrap(){ rm ./target;};wrap",
         "posttest:host": "wrap(){ yarn stopEnvironment && rm ./target;};wrap",
         "saveLogs": "saveLogs () { mkdirp logs && cd ../$1/ && docker-compose -f ../docker-compose.yml -f docker-compose.override.yml logs --timestamps --no-log-prefix --no-color $2 > ../integration-tests/logs/$2.log; }; saveLogs"
     },

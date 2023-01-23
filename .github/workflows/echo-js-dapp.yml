@@ -66,6 +66,7 @@ jobs:
                   yarn saveLogs echo-js rollups_indexer
                   yarn saveLogs echo-js query_server
                   yarn saveLogs echo-js database
+                  yarn saveLogs echo-js server_manager_broker_proxy
               working-directory: ./integration-tests
 
             - name: Upload docker logs
