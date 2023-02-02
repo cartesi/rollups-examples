@@ -12,7 +12,7 @@
 
 CXX  := riscv64-cartesi-linux-gnu-g++
 
-.PHONY: clean 3rdparty
+.PHONY: clean
 
 low-level-backend: low-level-backend.cpp
 	$(CXX) -std=c++17 -Wall -Werror -o $@ $^
