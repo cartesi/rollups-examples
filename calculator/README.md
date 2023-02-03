@@ -9,78 +9,6 @@ For example, the following expression is a valid input:
 3 + 2 + 5 - 9
 ```
 
-## Installing extra dependencies
-
-As explained above, the Calculator DApp requires `py-expression-eval` to work.
-Such module is not available on the default Python installation that comes with the Cartesi Machine.
-
-In order to install extra libraries, the DApp build configuration must be adapted before proceeding with the [build process](../README.md#building) as usual.
-
-### Changing the build configuration
-
-First of all, all modules required by the DApp must be appended to [`requirements.txt`](./requirements.txt).
-
-In order to install the modules during the DApp build process, we need to compile a customized version of Python for RISC-V. This can be done using the Docker image `toolchain-python`, as defined in [`../docker/Dockerfile`](../docker/Dockerfile).
-To have this image built before the DApp, we should change the build configuration for target `dapp` by adjusting [`docker-bake.override.hcl`](./docker-bake.override.hcl) so that the target `toolchain-python` (already defined in [`docker-bake.hcl`](./docker-bake.hcl)) takes precedence over it.
-The resulting configuration should look like this:
-
-```hcl
-target "dapp" {
-  contexts = {
-    toolchain-python = "target:toolchain-python"
-  }
-}
-...
-```
-
-Finally, the DApp image definition must be changed to be based on `toolchain-python`, which will allow the modules defined in [`requirements.txt`](./requirements.txt) to be installed.
-This may be accomplished by updating the DApp's [`Dockerfile`](./Dockerfile) as follows:
-
-```Dockerfile
-# syntax=docker.io/docker/dockerfile:1.4
-FROM toolchain-python
-
-WORKDIR /opt/cartesi/dapp
-COPY . .
-
-RUN <<EOF
-python3 -m crossenv $(which python3) .venv
-. ./.venv/bin/activate
-pip install -r requirements.txt
-EOF
-```
-
-_Note:_ This procedure works out-of-the-box for pure Python modules. Modules that depend on native libraries are out of the scope of these instructions.
-
-### Increasing file system size
-
-The DApp file system size must be increased in order to accommodate the new modules.
-
-This is accomplished by adjusting the DApp's own configuration file, [`dapp.json`](./dapp.json), as follows:
-
-- Include directory `.venv`, where the modules were installed, in the file system;
-- Overriding the default file system size, defined as `fs.size` at [`../docker/default.json`](../docker/default.json). Values are stated in bytes.
-
-The resulting [`dapp.json`](./dapp.json) file is listed below:
-
-```json
-{
-  "fs": {
-    "files": [".venv", "calculator.py", "entrypoint.sh"],
-    "size": 128000
-  }
-}
-```
-
-### Changing runtime configuration
-
-In order to make the installed modules available, `PYTHONPATH` must be defined in [the DApp's entry point script](./entrypoint.sh) as follows:
-
-```shell
-set -e
-PYTHONPATH=/mnt/dapp/.venv/cross/lib/python3.10/site-packages python3 calculator.py
-```
-
 ## Interacting with the application
 
 We can use the [frontend-console](../frontend-console) application to interact with the DApp.
@@ -122,7 +50,7 @@ In order to start the calculator back-end, run the following commands in a dedic
 cd calculator/
 python3 -m venv .env
 . .env/bin/activate
-pip install -r requirements.txt -r extras/requirements.txt
+pip install -r requirements.txt
 ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004" python3 calculator.py
 ```
 

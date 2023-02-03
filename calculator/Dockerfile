@@ -1,11 +1,9 @@
 # syntax=docker.io/docker/dockerfile:1.4
-FROM toolchain-python
+#FROM --platform=riscv64 ghcr.io/cartesi-corp/python:3.11.1-jammy as dapp
+FROM riscv64/ubuntu:jammy
+RUN apt update && apt install -y python3 python3-pip
 
 WORKDIR /opt/cartesi/dapp
 COPY . .
 
-RUN <<EOF
-python3 -m crossenv $(which python3) .crossenv
-. ./.crossenv/bin/activate
-pip install -r requirements.txt
-EOF
+RUN pip install -r requirements.txt
