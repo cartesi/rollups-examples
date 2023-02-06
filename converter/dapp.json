@@ -1,5 +1,0 @@
-{
-  "fs": {
-    "files": ["converter.py", "entrypoint.sh"]
-  }
-}
