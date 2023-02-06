@@ -1,6 +1,0 @@
-{
-  "fs": {
-    "files": [".crossenv", "auction", "entrypoint.sh"],
-    "size": 131072
-  }
-}

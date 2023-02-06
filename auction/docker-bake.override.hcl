@@ -1,8 +1,8 @@
 
 target "dapp" {
-  contexts = {
-    toolchain-python = "target:toolchain-python"
-  }
+  #contexts = {
+  #  toolchain-python = "target:toolchain-python"
+  #}
 }
 
 target "server" {
