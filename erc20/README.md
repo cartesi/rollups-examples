@@ -8,13 +8,6 @@ Any input that either does not come from the Portal or is malformed will be reje
 
 After the deposit is properly parsed, the application issues a voucher to return the amount back to the depositor ("I don't want your money!"). This voucher can then be executed to withdraw the amount from the Portal and recover the assets.
 
-## Installing extra dependencies
-
-The DApp requires some modules, which are not available in the default Python installation that comes with the Cartesi Machine.
-In order to install these modules, this DApp's build configuration has been adapted following the same process already explained in the [Calculator documentation](../calculator/README.md#installing-extra-dependencies).
-
-In practice, the [build procedure](../README.md#building) remains the same one described for all the DApps.
-
 ## Interacting with the application
 
 We can use the [frontend-console](../frontend-console) application to interact with the DApp.
