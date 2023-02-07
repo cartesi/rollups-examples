@@ -1,1 +1,1 @@
-../base.hcl
+../new-build-base.hcl

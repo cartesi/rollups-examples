@@ -1,5 +1,0 @@
-{
-  "fs": {
-    "files": ["entrypoint.sh", "m2cgen.py", "model.py"]
-  }
-}
