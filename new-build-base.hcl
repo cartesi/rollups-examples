@@ -1,22 +1,31 @@
 
 group "default" {
-  targets = ["dapp", "server", "console"]
+  targets = ["server", "console"]
+}
+
+target "normalized" {
+  context = "../new-build"
+  target = "normalized-dapp"
+  contexts = {
+    dapp = "target:dapp"
+  }
 }
 
 target "fs" {
   context = "../new-build"
   target  = "dapp-fs-build"
   contexts = {
-    dapp-build = "target:dapp"
+    final-dapp = "target:normalized"
   }
-  tags = ["cartesi/dapp-fs-build"]
 }
+
+
 
 target "server" {
   context = "../new-build"
   target  = "machine-server"
   contexts = {
-    dapp-build = "target:dapp"
+    dapp-fs = "target:fs"
   }
 }
 
@@ -24,7 +33,7 @@ target "console" {
   context = "../new-build"
   target  = "machine-console"
   contexts = {
-    dapp-build = "target:dapp"
+    dapp-fs = "target:fs"
   }
 }
 
@@ -32,7 +41,7 @@ target "machine" {
   context = "../new-build"
   target  = "machine-standalone"
   contexts = {
-    dapp-build = "target:dapp"
+    dapp-fs = "target:fs"
   }
 }
 

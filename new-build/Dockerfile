@@ -17,15 +17,20 @@ RUN sha1sum -c shasumfile
 ADD rom.bin . 
 ADD linux.bin .
 
-from toolchain as dapp-fs-build
+FROM dapp as normalized-dapp
+WORKDIR /
+RUN useradd --create-home --user-group --uid 1000 dapp
+RUN chown -R 1000:1000 /opt/cartesi/dapp  
+
+FROM toolchain as dapp-fs-build
 WORKDIR /var/tmp/app_fs/
-COPY --from=dapp-build / ./
+COPY --from=final-dapp / ./
 RUN rm -rf ./proc/* ./sys/* ./dev/*
 ADD bootfs.tar.gz /var/tmp/app_fs
 
 # Check /tmp/app_fs size and tar it
 RUN <<EOF
-tar -cf /dapp.tar --transform='s:^./::g'  --mtime="2022-01-01" --owner=1000 --group=1000 --numeric-owner ./
+tar -cf /dapp.tar --transform='s:^./::g'  --mtime="2022-01-01" --format=gnu --numeric-owner ./
 
 blocksize=4096
 bytes=$(du -bd0 /dapp.tar | cut -f1)
@@ -41,7 +46,7 @@ FROM server-manager as machine-server
 WORKDIR /opt/cartesi/dapp
 
 # copy dapp ext2 from dapp stage
-COPY --from=dapp-fs-build /dapp.ext2 ./dapp.ext2 
+COPY --from=dapp-fs /dapp.ext2 ./dapp.ext2 
 
 # copy rootfs, linux, rom
 COPY --from=machine-core /opt/cartesi/share/* .
@@ -60,7 +65,7 @@ FROM server-manager as machine-console
 WORKDIR /opt/cartesi/dapp
 
 # copy dapp ext2 from stage 1
-COPY --from=dapp-fs-build /dapp.ext2 ./dapp.ext2
+COPY --from=dapp-fs /dapp.ext2 ./dapp.ext2
 
 # copy rootfs, kernel, rom
 COPY --from=machine-core /opt/cartesi/share/* .
