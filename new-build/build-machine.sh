@@ -21,8 +21,8 @@ cartesi-machine \
     --ram-length=128Mi \
     --rollup \
     --flash-drive=label:root,filename:dapp.ext2 \
-    --ram-image=linux.bin \
-    --rom-image=rom.bin \
+    --ram-image=linux-5.15.63-ctsi-1.bin \
+    --rom-image=rom-v0.15.0.bin \
     --store=$MACHINE_DIR \
     -- "cd /opt/cartesi/dapp; \
         ROLLUP_HTTP_SERVER_URL=\"http://127.0.0.1:$ROLLUP_HTTP_SERVER_PORT\" \

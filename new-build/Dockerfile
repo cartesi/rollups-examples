@@ -1,7 +1,7 @@
 # syntax=docker.io/docker/dockerfile:1.4
 # layers for caching and versioning
-FROM cartesi/toolchain:0.12.0 as toolchain
-FROM cartesicorp/server-manager:0.5.0-rv64gc-test as server-manager
+FROM cartesi/toolchain:0.13.0 as toolchain
+FROM cartesi/server-manager:0.6.0 as server-manager
 
 # download standard machine drives
 FROM busybox as machine-core
@@ -13,20 +13,22 @@ COPY dependencies .
 COPY shasumfile .
 RUN cat dependencies | xargs wget
 RUN sha1sum -c shasumfile
-# temporary adds
-ADD rom.bin . 
-ADD linux.bin .
+
 
 FROM dapp as normalized-dapp
 WORKDIR /
 RUN useradd --create-home --user-group --uid 1000 dapp
 RUN chown -R 1000:1000 /opt/cartesi/dapp  
+RUN apt-get update && apt-get install -y --no-install-recommends busybox-static && rm -rf /var/apt/lists/*
 
 FROM toolchain as dapp-fs-build
 WORKDIR /var/tmp/app_fs/
 COPY --from=final-dapp / ./
 RUN rm -rf ./proc/* ./sys/* ./dev/*
-ADD bootfs.tar.gz /var/tmp/app_fs
+COPY --from=machine-core /opt/cartesi/share/machine-emulator-tools-v0.10.0.tar.gz /var/tmp/app_fs/
+RUN tar -xvf machine-emulator-tools-v0.10.0.tar.gz ./
+RUN rm machine-emulator-tools-v0.10.0.tar.gz
+
 
 # Check /tmp/app_fs size and tar it
 RUN <<EOF
