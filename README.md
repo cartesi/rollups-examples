@@ -57,16 +57,13 @@ docker buildx bake --load
 
 This will also build the example's Cartesi Machine containing the DApp's back-end logic.
 
-The file `<example>/dapp.json` contains some configurations for building the application. In particular, it defines the back-end's entry-point executable, along with any other files that should be made available inside the Cartesi Machine.
-For certain examples, the build process also includes special [procedures for downloading and installing additional dependencies](./calculator/README.md#installing-extra-dependencies) required by the application.
-
 ## Running
 
 Each application can be executed in Production and Host modes, as explained below.
 
 ### Production mode
 
-In this mode, the DApp's back-end logic is executed inside a Cartesi Machine, meaning that its code is cross-compiled to the machine's RISC-V architecture. This ensures that the computation performed by the back-end is _reproducible_ and hence _verifiable_, enabling a truly trustless and decentralized execution.
+In this mode, the DApp's back-end logic is executed inside a Cartesi Machine, meaning that its code is compiled to the machine's RISC-V architecture. This ensures that the computation performed by the back-end is _reproducible_ and hence _verifiable_, enabling a truly trustless and decentralized execution.
 
 After building an example as described in the previous section, you can run it in production mode by executing:
 
