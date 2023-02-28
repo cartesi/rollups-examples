@@ -6,9 +6,7 @@ COPY ./model .
 RUN pip3 install -r requirements.txt
 RUN python3 build_model.py
 
-#FROM --platform=riscv64 ghcr.io/cartesi-corp/python:3.11.1-jammy as dapp
-FROM riscv64/ubuntu:jammy
-RUN apt update && apt install -y python3 python3-pip
+FROM --platform=riscv64 cartesi/python:jammy as dapp
 
 WORKDIR /opt/cartesi/dapp
 COPY . .
