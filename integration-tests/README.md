@@ -9,13 +9,13 @@ The tests are written in Typescript and are based on frameworks [Mocha](https://
 To run tests on a DApp in `prod` mode, type the following command:
 
 ```shell
-yarn start test:prod DAPP_NAME
+yarn test:prod DAPP_NAME
 ```
 
 Or, to run tests on a DApp in `host` mode, type the following command:
 
 ```shell
-yarn start test:host DAPP_NAME
+yarn test:host DAPP_NAME
 ```
 
 Where `DAPP_NAME` is the name of the sub-directory where the tests for the specific DApp live.
