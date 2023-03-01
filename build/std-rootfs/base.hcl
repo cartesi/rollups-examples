@@ -12,33 +12,33 @@ target "toolchain-python" {
 
 target "fs" {
   context = "../build/std-rootfs"
-  target  = "dapp-fs-build"
+  target  = "fs-stage"
   contexts = {
-    dapp-build = "target:dapp"
+    dapp = "target:dapp"
   }
 }
 
 target "server" {
   context = "../build/std-rootfs"
-  target  = "machine-server"
+  target  = "server-stage"
   contexts = {
-    dapp-build = "target:dapp"
+    dapp = "target:dapp"
   }
 }
 
 target "console" {
   context = "../build/std-rootfs"
-  target  = "machine-console"
+  target  = "console-stage"
   contexts = {
-    dapp-build = "target:dapp"
+    dapp = "target:dapp"
   }
 }
 
 target "machine" {
   context = "../build/std-rootfs"
-  target  = "machine-standalone"
+  target  = "machine-stage"
   contexts = {
-    dapp-build = "target:dapp"
+    dapp = "target:dapp"
   }
 }
 

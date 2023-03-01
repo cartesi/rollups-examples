@@ -76,7 +76,7 @@ RUN sha1sum -c shasumfile
 
 
 # stage to build the dapp ext2 filesystem
-FROM toolchain as dapp-fs-build
+FROM toolchain as fs-stage
 
 # install jq
 RUN <<EOF
@@ -86,7 +86,7 @@ rm -rf /var/lib/apt/lists/*
 EOF
 
 WORKDIR /opt/cartesi/dapp
-COPY --from=dapp-build /opt/cartesi/dapp .
+COPY --from=dapp /opt/cartesi/dapp .
 COPY build-dapp-fs.sh /usr/local/bin
 COPY default.json /opt/cartesi/
 
@@ -94,12 +94,12 @@ RUN build-dapp-fs.sh /opt/cartesi/default.json dapp.json dapp.ext2
 
 
 # stage to build the initial cartesi machine
-FROM server-manager as machine-server
+FROM server-manager as server-stage
 
 WORKDIR /opt/cartesi/dapp
 
-# copy dapp ext2 from dapp stage
-COPY --from=dapp-fs-build /opt/cartesi/dapp/dapp.ext2 .
+# copy dapp ext2 from fs stage
+COPY --from=fs-stage /opt/cartesi/dapp/dapp.ext2 .
 
 # copy rootfs, linux, rom
 COPY --from=machine-core /opt/cartesi/share/* .
@@ -113,12 +113,12 @@ WORKDIR /opt/cartesi/bin
 
 
 # stage to run machine shell
-FROM server-manager as machine-console
+FROM server-manager as console-stage
 
 WORKDIR /opt/cartesi/dapp
 
-# copy dapp ext2 from stage 1
-COPY --from=dapp-fs-build /opt/cartesi/dapp/dapp.ext2 .
+# copy dapp ext2 from fs stage
+COPY --from=fs-stage /opt/cartesi/dapp/dapp.ext2 .
 
 # copy rootfs, kernel, rom
 COPY --from=machine-core /opt/cartesi/share/* .
@@ -128,9 +128,9 @@ CMD ["run-machine-console.sh"]
 
 
 # stage to copy the stored machine
-FROM busybox as machine-standalone
+FROM busybox as machine-stage
 
 WORKDIR /opt/cartesi/share/dapp-bin
-COPY --from=machine-server /opt/cartesi/share/dapp-bin .
+COPY --from=server-stage /opt/cartesi/share/dapp-bin .
 
 CMD ["xxd", "-c", "256", "-p", "hash"]

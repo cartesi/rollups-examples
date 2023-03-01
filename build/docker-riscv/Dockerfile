@@ -3,20 +3,24 @@
 FROM cartesi/toolchain:0.13.0 as toolchain
 FROM cartesi/server-manager:0.6.0 as server-manager
 
-# download standard machine drives
+
+# stage to download dependencies
 FROM busybox as machine-core
 
 WORKDIR /opt/cartesi/share
 
-# download dependencies
 COPY dependencies .
 COPY shasumfile .
 RUN cat dependencies | xargs wget
 RUN sha1sum -c shasumfile
 
 
-FROM dapp as normalized-dapp
+# stage to wrap the dapp installing resources needed to run inside the Cartesi Machine
+FROM dapp as wrapped-stage
+
 WORKDIR /
+
+# add the required 'dapp' user
 RUN useradd --create-home --user-group --uid 1000 dapp
 RUN chown -R 1000:1000 /opt/cartesi/dapp
 
@@ -26,19 +30,24 @@ RUN apt-get update \
     busybox-static \
     && rm -rf /var/apt/lists/*
 
-FROM toolchain as dapp-fs-build
-WORKDIR /var/tmp/app_fs/
-COPY --from=final-dapp / ./
+
+# stage to build the final ext2 filesystem for the dapp
+FROM toolchain as fs-stage
+
+WORKDIR /var/tmp/dapp_fs/
+
+# copy wrapped dapp filesystem
+COPY --from=wrapped / ./
 RUN rm -rf ./proc/* ./sys/* ./dev/*
-COPY --from=machine-core /opt/cartesi/share/machine-emulator-tools-v0.10.0.tar.gz /var/tmp/app_fs/
+
+# add emulator tools
+COPY --from=machine-core /opt/cartesi/share/machine-emulator-tools-v0.10.0.tar.gz /var/tmp/dapp_fs/
 RUN tar -xvf machine-emulator-tools-v0.10.0.tar.gz ./
 RUN rm machine-emulator-tools-v0.10.0.tar.gz
 
-
-# Check /tmp/app_fs size and tar it
+# build tar normalizing file timestamps and create final ext2 file with the appropriate size
 RUN <<EOF
 tar -cf /dapp.tar --transform='s:^./::g'  --mtime="2022-01-01" --format=gnu --numeric-owner ./
-
 blocksize=4096
 bytes=$(du -bd0 /dapp.tar | cut -f1)
 blocks=$(echo "1.2 * ($bytes + $blocksize - 1) / $blocksize" | bc)
@@ -48,12 +57,12 @@ EOF
 
 
 # stage to build the initial cartesi machine
-FROM server-manager as machine-server
+FROM server-manager as server-stage
 
 WORKDIR /opt/cartesi/dapp
 
-# copy dapp ext2 from dapp stage
-COPY --from=dapp-fs /dapp.ext2 ./dapp.ext2 
+# copy dapp ext2 from fs stage
+COPY --from=fs /dapp.ext2 ./dapp.ext2
 
 # copy rootfs, linux, rom
 COPY --from=machine-core /opt/cartesi/share/* .
@@ -67,12 +76,12 @@ WORKDIR /opt/cartesi/bin
 
 
 # stage to run machine shell
-FROM server-manager as machine-console
+FROM server-manager as console-stage
 
 WORKDIR /opt/cartesi/dapp
 
-# copy dapp ext2 from stage 1
-COPY --from=dapp-fs /dapp.ext2 ./dapp.ext2
+# copy dapp ext2 from fs stage
+COPY --from=fs /dapp.ext2 ./dapp.ext2
 
 # copy rootfs, kernel, rom
 COPY --from=machine-core /opt/cartesi/share/* .
@@ -82,9 +91,9 @@ CMD ["run-machine-console.sh"]
 
 
 # stage to copy the stored machine
-FROM busybox as machine-standalone
+FROM busybox as machine-stage
 
 WORKDIR /opt/cartesi/share/dapp-bin
-COPY --from=machine-server /opt/cartesi/share/dapp-bin .
+COPY --from=server-stage /opt/cartesi/share/dapp-bin .
 
 CMD ["xxd", "-c", "256", "-p", "hash"]

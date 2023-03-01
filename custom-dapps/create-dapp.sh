@@ -25,8 +25,8 @@ echo "Copying files from template..."
 cp -pr template ${dapp_name}
 
 echo "Copying common files..."
-cp -pr ../docker ${dapp_name}
-cp ../base.hcl ${dapp_name}/docker-bake.hcl
+cp -pr ../build/std-rootfs ${dapp_name}
+mv ${dapp_name}/std-rootfs/base.hcl ${dapp_name}/docker-bake.hcl
 cp ../deploy-testnet.yml ${dapp_name}
 cp ../docker-compose.yml ${dapp_name}
 cp ../docker-compose-testnet.yml ${dapp_name}
@@ -37,7 +37,7 @@ echo "Customizing DApp infrastructure..."
 for i in \
     ${dapp_name}/docker-bake.hcl
 do
-    sed -i'' -e "s/\.\.\/docker/\.\/docker/g" $i
+    sed -i'' -e "s/\.\.\/build\/std-rootfs/\.\/std-rootfs/g" $i
 done
 
 # replace template placeholders by dapp name

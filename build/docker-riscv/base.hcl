@@ -3,9 +3,9 @@ group "default" {
   targets = ["server", "console"]
 }
 
-target "normalized" {
+target "wrapped" {
   context = "../build/docker-riscv"
-  target = "normalized-dapp"
+  target = "wrapped-stage"
   contexts = {
     dapp = "target:dapp"
   }
@@ -13,33 +13,33 @@ target "normalized" {
 
 target "fs" {
   context = "../build/docker-riscv"
-  target  = "dapp-fs-build"
+  target  = "fs-stage"
   contexts = {
-    final-dapp = "target:normalized"
+    wrapped = "target:wrapped"
   }
 }
 
 target "server" {
   context = "../build/docker-riscv"
-  target  = "machine-server"
+  target  = "server-stage"
   contexts = {
-    dapp-fs = "target:fs"
+    fs = "target:fs"
   }
 }
 
 target "console" {
   context = "../build/docker-riscv"
-  target  = "machine-console"
+  target  = "console-stage"
   contexts = {
-    dapp-fs = "target:fs"
+    fs = "target:fs"
   }
 }
 
 target "machine" {
   context = "../build/docker-riscv"
-  target  = "machine-standalone"
+  target  = "machine-stage"
   contexts = {
-    dapp-fs = "target:fs"
+    fs = "target:fs"
   }
 }
 
