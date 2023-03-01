@@ -18,8 +18,13 @@ RUN sha1sum -c shasumfile
 FROM dapp as normalized-dapp
 WORKDIR /
 RUN useradd --create-home --user-group --uid 1000 dapp
-RUN chown -R 1000:1000 /opt/cartesi/dapp  
-RUN apt-get update && apt-get install -y --no-install-recommends busybox-static && rm -rf /var/apt/lists/*
+RUN chown -R 1000:1000 /opt/cartesi/dapp
+
+# install busybox
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    busybox-static \
+    && rm -rf /var/apt/lists/*
 
 FROM toolchain as dapp-fs-build
 WORKDIR /var/tmp/app_fs/

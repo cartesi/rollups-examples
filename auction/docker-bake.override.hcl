@@ -1,6 +1,5 @@
 
 target "dapp" {
-  
 }
 
 target "server" {
