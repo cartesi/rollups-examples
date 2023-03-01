@@ -1,1 +1,1 @@
-../base.hcl
+../build/std-rootfs/base.hcl
