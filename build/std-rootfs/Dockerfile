@@ -101,7 +101,7 @@ WORKDIR /opt/cartesi/dapp
 # copy dapp ext2 from fs stage
 COPY --from=fs-stage /opt/cartesi/dapp/dapp.ext2 .
 
-# copy rootfs, linux, rom
+# copy machine dependencies (rom, linux kernel, rootfs)
 COPY --from=machine-core /opt/cartesi/share/* .
 
 # build machine
@@ -120,7 +120,7 @@ WORKDIR /opt/cartesi/dapp
 # copy dapp ext2 from fs stage
 COPY --from=fs-stage /opt/cartesi/dapp/dapp.ext2 .
 
-# copy rootfs, kernel, rom
+# copy machine dependencies (rom, linux kernel, rootfs)
 COPY --from=machine-core /opt/cartesi/share/* .
 
 COPY run-machine-console.sh /usr/local/bin

@@ -38,7 +38,6 @@ WORKDIR /var/tmp/dapp_fs/
 
 # copy wrapped dapp filesystem
 COPY --from=wrapped / ./
-RUN rm -rf ./proc/* ./sys/* ./dev/*
 
 # add emulator tools
 COPY --from=machine-core /opt/cartesi/share/machine-emulator-tools-v0.10.0.tar.gz /var/tmp/dapp_fs/
@@ -64,8 +63,9 @@ WORKDIR /opt/cartesi/dapp
 # copy dapp ext2 from fs stage
 COPY --from=fs /dapp.ext2 ./dapp.ext2
 
-# copy rootfs, linux, rom
-COPY --from=machine-core /opt/cartesi/share/* .
+# copy machine dependencies (rom, linux kernel)
+COPY --from=machine-core /opt/cartesi/share/rom-v0.15.0.bin .
+COPY --from=machine-core /opt/cartesi/share/linux-5.15.63-ctsi-1.bin .
 
 # build machine
 COPY build-machine.sh /usr/local/bin
@@ -83,8 +83,9 @@ WORKDIR /opt/cartesi/dapp
 # copy dapp ext2 from fs stage
 COPY --from=fs /dapp.ext2 ./dapp.ext2
 
-# copy rootfs, kernel, rom
-COPY --from=machine-core /opt/cartesi/share/* .
+# copy machine dependencies (rom, linux kernel)
+COPY --from=machine-core /opt/cartesi/share/rom-v0.15.0.bin .
+COPY --from=machine-core /opt/cartesi/share/linux-5.15.63-ctsi-1.bin .
 
 COPY run-machine-console.sh /usr/local/bin
 CMD ["run-machine-console.sh"]
