@@ -11,7 +11,7 @@ WORKDIR /opt/cartesi/share
 
 COPY dependencies .
 COPY shasumfile .
-RUN cat dependencies | xargs wget
+RUN while read DEP; do wget -O $DEP; done < dependencies
 RUN sha1sum -c shasumfile
 
 
@@ -40,9 +40,9 @@ WORKDIR /var/tmp/dapp_fs/
 COPY --from=wrapped / ./
 
 # add emulator tools
-COPY --from=machine-core /opt/cartesi/share/machine-emulator-tools-v0.10.0.tar.gz /var/tmp/dapp_fs/
-RUN tar -xvf machine-emulator-tools-v0.10.0.tar.gz ./
-RUN rm machine-emulator-tools-v0.10.0.tar.gz
+COPY --from=machine-core /opt/cartesi/share/machine-emulator-tools.tar.gz /var/tmp/dapp_fs/
+RUN tar -xvf machine-emulator-tools.tar.gz ./
+RUN rm machine-emulator-tools.tar.gz
 
 # build tar normalizing file timestamps and create final ext2 file with the appropriate size
 RUN <<EOF
@@ -64,8 +64,8 @@ WORKDIR /opt/cartesi/dapp
 COPY --from=fs /dapp.ext2 ./dapp.ext2
 
 # copy machine dependencies (rom, linux kernel)
-COPY --from=machine-core /opt/cartesi/share/rom-v0.15.0.bin .
-COPY --from=machine-core /opt/cartesi/share/linux-5.15.63-ctsi-1.bin .
+COPY --from=machine-core /opt/cartesi/share/rom.bin .
+COPY --from=machine-core /opt/cartesi/share/linux.bin .
 
 # build machine
 COPY build-machine.sh /usr/local/bin
@@ -85,8 +85,8 @@ WORKDIR /opt/cartesi/dapp
 COPY --from=fs /dapp.ext2 ./dapp.ext2
 
 # copy machine dependencies (rom, linux kernel)
-COPY --from=machine-core /opt/cartesi/share/rom-v0.15.0.bin .
-COPY --from=machine-core /opt/cartesi/share/linux-5.15.63-ctsi-1.bin .
+COPY --from=machine-core /opt/cartesi/share/rom.bin .
+COPY --from=machine-core /opt/cartesi/share/linux.bin .
 
 COPY run-machine-console.sh /usr/local/bin
 CMD ["run-machine-console.sh"]

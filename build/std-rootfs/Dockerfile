@@ -71,7 +71,7 @@ WORKDIR /opt/cartesi/share
 # download dependencies
 COPY dependencies .
 COPY shasumfile .
-RUN cat dependencies | xargs wget
+RUN while read DEP; do wget -O $DEP; done < dependencies
 RUN sha1sum -c shasumfile
 
 

@@ -32,8 +32,8 @@ cartesi-machine \
     --ram-length=128Mi \
     --rollup \
     --flash-drive=label:dapp,filename:dapp.ext2 \
-    --flash-drive=label:root,filename:rootfs-v0.16.0.ext2 \
-    --ram-image=linux-5.15.63-ctsi-1.bin \
-    --rom-image=rom-v0.15.0.bin \
+    --flash-drive=label:root,filename:rootfs.ext2 \
+    --ram-image=linux.bin \
+    --rom-image=rom.bin \
     -i $CM_OPTS \
     -- "/bin/sh"
