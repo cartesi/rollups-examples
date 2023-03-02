@@ -53,7 +53,7 @@ jobs:
                   DAPP_IMAGE: ${{ needs.build.outputs.dapp-image }}
               run: |
                   yarn install
-                  yarn test:ci echo-python --verbose --pollingTimeout 150
+                  yarn test:ci echo-python --verbose
               working-directory: ./integration-tests/
 
             - name: Save docker logs
