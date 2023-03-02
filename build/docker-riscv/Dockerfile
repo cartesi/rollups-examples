@@ -56,7 +56,7 @@ EOF
 
 
 # stage to build the initial cartesi machine
-FROM server-manager as server-stage
+FROM server-manager as build-server-stage
 
 WORKDIR /opt/cartesi/dapp
 
@@ -71,9 +71,10 @@ COPY --from=machine-core /opt/cartesi/share/linux-5.15.63-ctsi-1.bin .
 COPY build-machine.sh /usr/local/bin
 RUN build-machine.sh /opt/cartesi/share/dapp-bin
 
-# switch back to server-manager workdir
-WORKDIR /opt/cartesi/bin
+FROM server-manager as server-stage
 
+WORKDIR /opt/cartesi/bin
+COPY --from=build-server-stage /opt/cartesi/share /opt/cartesi/share/
 
 # stage to run machine shell
 FROM server-manager as console-stage
@@ -96,5 +97,4 @@ FROM busybox as machine-stage
 
 WORKDIR /opt/cartesi/share/dapp-bin
 COPY --from=server-stage /opt/cartesi/share/dapp-bin .
-
 CMD ["xxd", "-c", "256", "-p", "hash"]
