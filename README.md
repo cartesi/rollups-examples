@@ -220,6 +220,72 @@ Alternatively, you can also run the node on host mode by executing:
 DAPP_NAME=<example> docker compose --env-file ../env.<network> -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml -f ../docker-compose-host-testnet.yml up
 ```
 
+## Creating DApps
+
+The fundamental step of creating a new DApp is to implement a back-end, which is equivalent to writing a smart contract for traditional blockchains. Front-end clients are also usually desirable (e.g., to provide a UI for the DApp), but in some cases generic clients such as the [frontend-console](./frontend-console/) application may be sufficient from the DApp developer's point of view.
+
+### Quick-start template
+
+The [custom-dapps](./custom-dapps/) directory contains a simple template to quickly create a new DApp, based on the [Echo Python DApp](./echo-python/) example.
+
+### Build strategies
+
+Digging a little deeper, creating a back-end basically consists of building an appropriate Cartesi Machine. In this repository, Cartesi Machines always boot a Linux kernel, with each DApp defining its root file-system and optionally additional drives with DApp resources.
+
+This repository contains two different strategies or "build systems" for easily assembling Cartesi Machines with arbitrary user-provided code, as described below.
+
+#### `std-rootfs`: using a standard root file-system
+
+In this system, the DApp uses a standard root file-system that is downloaded from Cartesi's [image-rootfs Github repository](https://github.com/cartesi/image-rootfs/).
+
+DApp-specific content is defined using a Dockerfile that places files inside a directory called `/opt/cartesi/dapp`. This content is then further filtered by specifying files of interest in a `dapp.json` configuration file.
+By default, the DApp starts by executing a file called `entrypoint.sh`, which should be inside the `/opt/cartesi/dapp` directory and included in the `dapp.json` list of files of interest.
+All of these files will be made available to the Cartesi Machine in a drive labeled "dapp", which is mounted separately from the main root file-system drive.
+
+In this build system, the developer needs to ensure that contents are compatible with the Cartesi Machine's RISC-V architecture. This means that binaries must be generated with the `riscv64` platform as target, which can be done using the cross-compiler from the [cartesi/toolchain](https://hub.docker.com/r/cartesi/toolchain) Docker image. This is the case for code written in C++ or Rust, and is also recommended for Python DApps since Python dependencies sometimes need to be compiled natively.
+
+In summary, for this strategy the DApp needs to provide the following:
+
+- A Dockerfile producing content in `/opt/cartesi/dapp`. The Dockerfile should use [cartesi/toolchain](https://hub.docker.com/r/cartesi/toolchain) as its base image if it needs to cross-compile code to RISC-V
+- A `dapp.json` file specifying a list of files of interest from the `/opt/cartesi/dapp` directory, which should include `entrypoint.sh`
+
+This strategy makes sense if the DApp does not have many special requirements, and can mostly run using the resources already bundled in the standard root file-system. This is the case for the simple [Echo Python DApp](./echo-python/), for example.
+Using this system also makes sense if the developer is familiar with cross-compilation, because it is faster than the other more general-purpose [docker-riscv](#docker-riscv-using-risc-v-base-docker-images) strategy described below.
+
+#### `docker-riscv`: using RISC-V base Docker images
+
+In this system, the entire build process is done using standard RISC-V Docker images.
+As such, the DApp developer is free to use regular Linux distributions as a base image, and then transparently add _any_ dependency without having to perform any cross-compilation.
+
+**Note:** at the moment, only images based on the Ubuntu RISC-V distribution are effectively supported.
+Examples include [riscv64/ubuntu](https://hub.docker.com/r/riscv64/ubuntu) itself and [cartesi/python](https://hub.docker.com/r/cartesi/python), which extends it to add Python support.
+It is strongly recommended to use slim images, so as to keep the Cartesi Machine size as small as possible.
+Moreover, it is also important to avoid including in the final images any resources that are only needed when building the DApp. To that end, it is recommended to define an intermediate "build stage" in your Dockerfile, and only copy to the final image the resources required for DApp execution.
+
+With this strategy, you can use any package manager to download dependencies needed for your DApp, as you would normally do in any Linux environment. Commands like `apt-get install` and `pip install` can simply download RISC-V binaries already available in remote repositories. Additionally, any source code that needs to be compiled is also transparently targeted to the RISC-V platform.
+
+To make it possible to use RISC-V images in a regular x86 or ARM computer, you must enable QEMU emulation support in Docker.
+Again, we recommend using [Docker Desktop](https://www.docker.com/products/docker-desktop/), which already provides QEMU support.
+If not using Docker Desktop, emulator support can be added by running a special Docker image such as [linuxkit/binfmt](https://hub.docker.com/r/linuxkit/binfmt) or [tonistiigi/binfmt](https://hub.docker.com/r/tonistiigi/binfmt). For example:
+
+```shell
+docker run --privileged --rm  linuxkit/binfmt:bebbae0c1100ebf7bf2ad4dfb9dfd719cf0ef132
+```
+
+For this build system, the entire content produced by the Dockerfile will be made available to the Cartesi Machine as its root file-system drive.
+The only requirement is that there must be an executable `entrypoint.sh` file within the `/opt/cartesi/dapp` directory.
+
+DApp files and resources can be added normally by copying them inside the Dockerfile.
+You may use `.dockerignore` to easily filter which files to add (e.g., to include everything in the local host directory but ignore the `.venv` directory along with bake and docker-compose files).
+
+In summary, in this system the DApp needs to provide the following:
+
+- A Dockerfile based on an Ubuntu RISC-V image, whose final contents must include an executable file called `/opt/cartesi/dapp/entrypoint.sh`
+- Any necessary resources can be added inside the Dockerfile as desired. Package managers such as `apt-get` or `pip` can also be used to install dependencies
+
+This strategy is the best option for adding any arbitrary dependency to your DApp.
+However, keep in mind that performing build operations such as compiling binaries inside an emulated RISC-V image is slower than executing them on your host machine. As such, in specific situations it may still be useful to generate RISC-V binaries via cross-compilation and then add them to the final image, as in the [std-rootfs](#std-rootfs-using-a-standard-root-file-system) build system.
+
 ## Examples
 
 ### 1. [Echo Python DApp](./echo-python)
