@@ -27,7 +27,7 @@ RUN chown -R 1000:1000 /opt/cartesi/dapp
 # install busybox
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    busybox-static \
+    busybox-static=1:1.30.1-7ubuntu3 \
     && rm -rf /var/apt/lists/*
 
 
