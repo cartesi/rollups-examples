@@ -1,11 +1,25 @@
 # syntax=docker.io/docker/dockerfile:1.4
-FROM --platform=linux/riscv64 cartesi/python:3.10-slim-jammy
+
+# build stage: includes resources necessary for installing dependencies
+FROM --platform=linux/riscv64 cartesi/python:3.10-slim-jammy as build-stage
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/apt/lists/*
 
-WORKDIR /opt/cartesi/dapp
-COPY . .
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY requirements.txt .
 
 RUN pip install -r requirements.txt
+
+
+# runtime stage: produces final image that will be executed
+FROM --platform=linux/riscv64 cartesi/python:3.10-slim-jammy
+
+COPY --from=build-stage /opt/venv /opt/venv
+
+WORKDIR /opt/cartesi/dapp
+COPY ./entrypoint.sh .
+COPY ./auction ./auction

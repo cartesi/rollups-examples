@@ -12,4 +12,5 @@
 # specific language governing permissions and limitations under the License.
 
 set -e
+export PATH="/opt/venv/bin:$PATH"
 rollup-init python3 -m auction.dapp
