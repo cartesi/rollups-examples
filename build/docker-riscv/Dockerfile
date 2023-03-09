@@ -21,8 +21,8 @@ FROM dapp as wrapped-stage
 WORKDIR /
 
 # add the required 'dapp' user
-RUN useradd --create-home --user-group --uid 1000 dapp
-RUN chown -R 1000:1000 /opt/cartesi/dapp
+RUN useradd --create-home --user-group --uid 2874 dapp
+RUN chown -R 2874:2874 /opt/cartesi/dapp
 
 # install busybox
 RUN apt-get update \
