@@ -1,1 +1,1 @@
-../build/std-rootfs/base.hcl
+../build/docker-riscv/base.hcl

@@ -12,7 +12,7 @@
 
 const { ethers } = require("ethers");
 
-const rollup_server = tjs.getenv("ROLLUP_HTTP_SERVER_URL");
+const rollup_server = process.env.ROLLUP_HTTP_SERVER_URL;
 console.log("HTTP rollup_server url is " + rollup_server);
 
 async function handle_advance(data) {
@@ -32,7 +32,7 @@ async function handle_advance(data) {
         body: JSON.stringify({ payload })
     });
     const json = await advance_req.json();
-    console.log("Received notice status " + advance_req.status + " body " + JSON.stringify(json));
+    console.log("Received notice status " + advance_req.status + " with body " + JSON.stringify(json));
     return "accept";
 }
 
@@ -67,6 +67,7 @@ var rollup_address = null;
 (async () => {
     while (true) {
         console.log("Sending finish")
+
         const finish_req = await fetch(rollup_server + '/finish', {
             method: 'POST',
             headers: {
@@ -74,7 +75,9 @@ var rollup_address = null;
             },
             body: JSON.stringify({ status: 'accept' })
         });
+
         console.log("Received finish status " + finish_req.status);
+
 
         if (finish_req.status == 202) {
             console.log("No pending rollup request, trying again");

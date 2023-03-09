@@ -1,15 +1,15 @@
 
-target "dapp" {
-  # default context is "."
-  # default dockerfile is "Dockerfile"
-}
-
 variable "TAG" {
   default = "devel"
 }
 
 variable "DOCKER_ORGANIZATION" {
   default = "cartesi"
+}
+
+target "dapp" {
+  # default context is "."
+  # default dockerfile is "Dockerfile"
 }
 
 target "server" {

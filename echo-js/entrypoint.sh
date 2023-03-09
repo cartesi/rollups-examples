@@ -12,4 +12,4 @@
 # specific language governing permissions and limitations under the License.
 
 set -e
-rollup-init /usr/bin/tjs dist/main.js
+rollup-init node dist/main.js

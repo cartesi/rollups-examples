@@ -1,4 +1,3 @@
-
 group "default" {
   targets = ["dapp", "server", "console"]
 }
@@ -41,5 +40,3 @@ target "machine" {
     dapp = "target:dapp"
   }
 }
-
-

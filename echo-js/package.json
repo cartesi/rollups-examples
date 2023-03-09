@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "webpack --entry ./dapp.js --mode production",
-    "start": "webpack --entry ./dapp.js --mode development && docker run -e ROLLUP_HTTP_SERVER_URL=\"http://127.0.0.1:5004\" --init --network host -v `pwd`:/dapp -w /dapp cartesi/txiki:latest tjs dist/main.js"
+    "start": "ROLLUP_HTTP_SERVER_URL=\"http://127.0.0.1:5004\" node dapp.js"
   },
   "keywords": [
     "cartesi"

@@ -35,12 +35,13 @@ The response should be something like this:
 
 When developing an application, it is often important to easily test and debug it. For that matter, it is possible to run the Cartesi Rollups environment in [host mode](../README.md#host-mode), so that the DApp's back-end can be executed directly on the host machine, allowing it to be debugged using regular development tools such as an IDE.
 
-This DApp's back-end is written in JavaScript using [txiki](https://github.com/saghul/txiki.js) runtime, and it is thus executed in your machine using a Docker container with the txiki interpreter.
+This DApp's back-end is written in JavaScript and expects Node.js version 18 or higher to be available in the host machine.
 
 In order to start the back-end, run the following commands in a dedicated terminal:
 
 ```shell
 cd echo-js/
+yarn
 yarn start
 ```
 
