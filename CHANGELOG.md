@@ -7,6 +7,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] 2023-03-10
+
+### Added
+
+- Support for multiple build systems
+- `docker-riscv` build system to create DApps based on RISC-V Docker images
+
+### Changed
+
+- Original build system labeled as `std-rootfs`
+- All Python DApps except `echo-python` adapted to use the new `docker-riscv` build system
+- Bump toolchain to 0.13.0
+- Bump rootfs to 0.16.0
+- Bump rom to 0.15.0
+- Bump server-manager to 0.6.0
+
 ## [0.12.0] 2023-01-09
 
 ### Added
