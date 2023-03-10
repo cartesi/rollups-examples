@@ -2,7 +2,7 @@
 FROM --platform=linux/riscv64 cartesi/python:3.10-slim-jammy
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    sqlite3 \
+    sqlite3=3.37.2-2ubuntu0.1 \
     && rm -rf /var/apt/lists/*
 
 WORKDIR /opt/cartesi/dapp
