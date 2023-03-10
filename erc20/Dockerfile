@@ -4,7 +4,7 @@
 FROM --platform=linux/riscv64 cartesi/python:3.10-slim-jammy as build-stage
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    build-essential \
+    build-essential=12.9ubuntu3 \
     && rm -rf /var/apt/lists/*
 
 RUN python -m venv /opt/venv
