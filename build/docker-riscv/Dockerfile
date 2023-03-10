@@ -47,9 +47,15 @@ RUN rm machine-emulator-tools.tar.gz
 # build tar normalizing file timestamps and create final ext2 file with the appropriate size
 RUN <<EOF
 tar -cf /dapp.tar --transform='s:^./::g'  --mtime="2022-01-01" --format=gnu --numeric-owner ./
+
 blocksize=4096
-bytes=$(du -bd0 /dapp.tar | cut -f1)
-blocks=$(echo "1.2 * ($bytes + $blocksize - 1) / $blocksize" | bc)
+bytes=$(($(wc -c < "/dapp.tar") +0))
+bcargs="$(cat <<- EOF
+	define max(a, b) { return (a > b) * a + (a <= b) * b }
+	max(8, 1.5 * ($bytes + $blocksize - 1) / $blocksize)
+	EOF
+)"
+blocks=$(echo "$bcargs" | bc)
 genext2fs -fzB $blocksize -i $blocksize -b $blocks -a /dapp.tar /dapp.ext2
 truncate -s %4096 /dapp.ext2
 EOF
