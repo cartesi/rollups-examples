@@ -10,8 +10,6 @@
 // specific language governing permissions and limitations under the License.
 
 import { Argv } from "yargs";
-import { defaultAbiCoder } from "@ethersproject/abi";
-import { OutputValidityProofStruct } from "@cartesi/rollups/dist/src/types/contracts/dapp/ICartesiDApp";
 
 import { getNotice } from "../../graphql/notices";
 import {
@@ -86,22 +84,13 @@ export const handler = async (args: Args) => {
 
     // send transaction to validate notice
     console.log(`validating notice "${id}"`);
-    const proof: OutputValidityProofStruct = {
-        ...notice.proof,
-        outputIndex: notice.index,
-    };
-    try {
-        // XXX: this will change
-        const claimQuery = defaultAbiCoder.encode(
-            ["uint8", "uint8"],
-            [notice.input.index, notice.input.epoch.index]
-        );
 
+
+    try {
         // console.log(`Would check: ${JSON.stringify(proof)}`);
         const ret = await outputContract.validateNotice(
             notice.payload,
-            claimQuery,
-            proof
+            notice.proof
         );
         console.log(`notice is valid! (ret="${ret}")`);
     } catch (e) {

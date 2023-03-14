@@ -11,7 +11,6 @@
 
 import { Argv } from "yargs";
 import { defaultAbiCoder } from "@ethersproject/abi";
-import { OutputValidityProofStruct } from "@cartesi/rollups/dist/src/types/contracts/dapp/ICartesiDApp";
 
 import { getVoucher } from "../../graphql/vouchers";
 import {
@@ -86,23 +85,14 @@ export const handler = async (args: Args) => {
 
     // send transaction to execute voucher
     console.log(`executing voucher "${id}"`);
-    const proof: OutputValidityProofStruct = {
-        ...voucher.proof,
-        outputIndex: voucher.index,
-    };
+
     try {
-        // XXX: this will change
-        const claimQuery = defaultAbiCoder.encode(
-            ["uint8", "uint8"],
-            [voucher.input.index, voucher.input.epoch.index]
-        );
 
         // console.log(`Would check: ${JSON.stringify(proof)}`);
         const tx = await outputContract.executeVoucher(
             voucher.destination,
             voucher.payload,
-            claimQuery,
-            proof
+            voucher.proof
         );
         const receipt = await tx.wait();
         console.log(`voucher executed! (tx="${tx.hash}")`);

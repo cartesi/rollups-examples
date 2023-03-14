@@ -13,7 +13,7 @@ services:
       [
         "deploy",
         "--network",
-        "localhost_docker",
+        "localhost_contracts",
         "--export",
         "/deployments/localhost/localhost_aux.json"
       ]
