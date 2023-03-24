@@ -12,6 +12,7 @@ Please note the below! We appreciate everyone following the guidelines.
 
 * No --force pushes or modifying the Git history in any way;
 * Use non-master branches, using a short meaningful description, with words separated by dash (e.g. 'fix-this-bug');
+* Abide by the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/);
 * All modifications must be made in a pull-request to solicit feedback from other contributors.
 
 ## Get in Touch
