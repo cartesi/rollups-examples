@@ -23,6 +23,7 @@ import {
     Args as RollupsArgs,
     builder as rollupsBuilder,
 } from "../../rollups";
+import { OutputValidityProofStruct, ProofStruct } from "@cartesi/rollups/dist/src/types/contracts/dapp/ICartesiDApp";
 
 interface Args extends ConnectArgs, RollupsArgs {
     url: string;
@@ -86,13 +87,25 @@ export const handler = async (args: Args) => {
     // send transaction to execute voucher
     console.log(`executing voucher "${id}"`);
 
+    // XXX: This is being adapted
+    const validity: OutputValidityProofStruct = {
+        ...voucher.proof as OutputValidityProofStruct,
+        epochInputIndex: 1,
+        outputIndex: 1
+    }
+
+    const proof: ProofStruct = {
+        validity: validity,
+        context: ""
+    }
+
     try {
 
         // console.log(`Would check: ${JSON.stringify(proof)}`);
         const tx = await outputContract.executeVoucher(
             voucher.destination,
             voucher.payload,
-            voucher.proof
+            proof
         );
         const receipt = await tx.wait();
         console.log(`voucher executed! (tx="${tx.hash}")`);

@@ -63,7 +63,7 @@ export const getInputKeys = (receipt: ContractReceipt): InputKeys => {
 
     const inputAdded = event as InputAddedEvent;
     return {
-        input_index: inputAdded.args.inputIndex.toNumber(),
+        input_index: inputAdded.args.inboxInputIndex.toNumber(),
     };
 };
 
