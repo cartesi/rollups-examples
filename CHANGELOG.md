@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0] 2023-04-04
+
+### Added
+
+- Support for Node.js and adaptation of Echo JS DApp to use it
+
 ## [0.13.0] 2023-03-10
 
 ### Added
@@ -274,6 +280,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove machine-emulator-tools submodule
 - Remove openapi-interfaces submodule
 
+[0.14.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.14.0
+[0.13.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.13.0
 [0.12.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.12.0
 [0.11.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.11.1
 [0.11.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.11.0

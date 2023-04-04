@@ -1,6 +1,6 @@
 {
     "name": "frontend-console",
-    "version": "0.13.0",
+    "version": "0.14.0",
     "description": "Simple console front-end for Cartesi DApp",
     "author": "Danilo Tuler <danilo.tuler@cartesi.io>",
     "license": "Apache-2.0",
