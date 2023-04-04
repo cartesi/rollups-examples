@@ -42,7 +42,6 @@ handlers = {
 }
 
 finish = {"status": "accept"}
-rollup_address = None
 
 while True:
     logger.info("Sending finish")
@@ -55,9 +54,5 @@ while True:
         data = rollup_request["data"]
         if "metadata" in data:
             metadata = data["metadata"]
-            if metadata["epoch_index"] == 0 and metadata["input_index"] == 0:
-                rollup_address = metadata["msg_sender"]
-                logger.info(f"Captured rollup address: {rollup_address}")
-                continue
         handler = handlers[rollup_request["request_type"]]
         finish["status"] = handler(rollup_request["data"])
