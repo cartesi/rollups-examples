@@ -20,6 +20,9 @@ FROM dapp as wrapped-stage
 
 WORKDIR /
 
+# normalize date for subsequent operations
+ENV SOURCE_DATE_EPOCH=1640995200
+
 # add the required 'dapp' user
 RUN useradd --create-home --user-group --uid 2874 dapp
 RUN chown -R 2874:2874 /opt/cartesi/dapp
@@ -28,8 +31,8 @@ RUN chown -R 2874:2874 /opt/cartesi/dapp
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     busybox-static=1:1.30.1-7ubuntu3 \
-    && rm -rf /var/apt/lists/*
-
+    && rm -rf /var/lib/apt/lists/* \
+    && find /var/log \( -name '*.log' -o -name '*.log.*' \) -exec truncate -s 0 {} \;
 
 # stage to build the final ext2 filesystem for the dapp
 FROM toolchain as fs-stage

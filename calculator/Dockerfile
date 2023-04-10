@@ -2,6 +2,10 @@
 FROM --platform=linux/riscv64 cartesi/python:3.10-slim-jammy
 
 WORKDIR /opt/cartesi/dapp
-COPY . .
 
-RUN pip install -r requirements.txt
+COPY ./requirements.txt .
+RUN pip install -r requirements.txt --no-cache \
+    && find /usr/local/lib -type d -name __pycache__ -exec rm -r {} +
+
+COPY ./entrypoint.sh .
+COPY ./calculator.py .

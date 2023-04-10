@@ -18,7 +18,7 @@ RUN yarn build
 # Here the image's platform must be riscv64.
 # Give preference to small base images, which lead to better start-up
 # performance when loading the Cartesi Machine.
-FROM --platform=linux/riscv64 cartesi/node:19-jammy-slim 
+FROM --platform=linux/riscv64 cartesi/node:19-jammy-slim
 WORKDIR /opt/cartesi/dapp
 COPY --from=build-stage /opt/cartesi/dapp/dist ./dist/
 COPY ./entrypoint.sh ./
