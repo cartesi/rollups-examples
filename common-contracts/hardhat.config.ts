@@ -42,10 +42,6 @@ const alchemy = (
 const config: HardhatUserConfig = {
     networks: {
         hardhat: mnemonic ? { accounts: { mnemonic } } : {},
-        localhost_contracts: {
-            url: "http://hardhat:8545",
-            accounts: mnemonic ? { mnemonic } : undefined,
-        },
         localhost: {
             url: "http://localhost:8545",
             accounts: mnemonic ? { mnemonic } : undefined,

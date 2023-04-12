@@ -26,4 +26,4 @@ WORKDIR /app
 COPY --from=builder /app .
 
 ENTRYPOINT ["npx", "hardhat"]
-CMD ["deploy", "--network", "localhost", "--export", "./deployments/localhost/localhost_aux.json"]
+CMD ["deploy", "--network", "localhost"]

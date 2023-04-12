@@ -32,7 +32,7 @@ First, retrieve the contract address from the deployment data.
 For the local development network, execute the following command:
 
 ```shell
-ERC_721=$(jq '.address' ./deployments/localhost_contracts/CartesiNFT.json | \
+ERC_721=$(jq '.address' ./deployments/localhost/CartesiNFT.json | \
     sed "s/[\",]//g")
 ```
 

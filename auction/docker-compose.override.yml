@@ -6,16 +6,18 @@ services:
 
   common-contracts:
     build: ./common-contracts
+    network_mode: host    
     depends_on:
       hardhat:
         condition: service_healthy
     command:
       [
         "deploy",
+        "--reset",
         "--network",
-        "localhost_contracts",
+        "localhost",
         "--export",
-        "/deployments/localhost/localhost_aux.json"
+        "/deployments/localhost/localhost.json"
       ]
     init: true
     healthcheck:
@@ -24,14 +26,13 @@ services:
           "CMD",
           "test",
           "-f",
-          "/opt/cartesi/share/blockchain/localhost_aux.json"
+          "/deployments/localhost/localhost.json"
         ]
       interval: 30s
       timeout: 30s
       retries: 5
     volumes:
-      - blockchain-data:/opt/cartesi/share/blockchain
-      - ./deployments:/app/deployments
+      - ./common-contracts/deployments:/app/deployments
 
   rollups_dispatcher:
     depends_on:
