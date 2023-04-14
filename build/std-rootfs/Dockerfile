@@ -2,8 +2,9 @@
 # layers for caching and versioning
 FROM cartesi/toolchain:0.13.0 as toolchain
 FROM cartesi/rootfs:0.16.0 as rootfs
-FROM cartesi/server-manager:0.9.0 as server-manager
+FROM cartesi/server-manager:0.7.0 as server-manager
 FROM cartesi/rollups-hardhat:0.9.0 as rollups-hardhat
+
 
 FROM rootfs as toolchain-python
 
