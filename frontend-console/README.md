@@ -303,4 +303,4 @@ Options are:
 --tokenId       The ID of the token being transfered
 ```
 
-If the `erc721` address is left unspecified, the address for CartesiNFT contract will be used for the target blockchain being specified.
+If the `erc721` address is left unspecified, the address for the SimpleERC721 contract will be used for the target blockchain being specified.

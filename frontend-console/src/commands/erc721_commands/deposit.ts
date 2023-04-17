@@ -72,7 +72,7 @@ export const handler = async (args: Args) => {
     console.log(`depositing token ${tokenId}...`);
 
     // get ERC-721 contract address
-    const erc721address = erc721 ?? deployment?.contracts["CartesiNFT"]?.address;
+    const erc721address = erc721 ?? deployment?.contracts["SimpleERC721"]?.address;
     if (!erc721address) {
         throw new Error(
             `cannot resolve ERC-721 address for chain ${network.chainId}`

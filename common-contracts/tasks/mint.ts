@@ -1,6 +1,6 @@
 import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { getEvent } from "../util";
+import { getEvent } from "./util";
 
 task("mint-token", "Mint token for a given address")
   .addParam("recipient", "Address for which account you want to mint a token")
@@ -8,7 +8,7 @@ task("mint-token", "Mint token for a given address")
   .setAction(async ({ recipient, erc721 }, hre: HardhatRuntimeEnvironment) => {
     const { ethers } = hre;
 
-    const factory = await ethers.getContractFactory("CartesiNFT");
+    const factory = await ethers.getContractFactory("SimpleERC721");
     const contract = await factory.attach(erc721);
 
     const tx = await contract.mintTo(recipient);

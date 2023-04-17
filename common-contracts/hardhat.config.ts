@@ -21,7 +21,7 @@ import "@typechain/hardhat";
 import "hardhat-deploy";
 import "solidity-coverage";
 import "hardhat-gas-reporter";
-import "./tasks/auction/mint"
+import "./tasks/mint"
 
 // read MNEMONIC from file or from env variable
 let mnemonic = process.env.MNEMONIC;
@@ -68,7 +68,7 @@ const config: HardhatUserConfig = {
     solidity: {
         compilers: [
             {
-                version: "0.8.4",
+                version: "0.8.18",
                 settings: {
                     optimizer: {
                         enabled: true,

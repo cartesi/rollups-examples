@@ -46,7 +46,7 @@ They may be executed with the help of the front-end console application, as ment
 
 Any kind of ERC-20 token may be used to place bids against an auction, depending on what token address is chosen during its creation.
 
-For example, to deposit CTSI (see [how to deposit ERC-20 tokens](../frontend-console#depositing-erc-20-tokens)) in the default account, using the front-end console, proceed as exemplified below:
+For example, to deposit CTSI (see [how to deposit ERC-20 tokens](../frontend-console/README.md#depositing-erc-20-tokens)) in the default account, using the front-end console, proceed as exemplified below:
 
 ```shell
 yarn start erc20 deposit --amount 10000000000000000000
@@ -72,13 +72,13 @@ yarn start input send --payload '{
 }'
 ```
 
-After the command is successfully processed, the change will be reflected in the account balance and the amount will be able to be retrieved by [executing the resulting `Voucher`](../frontend-console#validating-notices-and-executing-vouchers).
+After the command is successfully processed, the change will be reflected in the account balance and the amount will be able to be retrieved by [executing the resulting `Voucher`](../frontend-console/README.md#validating-notices-and-executing-vouchers).
 
 Any failure will make the request being rejected and the reason will be reported as a `Report`.
 
 ##### How to transfer ERC-20 funds
 
-Similarly to withdrawing, a transfer is executed with the help of the front-end console, by [sending inputs](../frontend-console#sending-inputs) with the command `erc20withdrawal` to the DApp.
+Similarly to withdrawing, a transfer is executed with the help of the front-end console, by [sending inputs](../frontend-console/README.md#sending-inputs) with the command `erc20withdrawal` to the DApp.
 
 As an example, the command below shows how to transfer 5000 *gwei* from the default account to another one:
 
@@ -103,12 +103,12 @@ Before executing any operation related to NFTs, one must first create them as ex
 
 ##### How to mint NFTs to be auctioned
 
-Simply proceed and [mint a CartesiNFT](../common-contracts/README.md#how-to-mint-a-cartesinft) and take note of the `token_id`.
+Simply proceed and [mint an ERC-721 token](../common-contracts/README.md#simpleerc721) and take note of the `token_id`.
 It will be used when [depositing NFTs into a user account](#how-to-deposit-nfts) using the front-end console.
 
 ##### How to deposit NFTs
 
-In order to [deposit NFTs](../frontend-console#depositing-erc-721-tokens), they must have been minted beforehand as explained above.
+In order to [deposit NFTs](../frontend-console/README.md#depositing-erc-721-tokens), they must have been minted beforehand as explained above.
 
 From the front-end console, deposit an NFT whose `token_id` is `1` as follows:
 
@@ -122,9 +122,9 @@ One can [query the account balance via an inspect state call](#how-to-query-an-a
 
 ##### How to withdraw NFTs
 
-Withdrawals can also be executed with the help of the front-end console, by [sending inputs](../frontend-console#sending-inputs) command `erc721withdrawal` to the DApp.
+Withdrawals can also be executed with the help of the front-end console, by [sending inputs](../frontend-console/README.md#sending-inputs) command `erc721withdrawal` to the DApp.
 
-As an example, the command below shows how to withdraw an NFT (contract `0xc5a5C42992dECbae36851359345FE25997F5C42d`, aka locally deployed CartesiNFT contract, and `token_id` `1`) from the default account:
+As an example, the command below shows how to withdraw an NFT (contract `0xc5a5C42992dECbae36851359345FE25997F5C42d`, aka locally deployed SimpleERC721 contract, and `token_id` `1`) from the default account:
 
 ```shell
 yarn start input send --payload '{
@@ -136,11 +136,11 @@ yarn start input send --payload '{
 }'
 ```
 
-After the command is successfully processed, the change will be reflected in the account balance and the NFT will be retrievable by [executing the resulting `Voucher`](../frontend-console#validating-notices-and-executing-vouchers). Any failure will make the request be rejected, and the reason will be reported as a `Report`.
+After the command is successfully processed, the change will be reflected in the account balance and the NFT will be retrievable by [executing the resulting `Voucher`](../frontend-console/README.md#validating-notices-and-executing-vouchers). Any failure will make the request be rejected, and the reason will be reported as a `Report`.
 
 ##### How to transfer NFTs
 
-Similarly to withdrawing, a transfer is executed with the help of the front-end console, by [sending inputs](../frontend-console#sending-inputs) with the command `erc721transfer` to the DApp.
+Similarly to withdrawing, a transfer is executed with the help of the front-end console, by [sending inputs](../frontend-console/README.md#sending-inputs) with the command `erc721transfer` to the DApp.
 
 As an example, the command below shows how to transfer an NFT from the default account to another one:
 
@@ -161,7 +161,7 @@ Any failure will make the request being rejected and the reason will be reported
 
 #### Querying the wallet state
 
-The state of any account may be queried at any time via [inspect state calls](../frontend-console#inspecting-dapp-state).
+The state of any account may be queried at any time via [inspect state calls](../frontend-console/README.md#inspecting-dapp-state).
 
 ##### How to query an account balance
 

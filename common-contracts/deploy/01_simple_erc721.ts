@@ -22,10 +22,10 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
         log: true,
     };
 
-    await deployments.deploy("CartesiNFT", {
+    await deployments.deploy("SimpleERC721", {
         ...opts,
     });
 };
 
 export default func;
-export const tags = ["CartesiNFT"];
+export const tags = ["SimpleERC721"];
