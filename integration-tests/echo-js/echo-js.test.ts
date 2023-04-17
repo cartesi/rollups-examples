@@ -61,9 +61,9 @@ describe("Echo DApp Echo-JS Integration Tests", () => {
         const inputs = await serverManager.getProcessedInputs(
             0,
             pollingTimeout,
-            2
+            1
         );
-        expect(inputs.length).to.eq(2);
+        expect(inputs.length).to.eq(1);
 
         const sentInputs = inputs.pop();
         expect(
@@ -77,12 +77,12 @@ describe("Echo DApp Echo-JS Integration Tests", () => {
             "Timed out waiting Query Server to respond"
         ).to.be.true;
 
-        const notices = await queryNotices(0, 1, pollingTimeout);
+        const notices = await queryNotices(0, 0, pollingTimeout);
         expect(notices.length).to.eq(1);
 
         const notice = notices.pop();
         expect(notice.epoch).to.eq(0);
-        expect(notice.input).to.eq(1);
+        expect(notice.input).to.eq(0);
         expect(notice.notice).to.eq(0);
         expect(notice.payload).to.eq("cartesi");
     });

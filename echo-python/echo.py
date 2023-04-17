@@ -52,7 +52,6 @@ while True:
     else:
         rollup_request = response.json()
         data = rollup_request["data"]
-        if "metadata" in data:
-            metadata = data["metadata"]
+        
         handler = handlers[rollup_request["request_type"]]
         finish["status"] = handler(rollup_request["data"])
