@@ -7,3 +7,7 @@ services:
       - "5004:5004"
     environment:
       - RUST_LOG=warn
+
+  advance_runner:
+    environment:
+      - SNAPSHOT_ENABLED=false

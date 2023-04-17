@@ -129,8 +129,8 @@ COPY --from=machine-core /opt/cartesi/share/rootfs.ext2 .
 # build machine
 COPY build-machine.sh /usr/local/bin
 RUN mkdir -p /opt/cartesi/share/dapp-bin
-RUN build-machine.sh /opt/cartesi/share/dapp-bin/0 $NETWORK
-RUN ln -s /opt/cartesi/share/dapp-bin/0 /opt/cartesi/share/dapp-bin/latest
+RUN build-machine.sh /opt/cartesi/share/dapp-bin/0_0 $NETWORK
+RUN ln -s /opt/cartesi/share/dapp-bin/0_0 /opt/cartesi/share/dapp-bin/latest
 
 # switch back to server-manager workdir
 WORKDIR /opt/cartesi/bin

@@ -100,13 +100,14 @@ COPY --from=machine-core /opt/cartesi/share/linux.bin .
 # build machine
 COPY build-machine.sh /usr/local/bin
 RUN mkdir -p /opt/cartesi/share/dapp-bin
-RUN build-machine.sh /opt/cartesi/share/dapp-bin/0 $NETWORK
+
+RUN build-machine.sh /opt/cartesi/share/dapp-bin/0_0 $NETWORK
 
 FROM server-manager as server-stage
 
 WORKDIR /opt/cartesi/bin
-COPY --from=build-server-stage /opt/cartesi/share/dapp-bin/0 /opt/cartesi/share/dapp-bin/0
-RUN ln -s /opt/cartesi/share/dapp-bin/0 /opt/cartesi/share/dapp-bin/latest
+COPY --from=build-server-stage /opt/cartesi/share/dapp-bin/0_0 /opt/cartesi/share/dapp-bin/0_0
+RUN ln -s /opt/cartesi/share/dapp-bin/0_0 /opt/cartesi/share/dapp-bin/latest
 
 # stage to run machine shell
 FROM server-manager as console-stage

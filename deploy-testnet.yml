@@ -3,7 +3,7 @@ version: "3.9"
 services:
   machine:
     image: cartesi/dapp:${DAPP_NAME:?undefined DAPP_NAME}-devel-machine
-    command: xxd -c 256 -p hash; sleep 3
+    command: xxd -c 256 -p latest/hash; sleep 3
     volumes:
       - machine:/opt/cartesi/share/dapp-bin
 
@@ -20,7 +20,7 @@ services:
         "--mnemonic",
         "${MNEMONIC:?undefined MNEMONIC}",
         "--templateHashFile",
-        "/opt/cartesi/share/dapp-bin/hash",
+        "/opt/cartesi/share/dapp-bin/latest/hash",
         "--outputFile",
         "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.json",
       ]

@@ -8,7 +8,7 @@ services:
     environment:
       - RUST_LOG=warn
 
-  server_manager_broker_proxy:
+  advance_runner:
     environment:
       - SNAPSHOT_ENABLED=false
 
@@ -18,7 +18,7 @@ services:
         "--rpc",
         "http://hardhat:8545",
         "--deploymentFile",
-        "/opt/cartesi/share/blockchain/localhost.json",
+        "/opt/cartesi/share/deployments/localhost.json",
         "--mnemonic",
         "test test test test test test test test test test test junk",
         # template hash is not relevant in host mode, so we can specify hash zero
