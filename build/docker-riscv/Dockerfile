@@ -3,6 +3,16 @@
 FROM cartesi/toolchain:0.13.0 as toolchain
 FROM cartesi/server-manager:0.6.0 as server-manager
 
+ARG NETWORK=localhost
+
+FROM busybox as deployments
+
+WORKDIR /opt/cartesi/share
+
+COPY contracts .
+COPY shasumfile .
+RUN while read DEP; do wget -O $DEP; done < dependencies
+RUN sha1sum -c shasumfile
 
 # stage to download dependencies
 FROM busybox as machine-core
