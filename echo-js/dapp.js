@@ -62,7 +62,6 @@ var handlers = {
 }
 
 var finish = { status: "accept" };
-var rollup_address = null;
 
 (async () => {
     while (true) {
@@ -83,14 +82,9 @@ var rollup_address = null;
             console.log("No pending rollup request, trying again");
         } else {
             const rollup_req = await finish_req.json();
-            const metadata = rollup_req["data"]["metadata"];
-            if (metadata && metadata["epoch_index"] == 0 && metadata["input_index"] == 0) {
-                rollup_address = metadata["msg_sender"];
-                console.log("Captured rollup address: " + rollup_address);
-            } else {
-                var handler = handlers[rollup_req["request_type"]];
-                finish["status"] = await handler(rollup_req["data"]);
-            }
+            var handler = handlers[rollup_req["request_type"]];
+            finish["status"] = await handler(rollup_req["data"]);
+
         }
     }
 })();

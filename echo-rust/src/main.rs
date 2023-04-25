@@ -30,19 +30,6 @@ where
     Ok(())
 }
 
-fn process_initial(metadata: &JsonValue) -> Option<String> {
-    let epoch_index = metadata["epoch_index"].as_u64()?;
-    let input_index = metadata["input_index"].as_u64()?;
-
-    if epoch_index == 0 && input_index == 0 {
-        let msg_sender = metadata["msg_sender"].as_str()?;
-        println!("Captured rollup address: {}", msg_sender);
-        return Some(msg_sender.to_string());
-    }
-
-    return None;
-}
-
 pub async fn handle_advance(
     client: &hyper::Client<hyper::client::HttpConnector>,
     server_addr: &str,
@@ -91,7 +78,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let server_addr = env::var("ROLLUP_HTTP_SERVER_URL")?;
 
     let mut status = "accept";
-    let mut _rollup_address = String::new();
     loop {
         println!("Sending finish");
         let response = object! {"status" => status.clone()};
@@ -109,11 +95,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let body = hyper::body::to_bytes(response).await?;
             let utf = std::str::from_utf8(&body)?;
             let req = json::parse(utf)?;
-
-            if let Some(address) = process_initial(&req["data"]["metadata"]) {
-                _rollup_address = address;
-                continue;
-            }
 
             let request_type = req["request_type"]
                 .as_str()

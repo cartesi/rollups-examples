@@ -68,11 +68,8 @@ while true do
         info("No pending rollup request, trying again")
     else
         local rollup_request = json.decode(response)
-        local metadata = rollup_request.data.metadata
-        if metadata and metadata.epoch_index == 0 and metadata.input_index == 0 then
-            info("Captured rollup address: %s", metadata.msg_sender)
-        else
-            finish.status = handlers[rollup_request.request_type](rollup_request.data)
-        end
+        
+        finish.status = handlers[rollup_request.request_type](rollup_request.data)
+        
     end
 end

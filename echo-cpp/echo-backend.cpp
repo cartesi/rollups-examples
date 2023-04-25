@@ -16,7 +16,8 @@
 #include "3rdparty/cpp-httplib/httplib.h"
 #include "3rdparty/picojson/picojson.h"
 
-std::string handle_advance(httplib::Client &cli, picojson::value data) {
+std::string handle_advance(httplib::Client &cli, picojson::value data)
+{
     std::cout << "Received advance request data " << data << std::endl;
     std::cout << "Adding notice" << std::endl;
     auto payload = data.get("payload").get<std::string>();
@@ -26,7 +27,8 @@ std::string handle_advance(httplib::Client &cli, picojson::value data) {
     return "accept";
 }
 
-std::string handle_inspect(httplib::Client &cli, picojson::value data) {
+std::string handle_inspect(httplib::Client &cli, picojson::value data)
+{
     std::cout << "Received inspect request data " << data << std::endl;
     std::cout << "Adding report" << std::endl;
     auto payload = data.get("payload").get<std::string>();
@@ -36,7 +38,8 @@ std::string handle_inspect(httplib::Client &cli, picojson::value data) {
     return "accept";
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
     std::map<std::string, decltype(&handle_advance)> handlers = {
         {std::string("advance_state"), &handle_advance},
         {std::string("inspect_state"), &handle_inspect},
@@ -44,27 +47,25 @@ int main(int argc, char** argv) {
     httplib::Client cli(getenv("ROLLUP_HTTP_SERVER_URL"));
     cli.set_read_timeout(20, 0);
     std::string status("accept");
-    std::string rollup_address;
-    while (true) {
+    while (true)
+    {
         std::cout << "Sending finish" << std::endl;
         auto finish = std::string("{\"status\":\"") + status + std::string("\"}");
         auto r = cli.Post("/finish", finish, "application/json");
         std::cout << "Received finish status " << r.value().status << std::endl;
-        if (r.value().status == 202) {
+        if (r.value().status == 202)
+        {
             std::cout << "No pending rollup request, trying again" << std::endl;
-        } else {
+        }
+        else
+        {
             picojson::value rollup_request;
             picojson::parse(rollup_request, r.value().body);
-            picojson::value metadata = rollup_request.get("data").get("metadata");
-            if (!metadata.is<picojson::null>() && metadata.get("epoch_index").get<double>() == 0 && metadata.get("input_index").get<double>() == 0) {
-                rollup_address = metadata.get("msg_sender").get<std::string>();
-                std::cout << "Captured rollup address: " << rollup_address << std::endl;
-            } else {
-                auto request_type = rollup_request.get("request_type").get<std::string>();
-                auto handler = handlers.find(request_type)->second;
-                auto data = rollup_request.get("data");
-                status = (*handler)(cli, data);
-            }
+
+            auto request_type = rollup_request.get("request_type").get<std::string>();
+            auto handler = handlers.find(request_type)->second;
+            auto data = rollup_request.get("data");
+            status = (*handler)(cli, data);
         }
     }
     return 0;
