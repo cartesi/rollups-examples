@@ -15,6 +15,7 @@ set -e
 
 MACHINE_DIR=$1
 ROLLUP_HTTP_SERVER_PORT=5004
+NETWORK=$2
 
 cartesi-machine \
     --assert-rolling-template \
@@ -25,5 +26,5 @@ cartesi-machine \
     --rom-image=rom.bin \
     --store=$MACHINE_DIR \
     -- "cd /opt/cartesi/dapp; \
-        ROLLUP_HTTP_SERVER_URL=\"http://127.0.0.1:$ROLLUP_HTTP_SERVER_PORT\" \
+        NETWORK=$NETWORK ROLLUP_HTTP_SERVER_URL=\"http://127.0.0.1:$ROLLUP_HTTP_SERVER_PORT\" \
         ./entrypoint.sh"

@@ -3,16 +3,17 @@
 FROM cartesi/toolchain:0.13.0 as toolchain
 FROM cartesi/server-manager:0.6.0 as server-manager
 
-ARG NETWORK=localhost
 
-FROM busybox as deployments
+FROM ghcr.io/cartesi-corp/rollups-hardhat:develop AS local-deployments-stage
+RUN sh -c "npx hardhat deploy --write true --network hardhat"
+ENTRYPOINT [ "/bin/sh" ]
+
+
+FROM node as deployments-stage
 
 WORKDIR /opt/cartesi/share
-
-COPY contracts .
-COPY shasumfile .
-RUN while read DEP; do wget -O $DEP; done < dependencies
-RUN sha1sum -c shasumfile
+RUN yarn add @cartesi/rollups@0.9.0-alpha.4
+RUN mkdir -p ./deployments && cp -r ./node_modules/@cartesi/rollups/deployments/* ./deployments/
 
 # stage to download dependencies
 FROM busybox as machine-core
@@ -57,6 +58,10 @@ COPY --from=machine-core /opt/cartesi/share/machine-emulator-tools.tar.gz /var/t
 RUN tar -xvf machine-emulator-tools.tar.gz ./
 RUN rm machine-emulator-tools.tar.gz
 
+#add deployments 
+COPY --from=deployments /opt/cartesi/share/node_modules/@cartesi/rollups/deployments* /var/tmp/dapp_fs/deployments/
+COPY --from=local-deployments /app/rollups/deployments/hardhat/* /var/tmp/dapp_fs/deployments/localhost/
+
 # build tar normalizing file timestamps and create final ext2 file with the appropriate size
 RUN <<EOF
 tar -cf /dapp.tar --transform='s:^./::g'  --mtime="2022-01-01" --format=gnu --numeric-owner ./
@@ -77,6 +82,8 @@ EOF
 # stage to build the initial cartesi machine
 FROM server-manager as build-server-stage
 
+ARG NETWORK=unknown
+
 WORKDIR /opt/cartesi/dapp
 
 # copy dapp ext2 from fs stage
@@ -88,12 +95,8 @@ COPY --from=machine-core /opt/cartesi/share/linux.bin .
 
 # build machine
 COPY build-machine.sh /usr/local/bin
-RUN build-machine.sh /opt/cartesi/share/dapp-bin
-
-# build machine
-COPY build-machine.sh /usr/local/bin
 RUN mkdir -p /opt/cartesi/share/dapp-bin
-RUN build-machine.sh /opt/cartesi/share/dapp-bin/0
+RUN build-machine.sh /opt/cartesi/share/dapp-bin/0 $NETWORK
 
 FROM server-manager as server-stage
 

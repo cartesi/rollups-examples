@@ -3,6 +3,16 @@ group "default" {
   targets = ["server", "console"]
 }
 
+target "local-deployments" {
+  context = "../build/docker-riscv"
+  target = "local-deployments-stage"
+}
+
+target "deployments" {
+  context = "../build/docker-riscv"
+  target = "deployments-stage"
+}
+
 target "wrapped" {
   context = "../build/docker-riscv"
   target = "wrapped-stage"
@@ -16,6 +26,8 @@ target "fs" {
   target  = "fs-stage"
   contexts = {
     wrapped = "target:wrapped"
+    deployments = "target:deployments"
+    local-deployments = "target:local-deployments"
   }
 }
 
