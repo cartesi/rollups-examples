@@ -13,95 +13,65 @@ import { createClient, defaultExchanges } from "@urql/core";
 import fetch from "cross-fetch";
 import {
     NoticesDocument,
-    NoticesByEpochDocument,
-    NoticesByEpochAndInputDocument,
+    NoticesByInputDocument,
     Notice,
     Input,
     NoticeDocument,
 } from "../../generated-src/graphql";
-import { InputKeys } from "../commands/types";
 
 // define PartialNotice type only with the desired fields of the full Notice defined by the GraphQL schema
-export type PartialEpoch = Pick<Input, "index">;
-export type PartialInput = Pick<Input, "index"> & { epoch: PartialEpoch };
-export type PartialNotice = Pick<
-    Notice,
-    "__typename" | "id" | "index" | "payload"
-> & {
+export type PartialInput = Pick<Input, "index">;
+export type PartialNotice = Pick<Notice, "__typename" | "index" | "payload"> & {
     input: PartialInput;
 };
+export type PartialNoticeEdge = { node: PartialNotice };
 
-// define a type predicate to filter out notices
-const isPartialNotice = (n: PartialNotice | null): n is PartialNotice =>
-    n !== null;
+// define a type predicate to filter out notice edges
+const isPartialNoticeEdge = (
+    n: PartialNoticeEdge | null
+): n is PartialNoticeEdge => n !== null;
 
 /**
- * Queries a GraphQL server for notices based on input keys
+ * Queries a GraphQL server for notices based on an input index
  * @param url URL of the GraphQL server
- * @param input input identification keys
+ * @param input input index
  * @returns List of notices, returned as PartialNotice objects
  */
 export const getNotices = async (
     url: string,
-    inputKeys: InputKeys
+    inputIndex?: number
 ): Promise<PartialNotice[]> => {
     // create GraphQL client to reader server
     const client = createClient({ url, exchanges: defaultExchanges, fetch });
 
-    // query the GraphQL server for notices corresponding to the input keys
+    // query the GraphQL server for notices corresponding to the input index
     console.log(
-        `querying ${url} for notices of ${JSON.stringify(inputKeys)}...`
+        `querying ${url} for notices of input index "${inputIndex}"...`
     );
 
-    if (
-        inputKeys.epoch_index !== undefined &&
-        inputKeys.input_index !== undefined
-    ) {
-        // list notices querying by epoch and input
+    if (inputIndex !== undefined) {
+        // list notices querying by input
         const { data, error } = await client
-            .query(NoticesByEpochAndInputDocument, {
-                epoch_index: inputKeys.epoch_index,
-                input_index: inputKeys.input_index,
+            .query(NoticesByInputDocument, {
+                inputIndex: inputIndex,
             })
             .toPromise();
-        if (data?.epoch?.input?.notices) {
-            return data.epoch.input.notices.nodes.filter<PartialNotice>(
-                isPartialNotice
-            );
+        if (data?.input?.notices?.edges) {
+            return data.input.notices.edges
+                .filter<PartialNoticeEdge>(isPartialNoticeEdge)
+                .map((e) => e.node);
         } else {
             return [];
         }
-    } else if (inputKeys.epoch_index !== undefined) {
-        // list notices querying only by epoch
-        const { data, error } = await client
-            .query(NoticesByEpochDocument, {
-                epoch_index: inputKeys.epoch_index,
-            })
-            .toPromise();
-        if (data?.epoch?.inputs) {
-            // builds return notices array by concatenating each input's notices
-            let ret: PartialNotice[] = [];
-            const inputs = data.epoch.inputs.nodes;
-            for (let input of inputs) {
-                ret = ret.concat(
-                    input.notices.nodes.filter<PartialNotice>(isPartialNotice)
-                );
-            }
-            return ret;
-        } else {
-            return [];
-        }
-    } else if (inputKeys.input_index !== undefined) {
-        throw new Error(
-            "Querying only by input index is not supported. Please define epoch index as well."
-        );
     } else {
         // list notices using top-level query
         const { data, error } = await client
             .query(NoticesDocument, {})
             .toPromise();
-        if (data?.notices) {
-            return data.notices.nodes.filter<PartialNotice>(isPartialNotice);
+        if (data?.notices?.edges) {
+            return data.notices.edges
+                .filter<PartialNoticeEdge>(isPartialNoticeEdge)
+                .map((e) => e.node);
         } else {
             return [];
         }
@@ -111,18 +81,25 @@ export const getNotices = async (
 /**
  * Queries a GraphQL server looking for a specific notice
  * @param url URL of the GraphQL server
- * @param id ID of the notice
+ * @param noticeIndex notice index
+ * @param inputIndex input index
  * @returns The corresponding notice, returned as a full Notice object
  */
-export const getNotice = async (url: string, id: string): Promise<Notice> => {
+export const getNotice = async (
+    url: string,
+    noticeIndex: number,
+    inputIndex: number
+): Promise<Notice> => {
     // create GraphQL client to reader server
     const client = createClient({ url, exchanges: defaultExchanges, fetch });
 
     // query the GraphQL server for the notice
-    console.log(`querying ${url} for notice "${id}"...`);
+    console.log(
+        `querying ${url} for notice with index "${noticeIndex}" from input "${inputIndex}"...`
+    );
 
     const { data, error } = await client
-        .query(NoticeDocument, { id })
+        .query(NoticeDocument, { noticeIndex, inputIndex })
         .toPromise();
 
     if (data?.notice) {

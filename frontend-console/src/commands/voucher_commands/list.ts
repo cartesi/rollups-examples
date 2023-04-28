@@ -15,12 +15,11 @@ import { hex2str } from "../utils";
 
 interface Args {
     url: string;
-    epoch?: number;
     input?: number;
 }
 
 export const command = "list";
-export const describe = "List vouchers of an epoch and input";
+export const describe = "List vouchers of an input";
 
 const DEFAULT_URL = "http://localhost:4000/graphql";
 
@@ -31,10 +30,6 @@ export const builder = (yargs: Argv) => {
             type: "string",
             default: DEFAULT_URL,
         })
-        .option("epoch", {
-            describe: "Epoch index",
-            type: "number",
-        })
         .option("input", {
             describe: "Input index",
             type: "number",
@@ -42,13 +37,10 @@ export const builder = (yargs: Argv) => {
 };
 
 export const handler = async (args: Args) => {
-    const { url, epoch, input } = args;
+    const { url, input } = args;
 
     // wait for vouchers to appear in reader
-    const vouchers = await getVouchers(url, {
-        epoch_index: epoch,
-        input_index: input,
-    });
+    const vouchers = await getVouchers(url, input);
 
     // gathers outputs to print based on the retrieved vouchers
     // - sorts vouchers because the query is not sortable
@@ -56,22 +48,20 @@ export const handler = async (args: Args) => {
     // - prints only destination, payload and indices for epoch, input and voucher
     const outputs = vouchers
         .sort((a, b) => {
-            // sort by epoch index and then by input index
-            const epochResult = a.input.epoch.index - b.input.epoch.index;
-            if (epochResult != 0) {
-                return epochResult;
+            // sort by input index and then by notice index
+            const inputResult = a.input.index - b.input.index;
+            if (inputResult != 0) {
+                return inputResult;
             } else {
-                return a.input.index - b.input.index;
+                return a.index - b.index;
             }
         })
-        .map((n) => {
+        .map((v) => {
             const output: any = {};
-            output.id = n.id;
-            output.epoch = n.input.epoch.index;
-            output.input = n.input.index;
-            output.voucher = n.index;
-            output.destination = n.destination;
-            output.payload = hex2str(n.payload);
+            output.index = v.index;
+            output.input = v.input.index;
+            output.destination = v.destination;
+            output.payload = hex2str(v.payload);
             return output;
         });
 

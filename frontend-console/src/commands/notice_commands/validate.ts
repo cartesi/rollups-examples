@@ -22,11 +22,15 @@ import {
     Args as RollupsArgs,
     builder as rollupsBuilder,
 } from "../../rollups";
-import { OutputValidityProofStruct, ProofStruct } from "@cartesi/rollups/dist/src/types/contracts/dapp/CartesiDApp";
+import {
+    OutputValidityProofStruct,
+    ProofStruct,
+} from "@cartesi/rollups/dist/src/types/contracts/dapp/CartesiDApp";
 
 interface Args extends ConnectArgs, RollupsArgs {
     url: string;
-    id: string;
+    index: number;
+    input: number;
 }
 
 export const command = "validate";
@@ -48,21 +52,30 @@ export const builder = (yargs: Argv) => {
             type: "string",
             default: DEFAULT_URL,
         })
-        .option("id", {
-            describe: "Notice ID",
-            type: "string",
+        .option("index", {
+            describe: "Notice index within its associated Input",
+            type: "number",
+            requiresArg: true,
+        })
+        .option("input", {
+            describe: "Input index",
+            type: "number",
             requiresArg: true,
         });
 };
 
 export const handler = async (args: Args) => {
-    const { url, id, rpc, mnemonic, accountIndex } = args;
+    const { url, index, input, rpc, mnemonic, accountIndex } = args;
 
     // wait for notices to appear in reader
-    console.log(`retrieving notice "${id}" along with proof`);
-    const notice = await getNotice(url, id);
+    console.log(
+        `retrieving notice "${index}" from input "${input}" along with proof`
+    );
+    const notice = await getNotice(url, index, input);
     if (!notice.proof) {
-        console.log(`notice "${id}" has no associated proof yet`);
+        console.log(
+            `notice "${index}" from input "${input}" has no associated proof yet`
+        );
         return;
     }
 
@@ -84,25 +97,12 @@ export const handler = async (args: Args) => {
     console.log(`using account "${signerAddress}"`);
 
     // send transaction to validate notice
-    console.log(`validating notice "${id}"`);
-
-    // XXX: This is being adapted
-    const validity: OutputValidityProofStruct = {
-        ...notice.proof as OutputValidityProofStruct,
-        epochInputIndex: 1,
-        outputIndex: 1
-    }
-
-    const proof: ProofStruct = {
-        validity: validity,
-        context: ""
-    }
+    console.log(`validating notice "${index}" from input "${input}"`);
 
     try {
-        // console.log(`Would check: ${JSON.stringify(proof)}`);
         const ret = await outputContract.validateNotice(
             notice.payload,
-            proof
+            notice.proof
         );
         console.log(`notice is valid! (ret="${ret}")`);
     } catch (e) {

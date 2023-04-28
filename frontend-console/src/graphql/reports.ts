@@ -13,27 +13,23 @@ import { createClient, defaultExchanges } from "@urql/core";
 import fetch from "cross-fetch";
 import {
     ReportsDocument,
-    ReportsByEpochDocument,
-    ReportsByEpochAndInputDocument,
+    ReportsByInputDocument,
     Report,
     Input,
     ReportDocument,
 } from "../../generated-src/graphql";
-import { InputKeys } from "../commands/types";
 
 // define PartialReport type only with the desired fields of the full Report defined by the GraphQL schema
-export type PartialEpoch = Pick<Input, "index">;
-export type PartialInput = Pick<Input, "index"> & { epoch: PartialEpoch };
-export type PartialReport = Pick<
-    Report,
-    "__typename" | "id" | "index" | "payload"
-> & {
+export type PartialInput = Pick<Input, "index">;
+export type PartialReport = Pick<Report, "__typename" | "index" | "payload"> & {
     input: PartialInput;
 };
+export type PartialReportEdge = { node: PartialReport };
 
 // define a type predicate to filter out reports
-const isPartialReport = (n: PartialReport | null): n is PartialReport =>
-    n !== null;
+const isPartialReportEdge = (
+    n: PartialReportEdge | null
+): n is PartialReportEdge => n !== null;
 
 /**
  * Queries a GraphQL server for reports based on input keys
@@ -43,65 +39,39 @@ const isPartialReport = (n: PartialReport | null): n is PartialReport =>
  */
 export const getReports = async (
     url: string,
-    inputKeys: InputKeys
+    inputIndex?: number
 ): Promise<PartialReport[]> => {
     // create GraphQL client to reader server
     const client = createClient({ url, exchanges: defaultExchanges, fetch });
 
-    // query the GraphQL server for reports corresponding to the input keys
+    // query the GraphQL server for reports corresponding to the input index
     console.log(
-        `querying ${url} for reports of ${JSON.stringify(inputKeys)}...`
+        `querying ${url} for reports of input index "${inputIndex}"...`
     );
 
-    if (
-        inputKeys.epoch_index !== undefined &&
-        inputKeys.input_index !== undefined
-    ) {
-        // list reports querying by epoch and input
+    if (inputIndex !== undefined) {
+        // list reports querying by input
         const { data, error } = await client
-            .query(ReportsByEpochAndInputDocument, {
-                epoch_index: inputKeys.epoch_index,
-                input_index: inputKeys.input_index,
+            .query(ReportsByInputDocument, {
+                inputIndex: inputIndex,
             })
             .toPromise();
-        if (data?.epoch?.input?.reports) {
-            return data.epoch.input.reports.nodes.filter<PartialReport>(
-                isPartialReport
-            );
+        if (data?.input?.reports?.edges) {
+            return data.input.reports.edges
+                .filter<PartialReportEdge>(isPartialReportEdge)
+                .map((e) => e.node);
         } else {
             return [];
         }
-    } else if (inputKeys.epoch_index !== undefined) {
-        // list reports querying only by epoch
-        const { data, error } = await client
-            .query(ReportsByEpochDocument, {
-                epoch_index: inputKeys.epoch_index,
-            })
-            .toPromise();
-        if (data?.epoch?.inputs) {
-            // builds return reports array by concatenating each input's reports
-            let ret: PartialReport[] = [];
-            const inputs = data.epoch.inputs.nodes;
-            for (let input of inputs) {
-                ret = ret.concat(
-                    input.reports.nodes.filter<PartialReport>(isPartialReport)
-                );
-            }
-            return ret;
-        } else {
-            return [];
-        }
-    } else if (inputKeys.input_index !== undefined) {
-        throw new Error(
-            "Querying only by input index is not supported. Please define epoch index as well."
-        );
     } else {
         // list reports using top-level query
         const { data, error } = await client
             .query(ReportsDocument, {})
             .toPromise();
         if (data?.reports) {
-            return data.reports.nodes.filter<PartialReport>(isPartialReport);
+            return data.reports.edges
+                .filter<PartialReportEdge>(isPartialReportEdge)
+                .map((e) => e.node);
         } else {
             return [];
         }
@@ -111,18 +81,25 @@ export const getReports = async (
 /**
  * Queries a GraphQL server looking for a specific report
  * @param url URL of the GraphQL server
- * @param id ID of the report
+ * @param reportIndex report index
+ * @param inputIndex input index
  * @returns The corresponding report, returned as a full Report object
  */
-export const getReport = async (url: string, id: string): Promise<Report> => {
+export const getReport = async (
+    url: string,
+    reportIndex: number,
+    inputIndex: number
+): Promise<Report> => {
     // create GraphQL client to reader server
     const client = createClient({ url, exchanges: defaultExchanges, fetch });
 
     // query the GraphQL server for the report
-    console.log(`querying ${url} for report "${id}"...`);
+    console.log(
+        `querying ${url} for report with index "${reportIndex}" from input "${inputIndex}"...`
+    );
 
     const { data, error } = await client
-        .query(ReportDocument, { id })
+        .query(ReportDocument, { reportIndex, inputIndex })
         .toPromise();
 
     if (data?.report) {

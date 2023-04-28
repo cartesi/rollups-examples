@@ -1,80 +1,52 @@
 # NOTICES
 
-query notice($id: ID!) {
-  notice(id: $id) {
-    id
-    payload
+query notice($noticeIndex: Int!, $inputIndex: Int!) {
+  notice(noticeIndex: $noticeIndex, inputIndex: $inputIndex) {
     index
-    keccak
-    proof {
-      outputHashesRootHash
-      vouchersEpochRootHash
-      noticesEpochRootHash
-      machineStateHash
-      keccakInHashesSiblings
-      outputHashesInEpochSiblings
-    }
     input {
       index
-      epoch {
-        index
+    }
+    payload
+    proof {
+      validity {
+        inputIndex
+        outputIndex
+        outputHashesRootHash
+        vouchersEpochRootHash
+        noticesEpochRootHash
+        machineStateHash
+        keccakInHashesSiblings
+        outputHashesInEpochSiblings
       }
+      context
     }
   }
 }
 
 query notices {
   notices {
-    nodes {
-      id
-      index
-      payload
-      input {
+    edges {
+      node {
         index
-        epoch {
+        input {
           index
         }
+        payload
       }
     }
   }
 }
 
-query noticesByEpochAndInput($epoch_index: Int!, $input_index: Int!) {
-  epoch: epochI(index: $epoch_index) {
-    input(index: $input_index) {
-      notices {
-        nodes {
-          id
+query noticesByInput($inputIndex: Int!) {
+  input(index: $inputIndex) {
+    notices {
+      edges {
+        node {
           index
-          payload
           input {
             index
-            epoch {
-              index
-            }
           }
-        }
-      }
-    }
-  }
-}
-
-query noticesByEpoch($epoch_index: Int!) {
-  epoch: epochI(index: $epoch_index) {
-    inputs {
-      nodes {
-        notices {
-          nodes {
-            id
-            index
-            payload
-            input {
-              index
-              epoch {
-                index
-              }
-            }
-          }
+          payload
         }
       }
     }
@@ -84,84 +56,56 @@ query noticesByEpoch($epoch_index: Int!) {
 
 # VOUCHERS
 
-query voucher($id: ID!) {
-  voucher(id: $id) {
-    id
-    destination
-    payload
+query voucher($voucherIndex: Int!, $inputIndex: Int!) {
+  voucher(voucherIndex: $voucherIndex, inputIndex: $inputIndex) {
     index
-    proof {
-      outputHashesRootHash
-      vouchersEpochRootHash
-      noticesEpochRootHash
-      machineStateHash
-      keccakInHashesSiblings
-      outputHashesInEpochSiblings
-    }
     input {
       index
-      epoch {
-        index
+    }
+    destination
+    payload
+    proof {
+      validity {
+        inputIndex
+        outputIndex
+        outputHashesRootHash
+        vouchersEpochRootHash
+        noticesEpochRootHash
+        machineStateHash
+        keccakInHashesSiblings
+        outputHashesInEpochSiblings
       }
+      context
     }
   }
 }
 
 query vouchers {
   vouchers {
-    nodes {
-      id
-      index
-      destination
-      payload
-      input {
+    edges {
+      node {
         index
-        epoch {
+        input {
           index
         }
+        destination
+        payload
       }
     }
   }
 }
 
-query vouchersByEpochAndInput($epoch_index: Int!, $input_index: Int!) {
-  epoch: epochI(index: $epoch_index) {
-    input(index: $input_index) {
-      vouchers {
-        nodes {
-          id
+query vouchersByInput($inputIndex: Int!) {
+  input(index: $inputIndex) {
+    vouchers {
+      edges {
+        node {
           index
-          destination
-          payload
           input {
             index
-            epoch {
-              index
-            }
           }
-        }
-      }
-    }
-  }
-}
-
-query vouchersByEpoch($epoch_index: Int!) {
-  epoch: epochI(index: $epoch_index) {
-    inputs {
-      nodes {
-        vouchers {
-          nodes {
-            id
-            index
-            destination
-            payload
-            input {
-              index
-              epoch {
-                index
-              }
-            }
-          }
+          destination
+          payload
         }
       }
     }
@@ -171,72 +115,40 @@ query vouchersByEpoch($epoch_index: Int!) {
 
 # REPORTS
 
-query report($id: ID!) {
-  report(id: $id) {
-    id
-    payload
+query report($reportIndex: Int!, $inputIndex: Int!) {
+  report(reportIndex: $reportIndex, inputIndex: $inputIndex) {
     index
     input {
       index
-      epoch {
-        index
-      }
     }
+    payload
   }
 }
 
 query reports {
   reports {
-    nodes {
-      id
-      index
-      payload
-      input {
+    edges {
+      node {
         index
-        epoch {
+        input {
           index
         }
+        payload
       }
     }
   }
 }
 
-query reportsByEpochAndInput($epoch_index: Int!, $input_index: Int!) {
-  epoch: epochI(index: $epoch_index) {
-    input(index: $input_index) {
-      reports {
-        nodes {
-          id
+query reportsByInput($inputIndex: Int!) {
+  input(index: $inputIndex) {
+    reports {
+      edges {
+        node {
           index
-          payload
           input {
             index
-            epoch {
-              index
-            }
           }
-        }
-      }
-    }
-  }
-}
-
-query reportsByEpoch($epoch_index: Int!) {
-  epoch: epochI(index: $epoch_index) {
-    inputs {
-      nodes {
-        reports {
-          nodes {
-            id
-            index
-            payload
-            input {
-              index
-              epoch {
-                index
-              }
-            }
-          }
+          payload
         }
       }
     }
