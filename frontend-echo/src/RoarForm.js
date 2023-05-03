@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { ethers } from "ethers";
-import { InputFacet__factory } from "@cartesi/rollups";
+import { InputBox__factory } from "@cartesi/rollups";
 import { Input, Button, useToast } from "@chakra-ui/react";
 
+// OBS: change Echo DApp address as appropriate
+const DAPP_ADDRESS = "0x6DF0A75b1DED722A8544Da197F7907a6e9E5B380";
+
+// Standard configuration for local development environment
+const INPUTBOX_ADDRESS = "0xD0Dd85da76c81Cc1D98191c42aDeAC51c6651F4B";
 const HARDHAT_DEFAULT_MNEMONIC =
     "test test test test test test test test test test test junk";
 const HARDHAT_LOCALHOST_RPC_URL = "http://localhost:8545";
-const LOCALHOST_DAPP_ADDRESS = "0xF8C694fd58360De278d5fF2276B7130Bfdc0192A";
 
-// This Component presents an Input field and adds its contents as an Input for the Echo DApp
+// This component presents an input field and adds its contents as an input for the Echo DApp
 function RoarForm() {
     const [value, setValue] = useState("");
     const [accountIndex] = useState(0);
@@ -27,9 +31,9 @@ function RoarForm() {
                 `m/44'/60'/0'/0/${accountIndex}`
             ).connect(provider);
 
-            // Instantiate the Input Contract
-            const inputContract = InputFacet__factory.connect(
-                LOCALHOST_DAPP_ADDRESS,
+            // Instantiate the InputBox contract
+            const inputBox = InputBox__factory.connect(
+                INPUTBOX_ADDRESS,
                 signer
             );
 
@@ -39,7 +43,7 @@ function RoarForm() {
                 : ethers.utils.toUtf8Bytes(value);
 
             // Send the transaction
-            const tx = await inputContract.addInput(inputBytes);
+            const tx = await inputBox.addInput(DAPP_ADDRESS, inputBytes);
             console.log(`transaction: ${tx.hash}`);
             toast({
                 title: "Transaction Sent",
@@ -60,14 +64,14 @@ function RoarForm() {
             setLoading(false);
             toast({
                 title: "Transaction Confirmed",
-                description: `Input added => epoch : ${event?.args.epochNumber} index: ${event?.args.inputIndex} `,
+                description: `Input added => index: ${event?.args.inboxInputIndex} `,
                 status: "success",
                 duration: 9000,
                 isClosable: true,
                 position: "top-left",
             });
             console.log(
-                `Input added => epoch : ${event?.args.epochNumber} index: ${event?.args.inputIndex} `
+                `Input added => index: ${event?.args.inboxInputIndex} `
             );
         };
         sendInput();

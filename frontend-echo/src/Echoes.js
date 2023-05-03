@@ -12,15 +12,13 @@ const GET_NOTICES = gql`
                 hasNextPage
                 endCursor
             }
-            nodes {
-                id
-                payload
-                index
-                input {
+            edges {
+                node {
                     index
-                    epoch {
+                    input {
                         index
                     }
+                    payload
                 }
             }
         }
@@ -68,20 +66,20 @@ function EchoesList() {
     });
 
     // Check query result
-    const length = data?.notices?.nodes?.length;
+    const length = data?.notices?.edges?.length;
     if (length) {
         // Update cursor so that next GraphQL poll retrieves only newer data
         setCursor(data.notices.pageInfo.endCursor);
     }
 
     // Render new echoes
-    const newEchoes = data?.notices?.nodes?.map((node) => {
+    const newEchoes = data?.notices?.edges?.map(({ node }) => {
         // Render echo from notice
         const echo = ethers.utils.toUtf8String(node.payload);
         console.log(`Detected new echo : ${echo}`);
 
         return (
-            <div key={`${node.id}`}>
+            <div key={`${node.input.index}-${node.index}`}>
                 <p>{echo}</p>
             </div>
         );
