@@ -1,19 +1,10 @@
 # syntax=docker.io/docker/dockerfile:1.4
 # layers for caching and versioning
 FROM cartesi/toolchain:0.13.0 as toolchain
-FROM cartesi/server-manager:0.6.0 as server-manager
+FROM cartesi/server-manager:0.9.0 as server-manager
+FROM cartesi/rollups-hardhat:0.9.0 as rollups-hardhat
 
 
-FROM ghcr.io/cartesi-corp/rollups-hardhat:develop AS local-deployments-stage
-RUN sh -c "npx hardhat deploy --write true --network hardhat"
-ENTRYPOINT [ "/bin/sh" ]
-
-
-FROM node as deployments-stage
-
-WORKDIR /opt/cartesi/share
-RUN yarn add @cartesi/rollups@0.9.0-alpha.4
-RUN mkdir -p ./deployments && cp -r ./node_modules/@cartesi/rollups/deployments/* ./deployments/
 
 # stage to download dependencies
 FROM busybox as machine-core
@@ -25,6 +16,19 @@ COPY shasumfile .
 RUN while read DEP; do wget -O $DEP; done < dependencies
 RUN sha1sum -c shasumfile
 
+
+# Deploy contracts locally
+FROM rollups-hardhat AS local-deployments-stage
+
+RUN sh -c "npx hardhat deploy --write true --network hardhat"
+ENTRYPOINT [ "/bin/sh" ]
+
+# Download known testnet/mainet deployments
+FROM busybox as deployments-stage
+
+WORKDIR /opt/cartesi/share
+COPY --from=machine-core opt/cartesi/share/rollups.tgz ./
+RUN tar -xzvf ./rollups.tgz 
 
 # stage to wrap the dapp installing resources needed to run inside the Cartesi Machine
 FROM dapp as wrapped-stage
@@ -59,8 +63,8 @@ RUN tar -xvf machine-emulator-tools.tar.gz ./
 RUN rm machine-emulator-tools.tar.gz
 
 #add deployments 
-COPY --from=deployments /opt/cartesi/share/node_modules/@cartesi/rollups/deployments* /var/tmp/dapp_fs/deployments/
-COPY --from=local-deployments /app/rollups/deployments/hardhat/* /var/tmp/dapp_fs/deployments/localhost/
+COPY --from=deployments /opt/cartesi/share/package/deployments* /var/tmp/dapp_fs/opt/cartesi/dapp/deployments/
+COPY --from=local-deployments /app/rollups/deployments/hardhat/* /var/tmp/dapp_fs/opt/cartesi/dapp/deployments/localhost/
 
 # build tar normalizing file timestamps and create final ext2 file with the appropriate size
 RUN <<EOF

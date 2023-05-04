@@ -1,3 +1,4 @@
 rom.bin https://github.com/cartesi/machine-emulator-rom/releases/download/v0.15.0/rom-v0.15.0.bin
 linux.bin https://github.com/cartesi/image-kernel/releases/download/v0.15.0/linux-5.15.63-ctsi-1.bin
 machine-emulator-tools.tar.gz https://github.com/cartesi/machine-emulator-tools/releases/download/v0.10.0/machine-emulator-tools-v0.10.0.tar.gz
+rollups.tgz https://registry.npmjs.org/@cartesi/rollups/-/rollups-0.9.0-alpha.6.tgz

@@ -1,3 +1,4 @@
 rom.bin https://github.com/cartesi/machine-emulator-rom/releases/download/v0.15.0/rom-v0.15.0.bin
 linux.bin https://github.com/cartesi/image-kernel/releases/download/v0.15.0/linux-5.15.63-ctsi-1.bin
 rootfs.ext2 https://github.com/cartesi/image-rootfs/releases/download/v0.16.0/rootfs-v0.16.0.ext2
+rollups.tgz https://registry.npmjs.org/@cartesi/rollups/-/rollups-0.9.0-alpha.6.tgz
