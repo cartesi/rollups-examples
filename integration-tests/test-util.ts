@@ -180,7 +180,6 @@ export const sendInput = async (input: string): Promise<string> => {
 
 //FIXME: keeps sending commands even after mocha dies with timeout
 export const queryNotices = async (
-    epoch: number,
     input: number,
     timeout: number
 ): Promise<any[]> => {
@@ -189,8 +188,6 @@ export const queryNotices = async (
         "start",
         "notice",
         "list",
-        "--epoch",
-        epoch.toString(),
         "--input",
         input.toString(),
     ];

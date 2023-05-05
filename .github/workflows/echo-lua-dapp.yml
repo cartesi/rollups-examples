@@ -59,14 +59,14 @@ jobs:
               if: always()
               run: |
                   yarn saveLogs echo-lua hardhat
-                  yarn saveLogs echo-lua rollups_dispatcher
+                  yarn saveLogs echo-lua dispatcher
                   yarn saveLogs echo-lua state_server
                   yarn saveLogs echo-lua server_manager
-                  yarn saveLogs echo-lua rollups_inspect_server
-                  yarn saveLogs echo-lua rollups_indexer
-                  yarn saveLogs echo-lua query_server
+                  yarn saveLogs echo-lua inspect_server
+                  yarn saveLogs echo-lua indexer
+                  yarn saveLogs echo-lua graphql_server
                   yarn saveLogs echo-lua database
-                  yarn saveLogs echo-lua server_manager_broker_proxy
+                  yarn saveLogs echo-lua advance_runner
               working-directory: ./integration-tests
 
             - name: Upload docker logs

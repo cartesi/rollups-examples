@@ -59,14 +59,14 @@ jobs:
               if: always()
               run: |
                   yarn saveLogs echo-js hardhat
-                  yarn saveLogs echo-js rollups_dispatcher
+                  yarn saveLogs echo-js dispatcher
                   yarn saveLogs echo-js state_server
                   yarn saveLogs echo-js server_manager
-                  yarn saveLogs echo-js rollups_inspect_server
-                  yarn saveLogs echo-js rollups_indexer
-                  yarn saveLogs echo-js query_server
+                  yarn saveLogs echo-js inspect_server
+                  yarn saveLogs echo-js indexer
+                  yarn saveLogs echo-js graphql_server
                   yarn saveLogs echo-js database
-                  yarn saveLogs echo-js server_manager_broker_proxy
+                  yarn saveLogs echo-js advance_runner
               working-directory: ./integration-tests
 
             - name: Upload docker logs

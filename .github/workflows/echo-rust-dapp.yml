@@ -58,14 +58,14 @@ jobs:
               if: always()
               run: |
                   yarn saveLogs echo-rust hardhat
-                  yarn saveLogs echo-rust rollups_dispatcher
+                  yarn saveLogs echo-rust dispatcher
                   yarn saveLogs echo-rust state_server
                   yarn saveLogs echo-rust server_manager
-                  yarn saveLogs echo-rust rollups_inspect_server
-                  yarn saveLogs echo-rust rollups_indexer
-                  yarn saveLogs echo-rust query_server
+                  yarn saveLogs echo-rust inspect_server
+                  yarn saveLogs echo-rust indexer
+                  yarn saveLogs echo-rust graphql_server
                   yarn saveLogs echo-rust database
-                  yarn saveLogs echo-rust server_manager_broker_proxy
+                  yarn saveLogs echo-rust advance_runner
               working-directory: ./integration-tests
 
             - name: Upload docker logs

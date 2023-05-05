@@ -60,14 +60,14 @@ jobs:
               if: always()
               run: |
                   yarn saveLogs echo-python hardhat
-                  yarn saveLogs echo-python rollups_dispatcher
+                  yarn saveLogs echo-python dispatcher
                   yarn saveLogs echo-python state_server
                   yarn saveLogs echo-python server_manager
-                  yarn saveLogs echo-python rollups_inspect_server
-                  yarn saveLogs echo-python rollups_indexer
-                  yarn saveLogs echo-python query_server
+                  yarn saveLogs echo-python inspect_server
+                  yarn saveLogs echo-python indexer
+                  yarn saveLogs echo-python graphql_server
                   yarn saveLogs echo-python database
-                  yarn saveLogs echo-python server_manager_broker_proxy
+                  yarn saveLogs echo-python advance_runner
               working-directory: ./integration-tests
 
             - name: Upload docker logs

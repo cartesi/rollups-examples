@@ -58,14 +58,14 @@ jobs:
               if: always()
               run: |
                   yarn saveLogs echo-low-level hardhat
-                  yarn saveLogs echo-low-level rollups_dispatcher
+                  yarn saveLogs echo-low-level dispatcher
                   yarn saveLogs echo-low-level state_server
                   yarn saveLogs echo-low-level server_manager
-                  yarn saveLogs echo-low-level rollups_inspect_server
-                  yarn saveLogs echo-low-level rollups_indexer
-                  yarn saveLogs echo-low-level query_server
+                  yarn saveLogs echo-low-level inspect_server
+                  yarn saveLogs echo-low-level indexer
+                  yarn saveLogs echo-low-level graphql_server
                   yarn saveLogs echo-low-level database
-                  yarn saveLogs echo-cpp server_manager_broker_proxy
+                  yarn saveLogs echo-cpp advance_runner
               working-directory: ./integration-tests
 
             - name: Upload docker logs

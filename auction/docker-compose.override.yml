@@ -34,7 +34,7 @@ services:
     volumes:
       - ./common-contracts/deployments:/app/deployments
 
-  rollups_dispatcher:
+  dispatcher:
     depends_on:
       common-contracts:
         condition: service_completed_successfully

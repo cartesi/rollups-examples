@@ -82,13 +82,12 @@ describe("Echo-Lua DApp Integration Tests", () => {
             "Timed out waiting Query Server to respond"
         ).to.be.true;
 
-        const notices = await queryNotices(0, 0, pollingTimeout);
+        const notices = await queryNotices(0, pollingTimeout);
         expect(notices.length).to.eq(1);
 
         const notice = notices.pop();
-        expect(notice.epoch).to.eq(0);
+        expect(notice.index).to.eq(0);
         expect(notice.input).to.eq(0);
-        expect(notice.notice).to.eq(0);
         expect(notice.payload).to.eq("cartesi");
     });
 
