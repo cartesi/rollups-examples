@@ -114,6 +114,8 @@ RUN build-dapp-fs.sh /opt/cartesi/default.json dapp.json dapp.ext2
 # stage to build the initial cartesi machine
 FROM server-manager as server-stage
 
+ARG NETWORK=unknown
+
 WORKDIR /opt/cartesi/dapp
 
 # copy dapp ext2 from fs stage
@@ -127,7 +129,7 @@ COPY --from=machine-core /opt/cartesi/share/rootfs.ext2 .
 # build machine
 COPY build-machine.sh /usr/local/bin
 RUN mkdir -p /opt/cartesi/share/dapp-bin
-RUN build-machine.sh /opt/cartesi/share/dapp-bin/0
+RUN build-machine.sh /opt/cartesi/share/dapp-bin/0 $NETWORK
 RUN ln -s /opt/cartesi/share/dapp-bin/0 /opt/cartesi/share/dapp-bin/latest
 
 # switch back to server-manager workdir
