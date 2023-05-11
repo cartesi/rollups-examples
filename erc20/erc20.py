@@ -10,13 +10,14 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
+
 from os import environ
 import traceback
 import logging
-from typing import Any
 import requests
 import json
-from eth_abi import  encode_abi
+from eth_abi.abi import encode
+from eth_abi_ext import decode_packed
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
@@ -35,10 +36,6 @@ TRANSFER_FUNCTION_SELECTOR = b'\xa9\x05\x9c\xbb'
 ERC20PortalFile = open(f'./deployments/{network}/ERC20Portal.json')
 erc20Portal = json.load(ERC20PortalFile) 
 
-bytes_types = (bytes, bytearray)
-
-def is_bytes(value: Any) -> bool:
-    return isinstance(value, bytes_types)
 
 def str2hex(str):
     """
@@ -52,39 +49,6 @@ def reject_input(msg, payload):
     logger.info(f"Received report status {response.status_code} body {response.content}")
     return "reject"
 
-def decode_abi_packed_boolean(binary):
-    if binary == b'\x00':
-            return False
-    elif binary == b'\x01':
-            return True
-    raise Exception(
-                "Boolean must be either 0x0 or 0x1.  Got: {0}".format(repr(data))
-            )
-
-def decode_abi_packed(types,binary):
-
-    if not is_bytes(binary):
-            raise TypeError("The `data` value must be of bytes type.  Got {0}".format(type(data)))
-
-    current_byte_index = 0
-    decoded = []
-    for type in types:
-        if type == 'bool':
-            next_data_index = current_byte_index+1
-            decoded.append(decode_abi_packed_boolean(binary[current_byte_index:next_data_index]))
-            current_byte_index = next_data_index
-        elif type == 'address' :
-            next_data_index = current_byte_index+20
-            decoded.append('0x'+binary[current_byte_index:next_data_index].hex())
-            current_byte_index = next_data_index
-        elif type == 'uint256' :
-            next_data_index = current_byte_index+32
-            decoded.append(int.from_bytes(binary[current_byte_index:next_data_index],'big'))
-        else :
-            raise Exception(f"Unhadled type {type}")
-    return decoded
-
-
 def handle_advance(data):
     logger.info(f"Received advance request data {data}")
 
@@ -97,7 +61,7 @@ def handle_advance(data):
         # Attempt to decode input as an ABI-packed-encoded ERC20 deposit
         binary = bytes.fromhex(data["payload"][2:])
         try:
-            decoded = decode_abi_packed(['bool', 'address', 'address', 'uint256'], binary)
+            decoded = decode_packed(['bool','address','address','uint256'],binary)
         except Exception as e:
             msg = "Payload does not conform to ERC20 deposit ABI"
             logger.error(f"{msg}\n{traceback.format_exc()}")
@@ -116,8 +80,8 @@ def handle_advance(data):
         logger.info(f"Received notice status {response.status_code} body {response.content}")
 
         # Encode a transfer function call that returns the amount back to the depositor
-        transfer_payload = TRANSFER_FUNCTION_SELECTOR + encode_abi(['address','uint256'], [depositor, amount])
-        # Post voucher executin,,lllg the transfer on the ERC-20 contract: "I don't want your money"!
+        transfer_payload = TRANSFER_FUNCTION_SELECTOR + encode(['address','uint256'], [depositor, amount])
+        # Post voucher executing the transfer on the ERC-20 contract: "I don't want your money"!
         voucher = {"address": erc20, "payload": "0x" + transfer_payload.hex()}
         logger.info(f"Issuing voucher {voucher}")
         response = requests.post(rollup_server + "/voucher", json=voucher)
@@ -141,8 +105,6 @@ handlers = {
 }
 
 finish = {"status": "accept"}
-
-
 
 while True:
     logger.info("Sending finish")

@@ -26,3 +26,4 @@ COPY --from=build-stage /opt/venv /opt/venv
 WORKDIR /opt/cartesi/dapp
 COPY ./entrypoint.sh .
 COPY ./erc20.py .
+COPY ./eth_abi_ext.py .
