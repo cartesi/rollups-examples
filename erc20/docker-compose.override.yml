@@ -1,5 +1,51 @@
 version: "3"
 
 services:
+
   server_manager:
     image: ${DAPP_IMAGE:-cartesi/dapp:erc20-devel-server}
+    
+  common-contracts:
+    build: ./common-contracts
+    network_mode: host    
+    depends_on:
+      hardhat:
+        condition: service_healthy
+    command:
+      [
+        "deploy",
+        "--reset",
+        "--network",
+        "localhost",
+        "--export",
+        "/deployments/localhost/localhost.json"
+      ]
+    init: true
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "test",
+          "-f",
+          "/deployments/localhost/localhost.json"
+        ]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+    volumes:
+      - ./common-contracts/deployments:/app/deployments
+
+  dispatcher:
+    depends_on:
+      common-contracts:
+        condition: service_completed_successfully
+  
+  state_server:
+    depends_on:
+      common-contracts:
+        condition: service_completed_successfully
+
+  deployer:
+    depends_on:
+      common-contracts:
+        condition: service_completed_successfully

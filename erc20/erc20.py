@@ -13,22 +13,32 @@
 from os import environ
 import traceback
 import logging
+from typing import Any
 import requests
-from eth_abi import decode_abi, encode_abi
+import json
+from eth_abi import  encode_abi
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
 
 rollup_server = environ["ROLLUP_HTTP_SERVER_URL"]
-logger.info(f"HTTP rollup_server url is {rollup_server}")
+network = environ["NETWORK"]
 
-# Default header for ERC-20 transfers coming from the Portal, which corresponds
-# to the Keccak256-encoded string "ERC20_Transfer", as defined at
-# https://github.com/cartesi/rollups/blob/main/onchain/rollups/contracts/facets/ERC20PortalFacet.sol.
-ERC20_TRANSFER_HEADER =  b'Y\xda*\x98N\x16Z\xe4H|\x99\xe5\xd1\xdc\xa7\xe0L\x8a\x990\x1b\xe6\xbc\t)2\xcb]\x7f\x03Cx'
+logger.info(f"HTTP rollup_server url is {rollup_server}")
+logger.info(f"Network is {network}")
+
 # Function selector to be called during the execution of a voucher that transfers funds,
 # which corresponds to the first 4 bytes of the Keccak256-encoded result of "transfer(address,uint256)"
 TRANSFER_FUNCTION_SELECTOR = b'\xa9\x05\x9c\xbb'
+
+# Setup contracts addresses
+ERC20PortalFile = open(f'./deployments/{network}/ERC20Portal.json')
+erc20Portal = json.load(ERC20PortalFile) 
+
+bytes_types = (bytes, bytearray)
+
+def is_bytes(value: Any) -> bool:
+    return isinstance(value, bytes_types)
 
 def str2hex(str):
     """
@@ -42,33 +52,63 @@ def reject_input(msg, payload):
     logger.info(f"Received report status {response.status_code} body {response.content}")
     return "reject"
 
+def decode_abi_packed_boolean(binary):
+    if binary == b'\x00':
+            return False
+    elif binary == b'\x01':
+            return True
+    raise Exception(
+                "Boolean must be either 0x0 or 0x1.  Got: {0}".format(repr(data))
+            )
+
+def decode_abi_packed(types,binary):
+
+    if not is_bytes(binary):
+            raise TypeError("The `data` value must be of bytes type.  Got {0}".format(type(data)))
+
+    current_byte_index = 0
+    decoded = []
+    for type in types:
+        if type == 'bool':
+            next_data_index = current_byte_index+1
+            decoded.append(decode_abi_packed_boolean(binary[current_byte_index:next_data_index]))
+            current_byte_index = next_data_index
+        elif type == 'address' :
+            next_data_index = current_byte_index+20
+            decoded.append('0x'+binary[current_byte_index:next_data_index].hex())
+            current_byte_index = next_data_index
+        elif type == 'uint256' :
+            next_data_index = current_byte_index+32
+            decoded.append(int.from_bytes(binary[current_byte_index:next_data_index],'big'))
+        else :
+            raise Exception(f"Unhadled type {type}")
+    return decoded
+
+
 def handle_advance(data):
     logger.info(f"Received advance request data {data}")
 
     try:
-        # Check wether an input was sent by the Portal,
+        # Check wether an input was sent by the ERC20 Portal,
         # which is where all deposits must come from
-        if data["metadata"]["msg_sender"] != rollup_address:
-            return reject_input(f"Input does not come from the Portal", data["payload"])
+        if data["metadata"]["msg_sender"].lower() != erc20Portal['address'].lower():
+            return reject_input(f"Input does not come from the ERC20 Portal", data["payload"])
 
-        # Attempt to decode input as an ABI-encoded ERC20 deposit
+        # Attempt to decode input as an ABI-packed-encoded ERC20 deposit
         binary = bytes.fromhex(data["payload"][2:])
         try:
-            decoded = decode_abi(['bytes32', 'address', 'address', 'uint256', 'bytes'], binary)
+            decoded = decode_abi_packed(['bool', 'address', 'address', 'uint256'], binary)
         except Exception as e:
             msg = "Payload does not conform to ERC20 deposit ABI"
             logger.error(f"{msg}\n{traceback.format_exc()}")
             return reject_input(msg, data["payload"])
 
-        # Check if the header matches the Keccak256-encoded string "ERC20_Transfer"
-        input_header = decoded[0]
-        if input_header != ERC20_TRANSFER_HEADER:
-            return reject_input(f"Input header is not from an ERC20 transfer", data["payload"])
-
-        # Post notice about the deposit
-        depositor = decoded[1]
-        erc20 = decoded[2]
+        success = decoded[0]
+        erc20 = decoded[1]
+        depositor = decoded[2]
         amount = decoded[3]
+        
+        # Post notice about the deposit
         notice_str = f"Deposit received from: {depositor}; ERC-20: {erc20}; Amount: {amount}"
         logger.info(f"Adding notice: {notice_str}")
         notice = {"payload": str2hex(notice_str)}
@@ -77,7 +117,7 @@ def handle_advance(data):
 
         # Encode a transfer function call that returns the amount back to the depositor
         transfer_payload = TRANSFER_FUNCTION_SELECTOR + encode_abi(['address','uint256'], [depositor, amount])
-        # Post voucher executing the transfer on the ERC-20 contract: "I don't want your money"!
+        # Post voucher executin,,lllg the transfer on the ERC-20 contract: "I don't want your money"!
         voucher = {"address": erc20, "payload": "0x" + transfer_payload.hex()}
         logger.info(f"Issuing voucher {voucher}")
         response = requests.post(rollup_server + "/voucher", json=voucher)
@@ -101,6 +141,8 @@ handlers = {
 }
 
 finish = {"status": "accept"}
+
+
 
 while True:
     logger.info("Sending finish")
