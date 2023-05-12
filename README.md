@@ -8,7 +8,7 @@ You can use online development environments such as [Gitpod](https://gitpod.io/)
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#/https://github.com/cartesi/rollups-examples/)
 
-## Introduction
+## Introductio
 
 From a developer’s point of view, each decentralized application or _DApp_ is composed of two main parts: a **front-end** and a **back-end**.
 
