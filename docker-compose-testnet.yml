@@ -64,7 +64,7 @@ services:
         condition: service_healthy
     volumes:
       - ./deployments:/deployments:ro
-      - machine:/opt/cartesi/share/dapp-bin
+      - machine:/var/opt/cartesi/machine-snapshots
     environment:
       RUST_LOG: info
       SERVER_MANAGER_ENDPOINT: http://server_manager:5001
@@ -72,6 +72,8 @@ services:
       REDIS_ENDPOINT: redis://redis:6379
       CHAIN_ID: ${CHAIN_ID:?undefined CHAIN_ID}
       DAPP_CONTRACT_ADDRESS_FILE: /deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.json
+      SNAPSHOT_DIR: /var/opt/cartesi/machine-snapshots
+      SNAPSHOT_LATEST: /var/opt/cartesi/machine-snapshots/latest
 
   server_manager:
     restart: always
@@ -81,7 +83,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - machine:/opt/cartesi/share/dapp-bin
+      - machine:/var/opt/cartesi/machine-snapshots
     environment:
       - SERVER_MANAGER_LOG_LEVEL=warning
       - REMOTE_CARTESI_MACHINE_LOG_LEVEL=info

@@ -127,11 +127,17 @@ COPY --from=machine-core /opt/cartesi/share/rom.bin .
 COPY --from=machine-core /opt/cartesi/share/linux.bin .
 COPY --from=machine-core /opt/cartesi/share/rootfs.ext2 .
 
+# create var dir with correct permissions
+USER root
+RUN mkdir -p /var/opt/cartesi
+RUN chown cartesi:cartesi /var/opt/cartesi
+USER cartesi
+
 # build machine
 COPY build-machine.sh /usr/local/bin
-RUN mkdir -p /opt/cartesi/share/dapp-bin
-RUN build-machine.sh /opt/cartesi/share/dapp-bin/0_0 $NETWORK
-RUN ln -s /opt/cartesi/share/dapp-bin/0_0 /opt/cartesi/share/dapp-bin/latest
+RUN mkdir -p /var/opt/cartesi/machine-snapshots
+RUN build-machine.sh /var/opt/cartesi/machine-snapshots/0_0 $NETWORK
+RUN ln -s /var/opt/cartesi/machine-snapshots/0_0 /var/opt/cartesi/machine-snapshots/latest
 
 # switch back to server-manager workdir
 WORKDIR /opt/cartesi/bin
@@ -155,7 +161,7 @@ CMD ["run-machine-console.sh"]
 # stage to copy the stored machine
 FROM busybox as machine-stage
 
-WORKDIR /opt/cartesi/share/dapp-bin
-COPY --from=server /opt/cartesi/share/dapp-bin .
+WORKDIR /var/opt/cartesi/machine-snapshots
+COPY --from=server /var/opt/cartesi/machine-snapshots .
 
 CMD ["xxd", "-c", "256", "-p", "hash"]

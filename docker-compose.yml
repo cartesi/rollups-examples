@@ -104,7 +104,7 @@ services:
         condition: service_completed_successfully
     volumes:
       - ./deployments:/deployments:ro
-      - machine:/opt/cartesi/share/dapp-bin
+      - machine:/var/opt/cartesi/machine-snapshots
     environment:
       RUST_LOG: info
       SERVER_MANAGER_ENDPOINT: http://server_manager:5001
@@ -112,6 +112,8 @@ services:
       REDIS_ENDPOINT: redis://redis:6379
       CHAIN_ID: 31337
       DAPP_CONTRACT_ADDRESS_FILE: /deployments/localhost/dapp.json
+      SNAPSHOT_DIR: /var/opt/cartesi/machine-snapshots
+      SNAPSHOT_LATEST: /var/opt/cartesi/machine-snapshots/latest
 
   server_manager:
     restart: always
@@ -123,7 +125,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - machine:/opt/cartesi/share/dapp-bin
+      - machine:/var/opt/cartesi/machine-snapshots
     environment:
       - SERVER_MANAGER_LOG_LEVEL=warning
       - REMOTE_CARTESI_MACHINE_LOG_LEVEL=info
@@ -146,13 +148,13 @@ services:
         "--mnemonic",
         "test test test test test test test test test test test junk",
         "--templateHashFile",
-        "/opt/cartesi/share/dapp-bin/0_0/hash",
+        "/var/opt/cartesi/machine-snapshots/0_0/hash",
         "--outputFile",
         "/deployments/localhost/dapp.json"
       ]
     volumes:
       - blockchain-data:/opt/cartesi/share/deployments:ro
-      - machine:/opt/cartesi/share/dapp-bin:ro
+      - machine:/var/opt/cartesi/machine-snapshots:ro
       - ./deployments:/deployments
 
   hardhat_stop_automine:

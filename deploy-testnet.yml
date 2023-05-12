@@ -5,7 +5,7 @@ services:
     image: cartesi/dapp:${DAPP_NAME:?undefined DAPP_NAME}-devel-machine
     command: xxd -c 256 -p latest/hash; sleep 3
     volumes:
-      - machine:/opt/cartesi/share/dapp-bin
+      - machine:/var/opt/cartesi/machine-snapshots
 
   deployer:
     image: ghcr.io/cartesi-corp/rollups-cli:develop
@@ -20,12 +20,12 @@ services:
         "--mnemonic",
         "${MNEMONIC:?undefined MNEMONIC}",
         "--templateHashFile",
-        "/opt/cartesi/share/dapp-bin/latest/hash",
+        "/var/opt/cartesi/machine-snapshots/latest/hash",
         "--outputFile",
         "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.json",
       ]
     volumes:
-      - machine:/opt/cartesi/share/dapp-bin:ro
+      - machine:/var/opt/cartesi/machine-snapshots:ro
       - ./deployments:/deployments
 
 volumes:
