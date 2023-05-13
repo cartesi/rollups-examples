@@ -75,3 +75,10 @@ INFO:__main__:Sending finish
 ```
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
+
+
+
+```bash
+nix derivation show -r nixpkgs#hello | jq -r '.[] | select(.outputs.out.hash and .env.urls) | .env.urls' | uniq | sort > fo-drvs
+for url in $(cat fo-drvs) ; do nix-prefetch-url $url; done
+```
