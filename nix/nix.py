@@ -15,8 +15,9 @@ import logging
 import requests
 import subprocess
 
-def str2hex(string):
-    return "0x" + str.encode(string).hex()
+def str2hex(str):
+    return "0x" + str.encode("utf-8").hex()
+
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
@@ -35,7 +36,7 @@ def handle_advance(data):
     logger.info(f"Addsubprocess.check_output {version}")
     logger.info(f"Addsubprocess.check_output str2hex {version_str2hex}")
 
-    notice = {"payload": version_str2hex}
+    notice = {"payload": version_str2hex.decode()}
     response = requests.post(rollup_server + "/notice", json=notice)
     logger.info(f"Received notice status {response.status_code} body {response.content}")
     return "accept"
