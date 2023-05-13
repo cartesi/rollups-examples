@@ -28,9 +28,9 @@ RUN addgroup --gid 30000 --system nixbld \
     && mkdir -m 0755 /etc/nix \
     && echo 'sandbox = true' > /etc/nix/nix.conf \
     && echo "build-users-group =" >> /etc/nix/nix.conf \
-    && echo "extra-experimental-features = nix-command flakes" >> /etc/nix/nix.conf \
+    && echo "extra-experimental-features = nix-command flakes" >> /etc/nix/nix.conf
     # https://github.com/hercules-ci/hercules-ci-agent/issues/183
-    && mkdir -m 0755 /nix && USER=root sh nix-tarball/install \
+RUN mkdir -m 0755 /nix && USER=root sh nix-tarball/install \
     && ln -s /nix/var/nix/profiles/default/etc/profile.d/nix.sh /etc/profile.d/ \
     && rm -rf /var/cache/apk/* \
     && /nix/var/nix/profiles/default/bin/nix-collect-garbage --delete-old \
@@ -39,10 +39,11 @@ RUN addgroup --gid 30000 --system nixbld \
 RUN rm -r nix-tarball.tar.xz \
     && nix-tarball
 
-RUN echo "$PATH:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin" > /etc/environment
+# RUN echo "$PATH:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin" > /etc/environment
+ENV PATH="${PATH}:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin"
 
 COPY hello-fo-drvs.txt ./hello-fo-drvs.txt
-RUN for url in $(cat fo-drvs) ; do nix-prefetch-url $url; done
+RUN for url in $(cat ./hello-fo-drvs.txt) ; do nix-prefetch-url $url; done
 
 
 ONBUILD ENV \
