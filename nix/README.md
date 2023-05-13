@@ -2,7 +2,7 @@
 
 This proof of concept allows you to run Nix build inside the Cartesi virtual machine.
 
-We built Nix binaries for riscv64 and installed them on the cartesi/python:3.10-slim-jammy image to be able to create reproducible build.
+We built Nix tools for riscv64 and installed them on the `cartesi/python:3.10-slim-jammy` image in order to create a reproducible build of a generic software given his depencencies. At the moment the docker image depends on a specific package that we are going to build (GNU hello).
 
 ## Interacting with the application
 
