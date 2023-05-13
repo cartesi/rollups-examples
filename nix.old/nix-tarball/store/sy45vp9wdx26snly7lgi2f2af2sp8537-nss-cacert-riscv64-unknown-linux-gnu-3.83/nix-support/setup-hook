@@ -1,0 +1,7 @@
+export NIX_SSL_CERT_FILE=/nix/store/sy45vp9wdx26snly7lgi2f2af2sp8537-nss-cacert-riscv64-unknown-linux-gnu-3.83/etc/ssl/certs/ca-bundle.crt
+
+# compatibility
+#  - openssl
+export SSL_CERT_FILE=/nix/store/sy45vp9wdx26snly7lgi2f2af2sp8537-nss-cacert-riscv64-unknown-linux-gnu-3.83/etc/ssl/certs/ca-bundle.crt
+#  - Haskell x509-system
+export SYSTEM_CERTIFICATE_PATH=/nix/store/sy45vp9wdx26snly7lgi2f2af2sp8537-nss-cacert-riscv64-unknown-linux-gnu-3.83/etc/ssl/certs/ca-bundle.crt

@@ -1,0 +1,5 @@
+/* GNU ld script
+   Use the shared library, but some functions are only in
+   the static library, so try that secondarily.  */
+OUTPUT_FORMAT(elf64-x86-64)
+GROUP ( /nix/store/4nlgxhb09sdr51nc9hdm8az5b08vzkgx-glibc-2.35-163/lib/libc.so.6 /nix/store/4nlgxhb09sdr51nc9hdm8az5b08vzkgx-glibc-2.35-163/lib/libc_nonshared.a  AS_NEEDED ( /nix/store/4nlgxhb09sdr51nc9hdm8az5b08vzkgx-glibc-2.35-163/lib/ld-linux-x86-64.so.2 ) )
