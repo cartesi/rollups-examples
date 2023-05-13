@@ -11,13 +11,13 @@ variable "DOCKER_ORGANIZATION" {
 }
 
 target "server" {
-  tags = ["${DOCKER_ORGANIZATION}/dapp:erc20-${TAG}-server"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:nix-${TAG}-server"]
 }
 
 target "console" {
-  tags = ["${DOCKER_ORGANIZATION}/dapp:erc20-${TAG}-console"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:nix-${TAG}-console"]
 }
 
 target "machine" {
-  tags = ["${DOCKER_ORGANIZATION}/dapp:erc20-${TAG}-machine"]
+  tags = ["${DOCKER_ORGANIZATION}/dapp:nix-${TAG}-machine"]
 }
