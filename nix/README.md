@@ -72,5 +72,5 @@ querying http://localhost:4000/graphql for notices of {}...
 ✨  Done in 9.14s.
 ```
 
-You will be able to get in response the Nix version installed on the docker image
+You will be able to get in response the Nix version, the path and the content result of the built app installed on the docker image
 
