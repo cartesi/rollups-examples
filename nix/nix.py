@@ -31,7 +31,7 @@ def handle_advance(data):
 
     #FIXME: the path of the nix bin
     version = subprocess.check_output("/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin/nix --version", shell=True, stderr=subprocess.STDOUT)
-    version_str2hex = str2hex(version).decode()
+    version_str2hex = str2hex(version.decode())
 
     logger.info(f"Addsubprocess.check_output {version}")
     logger.info(f"Addsubprocess.check_output str2hex {version_str2hex}")
