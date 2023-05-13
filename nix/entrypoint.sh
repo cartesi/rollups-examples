@@ -12,9 +12,5 @@
 # specific language governing permissions and limitations under the License.
 
 set -e
-#rollup-init nix build nixpkgs#hello --extra-experimental-features nix-command --extra-experimental-features flakes && echo ciao
-# rollup-init nix --version
-rollup-init /nix/store2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin/nix --version \
-  && curl -X POST http://${ROLLUP_HTTP_SERVER_URL}/finish \
-  -H 'Content-Type: application/json' \
-  -d '{"status":"accept"}'
+export PATH="/opt/venv/bin:$PATH"
+rollup-init python3 nix.py

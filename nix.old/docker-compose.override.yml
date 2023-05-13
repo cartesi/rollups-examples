@@ -1,5 +1,0 @@
-version: "3"
-
-services:
-  server_manager:
-    image: ${DAPP_IMAGE:-cartesi/dapp:echo-js-devel-server}
