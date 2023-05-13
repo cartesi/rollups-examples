@@ -39,17 +39,21 @@ RUN mkdir -m 0755 /nix && USER=root sh nix-tarball/install --no-daemon \
 RUN rm nix-tarball.tar.xz \
     && rm -r /nix-tarball
 
-#FIXME: add nix to the path in the right way?
+# FIXME: add nix to the path in the right way?
 RUN echo "$PATH:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin" > /etc/environment
 ENV PATH="${PATH}:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin"
 
 RUN chown -R 2874:2874 /nix
 
 RUN apt-get install -y jq
+# TODO 
 # COPY hello-fo-drvs.txt ./hello-fo-drvs.txt
-RUN nix derivation show -r nixpkgs#hello | jq -r '.[] | select(.outputs.out.hash and .env.urls) | .env.urls' | uniq | sort > ./hello-fo-drvs.txt
-RUN for url in $(cat ./hello-fo-drvs.txt) ; do nix-prefetch-url $url; done
+# RUN nix derivation show -r nixpkgs#hello | jq -r '.[] | select(.outputs.out.hash and .env.urls) | .env.urls' | uniq | sort > ./hello-fo-drvs.txt
+# RUN for url in $(cat ./hello-fo-drvs.txt) ; do nix-prefetch-url $url; done
 
+COPY flake ./flake
+RUN chown -R 2874:2874 ./flake
+# RUN cd flake && nix build .# -L && nix store delete $(readlink ./result)
 
 ONBUILD ENV \
     ENV=/etc/profile \
