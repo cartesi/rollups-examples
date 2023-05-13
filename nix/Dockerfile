@@ -37,9 +37,10 @@ RUN mkdir -m 0755 /nix && USER=root sh nix-tarball/install --no-daemon \
     && /nix/var/nix/profiles/default/bin/nix-store --optimise \
     && /nix/var/nix/profiles/default/bin/nix-store --verify --check-contents
 RUN rm nix-tarball.tar.xz \
-    && rm -r nix-tarball
+    && rm -r /nix-tarball
 
-# RUN echo "$PATH:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin" > /etc/environment
+#FIXME: add nix to the path in the right way?
+RUN echo "$PATH:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin" > /etc/environment
 ENV PATH="${PATH}:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin"
 
 RUN chown -R 2874:2874 /nix
