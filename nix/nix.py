@@ -19,7 +19,7 @@ def str2hex(hex):
     return "0x" + str.encode("utf-8").hex()
 
 logging.basicConfig(level="INFO")
-logger = logging.getLogger(_name_)
+logger = logging.getLogger(__name__)
 
 rollup_server = environ["ROLLUP_HTTP_SERVER_URL"]
 logger.info(f"HTTP rollup_server url is {rollup_server}")
