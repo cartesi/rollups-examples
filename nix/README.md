@@ -18,6 +18,10 @@ Then the Dockerfile will copy the produced file containing all the dependencies 
 for url in $(cat ./hello-fo-drvs.txt) ; do nix-prefetch-url $url; done
 ```
 
+## Build Nix for riscv
+
+TBD (at the moment this section is yet to be described but do not worry in the project you can find a build done just for you nix-tarball.tar.xz)
+
 ## Interacting with the application
 
 Build
