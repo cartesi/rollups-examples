@@ -15,8 +15,8 @@ import logging
 import requests
 import subprocess
 
-def str2hex(hex):
-    return "0x" + str.encode("utf-8").hex()
+def str2hex(string):
+    return "0x" + str.encode(string).hex()
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
