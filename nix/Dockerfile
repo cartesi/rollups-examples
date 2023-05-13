@@ -30,7 +30,7 @@ RUN addgroup --gid 30000 --system nixbld \
     && echo "build-users-group =" >> /etc/nix/nix.conf \
     && echo "extra-experimental-features = nix-command flakes" >> /etc/nix/nix.conf
     # https://github.com/hercules-ci/hercules-ci-agent/issues/183
-RUN mkdir -m 0755 /nix && USER=root sh nix-tarball/install \
+RUN mkdir -m 0755 /nix && USER=root sh nix-tarball/install --no-daemon \
     && ln -s /nix/var/nix/profiles/default/etc/profile.d/nix.sh /etc/profile.d/ \
     && rm -rf /var/cache/apk/* \
     && /nix/var/nix/profiles/default/bin/nix-collect-garbage --delete-old \
@@ -42,7 +42,11 @@ RUN rm nix-tarball.tar.xz \
 # RUN echo "$PATH:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin" > /etc/environment
 ENV PATH="${PATH}:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin"
 
-COPY hello-fo-drvs.txt ./hello-fo-drvs.txt
+RUN chown -R 2874:2874 /nix
+
+RUN apt-get install -y jq
+# COPY hello-fo-drvs.txt ./hello-fo-drvs.txt
+RUN nix derivation show -r nixpkgs#hello | jq -r '.[] | select(.outputs.out.hash and .env.urls) | .env.urls' | uniq | sort > ./hello-fo-drvs.txt
 RUN for url in $(cat ./hello-fo-drvs.txt) ; do nix-prefetch-url $url; done
 
 
