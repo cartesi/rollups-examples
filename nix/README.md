@@ -4,6 +4,21 @@ This proof of concept allows you to run Nix build inside the Cartesi virtual mac
 
 We built Nix tools for riscv64 and installed them on the `cartesi/python:3.10-slim-jammy` image in order to create a reproducible build of a generic software given his depencencies. At the moment the docker image depends on a specific package that we are going to build (GNU hello).
 
+Since we don't have internet access inside the Cartesi VM we need to provide all the (transitive) dependencies sources, using the nix terminology, we need to provide all the fixed output derivations from the target derivation closure.
+
+Right now this operation has to be done manually running:
+
+```shell
+nix derivation show -r nixpkgs#hello | jq -r '.[] | select(.outputs.out.hash and .env.urls) | .env.urls' | uniq | sort > fo-drvs`.
+```
+
+Then the Dockerfile will copy the produced file containing all the dependencies sources 
+
+```shell
+for url in $(cat ./hello-fo-drvs.txt) ; do nix-prefetch-url $url; done
+```
+
+
 ## Interacting with the application
 
 Build
@@ -11,6 +26,8 @@ Build
 ```shell
 docker buildx bake --load
 ```
+
+Run
 
 ```shell
 docker compose -f ../docker-compose.yml -f ./docker-compose.override.yml up
