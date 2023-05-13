@@ -39,7 +39,8 @@ RUN mkdir -m 0755 /nix && USER=root sh nix-tarball/install \
 RUN rm nix-tarball.tar.xz \
     && rm -r /nix-tarball
 
-# RUN echo "$PATH:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin" > /etc/environment
+#FIXME: add nix to the path in the right way?
+RUN echo "$PATH:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin" > /etc/environment
 ENV PATH="${PATH}:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin"
 
 COPY hello-fo-drvs.txt ./hello-fo-drvs.txt
