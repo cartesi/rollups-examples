@@ -36,7 +36,8 @@ RUN addgroup --gid 30000 --system nixbld \
     && /nix/var/nix/profiles/default/bin/nix-collect-garbage --delete-old \
     && /nix/var/nix/profiles/default/bin/nix-store --optimise \
     && /nix/var/nix/profiles/default/bin/nix-store --verify --check-contents
-RUN rm -r nix-tarball.tar.xz
+RUN rm -r nix-tarball.tar.xz \
+    && nix-tarball
 
 RUN echo "$PATH:/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin" > /etc/environment
 
