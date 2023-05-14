@@ -20,7 +20,14 @@ for url in $(cat ./hello-fo-drvs.txt) ; do nix-prefetch-url $url; done
 
 ## Build Nix for riscv
 
-TBD (at the moment this section is yet to be described but do not worry in the project you can find a build done just for you nix-tarball.tar.xz)
+This requires Nix installed with `nix-command` and `flakes` extra experimental features enabled:
+
+```shell
+nix build github:aciceri/nix/riscv64#hydraJobs.binaryTarballCross.x86_64-linux.riscv64-linux -L
+```
+
+Check `./result` for the tarball containing binaries and installation scripts that will be copied by the `Dockerfile`.
+
 
 ## Interacting with the application
 
