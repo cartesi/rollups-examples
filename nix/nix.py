@@ -14,6 +14,7 @@ from os import environ
 import logging
 import requests
 import subprocess
+import json
 
 def str2hex(str):
     return "0x" + str.encode("utf-8").hex()
@@ -35,16 +36,20 @@ def handle_advance(data):
     # Nix does something :)
     subprocess.check_output("/nix/store/2qzfvsqb9afhb73cc3yfg8hk2xpxcy47-nix-2.16.0pre20230512_dirty-riscv64-unknown-linux-gnu/bin/nix build /flake", shell=True, stderr=subprocess.STDOUT)
     path = subprocess.check_output("readlink result ./result", shell=True, stderr=subprocess.STDOUT)
-    result = subprocess.check_output("cat ./result", shell=True, stderr=subprocess.STDOUT)
+    content = subprocess.check_output("cat ./result", shell=True, stderr=subprocess.STDOUT)
 
-    notice = {"payload": {
-            "version": str2hex(version.decode()),
-            "path": str2hex(path.decode()), 
-            "content": str2hex(result.decode())
-        }
+    notice = {"payload": str2hex(json.dumps({
+            "version": version.decode(),
+            "path": path.decode(), 
+            "content": content.decode()
+        }))
     }
+
+    notice_but_is_a_string = (notice)
+
+    logger.info(f"Adding notice log {notice_but_is_a_string}")
     
-    response = requests.post(rollup_server + "/notice", json=notice)
+    response = requests.post(rollup_server + "/notice", json=notice_but_is_a_string)
     logger.info(f"Received notice status {response.status_code} body {response.content}")
 
     return "accept"
