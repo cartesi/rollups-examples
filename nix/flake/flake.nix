@@ -7,5 +7,4 @@
       "hello-world"
       "Hello world!";
   };
-
 }
