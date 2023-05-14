@@ -28,6 +28,8 @@ nix build github:aciceri/nix/riscv64#hydraJobs.binaryTarballCross.x86_64-linux.r
 
 Check `./result` for the tarball containing binaries and installation scripts that will be copied by the `Dockerfile`.
 
+Currently the `Dockerfile` expects the tarball to be named ` nix-tarball.tar.xz` and contain a folder named  `nix-tarball`, so a manually renaming is needed.
+
 
 ## Interacting with the application
 
