@@ -50,7 +50,7 @@ services:
       BH_BLOCK_TIMEOUT: 120
 
   advance_runner:
-    image: ghcr.io/cartesi-corp/rollups-server-manager-broker-proxy:develop
+    image: ghcr.io/cartesi-corp/rollups-advance-runner:develop
     restart: always
     healthcheck:
       test: [ "CMD", "curl", "--fail", "localhost:8080/healthz" ]
@@ -120,7 +120,7 @@ services:
       - ./deployments:/deployments:ro
 
   graphql_server:
-    image: ghcr.io/cartesi-corp/query-server:develop
+    image: ghcr.io/cartesi-corp/rollups-graphql-server:develop
     ports:
       - "4000:4000"
     depends_on:
