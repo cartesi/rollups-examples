@@ -8,7 +8,7 @@ services:
       - machine:/var/opt/cartesi/machine-snapshots
 
   deployer:
-    image: ghcr.io/cartesi-corp/rollups-cli:develop
+    image: cartesi/rollups-cli:0.9.0-rc.0
     depends_on:
       machine:
         condition: service_started
