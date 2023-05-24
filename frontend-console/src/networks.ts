@@ -47,4 +47,8 @@ export const networks: Record<number, Chain> = {
         name: "chiado",
         explorer: "https://blockscout.chiadochain.net/",
     },
+    11155111: {
+        name: "sepolia",
+        explorer: "https://sepolia.etherscan.io",
+    },
 };
