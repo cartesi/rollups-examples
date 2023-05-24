@@ -12,4 +12,4 @@
 # specific language governing permissions and limitations under the License.
 
 set -e
-rollup-init ruby ./echo.rb
+rollup-init ruby echo.rb
