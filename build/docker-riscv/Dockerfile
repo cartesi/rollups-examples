@@ -132,6 +132,6 @@ CMD ["run-machine-console.sh"]
 # stage to copy the stored machine
 FROM busybox as machine-stage
 
+WORKDIR /var/opt/cartesi/machine-snapshots
 COPY --from=server-stage /var/opt/cartesi/machine-snapshots .
-WORKDIR /var/opt/cartesi/machine-snapshots/latest
 CMD ["xxd", "-c", "256", "-p", "hash"]
