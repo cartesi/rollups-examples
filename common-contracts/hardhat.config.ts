@@ -26,13 +26,13 @@ import "./tasks/mint"
 // read MNEMONIC from file or from env variable
 let mnemonic = process.env.MNEMONIC;
 
-const alchemy = (
+const infuraNetwork = (
     network: string,
     chainId?: number,
     gas?: number
 ): HttpNetworkUserConfig => {
     return {
-        url: `https://${network}.g.alchemy.com/v2/${process.env.PROJECT_ID}`,
+        url: `https://${network}.infura.io/v3/${process.env.PROJECT_ID}`,
         chainId,
         gas,
         accounts: mnemonic ? { mnemonic } : undefined,
@@ -46,22 +46,26 @@ const config: HardhatUserConfig = {
             url: "http://localhost:8545",
             accounts: mnemonic ? { mnemonic } : undefined,
         },
-        rinkeby: alchemy("rinkeby", 4, 6283185),
-        goerli: alchemy("goerli", 5, 6283185),
-        mainnet: alchemy("mainnet", 1, 6283185),
-        polygon_mumbai: {
-            url: "https://matic-mumbai.chainstacklabs.com",
-            chainId: 80001,
-            accounts: mnemonic ? { mnemonic } : undefined,
-        },
+        mainnet: infuraNetwork("mainnet", 1, 6283185),
+        goerli: infuraNetwork("goerli", 5, 6283185),
+        sepolia: infuraNetwork("sepolia", 11155111, 6283185),
+        polygon_mumbai: infuraNetwork("polygon-mumbai", 80001),
+        arbitrum_goerli: infuraNetwork("arbitrum-goerli", 421613),
+        optimism_goerli: infuraNetwork("optimism-goerli", 420),
         bsc_testnet: {
             url: "https://data-seed-prebsc-1-s1.binance.org:8545",
             chainId: 97,
             accounts: mnemonic ? { mnemonic } : undefined,
         },
-        avax_testnet: {
-            url: "https://api.avax-test.network/ext/bc/C/rpc",
-            chainId: 0xa869,
+        iotex_testnet: {
+            url: "https://babel-api.testnet.iotex.io",
+            chainId: 4690,
+            accounts: mnemonic ? { mnemonic } : undefined,
+        },
+        chiado: {
+            url: "https://rpc.chiadochain.net",
+            chainId: 10200,
+            gasPrice: 1000000000,
             accounts: mnemonic ? { mnemonic } : undefined,
         },
     },
