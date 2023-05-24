@@ -1,0 +1,5 @@
+{
+  "fs": {
+    "files": ["echo.rb", "entrypoint.sh"]
+  }
+}
