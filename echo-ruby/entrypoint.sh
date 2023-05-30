@@ -11,5 +11,8 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
+export GEM_HOME="/opt/cartesi/dapp/bundle"
+export PATH=$GEM_HOME/bin:$GEM_HOME/gems/bin:$PATH
+
 set -e
-rollup-init ruby echo.rb
+rollup-init bundle exec ruby echo.rb
