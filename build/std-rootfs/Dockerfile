@@ -115,7 +115,7 @@ RUN build-dapp-fs.sh /opt/cartesi/default.json dapp.json dapp.ext2
 # stage to build the initial cartesi machine
 FROM server-manager as server-stage
 
-ARG NETWORK=unknown
+ARG NETWORK=localhost
 
 WORKDIR /opt/cartesi/dapp
 

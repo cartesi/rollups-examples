@@ -85,7 +85,7 @@ EOF
 # stage to build the initial cartesi machine
 FROM server-manager as build-server-stage
 
-ARG NETWORK=unknown
+ARG NETWORK=localhost
 
 WORKDIR /opt/cartesi/dapp
 
