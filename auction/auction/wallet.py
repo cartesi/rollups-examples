@@ -15,21 +15,12 @@ import json
 from auction.balance import Balance
 from auction.log import logger
 from auction.outputs import Error, Notice, Voucher
-from eth_abi import decode_abi, encode_abi
-
-# Default header for ERC-20 transfers coming from the Portal, which corresponds
-# to the Keccak256-encoded string "ERC20_Transfer", as defined at
-# https://github.com/cartesi/rollups/blob/main/onchain/rollups/contracts/facets/ERC20PortalFacet.sol.
-ERC20_TRANSFER_HEADER = b'Y\xda*\x98N\x16Z\xe4H|\x99\xe5\xd1\xdc\xa7\xe0L\x8a\x990\x1b\xe6\xbc\t)2\xcb]\x7f\x03Cx'
+from eth_abi import decode, encode
+from auction.eth_abi_ext import decode_packed
 
 # Function selector to be called during the execution of a voucher that transfers funds,
 # which corresponds to the first 4 bytes of the Keccak256-encoded result of "transfer(address,uint256)"
 TRANSFER_FUNCTION_SELECTOR = b'\xa9\x05\x9c\xbb'
-
-# Default header for ERC-721 transfers coming from the Portal, which corresponds
-# to the Keccak256-encoded string "ERC721_Transfer", as defined at
-# https://github.com/cartesi-corp/rollups/blob/main/onchain/rollups/contracts/facets/ERC721PortalFacet.sol
-ERC721_TRANSFER_HEADER = b'd\xd9\xdeE\xe7\xdb\x1c\n|\xb7\x96\n\xd2Q\x07\xa67\x9bj\xb8[0DO:\x8drHW\xc1\xacx'
 
 # Function selector to be called during the execution of a voucher that transfers ERC-721, which
 # corresponds to the first 4 bytes of the Keccak256-encoded result of 'safeTransferFrom(address,address,uint256)'
@@ -55,39 +46,57 @@ def balance_get(account) -> Balance:
     return _balance_get(account)
 
 
-def deposit_process(payload: str):
+def erc20_deposit_process(payload:str):
     '''
-    Process the ABI-encoded input data sent by the Portal
-    after an ERC-20 or ERC-721 deposit.
-
+    Process the ABI-encoded input data sent by the ERC20Portal
+    after an ERC-20 deposit
         Parameters:
             payload (str): the binary input data as hex string.
 
         Returns:
-            notice (Notice): A notice whose payload is the hex value for an ERC-20 or ERC-721 deposit JSON.
+            notice (Notice): A notice whose payload is the hex value for an ERC-20 deposit JSON.
             report (Error): A report detailing the operation's failure reason.
     '''
     # remove the '0x' prefix and convert to bytes
     binary_payload = bytes.fromhex(payload[2:])
     try:
-        header = decode_abi(['bytes32'], binary_payload)[0]
-        if header == ERC20_TRANSFER_HEADER:
-            account, erc20, amount = _erc20_deposit_parse(binary_payload)
-            return _erc20_deposit(account, erc20, amount)
-        elif header == ERC721_TRANSFER_HEADER:
-            account, erc721, token_id = _erc721_deposit_parse(binary_payload)
-            return _erc721_deposit(account, erc721, token_id)
-        else:
-            return Error("Unknown payload header")
+        account, erc20, amount = _erc20_deposit_parse(binary_payload)
+        logger.info(f"'{amount} {erc20}' tokens deposited "
+                    f"in account '{account}'")
+        return _erc20_deposit(account, erc20, amount)
     except ValueError as error:
         error_msg = f"{error}"
         logger.debug(error_msg, exc_info=True)
         return Error(error_msg)
 
 
+def erc721_deposit_process(payload:str):
+    '''
+    Process the ABI-encoded input data sent by the ERC721Portal
+    after an ERC-721 deposit
+        Parameters:
+            payload (str): the binary input data as hex string.
+
+        Returns:
+            notice (Notice): A notice whose payload is the hex value for an
+            ERC-721 deposit JSON.
+            report (Error): A report detailing the operation's failure reason.
+    '''
+    # remove the '0x' prefix and convert to bytes
+    binary_payload = bytes.fromhex(payload[2:])
+    try:
+        account, erc721, token_id = _erc721_deposit_parse(binary_payload)
+        logger.info(f"Token 'ERC-721: {erc721}, id: {token_id}' deposited "
+                    f"in '{account}'")
+        return _erc721_deposit(account, erc721, token_id)
+    except ValueError as error:
+        error_msg = f"{error}"
+        logger.debug(error_msg, exc_info=True)
+        return Error(error_msg)
+
 def _erc20_deposit_parse(binary_payload: bytes):
     '''
-    Retrieve the ABI-encoded input data sent by the Portal
+    Retrieve the ABI-encoded input data sent by the ERC20Portal
     after an ERC-20 deposit.
 
         Parameters:
@@ -100,16 +109,19 @@ def _erc20_deposit_parse(binary_payload: bytes):
                 amount (int): amount of deposited ERC-20 tokens
     '''
     try:
-        input_data = decode_abi(
-            ['bytes32',  # Keccak256-encoded string "ERC20_Transfer"
-             'address',  # Address which deposited the tokens
+        input_data = decode_packed(
+            ['bool',     # Is a valid deposit
              'address',  # Address of the ERC-20 contract
-             'uint256',  # Amount of ERC-20 tokens being deposited
-             'bytes'],   # Additional data
+             'address',  # Address which deposited the tokens
+             'uint256'], # Amount of ERC-20 tokens being deposited
             binary_payload
         )
-        account = input_data[1]
-        erc20 = input_data[2]
+
+        valid = input_data[0]
+        if not valid:
+            raise ValueError("Invalid deposit with 'False' success flag")
+        erc20 = input_data[1]
+        account = input_data[2]
         amount = input_data[3]
         return account, erc20, amount
     except Exception as error:
@@ -132,18 +144,15 @@ def _erc721_deposit_parse(binary_payload: bytes):
                 token_id (int): ERC-721 token ID
     '''
     try:
-        input_data = decode_abi(
-            ['bytes32',  # Keccak256-encoded string "ERC721_Transfer"
-             'address',  # ERC-721 contract address
+        input_data = decode_packed(
+            ['address',  # ERC-721 contract address
              'address',  # Address which called the safeTransferFrom function
-             'address',  # Address which previously owned the token
-             'uint256',  # The id of the NFT being deposited
-             'bytes'],   # Additional data
+             'uint256'], # The id of the NFT being deposited
             binary_payload
         )
-        account = input_data[3]
-        erc721 = input_data[1]
-        token_id = input_data[4]
+        erc721 = input_data[0]
+        account = input_data[1]
+        token_id = input_data[2]
 
         return account, erc721, token_id
     except Exception as error:
@@ -161,7 +170,8 @@ def _erc20_deposit(account, erc20, amount):
             amount (float): amount of tokens to deposit.
 
         Returns:
-            notice (Notice): A notice whose payload is the hex value for an ERC-20 deposit JSON.
+            notice (Notice): A notice whose payload is the hex value for an
+            ERC-20 deposit JSON.
     '''
     balance = _balance_get(account)
     balance._erc20_increase(erc20, amount)
@@ -187,7 +197,8 @@ def _erc721_deposit(account, erc721, token_id):
             token_id (int): ERC-721 token ID
 
         Returns:
-            notice (Notice): A notice whose payload is the hex value for an ERC-721 deposit JSON
+            notice (Notice): A notice whose payload is the hex value for an
+            ERC-721 deposit JSON
     '''
     balance = _balance_get(account)
     balance._erc721_add(erc721, token_id)
@@ -203,40 +214,6 @@ def _erc721_deposit(account, erc721, token_id):
     return Notice(json.dumps(notice_payload))
 
 
-def deposit_process(payload: str):
-    '''
-    Process the ABI-encoded input data sent by the Portal
-    after an ERC-20 or ERC-721 deposit.
-
-        Parameters:
-            payload (str): the binary input data as hex string.
-
-        Returns:
-            notice (Notice): A notice whose payload is the hex value for an ERC-20 or ERC-721 deposit JSON.
-            report (Error): A report detailing the operation's failure reason.
-    '''
-    # remove the '0x' prefix and convert to bytes
-    binary_payload = bytes.fromhex(payload[2:])
-    try:
-        header = decode_abi(['bytes32'], binary_payload)[0]
-        if header == ERC20_TRANSFER_HEADER:
-            account, erc20, amount = _erc20_deposit_parse(binary_payload)
-            logger.info(f"'{amount} {erc20}' tokens deposited "
-                        f"in account '{account}'")
-            return _erc20_deposit(account, erc20, amount)
-        elif header == ERC721_TRANSFER_HEADER:
-            account, erc721, token_id = _erc721_deposit_parse(binary_payload)
-            logger.info(f"Token 'ERC-721: {erc721}, id: {token_id}' deposited "
-                        f"in '{account}'")
-            return _erc721_deposit(account, erc721, token_id)
-        else:
-            return Error("Unknown payload header")
-    except ValueError as error:
-        error_msg = f"{error}"
-        logger.debug(error_msg, exc_info=True)
-        return Error(error_msg)
-
-
 def erc20_withdraw(account, erc20, amount):
     '''
     Extract ERC-20 tokens from account.
@@ -247,13 +224,14 @@ def erc20_withdraw(account, erc20, amount):
             amount (float): amount of tokens to withdraw.
 
         Returns:
-            voucher (Voucher): A voucher that transfers `amount` tokens to `account` address.
+            voucher (Voucher): A voucher that transfers `amount` tokens to
+            `account` address.
     '''
     balance = _balance_get(account)
-    balance._erc20_decrease(account, erc20, amount)
+    balance._erc20_decrease(erc20, amount)
 
     transfer_payload = TRANSFER_FUNCTION_SELECTOR + \
-        encode_abi(['address', 'uint256'], [account, amount])
+            encode(['address', 'uint256'], [account, amount])
 
     logger.info(f"'{amount} {erc20}' tokens withdrawn from '{account}'")
     return Voucher(erc20, transfer_payload)
@@ -306,7 +284,7 @@ def erc721_withdraw(rollup_address, sender, erc721, token_id):
         logger.debug(error_msg, exc_info=True)
         return Error(error_msg)
 
-    payload = SAFE_TRANSFER_FROM_SELECTOR + encode_abi(
+    payload = SAFE_TRANSFER_FROM_SELECTOR + encode(
         ['address', 'address', 'uint256'],
         [rollup_address, sender, token_id]
     )

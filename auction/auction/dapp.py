@@ -25,7 +25,21 @@ from auction.util import hex_to_str
 logger.info("Auction DApp started")
 
 rollup_server = environ["ROLLUP_HTTP_SERVER_URL"]
+network = environ["NETWORK"]
 logger.debug(f"Rollup server URL: {rollup_server}")
+logger.info(f"Network is {network}")
+
+# Setup contracts addresses
+erc20_portal_file = open(f'./deployments/{network}/ERC20Portal.json')
+erc20_portal = json.load(erc20_portal_file)
+
+erc721_portal_file = open(f'./deployments/{network}/ERC721Portal.json')
+erc721_portal = json.load(erc721_portal_file)
+
+dapp_address_relay_file = open(f'./deployments/{network}/DAppAddressRelay.json')
+dapp_address_relay = json.load(dapp_address_relay_file)
+
+router = None
 
 
 def send_request(output):
@@ -51,17 +65,28 @@ def send_request(output):
 def handle_advance(data):
     logger.debug(f"Received advance request data {data}")
     try:
-        if rollup_address is None:
-            raise ValueError("Rollup address is missing")
-
         msg_sender = data["metadata"]["msg_sender"]
         payload = data["payload"]
 
-        if msg_sender == rollup_address:
+        if msg_sender.lower() == dapp_address_relay['address'].lower():
+            logger.debug("Setting DApp address")
+            rollup_address = payload
+            router.set_rollup_address(rollup_address)
+            return Log(f"DApp address set up successfully to {rollup_address}.")
+
+        # It is an ERC20 deposit
+        if msg_sender.lower() == erc20_portal['address'].lower():
             try:
-                return router.process("deposit", payload)
+                return router.process("erc20_deposit", payload)
             except Exception as error:
-                error_msg = f"Failed to process deposit '{payload}'. {error}"
+                error_msg = f"Failed to process ERC20 deposit '{payload}'. {error}"
+                logger.debug(error_msg, exc_info=True)
+                return Error(error_msg)
+        elif msg_sender.lower() == erc721_portal['address'].lower():
+            try:
+                return router.process("erc721_deposit", payload)
+            except Exception as error:
+                error_msg = f"Failed to process ERC721 deposit '{payload}'. {error}"
                 logger.debug(error_msg, exc_info=True)
                 return Error(error_msg)
         else:
@@ -97,9 +122,9 @@ handlers = {
 }
 
 finish = {"status": "accept"}
-rollup_address = None
-router = None
+
 auctioneer = Auctioneer(wallet)
+router = Router(wallet, auctioneer)
 
 while True:
     logger.debug("Sending finish")
@@ -110,13 +135,6 @@ while True:
     else:
         rollup_request = response.json()
         data = rollup_request["data"]
-        if "metadata" in data:
-            metadata = data["metadata"]
-            if metadata["epoch_index"] == 0 and metadata["input_index"] == 0:
-                rollup_address = metadata["msg_sender"]
-                router = Router(rollup_address, wallet, auctioneer)
-                logger.debug(f"Captured rollup address: {rollup_address}")
-                continue
 
         handler = handlers[rollup_request["request_type"]]
         output = handler(rollup_request["data"])
