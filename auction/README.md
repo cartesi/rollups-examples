@@ -20,8 +20,9 @@ The DApp is comprised of:
 
 The DApp also relies on a couple of components provided along with the [other examples](../README.md#examples):
 
-- A Cartesi NFT contract that can be used to mint tokens to be auctioned.
+- An NFT contract that can be used to mint tokens to be auctioned.
 For more information about how to mint example NFTs, refer to the [`common-contracts` documentation](../common-contracts).
+- An ERC-20 contract that can be used to place bids.
 - A Command-line tool to send commands to the DApp.
 Please refer to the [Front-end console documentation](../frontend-console) for more details.
 
@@ -60,13 +61,13 @@ One can [query the account balance via an inspect state call](#how-to-query-an-a
 
 Withdrawals are also executed with the help of the front-end console, by [sending inputs](../frontend-console/README.md#sending-inputs) with the command `erc20withdrawal` to the DApp.
 
-As an example, the command below shows how to withdraw 1 CTSI (`0x610178dA211FEF7D417bC0e6FeD39F05609AD788`) from the default account:
+As an example, the command below shows how to withdraw 1 SimpleERC20 (`0x59b670e9fA9D0A427751Af201D676719a970857b`) from the default account:
 
 ```shell
 yarn start input send --payload '{
     "method": "erc20withdrawal",
     "args": {
-        "erc20": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+        "erc20": "0x59b670e9fA9D0A427751Af201D676719a970857b",
         "amount": 10000000000000000000
     }
 }'
@@ -87,7 +88,7 @@ yarn start input send --payload '{
     "method": "erc20transfer",
     "args": {
         "to": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
-        "erc20": "0x610178da211fef7d417bc0e6fed39f05609ad788",
+        "erc20": "0x59b670e9fA9D0A427751Af201D676719a970857b",
         "amount": 5000
     }
 }'
@@ -124,13 +125,13 @@ One can [query the account balance via an inspect state call](#how-to-query-an-a
 
 Withdrawals can also be executed with the help of the front-end console, by [sending inputs](../frontend-console/README.md#sending-inputs) command `erc721withdrawal` to the DApp.
 
-As an example, the command below shows how to withdraw an NFT (contract `0xc5a5C42992dECbae36851359345FE25997F5C42d`, aka locally deployed SimpleERC721 contract, and `token_id` `1`) from the default account:
+As an example, the command below shows how to withdraw an NFT (contract `0xc6e7DF5E7b4f2A278906862b61205850344D4e7d`, aka locally deployed SimpleERC721 contract, and `token_id` `1`) from the default account:
 
 ```shell
 yarn start input send --payload '{
     "method": "erc721withdrawal",
     "args": {
-        "erc721": "0xc5a5C42992dECbae36851359345FE25997F5C42d",
+        "erc721": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
         "token_id": 1
     }
 }'
@@ -149,7 +150,7 @@ yarn start input send --payload '{
     "method": "erc721transfer",
     "args": {
         "to": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-        "erc721": "0xc5a5c42992decbae36851359345fe25997f5c42d",
+        "erc721": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
         "token_id": 1
     }
 }'
@@ -183,7 +184,7 @@ HTTP status: 200
 Inspect status: "Accepted"
 Metadata: {"active_epoch_index":0,"current_input_index":8}
 Reports:
-0: {"erc721": {"0xc5a5c42992decbae36851359345fe25997f5c42d": [1]}, "erc20": {"0x610178da211fef7d417bc0e6fed39f05609ad788": 100000000}}
+0: {"erc721": {"0xc6e7DF5E7b4f2A278906862b61205850344D4e7d": [1]}, "erc20": {"0x59b670e9fA9D0A427751Af201D676719a970857b": 100000000}}
 ✨  Done in 3.88s.
 ```
 
@@ -212,10 +213,10 @@ yarn start input send --payload '{
     "method": "create",
     "args": {
         "item": {
-            "erc721": "0xc5a5C42992dECbae36851359345FE25997F5C42d",
+            "erc721": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
             "token_id": 1
         },
-        "erc20": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+        "erc20": "0x59b670e9fA9D0A427751Af201D676719a970857b",
         "title": "Default title for testing",
         "description": "Default description for testing",
         "start_date": 1693507978,
@@ -313,7 +314,7 @@ HTTP status: 200
 Inspect status: "Accepted"
 Metadata: {"active_epoch_index":0,"current_input_index":9}
 Reports:
-0: {"0": {"id": 0, "state": 0, "item": {"erc721": "0xc5a5c42992decbae36851359345fe25997f5c42d", "token_id": 1}, "erc20": "0x610178da211fef7d417bc0e6fed39f05609ad788", "title": "Default title for testing", "description": "Default description for testing", "start_date": 1693507978.0, "end_date": 1694372013.0, "min_bid_amount": 1, "bids": []}}
+0: {"0": {"id": 0, "state": 0, "item": {"erc721": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d", "token_id": 1}, "erc20": "0x59b670e9fA9D0A427751Af201D676719a970857b", "title": "Default title for testing", "description": "Default description for testing", "start_date": 1693507978.0, "end_date": 1694372013.0, "min_bid_amount": 1, "bids": []}}
 ✨  Done in 3.27s.
 ```
 
