@@ -23,6 +23,7 @@ import {
 } from "../../rollups";
 import { findInputAddedInfo } from "../util";
 
+
 interface Args extends ConnectArgs, RollupsArgs {
     erc721?: string;
     to: string;
@@ -63,7 +64,7 @@ export const handler = async (args: Args) => {
     console.log(`connected to chain ${network.chainId}`);
 
     // connect to rollups
-    const { inputContract, erc721Portal, deployment } = await rollups(
+    const {dapp, inputContract, erc721Portal, deployment } = await rollups(
         network.chainId,
         signer || provider,
         args
@@ -88,11 +89,21 @@ export const handler = async (args: Args) => {
     const senderAddress = await erc721Portal.signer.getAddress();
     console.log(`using account "${senderAddress}"`);
 
-    const tx = await erc721Contract[safeTransferFrom](
-        senderAddress,
-        erc721Portal.address,
-        tokenId
-    );
+    //Set the ERC721Portal as the new controller
+    const approve = await erc721Contract.approve(erc721Portal.address,tokenId)
+
+    await approve.wait();
+
+    //Deposit token through portal
+    const tx = await erc721Portal.depositERC721Token(
+        erc721address,
+        dapp,
+        tokenId,
+        "0x",
+        "0x"
+    )
+
+
     console.log(`transaction: ${tx.hash}`);
     console.log("waiting for confirmation...");
 
