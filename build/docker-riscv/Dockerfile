@@ -1,6 +1,6 @@
 # syntax=docker.io/docker/dockerfile:1.4
 # layers for caching and versioning
-FROM cartesi/toolchain:0.13.0 as toolchain
+FROM cartesi/toolchain:0.14.0 as toolchain
 FROM cartesi/server-manager:0.7.0 as server-manager
 FROM cartesi/rollups-hardhat:0.9.0-rc.0 as rollups-hardhat
 
