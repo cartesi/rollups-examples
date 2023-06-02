@@ -31,6 +31,21 @@ Please refer to the [Front-end console documentation](../frontend-console) for m
 An auction can be created by a user for any ERC-721 token (NFT) they possess.
 In order to create an auction, a user must first mint an NFT and deposit it in the DApp wallet. After that, any other user may place bids on the auction until the auction is finished and the NFT may be transferred to the winning bidder.
 
+### Helper to setup an example Auction at localhost
+
+This example contains the script `setup_auction_localhost.sh` to setup a basic auction for localhost demos and testing.
+
+It executes the following steps:
+
+- Sends a transaction with the DApp address to the DAppAddressRelay contract, to properly configure the DApp
+- Mints a token
+- Transfers funds from the main account to other accounts that can be used as bidders
+- Deposits the NFT and funds for each participant
+- Creates the auction
+- Places bids
+
+In the following sections you will get a clear view of each one of these steps
+
 ## DApp Operations
 
 The DApp operations are split between wallet and auction operations.
