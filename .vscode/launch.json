@@ -90,15 +90,16 @@
             "gevent": false,
         },
         {
-          "env": {
-            "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004"
-          },
-          "cwd": "${workspaceFolder}/auction",
-          "name": "Auction DApp",
-          "type": "python",
-          "request": "launch",
-          "python": "${workspaceFolder}/auction/.venv/bin/python3",
-          "module": "auction.dapp",
+            "env": {
+                "ROLLUP_HTTP_SERVER_URL": "http://127.0.0.1:5004",
+                "NETWORK":"localhost"
+            },
+            "cwd": "${workspaceFolder}/auction",
+            "name": "Auction DApp",
+            "type": "python",
+            "request": "launch",
+            "python": "${workspaceFolder}/auction/.venv/bin/python3",
+            "module": "auction.dapp"
         }
     ]
 }
