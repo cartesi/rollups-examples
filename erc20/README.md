@@ -39,6 +39,14 @@ The payload of the notice should be something like this:
 "Deposit received from: 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266; ERC-20: 0xa513e6e4b8f2a923d98304ec87f64353c4d5c853; Amount: 100"
 ```
 
+In order to chech the voucher generated for the deposit, execute the following command:
+
+```shell
+yarn start voucher list
+```
+
+The voucher may be executed to return the funds to the depositor by following the instructions available at [Validating notices and executing vouchers](../frontend-console/README.md#validating-notices-and-executing-vouchers).
+
 ## Running the environment in host mode
 
 This DApp's back-end is written in Python, so to run it in your machine you need to have `python3` installed.
