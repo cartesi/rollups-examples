@@ -38,12 +38,12 @@ class Voucher(Output):
     such as a transfer of assets.
 
         Parameters:
-            address(str): address of the contract who will execute the payload
+            destination(str): destination of the contract who will execute the payload
             payload(bytes): an ABI encoded contract function call
     """
 
-    def __init__(self, address: str, payload: bytes):
-        self.address = address
+    def __init__(self, destination: str, payload: bytes):
+        self.destination = destination
         hexpayload = "0x" + payload.hex()
         super().__init__(hexpayload)
 

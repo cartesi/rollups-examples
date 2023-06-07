@@ -82,7 +82,7 @@ def handle_advance(data):
         # Encode a transfer function call that returns the amount back to the depositor
         transfer_payload = TRANSFER_FUNCTION_SELECTOR + encode(['address','uint256'], [depositor, amount])
         # Post voucher executing the transfer on the ERC-20 contract: "I don't want your money"!
-        voucher = {"address": erc20, "payload": "0x" + transfer_payload.hex()}
+        voucher = {"destination": erc20, "payload": "0x" + transfer_payload.hex()}
         logger.info(f"Issuing voucher {voucher}")
         response = requests.post(rollup_server + "/voucher", json=voucher)
         logger.info(f"Received voucher status {response.status_code} body {response.content}")
