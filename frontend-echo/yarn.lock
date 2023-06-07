@@ -1098,10 +1098,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cartesi/rollups@^0.9.0-alpha.6":
-  version "0.9.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-0.9.0-alpha.6.tgz#a03826148070632c73d735c9d1f253b04d655919"
-  integrity sha512-cxHD0w1ZPPd8NGjoPG44sWW8H4PYEIsXBNoFMPSVswSfmtBSeSL9lWFLgvR6L4ZZ1W+ebbGLpNrc9Ey+SYvtvA==
+"@cartesi/rollups@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-0.9.1.tgz#f6cd6294553b799016b721463160c65dadc6ff44"
+  integrity sha512-KTkvmRvWGKfecv2Vlnr6PmyNrVAtQBwzoAoqATWnZafOO06Pl/jSqVjyewLHsz+44tEst6lRsV8WDos4FeGlUA==
   dependencies:
     "@cartesi/util" "^5.0.2"
     "@openzeppelin/contracts" "4.8.0"

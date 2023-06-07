@@ -3,7 +3,7 @@
 FROM cartesi/toolchain:0.14.0 as toolchain
 FROM cartesi/rootfs:0.17.0 as rootfs
 FROM cartesi/server-manager:0.7.0 as server-manager
-FROM cartesi/rollups-hardhat:0.9.0-rc.0 as rollups-hardhat
+FROM cartesi/rollups-hardhat:0.9.1 as rollups-hardhat
 
 
 FROM rootfs as toolchain-python
