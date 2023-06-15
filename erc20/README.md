@@ -39,7 +39,7 @@ The payload of the notice should be something like this:
 "Deposit received from: 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266; ERC-20: 0xa513e6e4b8f2a923d98304ec87f64353c4d5c853; Amount: 100"
 ```
 
-In order to chech the voucher generated for the deposit, execute the following command:
+In order to check the voucher generated for the deposit, execute the following command:
 
 ```shell
 yarn start voucher list
