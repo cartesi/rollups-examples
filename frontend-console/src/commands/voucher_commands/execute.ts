@@ -30,7 +30,7 @@ interface Args extends ConnectArgs, RollupsArgs {
 }
 
 export const command = "execute";
-export const describe = "Execute voucher given its id";
+export const describe = "Execute voucher given its input index and its index";
 
 const DEFAULT_URL = "http://localhost:4000/graphql";
 
