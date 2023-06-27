@@ -7,17 +7,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] 2023-06-27
+
+### Added
+
+- Support for machine snapshots
+- Support for sepolia testnet
+- SimpleERC20 contract in common-contracts
+- Setup script for Auction DApp
+
+### Changed
+
+- Adapt all DApps to rollups 0.9.1
+- Reproducible builds using `docker-riscv` for DApps that do not compile code
+- Renamed common-contracts CartesiNFT contract to SimpleERC721
+- Bump machine-emulator-tools to 0.11.0
+- Bump toolchain to 0.14.0
+- Bump rootfs to 0.17.0
+- Bump rom to 0.16.0
+- Bump server-manager to 0.7.0
+
 ## [0.14.0] 2023-04-04
 
 ### Added
 
 - Support for Node.js and adaptation of Echo JS DApp to use it
-
-## [Unreleased]
-
-### Added
-
-- Added support to machine snapshots
 
 ## [0.13.0] 2023-03-10
 
@@ -286,6 +300,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove machine-emulator-tools submodule
 - Remove openapi-interfaces submodule
 
+[0.15.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.15.0
 [0.14.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.14.0
 [0.13.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.13.0
 [0.12.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.12.0
