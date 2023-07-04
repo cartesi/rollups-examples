@@ -19,8 +19,20 @@ RUN sha1sum -c shasumfile
 # Deploy contracts locally
 FROM rollups-hardhat AS local-deployments-stage
 
-RUN sh -c "npx hardhat deploy --write true --network hardhat"
+ARG NETWORK=localhost
+
+RUN <<EOF 
+if [ "$NETWORK" = "localhost" ] ; then
+    echo "Add localhost deployments"
+    sh -c "npx hardhat deploy --write true --network hardhat"
+else
+   mkdir /app/rollups/deployments/hardhat
+fi
+EOF
+
 ENTRYPOINT [ "/bin/sh" ]
+
+
 
 # Download known testnet/mainet deployments
 FROM busybox as deployments-stage

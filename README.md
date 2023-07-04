@@ -160,13 +160,13 @@ Deploying a new Cartesi DApp to a blockchain requires creating a smart contract 
 
 The first step is to build the DApp's back-end machine, which will produce a hash that serves as a unique identifier.
 
-Make sure to inform for which network (defaults to `localhost`) the back-end machine is going to be built by overriding build argument `server.args.NETWORK`.
+Make sure to inform for which network (defaults to `localhost`) the back-end machine is going to be built by overriding build argument `*.args.NETWORK`.
 
 For example, to build a machine to be deployed to Goerli, proceed as follows:
 
 ```shell
 cd <example>
-docker buildx bake machine --load --set server.args.NETWORK=goerli
+docker buildx bake machine --load --set *.args.NETWORK=goerli
 ```
 
 Once the machine docker image is ready, we can use it to deploy a corresponding Rollups smart contract.
@@ -218,7 +218,7 @@ Before running the Validator Node, a Cartesi Server Manager must be built specif
 For example, to build such a server for the Goerli network, execute the following command:
 
 ```shell
-docker buildx bake server --load --set server.args.NETWORK=goerli
+docker buildx bake server --load --set *.args.NETWORK=goerli
 ```
 
 Then, the node itself can be started by running a docker compose as follows:
