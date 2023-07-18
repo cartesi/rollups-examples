@@ -10,7 +10,7 @@ x-credentials:
 
 services:
   dispatcher:
-    image: cartesi/rollups-dispatcher:0.9.1
+    image: ghcr.io/cartesi/rollups-dispatcher:main
     restart: always
     depends_on:
       state_server:
@@ -25,7 +25,7 @@ services:
       SC_GRPC_ENDPOINT: http://state_server:50051
       SC_DEFAULT_CONFIRMATIONS: ${BLOCK_CONFIRMATIONS:?undefined BLOCK_CONFIRMATIONS}
       TX_PROVIDER_HTTP_ENDPOINT: ${RPC_URL:?undefined RPC_URL}
-      TX_MNEMONIC: ${MNEMONIC:?undefined MNEMONIC}
+      AUTH_MNEMONIC: ${MNEMONIC:?undefined MNEMONIC}
       TX_CHAIN_ID: ${CHAIN_ID:?undefined CHAIN_ID}
       TX_CHAIN_IS_LEGACY: ${TX_LEGACY:-false}
       TX_DEFAULT_CONFIRMATIONS: ${BLOCK_CONFIRMATIONS_TX:?undefined BLOCK_CONFIRMATIONS_TX}
@@ -34,7 +34,7 @@ services:
       - ./deployments:/deployments:ro
 
   state_server:
-    image: cartesi/rollups-state-server:0.9.1
+    image: ghcr.io/cartesi/rollups-state-server:main
     restart: always
     healthcheck:
       test: [ "CMD-SHELL", "bash -c 'echo \"\" > /dev/tcp/127.0.0.1/50051;'" ]
@@ -50,7 +50,7 @@ services:
       BH_BLOCK_TIMEOUT: 120
 
   advance_runner:
-    image: cartesi/rollups-advance-runner:0.9.1
+    image: ghcr.io/cartesi/rollups-advance-runner:main
     restart: always
     healthcheck:
       test: [ "CMD", "curl", "--fail", "localhost:8080/healthz" ]
@@ -89,7 +89,7 @@ services:
       - REMOTE_CARTESI_MACHINE_LOG_LEVEL=info
 
   inspect_server:
-    image: cartesi/rollups-inspect-server:0.9.1
+    image: ghcr.io/cartesi/rollups-inspect-server:main
     restart: always
     ports:
       - "5005:5005"
@@ -103,7 +103,7 @@ services:
       SESSION_ID: default_rollups_id
 
   indexer:
-    image: cartesi/rollups-indexer:0.9.1
+    image: ghcr.io/cartesi/rollups-indexer:main
     restart: always
     depends_on:
       database:
@@ -120,7 +120,7 @@ services:
       - ./deployments:/deployments:ro
 
   graphql_server:
-    image: cartesi/rollups-graphql-server:0.9.1
+    image: ghcr.io/cartesi/rollups-graphql-server:main
     ports:
       - "4000:4000"
     depends_on:
