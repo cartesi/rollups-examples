@@ -18,7 +18,7 @@ export const findInputAddedInfo = (
                 const parsedLog = inputContract.interface.parseLog(event);
                 if (parsedLog.name == "InputAdded") {
                     return {
-                        input_index: parsedLog.args?.inboxInputIndex?.toNumber(),
+                        input_index: parsedLog.args?.inputIndex?.toNumber(),
                     };
                 }
             } catch (e) {

@@ -259,11 +259,11 @@ Options are:
 --accountIndex  Account index from mnemonic
 ```
 
-If the `erc20` address is unspecified, the appropriate address for the CTSI token will be used for the target blockchain being specified.
+If the `erc20` address is unspecified, the appropriate address for the SimpleERC20 token will be used for the target blockchain being specified.
 
 #### Depositing ERC-721 tokens
 
-The `erc721 deposit` command deposits ERC-20 tokens in the DApp.
+The `erc721 deposit` command deposits ERC-721 tokens in the DApp.
 
 ```shell
 yarn start erc721 deposit --tokenId [token_id] <options>
