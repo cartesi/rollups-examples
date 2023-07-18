@@ -5,10 +5,10 @@ import { InputBox__factory } from "@cartesi/rollups";
 import { Input, Button, useToast } from "@chakra-ui/react";
 
 // OBS: change Echo DApp address as appropriate
-const DAPP_ADDRESS = "0x6DF0A75b1DED722A8544Da197F7907a6e9E5B380";
+const DAPP_ADDRESS = "0x70ac08179605AF2D9e75782b8DEcDD3c22aA4D0C";
 
 // Standard configuration for local development environment
-const INPUTBOX_ADDRESS = "0xD0Dd85da76c81Cc1D98191c42aDeAC51c6651F4B";
+const INPUTBOX_ADDRESS = "0x59b22D57D4f067708AB0c00552767405926dc768";
 const HARDHAT_DEFAULT_MNEMONIC =
     "test test test test test test test test test test test junk";
 const HARDHAT_LOCALHOST_RPC_URL = "http://localhost:8545";
@@ -64,15 +64,13 @@ function RoarForm() {
             setLoading(false);
             toast({
                 title: "Transaction Confirmed",
-                description: `Input added => index: ${event?.args.inboxInputIndex} `,
+                description: `Input added => index: ${event?.args.inputIndex} `,
                 status: "success",
                 duration: 9000,
                 isClosable: true,
                 position: "top-left",
             });
-            console.log(
-                `Input added => index: ${event?.args.inboxInputIndex} `
-            );
+            console.log(`Input added => index: ${event?.args.inputIndex} `);
         };
         sendInput();
     }

@@ -9,13 +9,13 @@ query notice($noticeIndex: Int!, $inputIndex: Int!) {
     payload
     proof {
       validity {
-        inputIndex
-        outputIndex
+        inputIndexWithinEpoch
+        outputIndexWithinInput
         outputHashesRootHash
         vouchersEpochRootHash
         noticesEpochRootHash
         machineStateHash
-        keccakInHashesSiblings
+        outputHashInOutputHashesSiblings
         outputHashesInEpochSiblings
       }
       context
@@ -66,13 +66,13 @@ query voucher($voucherIndex: Int!, $inputIndex: Int!) {
     payload
     proof {
       validity {
-        inputIndex
-        outputIndex
+        inputIndexWithinEpoch
+        outputIndexWithinInput
         outputHashesRootHash
         vouchersEpochRootHash
         noticesEpochRootHash
         machineStateHash
-        keccakInHashesSiblings
+        outputHashInOutputHashesSiblings
         outputHashesInEpochSiblings
       }
       context

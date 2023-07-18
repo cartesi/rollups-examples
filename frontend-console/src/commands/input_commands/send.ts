@@ -63,7 +63,7 @@ export const getInputKeys = (receipt: ContractReceipt): InputKeys => {
 
     const inputAdded = event as InputAddedEvent;
     return {
-        input_index: inputAdded.args.inboxInputIndex.toNumber(),
+        input_index: inputAdded.args.inputIndex.toNumber(),
     };
 };
 
@@ -103,7 +103,5 @@ export const handler = async (args: Args) => {
 
     // find reference to notice from transaction receipt
     const inputKeys = getInputKeys(receipt);
-    console.log(
-        `input ${inputKeys.input_index} added`
-    );
+    console.log(`input ${inputKeys.input_index} added`);
 };

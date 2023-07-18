@@ -35,9 +35,9 @@ type Input {
 "Validity proof for an output"
 type OutputValidityProof {
   "Local input index within the context of the related epoch"
-  inputIndex: Int!
+  inputIndexWithinEpoch: Int!
   "Output index within the context of the input that produced it"
-  outputIndex: Int!
+  outputIndexWithinInput: Int!
   "Merkle root of all output hashes of the related input, given in Ethereum hex binary format (32 bytes), starting with '0x'"
   outputHashesRootHash: String!
   "Merkle root of all voucher hashes of the related epoch, given in Ethereum hex binary format (32 bytes), starting with '0x'"
@@ -47,7 +47,7 @@ type OutputValidityProof {
   "Hash of the machine state claimed for the related epoch, given in Ethereum hex binary format (32 bytes), starting with '0x'"
   machineStateHash: String!
   "Proof that this output hash is in the output-hashes merkle tree. This array of siblings is bottom-up ordered (from the leaf to the root). Each hash is given in Ethereum hex binary format (32 bytes), starting with '0x'."
-  keccakInHashesSiblings: [String!]!
+  outputHashInOutputHashesSiblings: [String!]!
   "Proof that this output-hashes root hash is in epoch's output merkle tree. This array of siblings is bottom-up ordered (from the leaf to the root). Each hash is given in Ethereum hex binary format (32 bytes), starting with '0x'."
   outputHashesInEpochSiblings: [String!]!
 }

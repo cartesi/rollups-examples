@@ -7,26 +7,40 @@ services:
     volumes:
       - machine:/var/opt/cartesi/machine-snapshots
 
-  deployer:
-    image: cartesi/rollups-cli:0.9.1
+  authority-deployer:
+    image: cartesi/rollups-hardhat:1.0.0
+    command:
+      [
+        "deploy",
+        "--tags",
+        "Authority",
+        "--network",
+        "${NETWORK:?undefined NETWORK}",
+        "--export",
+        "/home/node/rollups.json",
+      ]
+    volumes:
+      - ./deployments/${NETWORK:?undefined NETWORK}:/home/node
+    environment:
+      - MNEMONIC=${MNEMONIC:?undefined MNEMONIC}
+      - RPC_URL=${RPC_URL:?undefined RPC_URL}
+
+  dapp-deployer:
+    build: ./build/testnet-dapp-deployer
     depends_on:
       machine:
         condition: service_started
-    command:
-      [
-        "create",
-        "--rpc",
-        "${RPC_URL:?undefined RPC_URL}",
-        "--mnemonic",
-        "${MNEMONIC:?undefined MNEMONIC}",
-        "--templateHashFile",
-        "/var/opt/cartesi/machine-snapshots/latest/hash",
-        "--outputFile",
-        "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.json",
-      ]
+      authority-deployer:
+        condition: service_completed_successfully
     volumes:
       - machine:/var/opt/cartesi/machine-snapshots:ro
       - ./deployments:/deployments
+      - ./build:/build
+    environment:
+      - MNEMONIC=${MNEMONIC:?undefined MNEMONIC}
+      - NETWORK=${NETWORK:?undefined NETWORK}
+      - RPC_URL=${RPC_URL:?undefined RPC_URL}
+      - DAPP_NAME=${DAPP_NAME:?undefined DAPP_NAME}
 
 volumes:
   machine: {}
