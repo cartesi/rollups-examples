@@ -11,22 +11,31 @@
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-if [ $# -ne 1 ]
+if [ $# -eq 0 ]
   then
     echo "No DAPP_NAME supplied"
-    echo "Usage: $0 DAPP_NAME"
+    echo "Usage: $0 DAPP_NAME [BUILD_SYSTEM]"
     exit 1
 fi
 
 dapp_name=${1}
+build_system=${2:-std-rootfs}
+
+if [[ ! "$build_system" =~ ^(std-rootfs|docker-riscv)$ ]]; then
+    echo "BUILD_SYSTEM should either be std-rootfs or docker-riscv"
+    echo "Usage: $0 DAPP_NAME [BUILD_SYSTEM]"
+    exit 1
+fi
+
 echo "Creating DApp ${dapp_name}..."
 
 echo "Copying files from template..."
 cp -pr template ${dapp_name}
+cp template-dockerfile/${build_system}.Dockerfile ${dapp_name}/Dockerfile
 
 echo "Copying common files..."
-cp -pr ../build/std-rootfs ${dapp_name}
-mv ${dapp_name}/std-rootfs/base.hcl ${dapp_name}/docker-bake.hcl
+cp -pr ../build/${build_system} ${dapp_name}
+mv ${dapp_name}/${build_system}/base.hcl ${dapp_name}/docker-bake.hcl
 cp ../deploy-testnet.yml ${dapp_name}
 cp ../docker-compose.yml ${dapp_name}
 cp ../docker-compose-testnet.yml ${dapp_name}
@@ -37,7 +46,7 @@ echo "Customizing DApp infrastructure..."
 for i in \
     ${dapp_name}/docker-bake.hcl
 do
-    sed -i'' -e "s/\.\.\/build\/std-rootfs/\.\/std-rootfs/g" $i
+    sed -i'' -e "s/\.\.\/build\/${build_system}/\.\/${build_system}/g" $i
 done
 
 # replace template placeholders by dapp name
@@ -46,6 +55,7 @@ for i in \
     ${dapp_name}/docker-bake.override.hcl \
     ${dapp_name}/docker-compose.override.yml \
     ${dapp_name}/entrypoint.sh \
+    ${dapp_name}/Dockerfile \
     ${dapp_name}/README.md
 do
     sed -i'' -e "s/template/${dapp_name}/g" $i
