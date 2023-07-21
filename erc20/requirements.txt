@@ -1,2 +1,3 @@
+cytoolz == 0.11.2
 requests == 2.23.0
 eth_abi == 4.0.0
