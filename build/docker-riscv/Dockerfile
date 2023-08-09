@@ -146,4 +146,4 @@ FROM busybox as machine-stage
 
 WORKDIR /var/opt/cartesi/machine-snapshots
 COPY --from=server-stage /var/opt/cartesi/machine-snapshots .
-CMD ["xxd", "-c", "256", "-p", "hash"]
+CMD ["xxd", "-c", "256", "-p", "0_0/hash"]
