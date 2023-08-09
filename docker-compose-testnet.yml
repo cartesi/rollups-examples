@@ -20,7 +20,7 @@ services:
     environment:
       RUST_LOG: info
       RD_DAPP_DEPLOYMENT_FILE: /deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.json
-      RD_ROLLUPS_DEPLOYMENT_FILE: /opt/cartesi/share/deployments/${NETWORK:?undefined NETWORK}.json
+      RD_ROLLUPS_DEPLOYMENT_FILE: /deployments/${NETWORK:?undefined NETWORK}/rollups.json
       RD_EPOCH_DURATION: 86400
       SC_GRPC_ENDPOINT: http://state_server:50051
       SC_DEFAULT_CONFIRMATIONS: ${BLOCK_CONFIRMATIONS:?undefined BLOCK_CONFIRMATIONS}
