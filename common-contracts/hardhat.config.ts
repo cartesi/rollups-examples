@@ -1,40 +1,51 @@
-// Copyright 2021 Cartesi Pte. Ltd.
+// (c) Cartesi and individual authors (see AUTHORS)
+// SPDX-License-Identifier: Apache-2.0 (see LICENSE)
 
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not
-// use this file except in compliance with the License. You may obtain a copy
-// of the license at http://www.apache.org/licenses/LICENSE-2.0
-
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-// License for the specific language governing permissions and limitations
-// under the License.
-
+import path from "path";
 import { HardhatUserConfig } from "hardhat/config";
 import { HttpNetworkUserConfig } from "hardhat/types";
-import dotenv from "dotenv"; dotenv.config();
+import { getSingletonFactoryInfo } from "@safe-global/safe-singleton-factory";
 
-import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-ethers";
-import "@nomiclabs/hardhat-etherscan";
+import "@nomicfoundation/hardhat-verify";
 import "@typechain/hardhat";
 import "hardhat-deploy";
-import "solidity-coverage";
+import "hardhat-abi-exporter";
 import "hardhat-gas-reporter";
-import "./tasks/mint"
 
-// read MNEMONIC from file or from env variable
+import {
+    Chain,
+    arbitrum,
+    arbitrumGoerli,
+    mainnet,
+    optimism,
+    optimismGoerli,
+    sepolia,
+} from "@wagmi/chains";
+
+// read MNEMONIC from env variable
 let mnemonic = process.env.MNEMONIC;
 
-const infuraNetwork = (
-    network: string,
-    chainId?: number,
-    gas?: number
-): HttpNetworkUserConfig => {
+const ppath = (packageName: string, pathname: string) => {
+    return path.join(
+        path.dirname(require.resolve(`${packageName}/package.json`)),
+        pathname
+    );
+};
+
+const networkConfig = (chain: Chain): HttpNetworkUserConfig => {
+    let url = process.env.RPC_URL || chain.rpcUrls.public.http.at(0);
+
+    // support for infura and alchemy URLs through env variables
+    if (process.env.INFURA_ID && chain.rpcUrls.infura?.http) {
+        url = `${chain.rpcUrls.infura.http}/${process.env.INFURA_ID}`;
+    } else if (process.env.ALCHEMY_ID && chain.rpcUrls.alchemy?.http) {
+        url = `${chain.rpcUrls.alchemy.http}/${process.env.ALCHEMY_ID}`;
+    }
+
     return {
-        url: `https://${network}.infura.io/v3/${process.env.PROJECT_ID}`,
-        chainId,
-        gas,
+        chainId: chain.id,
+        url,
         accounts: mnemonic ? { mnemonic } : undefined,
     };
 };
@@ -43,48 +54,53 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: mnemonic ? { accounts: { mnemonic } } : {},
         localhost: {
-            url: "http://localhost:8545",
+            url: process.env.RPC_URL || "http://localhost:8545",
             accounts: mnemonic ? { mnemonic } : undefined,
         },
-        mainnet: infuraNetwork("mainnet", 1, 6283185),
-        goerli: infuraNetwork("goerli", 5, 6283185),
-        sepolia: infuraNetwork("sepolia", 11155111, 6283185),
-        polygon_mumbai: infuraNetwork("polygon-mumbai", 80001),
-        arbitrum_goerli: infuraNetwork("arbitrum-goerli", 421613),
-        optimism_goerli: infuraNetwork("optimism-goerli", 420),
-        bsc_testnet: {
-            url: "https://data-seed-prebsc-1-s1.binance.org:8545",
-            chainId: 97,
-            accounts: mnemonic ? { mnemonic } : undefined,
-        },
-        iotex_testnet: {
-            url: "https://babel-api.testnet.iotex.io",
-            chainId: 4690,
-            accounts: mnemonic ? { mnemonic } : undefined,
-        },
-        chiado: {
-            url: "https://rpc.chiadochain.net",
-            chainId: 10200,
-            gasPrice: 1000000000,
-            accounts: mnemonic ? { mnemonic } : undefined,
-        },
+        arbitrum: networkConfig(arbitrum),
+        arbitrum_goerli: networkConfig(arbitrumGoerli),
+        mainnet: networkConfig(mainnet),
+        sepolia: networkConfig(sepolia),
+        optimism: networkConfig(optimism),
+        optimism_goerli: networkConfig(optimismGoerli),
     },
     solidity: {
-        compilers: [
-            {
-                version: "0.8.18",
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                    },
-                },
+        version: "0.8.19",
+        settings: {
+            optimizer: {
+                enabled: true,
             },
-        ],
+        },
     },
     paths: {
         artifacts: "artifacts",
         deploy: "deploy",
         deployments: "deployments",
+    },
+    deterministicDeployment: (network: string) => {
+        // networks will use another deterministic deployment proxy
+        // https://github.com/safe-global/safe-singleton-factory
+        const chainId = parseInt(network);
+        const info = getSingletonFactoryInfo(chainId);
+        if (info) {
+            return {
+                factory: info.address,
+                deployer: info.signerAddress,
+                funding: (
+                    BigInt(info.gasPrice) * BigInt(info.gasLimit)
+                ).toString(),
+                signedTx: info.transaction,
+            };
+        } else {
+            console.warn(
+                `unsupported deterministic deployment for network ${network}`
+            );
+            return undefined;
+        }
+    },
+    abiExporter: {
+        runOnCompile: true,
+        clear: true,
     },
     typechain: {
         outDir: "src/types",
@@ -97,6 +113,9 @@ const config: HardhatUserConfig = {
         deployer: {
             default: 0,
         },
+    },
+    gasReporter: {
+        enabled: process.env.REPORT_GAS ? true : false,
     },
 };
 
