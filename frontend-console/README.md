@@ -7,8 +7,8 @@ It's implemented in Typescript and uses the [ethers](https://docs.ethers.io/v5/)
 
 ## Requirements
 
-- node.js
-- yarn
+-   node.js
+-   yarn
 
 ## Building
 
@@ -65,11 +65,11 @@ Examples:
     yarn start input send --payload "my message"
     ```
 
-1. Send an input to an instance of the `echo-python` DApp already deployed to the Ethereum Goerli testnet, using a user's account and a user's gateway RPC on Alchemy:
+1. Send an input to an instance of the `echo-python` DApp already deployed to the Ethereum Sepolia testnet, using a user's account and a user's gateway RPC on Alchemy:
 
     ```shell
     export MNEMONIC=<user sequence of twelve words>
-    export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
+    export RPC_URL=https://eth-sepolia.g.alchemy.com/v2/<USER_KEY>
 
     yarn start input send --payload "my message" --dapp echo-python
     ```
@@ -80,12 +80,12 @@ When sending data to a DApp, the console application needs to communicate with t
 
 The following parameters are available to specify this configuration, with some default behaviors and values to make it convenient to the user, especially for a local development environment:
 
-- **`--rpc`**: provides the RPC URL of the remote blockchain gateway; if absent, its default value is "http://localhost:8545", which provides connectivity to the Hardhat node used for local development; it may also be specified by setting a value for the environment variable `RPC_URL`;
-- **`--address`**: represents an explicit definition for the address of the DApp's Rollups smart contract, given as a hex string; if absent, the console application will look for other ways to determine this address, as explained below
-- **`--addressFile`**: provides a path to a file containing the address as a hex string, and is only used if `address` is absent
-- **`--dapp`**: specifies the name of the DApp, with a default value of "dapp"; if both `address` and `addressFile` are absent, the console application will query the given RPC instance to infer the network being used, and will extract the DApp's address from file `../deployments/<network>/<dapp>.json`; as such, if none of the above parameters are specified, the DApp address will be determined by looking for the file `../deployments/localhost/dapp.json`;
-- **`--mnemonic`**: determines an account for submitting transactions; when using the `localhost` network, the application will use the default `mnemonic` for the local Hardhat node, which is already funded; otherwise, you must define a mnemonic for an account that has funds in the specified network; you can also define this parameter by setting the `MNEMONIC` environment variable;
-- **`--accountIndex`**: specifies an account index to use from the provided mnemonic; if absent, index `0` is used;
+-   **`--rpc`**: provides the RPC URL of the remote blockchain gateway; if absent, its default value is "http://localhost:8545", which provides connectivity to the Hardhat node used for local development; it may also be specified by setting a value for the environment variable `RPC_URL`;
+-   **`--address`**: represents an explicit definition for the address of the DApp's Rollups smart contract, given as a hex string; if absent, the console application will look for other ways to determine this address, as explained below
+-   **`--addressFile`**: provides a path to a file containing the address as a hex string, and is only used if `address` is absent
+-   **`--dapp`**: specifies the name of the DApp, with a default value of "dapp"; if both `address` and `addressFile` are absent, the console application will query the given RPC instance to infer the network being used, and will extract the DApp's address from file `../deployments/<network>/<dapp>.json`; as such, if none of the above parameters are specified, the DApp address will be determined by looking for the file `../deployments/localhost/dapp.json`;
+-   **`--mnemonic`**: determines an account for submitting transactions; when using the `localhost` network, the application will use the default `mnemonic` for the local Hardhat node, which is already funded; otherwise, you must define a mnemonic for an account that has funds in the specified network; you can also define this parameter by setting the `MNEMONIC` environment variable;
+-   **`--accountIndex`**: specifies an account index to use from the provided mnemonic; if absent, index `0` is used;
 
 ### Listing notices, vouchers and reports
 
@@ -117,10 +117,10 @@ Examples:
     yarn start voucher list --input 1
     ```
 
-1. List notices for input `3` of the `echo-python` DApp instance already deployed to the Ethereum Goerli testnet:
+1. List notices for input `3` of an `echo-python` DApp instance already deployed remotely:
 
     ```shell
-    yarn start notice list --url https://echo-python.goerli.rollups.staging.cartesi.io/graphql --input 3
+    yarn start notice list --url https://<dapp-cartesi-node-url>/graphql --input 3
     ```
 
 Options are:
@@ -161,13 +161,13 @@ Examples:
     yarn start voucher execute --index 1 --input 3
     ```
 
-1. Validate notice with index `0` of input `5` for the `echo-python` DApp already deployed to the Ethereum Goerli testnet, using a user's account and a user's gateway RPC on Alchemy:
+1. Validate notice with index `0` of input `5` for an `echo-python` DApp already deployed to the Ethereum Sepolia testnet, using a user's account and a user's gateway RPC on Alchemy:
 
     ```shell
     export MNEMONIC=<user sequence of twelve words>
-    export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
+    export RPC_URL=https://eth-sepolia.g.alchemy.com/v2/<USER_KEY>
 
-    yarn start notice validate --index 0 --input 5 --dapp echo-python --url https://echo-python.goerli.rollups.staging.cartesi.io/graphql
+    yarn start notice validate --index 0 --input 5 --dapp echo-python --url https://<dapp-cartesi-node-url>/graphql
     ```
 
 Options are:
@@ -203,10 +203,10 @@ Examples:
     yarn start inspect --payload "myresource?attr1=value1&attr2=value2"
     ```
 
-1. Inspect the state of the `echo-python` DApp instance already deployed to the Ethereum Goerli testnet:
+1. Inspect the state of the `echo-python` DApp instance already deployed remotely:
 
     ```shell
-    yarn start inspect --payload "mypayload" --url https://echo-python.goerli.rollups.staging.cartesi.io/inspect
+    yarn start inspect --payload "mypayload" --url https://<dapp-cartesi-node-url>/inspect
     ```
 
 Options are:
@@ -238,11 +238,11 @@ Examples:
     yarn start erc20 deposit --amount 10000000000000000000
     ```
 
-1. Deposit 10 CTSI in the `echo-python` DApp instance already deployed to the Ethereum Goerli testnet, using a user's account and a user's gateway RPC on Alchemy:
+1. Deposit 10 CTSI in the `echo-python` DApp instance already deployed to the Ethereum Sepolia testnet, using a user's account and a user's gateway RPC on Alchemy:
 
     ```shell
     export MNEMONIC=<user sequence of twelve words>
-    export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
+    export RPC_URL=https://eth-sepolia.g.alchemy.com/v2/<USER_KEY>
 
     yarn start erc20 deposit --amount 10000000000000000000 --dapp echo-python
     ```
@@ -277,11 +277,11 @@ Examples:
     yarn start erc721 deposit --tokenId 1
     ```
 
-1. Deposit token with id `1` in the `echo-python` DApp instance already deployed to the Ethereum Goerli testnet, using a user's account and a user's gateway RPC on Alchemy:
+1. Deposit token with id `1` in the `echo-python` DApp instance already deployed to the Ethereum Sepolia testnet, using a user's account and a user's gateway RPC on Alchemy:
 
     ```shell
     export MNEMONIC=<user sequence of twelve words>
-    export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
+    export RPC_URL=https://eth-sepolia.g.alchemy.com/v2/<USER_KEY>
 
     yarn start erc721 deposit --tokenId 1 --dapp echo-python
     ```

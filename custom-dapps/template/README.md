@@ -72,12 +72,12 @@ export MNEMONIC=<user sequence of twelve words>
 export RPC_URL=<https://your.rpc.gateway>
 ```
 
-For example, to deploy to the Goerli testnet using an Alchemy RPC node, you could execute:
+For example, to deploy to the Sepolia testnet using an Alchemy RPC node, you could execute:
 
 ```shell
-export NETWORK=goerli
+export NETWORK=sepolia
 export MNEMONIC=<user sequence of twelve words>
-export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
+export RPC_URL=https://eth-sepolia.g.alchemy.com/v2/<USER_KEY>
 ```
 
 With that in place, you can submit a deploy transaction to the Cartesi DApp Factory contract on the target network by executing the following command:
@@ -96,11 +96,11 @@ DAPP_NAME=template docker compose -f ./deploy-testnet.yml down -v
 After that, a corresponding Cartesi Validator Node must also be instantiated in order to interact with the deployed smart contract on the target network and handle the back-end logic of the DApp.
 Aside from the environment variables defined above, the node will also need a secure websocket endpoint for the RPC gateway (WSS URL) and the chain ID of the target network.
 
-For example, for Goerli and Alchemy, you would set the following additional variables:
+For example, for Sepolia and Alchemy, you would set the following additional variables:
 
 ```shell
-export WSS_URL=wss://eth-goerli.alchemyapi.io/v2/<USER_KEY>
-export CHAIN_ID=5
+export WSS_URL=wss://eth-sepolia.g.alchemy.com/v2/<USER_KEY>
+export CHAIN_ID=11155111
 ```
 
 Then, the node itself can be started by running a docker compose as follows:
