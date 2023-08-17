@@ -138,50 +138,44 @@ When executing an example, it is possible to advance time in order to simulate t
 curl --data '{"id":1337,"jsonrpc":"2.0","method":"evm_increaseTime","params":[864010]}' http://localhost:8545
 ```
 
-## Using testnets
-
-<!-- markdownlint-disable MD024 -->
-
-### Interacting with deployed DApps
-
-Several examples committed to this repository are already deployed to the Ethereum Goerli testnet: [echo-python](./echo-python/README.md), [echo-cpp](./echo-cpp/README.md), [echo-lua](./echo-lua/README.md), [echo-js](./echo-js/README.md), [echo-low-level](./echo-low-level/README.md), [sqlite](./sqlite/README.md) and [knn](./knn/README.md). In order to interact with them, you can simply use the [frontend-console](./frontend-console) tool mentioned before, but this time specifying a few connectivity configurations appropriate for the target network.
-
-First of all, you will need to provide an account with some funds for submitting transactions. This can be accomplished by specifying a mnemonic string, and optionally an account index to use from that mnemonic.
-There are a few ways to get free Goerli testnet funds using _token faucets_. Sometimes you will be required to [use social media accounts](https://goerli-faucet.mudit.blog/) to request tokens, but in other cases you can just [directly specify an account address](https://goerli-faucet.slock.it/). Do keep in mind that individual faucets are kept by third-parties, are not guaranteed to be functioning at all times, and may be discontinued.
-
-Aside from the account to use, submitting transactions also requires you to provide the URL of an appropriate RPC gateway node for the target network. There are many options for that, and several services provide private nodes with free tiers that are more than enough for running these examples. Some options include [Alchemy](https://www.alchemy.com/), [Infura](https://infura.io/) and [Moralis](https://moralis.io/).
-
-Finally, to query the layer-2 Cartesi Node for DApp outputs, you will need to specify the URL of its GraphQL endpoint. As a general rule, the examples deployed to Goerli have their endpoints available at `https://<example>.goerli.rollups.staging.cartesi.io/graphql`.
-As such, the Echo Python DApp has its endpoint available at `https://echo-python.goerli.rollups.staging.cartesi.io/graphql`. Please refer to the [frontend-console](./frontend-console)'s documentation for details on how to use it to [send inputs](./frontend-console/README.md#sending-inputs), [list outputs](./frontend-console/README.md#listing-notices-vouchers-and-reports), [deposit tokens](./frontend-console/README.md#depositing-erc-20-tokens), and more.
-
-### Deploying DApps
+## Deploying
 
 Deploying a new Cartesi DApp to a blockchain requires creating a smart contract on that network, as well as running a validator node for the DApp.
+
+### Building machine to deploy
 
 The first step is to build the DApp's back-end machine, which will produce a hash that serves as a unique identifier.
 
 Make sure to inform for which network (defaults to `localhost`) the back-end machine is going to be built by overriding build argument `*.args.NETWORK`.
 
-For example, to build a machine to be deployed to Goerli, proceed as follows:
+For example, to build a machine to be deployed to Sepolia, proceed as follows:
 
 ```shell
 cd <example>
-docker buildx bake machine --load --set *.args.NETWORK=goerli
+docker buildx bake machine --load --set *.args.NETWORK=sepolia
 ```
 
+### Deploying DApp contract
+
 Once the machine docker image is ready, we can use it to deploy a corresponding Rollups smart contract.
-This requires you to specify the account and RPC gateway to use when submitting the deploy transaction on the target network, which can be done by defining the following environment variables:
+
+In order to do that, you will need to provide an account with some funds for submitting transactions. The account is often specified by providing a mnemonic string, and optionally an account index to use from that mnemonic.
+For testnets such as Sepolia, it is usually possible to get free testnet funds by using _token faucets_. But do keep in mind that individual faucets are kept by third-parties, are not guaranteed to be functioning at all times, and may be discontinued.
+
+Aside from the account to use, submitting transactions also requires you to provide the URL of an appropriate RPC gateway node for the target network. There are many options for that, and several services provide private nodes with free tiers that are more than enough for running these examples. Some options include [Alchemy](https://www.alchemy.com/), [Infura](https://infura.io/) and [Moralis](https://moralis.io/).
+
+You can specify the account and RPC gateway to use by defining the following environment variables:
 
 ```shell
 export MNEMONIC=<user sequence of twelve words>
 export RPC_URL=<https://your.rpc.gateway>
 ```
 
-For example, to deploy to the Goerli testnet using an Alchemy RPC node, you could execute:
+For example, to configure deployment to the Sepolia testnet using an Alchemy RPC node, you could execute:
 
 ```shell
 export MNEMONIC=<user sequence of twelve words>
-export RPC_URL=https://eth-goerli.alchemyapi.io/v2/<USER_KEY>
+export RPC_URL=https://eth-sepolia.g.alchemy.com/v2/<USER_KEY>
 ```
 
 With that in place, you can submit a deploy transaction to the Cartesi DApp Factory contract on the target network by executing the following command:
@@ -190,10 +184,10 @@ With that in place, you can submit a deploy transaction to the Cartesi DApp Fact
 DAPP_NAME=<example> docker compose --env-file ../env.<network> -f ../deploy-testnet.yml up
 ```
 
-Here, `env.<network>` specifies general parameters for the target network, like its name and chain ID. In the case of Goerli, the command would be:
+Here, `env.<network>` specifies general parameters for the target network, like its name and chain ID. In the case of Sepolia, the command would be:
 
 ```shell
-DAPP_NAME=<example> docker compose --env-file ../env.goerli -f ../deploy-testnet.yml up
+DAPP_NAME=<example> docker compose --env-file ../env.sepolia -f ../deploy-testnet.yml up
 ```
 
 This will create a file at `../deployments/<network>/<example>.json` with the deployed contract's address.
@@ -203,22 +197,24 @@ Once the command finishes, it is advisable to stop the docker compose and remove
 DAPP_NAME=<example> docker compose --env-file ../env.<network> -f ../deploy-testnet.yml down -v
 ```
 
-After that, a corresponding Cartesi Validator Node must also be instantiated in order to interact with the deployed smart contract on the target network and handle the back-end logic of the DApp.
+### Running a validator node
+
+With the DApp's smart contract deployed to the target network, a corresponding Cartesi Validator Node must also be instantiated to interact with it and handle the back-end logic of the DApp.
 
 Aside from the environment variables defined before, the node will also need a secure websocket endpoint for the RPC gateway (WSS URL).
 
-For example, for Goerli and Alchemy, you would set the following additional variable:
+For example, for Sepolia and Alchemy, you would set the following additional variable:
 
 ```shell
-export WSS_URL=wss://eth-goerli.alchemyapi.io/v2/<USER_KEY>
+export WSS_URL=wss://eth-sepolia.g.alchemy.com/v2/<USER_KEY>
 ```
 
 Before running the Validator Node, a Cartesi Server Manager must be built specifying the network being used.
 
-For example, to build such a server for the Goerli network, execute the following command:
+For example, to build such a server for the Sepolia network, execute the following command:
 
 ```shell
-docker buildx bake server --load --set *.args.NETWORK=goerli
+docker buildx bake server --load --set *.args.NETWORK=sepolia
 ```
 
 Then, the node itself can be started by running a docker compose as follows:
@@ -232,6 +228,10 @@ Alternatively, you can also run the node on host mode by executing:
 ```shell
 DAPP_NAME=<example> docker compose --env-file ../env.<network> -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml -f ../docker-compose-host-testnet.yml up
 ```
+
+### Interacting with deployed DApps
+
+You can interact with deployed DApps using the [frontend-console](./frontend-console) tool mentioned before, but this time specifying a few connectivity configurations appropriate for the target network. Please refer to its documentation for details on how to use it to [send inputs](./frontend-console/README.md#sending-inputs), [list outputs](./frontend-console/README.md#listing-notices-vouchers-and-reports), [deposit tokens](./frontend-console/README.md#depositing-erc-20-tokens), and more.
 
 ## Creating DApps
 
