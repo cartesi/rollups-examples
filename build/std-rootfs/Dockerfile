@@ -149,6 +149,20 @@ RUN mkdir -p /var/opt/cartesi/machine-snapshots
 RUN build-machine.sh /var/opt/cartesi/machine-snapshots/0_0 $NETWORK
 RUN ln -s /var/opt/cartesi/machine-snapshots/0_0 /var/opt/cartesi/machine-snapshots/latest
 
+# add line buffering to remote-cartesi-machine
+USER root
+RUN mv /opt/cartesi/bin/remote-cartesi-machine /opt/cartesi/bin/remote-cartesi-machine.bak
+RUN <<EOF cat > /opt/cartesi/bin/remote-cartesi-machine
+#!/bin/bash
+/opt/cartesi/bin/remote-cartesi-machine.bak "\$@" |
+while IFS= read -r line
+do
+    echo "\$line"
+done
+EOF
+RUN chmod 755 /opt/cartesi/bin/remote-cartesi-machine
+USER cartesi
+
 # switch back to server-manager workdir
 WORKDIR /opt/cartesi/bin
 
