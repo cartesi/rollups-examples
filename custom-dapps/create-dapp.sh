@@ -26,14 +26,17 @@ cp -pr template ${dapp_name}
 
 echo "Copying common files..."
 cp -pr ../build/std-rootfs ${dapp_name}
+cp -pr ../build/testnet-dapp-deployer ${dapp_name}
 mv ${dapp_name}/std-rootfs/base.hcl ${dapp_name}/docker-bake.hcl
 cp ../deploy-testnet.yml ${dapp_name}
 cp ../docker-compose.yml ${dapp_name}
 cp ../docker-compose-testnet.yml ${dapp_name}
 cp ../docker-compose-host.yml ${dapp_name}
+cp ../env.* ${dapp_name}
 
 echo "Customizing DApp infrastructure..."
 # adjust relative paths
+sed -i'' -e "s/\.\/build/\./g" ${dapp_name}/deploy-testnet.yml
 for i in \
     ${dapp_name}/docker-bake.hcl
 do

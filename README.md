@@ -223,6 +223,12 @@ Then, the node itself can be started by running a docker compose as follows:
 DAPP_NAME=<example> docker compose --env-file ../env.<network> -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml up
 ```
 
+Which, in the case of Sepolia, would be:
+
+```shell
+DAPP_NAME=<example> docker compose --env-file ../env.sepolia -f ../docker-compose-testnet.yml -f ./docker-compose.override.yml up
+```
+
 Alternatively, you can also run the node on host mode by executing:
 
 ```shell
