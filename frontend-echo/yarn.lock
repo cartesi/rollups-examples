@@ -1098,20 +1098,18 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cartesi/rollups@^0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-0.9.1.tgz#f6cd6294553b799016b721463160c65dadc6ff44"
-  integrity sha512-KTkvmRvWGKfecv2Vlnr6PmyNrVAtQBwzoAoqATWnZafOO06Pl/jSqVjyewLHsz+44tEst6lRsV8WDos4FeGlUA==
+"@cartesi/rollups@^1.0.0-rc.3":
+  version "1.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-1.0.0-rc.3.tgz#0595bf1653dae69f4a6f5ace701dea886b556bba"
+  integrity sha512-Z6T2lXDHfeVEHb6/rdflqHIBKrHf2lib4FO0Q/NzmXJotKilGJifXZjQxGIoZn8WWhDkuPwGKhBigQpy+G+dNA==
   dependencies:
-    "@cartesi/util" "^5.0.2"
-    "@openzeppelin/contracts" "4.8.0"
+    "@cartesi/util" "6.0.0"
+    "@openzeppelin/contracts" "4.9.2"
 
-"@cartesi/util@^5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@cartesi/util/-/util-5.0.2.tgz#dfe0ff88b1998b88eafc4089949c3df71e3246e1"
-  integrity sha512-mIaOplU+RKkiW10JRpDBG8IG7lGKyXrkF6w4WHVZ2YKWze5I+mzJBaPALZLtJSuwb6GCqLZbB7NZx3A7iZyWkA==
-  dependencies:
-    "@openzeppelin/contracts" "3.2.1-solc-0.7"
+"@cartesi/util@6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@cartesi/util/-/util-6.0.0.tgz#e24d39859a369e14d19b8348d53bf3b0857ff42f"
+  integrity sha512-n5+jFRI60HOp6xOd0IDtQU/2eh/u2uojxB1xVoTHi9Qu8EXWLeCT3s3+2bsBevk1duDFtAiqQeTT8g7dcj9+7g==
 
 "@chakra-ui/accordion@2.1.11":
   version "2.1.11"
@@ -2888,15 +2886,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@openzeppelin/contracts@3.2.1-solc-0.7":
-  version "3.2.1-solc-0.7"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.2.1-solc-0.7.tgz#067a60918b935d4733208edb3d7e35cd1d51026b"
-  integrity sha512-VfKZE9L2HNaZVBR7l5yHbRmap3EiVw9F5iVXRRDdgfnA9vQ1yFanrs0VYmdo2VIXC+EsI9wPPYZY9Ic7/qDBdw==
-
-"@openzeppelin/contracts@4.8.0":
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.8.0.tgz#6854c37df205dd2c056bdfa1b853f5d732109109"
-  integrity sha512-AGuwhRRL+NaKx73WKRNzeCxOCOCxpaqF+kp8TJ89QzAipSwZy/NoflkWaL9bywXFRhIzXt8j38sfF7KBKCPWLw==
+"@openzeppelin/contracts@4.9.2":
+  version "4.9.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.9.2.tgz#1cb2d5e4d3360141a17dbc45094a8cad6aac16c1"
+  integrity sha512-mO+y6JaqXjWeMh9glYVzVu8HYPGknAAnWyxTRhGeckOruyXQMNnlcW6w/Dx9ftLeIQk6N+ZJFuVmTwF7lEIFrg==
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.9"

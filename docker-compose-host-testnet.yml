@@ -2,7 +2,7 @@ version: "3"
 
 services:
   server_manager:
-    image: cartesi/rollups-host-runner:1.0.0-rc.2
+    image: cartesi/rollups-host-runner:1.0.0-rc.3
     ports:
       - "5004:5004"
     environment:

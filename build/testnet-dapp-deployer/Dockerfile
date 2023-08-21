@@ -1,5 +1,5 @@
 # syntax=docker.io/docker/dockerfile:1.4
-FROM cartesi/rollups-cli:1.0.0-rc.2
+FROM cartesi/rollups-cli:1.0.0-rc.3
 
 RUN apk update && apk add jq
 
