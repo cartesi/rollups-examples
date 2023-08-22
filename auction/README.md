@@ -362,7 +362,7 @@ Auctions may also be sorted and traversed by combining `sort`, `limit`, and `off
 yarn start inspect --payload "auctions?sort=end_date&limit=20&offset=40"
 ```
 
-### Running the back-end in host mode
+## Running the back-end in host mode
 
 When developing an application, it is often important to easily test and debug it. For that matter, it is possible to run the Cartesi Rollups environment in [host mode](https://github.com/cartesi/rollups-examples/tree/main/README.md#host-mode), so that the DApp's back-end can be executed directly on the host machine, allowing it to be debugged using regular development tools such as an IDE.
 
@@ -395,3 +395,20 @@ INFO:__main__:Sending finish
 ```
 
 After that, you can interact with the application normally using the [DApp operations](#dapp-operations).
+
+## Running a validator node on testnet
+
+Deploying DApps to a testnet and running corresponding validator nodes are described in the [main README](../README.md#deploying).
+However, for this DApp the command to run the validator node needs to be slightly different because of the additional configuration for `common-contracts`, which is used in the local development environment.
+
+As such, for this DApp the final command to run the node should specify the testnet-specific docker compose override, as follows:
+
+```shell
+DAPP_NAME=auction docker compose --env-file ../env.<network> -f ../docker-compose-testnet.yml -f ./docker-compose-testnet.override.yml up
+```
+
+In the case of Sepolia, the command would be:
+
+```shell
+DAPP_NAME=auction docker compose --env-file ../env.sepolia -f ../docker-compose-testnet.yml -f ./docker-compose-testnet.override.yml up
+```

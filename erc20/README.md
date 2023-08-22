@@ -78,3 +78,20 @@ INFO:__main__:Sending finish
 ```
 
 After that, you can interact with the application normally [as explained above](#interacting-with-the-application).
+
+## Running a validator node on testnet
+
+Deploying DApps to a testnet and running corresponding validator nodes are described in the [main README](../README.md#deploying).
+However, for this DApp the command to run the validator node needs to be slightly different because of the additional configuration for `common-contracts`, which is used in the local development environment.
+
+As such, for this DApp the final command to run the node should specify the testnet-specific docker compose override, as follows:
+
+```shell
+DAPP_NAME=erc20 docker compose --env-file ../env.<network> -f ../docker-compose-testnet.yml -f ./docker-compose-testnet.override.yml up
+```
+
+In the case of Sepolia, the command would be:
+
+```shell
+DAPP_NAME=erc20 docker compose --env-file ../env.sepolia -f ../docker-compose-testnet.yml -f ./docker-compose-testnet.override.yml up
+```
