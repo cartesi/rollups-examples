@@ -8,7 +8,7 @@ services:
       - machine:/var/opt/cartesi/machine-snapshots
 
   authority-deployer:
-    image: cartesi/rollups-hardhat:1.0.0-rc.3
+    image: cartesi/rollups-hardhat:1.0.0
     command:
       [
         "deploy",

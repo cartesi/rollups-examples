@@ -490,10 +490,10 @@
     "@babel/helper-validator-identifier" "^7.18.6"
     to-fast-properties "^2.0.0"
 
-"@cartesi/rollups@^1.0.0-rc.3":
-  version "1.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-1.0.0-rc.3.tgz#0595bf1653dae69f4a6f5ace701dea886b556bba"
-  integrity sha512-Z6T2lXDHfeVEHb6/rdflqHIBKrHf2lib4FO0Q/NzmXJotKilGJifXZjQxGIoZn8WWhDkuPwGKhBigQpy+G+dNA==
+"@cartesi/rollups@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@cartesi/rollups/-/rollups-1.0.0.tgz#4bedc2a62070086fecafd1127dd30862f5361769"
+  integrity sha512-/Yjw/sMYNP+xka5IU3pU3yewVILnmjsDfkVRp9xwMWEIyCnjKniOVkf7epAic///Op+UFcIcdgYljvEzMAhXbA==
   dependencies:
     "@cartesi/util" "6.0.0"
     "@openzeppelin/contracts" "4.9.2"

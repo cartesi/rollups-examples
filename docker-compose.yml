@@ -10,7 +10,7 @@ x-credentials:
 
 services:
   hardhat:
-    image: cartesi/rollups-hardhat:1.0.0-rc.3
+    image: cartesi/rollups-hardhat:1.0.0
     command:
       [
         "node",
@@ -38,7 +38,7 @@ services:
       - ./deployments:/app/rollups/deployments
 
   dispatcher:
-    image: cartesi/rollups-dispatcher:1.0.0-rc.3
+    image: cartesi/rollups-dispatcher:1.0.0
     restart: always
     depends_on:
       hardhat:
@@ -69,7 +69,7 @@ services:
       - ./deployments:/deployments:ro
 
   state_server:
-    image: cartesi/rollups-state-server:1.0.0-rc.3
+    image: cartesi/rollups-state-server:1.0.0
     restart: always
     healthcheck:
       test: ["CMD-SHELL","bash -c 'echo \"\" > /dev/tcp/127.0.0.1/50051;'"]
@@ -88,7 +88,7 @@ services:
       BH_BLOCK_TIMEOUT: 8
 
   advance_runner:
-    image: cartesi/rollups-advance-runner:1.0.0-rc.3
+    image: cartesi/rollups-advance-runner:1.0.0
     restart: always
     healthcheck:
       test: [ "CMD", "curl", "--fail", "localhost:8080/healthz" ]
@@ -131,7 +131,7 @@ services:
       - REMOTE_CARTESI_MACHINE_LOG_LEVEL=info
 
   deployer:
-    image: cartesi/rollups-cli:1.0.0-rc.3
+    image: cartesi/rollups-cli:1.0.0
     restart: on-failure
     depends_on:
       hardhat:
@@ -188,7 +188,7 @@ services:
       ]
 
   inspect_server:
-    image: cartesi/rollups-inspect-server:1.0.0-rc.3
+    image: cartesi/rollups-inspect-server:1.0.0
     restart: always
     ports:
       - "5005:5005"
@@ -202,7 +202,7 @@ services:
       SESSION_ID: default_rollups_id
 
   indexer:
-    image: cartesi/rollups-indexer:1.0.0-rc.3
+    image: cartesi/rollups-indexer:1.0.0
     restart: always
     depends_on:
       database:
@@ -221,7 +221,7 @@ services:
       - ./deployments:/deployments:ro
 
   graphql_server:
-    image: cartesi/rollups-graphql-server:1.0.0-rc.3
+    image: cartesi/rollups-graphql-server:1.0.0
     ports:
       - "4000:4000"
     depends_on:
