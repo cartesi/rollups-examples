@@ -2,7 +2,7 @@ version: "3"
 
 services:
   server_manager:
-    image: cartesi/dapp:auction-devel-server
+    image: ${DAPP_IMAGE:-cartesi/dapp:auction-devel-server}
 
   common-contracts:
     build: ./common-contracts
