@@ -20,11 +20,11 @@ The DApp is comprised of:
 
 The DApp also relies on a few extra components:
 
-- An NFT contract, *SimpleERC721*, that can be used to mint tokens to be auctioned, which is provided as part of the [`common-contracts`](../common-contracts/README.md#simpleerc721) project.
-For more information about how to mint example NFTs, refer to the [`common-contracts` documentation](../common-contracts/README.md).
-- An ERC-20 contract, *SimpleERC20*, also provided as part of [`common-contracts`](../common-contracts/README.md#simpleerc20), which can be used to place bids.
+- An NFT contract, _SimpleERC721_, that can be used to mint tokens to be auctioned, which is provided as part of the [`common-contracts`](../common-contracts/README.md#simpleerc721) project.
+  For more information about how to mint example NFTs, refer to the [`common-contracts` documentation](../common-contracts/README.md).
+- An ERC-20 contract, _SimpleERC20_, also provided as part of [`common-contracts`](../common-contracts/README.md#simpleerc20), which can be used to place bids.
 - A Command-line tool to send commands to the DApp.
-Please refer to the [Front-end console documentation](../frontend-console/README.md) for more details.
+  Please refer to the [Front-end console documentation](../frontend-console/README.md) for more details.
 
 ## Application life-cycle
 
@@ -62,7 +62,7 @@ They may be executed with the help of the front-end console application, as ment
 
 Any kind of ERC-20 token may be used to place bids against an auction, depending on what token address is chosen during its creation.
 
-For example, to deposit 1 *SimpleERC20* (see [how to deposit ERC-20 tokens](../frontend-console/README.md#depositing-erc-20-tokens)) in the default account, using the front-end console, proceed as exemplified below:
+For example, to deposit 1 _SimpleERC20_ (see [how to deposit ERC-20 tokens](../frontend-console/README.md#depositing-erc-20-tokens)) in the default account, using the front-end console, proceed as exemplified below:
 
 ```shell
 yarn start erc20 deposit --amount 10000000000000000000
@@ -76,7 +76,7 @@ One can [query the account balance via an inspect state call](#how-to-query-an-a
 
 Withdrawals are also executed with the help of the front-end console, by [sending inputs](../frontend-console/README.md#sending-inputs) with the command `erc20withdrawal` to the DApp.
 
-As an example, the command below shows how to withdraw 1 *SimpleERC20*, locally deployed at `0x59b670e9fA9D0A427751Af201D676719a970857b`, from the default account:
+As an example, the command below shows how to withdraw 1 _SimpleERC20_, locally deployed at `0x59b670e9fA9D0A427751Af201D676719a970857b`, from the default account:
 
 ```shell
 yarn start input send --payload '{
@@ -96,7 +96,7 @@ Any failure will make the request being rejected and the reason will be reported
 
 Similarly to withdrawing, a transfer is executed with the help of the front-end console, by [sending inputs](../frontend-console/README.md#sending-inputs) with the command `erc20withdrawal` to the DApp.
 
-As an example, the command below shows how to transfer 5000 *gwei* from the default account to another one:
+As an example, the command below shows how to transfer 5000 _gwei_ from the default account to another one:
 
 ```shell
 yarn start input send --payload '{
@@ -119,7 +119,7 @@ Before executing any operation related to NFTs, one must first create them as ex
 
 ##### How to mint NFTs to be auctioned
 
-Simply proceed and [mint a *SimpleERC721* token](../common-contracts/README.md#simpleerc721) and take note of the `token_id`.
+Simply proceed and [mint a _SimpleERC721_ token](../common-contracts/README.md#simpleerc721) and take note of the `token_id`.
 It will be used when [depositing NFTs into a user account](#how-to-deposit-nfts) using the front-end console.
 
 ##### How to deposit NFTs
@@ -140,7 +140,7 @@ One can [query the account balance via an inspect state call](#how-to-query-an-a
 
 Withdrawals can also be executed with the help of the front-end console, by [sending inputs](../frontend-console/README.md#sending-inputs) command `erc721withdrawal` to the DApp.
 
-As an example, the command below shows how to withdraw an NFT (*SimpleERC721* contract, locally deployed at  `0xc6e7DF5E7b4f2A278906862b61205850344D4e7d`, and `token_id` `1`) from the default account:
+As an example, the command below shows how to withdraw an NFT (_SimpleERC721_ contract, locally deployed at `0xc6e7DF5E7b4f2A278906862b61205850344D4e7d`, and `token_id` `1`) from the default account:
 
 ```shell
 yarn start input send --payload '{
@@ -158,7 +158,7 @@ After the command is successfully processed, the change will be reflected in the
 
 Similarly to withdrawing, a transfer is executed with the help of the front-end console, by [sending inputs](../frontend-console/README.md#sending-inputs) with the command `erc721transfer` to the DApp.
 
-As an example, the command below shows how to transfer an NFT (*SimpleERC721*) from the default account to another one:
+As an example, the command below shows how to transfer an NFT (_SimpleERC721_) from the default account to another one:
 
 ```shell
 yarn start input send --payload '{
@@ -189,7 +189,7 @@ yarn start inspect \
     --payload  balance/0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
 ```
 
-The account balance, which may be split into `erc20` balance and `erc721` ownership, will be returned as a *Report* as exemplified below:
+The account balance, which may be split into `erc20` balance and `erc721` ownership, will be returned as a _Report_ as exemplified below:
 
 ```shell
 $ yarn start inspect --payload  balance/0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
@@ -241,7 +241,7 @@ yarn start input send --payload '{
 }'
 ```
 
-*NOTE*: An auction may only be created for NFTs belonging to the user who requests its creation.
+_NOTE_: An auction may only be created for NFTs belonging to the user who requests its creation.
 See [how to deposit NFTs](#how-to-deposit-nfts) above.
 
 #### How to place bids
@@ -263,7 +263,7 @@ yarn start input send --payload '{
 }'
 ```
 
-*NOTE*: A bid may only be placed against auctions that are currently active.
+_NOTE_: A bid may only be placed against auctions that are currently active.
 
 #### How to finish an auction
 
@@ -289,7 +289,7 @@ yarn start input send --payload '{
 
 ### Querying auction data
 
-The DApp state may be queried at any time via *inspect state* calls, which may be easily performed with the help of the [front-end console](../frontend-console) application.
+The DApp state may be queried at any time via _inspect state_ calls, which may be easily performed with the help of the [front-end console](../frontend-console) application.
 
 #### How to query a single auction
 
@@ -303,7 +303,7 @@ yarn start inspect --payload auctions/0
 
 #### How to list the existing bids for a given auction
 
-Similarly, one can list the bids of a given auction by specifying its `id` through an *inspect state* request.
+Similarly, one can list the bids of a given auction by specifying its `id` through an _inspect state_ request.
 
 The following example shows how to list all bids from auction `0`:
 
@@ -344,7 +344,7 @@ As an example, auctions can be ordered by their `start_date` as follows:
 yarn start inspect --payload "auctions?sort=start_date"
 ```
 
-*NOTE:* In case multiple `sort` parameters are provided, only the first one will be considered.
+_NOTE:_ In case multiple `sort` parameters are provided, only the first one will be considered.
 
 ##### How to traverse auctions
 
