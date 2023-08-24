@@ -19,6 +19,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
     const opts: DeployOptions = {
         from: deployer,
+        deterministicDeployment: true,
         log: true,
     };
 
