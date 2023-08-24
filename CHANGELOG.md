@@ -7,6 +7,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0] 2023-08-24
+
+### Added
+
+- Proper testnet execution config and instructions for Auction and ERC-20 DApps
+
+### Changed
+
+- Adapt all DApps to rollups 1.0.0
+- Remove DApp deployment information: there are no longer live deploys of any examples
+- Remove support for Goerli, which is no longer supported in rollups 1.0.0
+- Make CI builds reproducible (building for Sepolia)
+
 ## [0.15.1] 2023-07-04
 
 ### Changed
@@ -306,6 +319,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove machine-emulator-tools submodule
 - Remove openapi-interfaces submodule
 
+[0.16.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.16.0
 [0.15.1]: https://github.com/cartesi/rollups-examples/releases/tag/v0.15.1
 [0.15.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.15.0
 [0.14.0]: https://github.com/cartesi/rollups-examples/releases/tag/v0.14.0
