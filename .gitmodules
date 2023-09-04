@@ -1,3 +1,6 @@
 [submodule "grpc-interfaces"]
 	path = grpc-interfaces
 	url = ../grpc-interfaces.git
+[submodule "echo-ts/server/src/types/quickjs"]
+	path = echo-ts/server/src/types/quickjs
+	url = git@github.com:mgred/quickjs-types.git
