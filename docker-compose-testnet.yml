@@ -2,15 +2,12 @@ version: "3.9"
 
 x-credentials:
   &postgres-config
-  POSTGRES_HOSTNAME: database
-  POSTGRES_PORT: "5432"
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: password
-  POSTGRES_DB: postgres
+  POSTGRES_ENDPOINT: postgres://postgres:password@database:5432/postgres
 
 services:
   dispatcher:
-    image: cartesi/rollups-dispatcher:1.0.0
+    image: cartesi/rollups-node:1.1.0
+    command: cartesi-rollups-dispatcher
     restart: always
     depends_on:
       state_server:
@@ -34,7 +31,8 @@ services:
       - ./deployments:/deployments:ro
 
   state_server:
-    image: cartesi/rollups-state-server:1.0.0
+    image: cartesi/rollups-node:1.1.0
+    command: cartesi-rollups-state-server
     restart: always
     healthcheck:
       test: [ "CMD-SHELL", "bash -c 'echo \"\" > /dev/tcp/127.0.0.1/50051;'" ]
@@ -50,7 +48,8 @@ services:
       BH_BLOCK_TIMEOUT: 120
 
   advance_runner:
-    image: cartesi/rollups-advance-runner:1.0.0
+    image: cartesi/rollups-node:1.1.0
+    command: cartesi-rollups-advance-runner
     restart: always
     healthcheck:
       test: [ "CMD", "curl", "--fail", "localhost:8080/healthz" ]
@@ -68,6 +67,7 @@ services:
     environment:
       RUST_LOG: info
       SERVER_MANAGER_ENDPOINT: http://server_manager:5001
+      PROVIDER_HTTP_ENDPOINT: ${RPC_URL:?undefined RPC_URL}
       SESSION_ID: default_rollups_id
       REDIS_ENDPOINT: redis://redis:6379
       CHAIN_ID: ${CHAIN_ID:?undefined CHAIN_ID}
@@ -89,7 +89,8 @@ services:
       - REMOTE_CARTESI_MACHINE_LOG_LEVEL=info
 
   inspect_server:
-    image: cartesi/rollups-inspect-server:1.0.0
+    image: cartesi/rollups-node:1.1.0
+    command: cartesi-rollups-inspect-server
     restart: always
     ports:
       - "5005:5005"
@@ -103,7 +104,8 @@ services:
       SESSION_ID: default_rollups_id
 
   indexer:
-    image: cartesi/rollups-indexer:1.0.0
+    image: cartesi/rollups-node:1.1.0
+    command: cartesi-rollups-indexer
     restart: always
     depends_on:
       database:
@@ -120,7 +122,8 @@ services:
       - ./deployments:/deployments:ro
 
   graphql_server:
-    image: cartesi/rollups-graphql-server:1.0.0
+    image: cartesi/rollups-node:1.1.0
+    command: cartesi-rollups-graphql-server
     ports:
       - "4000:4000"
     depends_on:
