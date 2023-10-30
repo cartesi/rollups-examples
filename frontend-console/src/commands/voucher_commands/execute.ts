@@ -22,6 +22,10 @@ import {
     Args as RollupsArgs,
     builder as rollupsBuilder,
 } from "../../rollups";
+import {
+    LibOutputValidation__factory,
+    History__factory,
+} from "@cartesi/rollups";
 
 interface Args extends ConnectArgs, RollupsArgs {
     url: string;
@@ -107,6 +111,31 @@ export const handler = async (args: Args) => {
             console.log(`resulting events: ${JSON.stringify(receipt.events)}`);
         }
     } catch (e) {
-        console.log(`COULD NOT EXECUTE VOUCHER: ${JSON.stringify(e)}`);
+        let error: any = e;
+        // if error is a custom revert object, we need to parse it given its "data" field
+        // note: custom revert error declaration may be in one of several contracts
+        const errorData = error?.error?.error?.error?.data;
+        try {
+            error = outputContract.interface.parseError(errorData).name;
+        } catch (e) {
+            try {
+                const libOutputValidation =
+                    LibOutputValidation__factory.connect(
+                        outputContract.address,
+                        outputContract.signer
+                    );
+                error =
+                    libOutputValidation.interface.parseError(errorData).name;
+            } catch (e) {
+                try {
+                    const history = History__factory.connect(
+                        outputContract.address,
+                        outputContract.signer
+                    );
+                    error = history.interface.parseError(errorData).name;
+                } catch (e) {}
+            }
+        }
+        console.log(`COULD NOT EXECUTE VOUCHER: ${JSON.stringify(error)}`);
     }
 };
