@@ -15,8 +15,8 @@ import { Signer } from "ethers";
 import {
     IInputBox,
     IInputBox__factory,
-    ICartesiDApp,
-    ICartesiDApp__factory,
+    CartesiDApp,
+    CartesiDApp__factory,
     IERC20Portal,
     IERC20Portal__factory,
     IERC721Portal,
@@ -40,7 +40,7 @@ export interface Args {
 interface Contracts {
     dapp: string;
     inputContract: IInputBox;
-    outputContract: ICartesiDApp;
+    outputContract: CartesiDApp;
     erc20Portal: IERC20Portal;
     erc721Portal: IERC721Portal;
     deployment: Deployment
@@ -155,7 +155,7 @@ export const rollups = async (
         InputBox.address,
         provider
     );
-    const outputContract = ICartesiDApp__factory.connect(address, provider);
+    const outputContract = CartesiDApp__factory.connect(address, provider);
     const erc20Portal = IERC20Portal__factory.connect(
         ERC20Portal.address,
         provider
