@@ -1,0 +1,3 @@
+https://github.com/cartesi/image-rootfs/releases/download/v0.11.0/rootfs.ext2
+https://github.com/cartesi/image-kernel/releases/download/v0.11.0/linux-5.5.19-ctsi-5.bin
+https://github.com/cartesi/machine-emulator-rom/releases/download/v0.10.0/rom.bin
