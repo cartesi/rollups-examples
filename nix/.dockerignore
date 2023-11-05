@@ -1,0 +1,4 @@
+.venv
+docker-bake.hcl
+docker-bake.override.hcl
+docker-compose.override.yml
