@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  authority-claimer:
+    image: cartesi/rollups-node:1.2.0
+    command: cartesi-rollups-authority-claimer
+    restart: always
+    depends_on:
+      hardhat:
+        condition: service_healthy
+      hardhat_set_interval:
+        condition: service_completed_successfully
+      deployer:
+        condition: service_completed_successfully
+      state_server:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      RUST_LOG: info
+      DAPP_DEPLOYMENT_FILE: /deployments/localhost/dapp.json
+      ROLLUPS_DEPLOYMENT_FILE: /opt/cartesi/share/deployments/localhost.json
+      RD_EPOCH_DURATION: 86400
+      SC_GRPC_ENDPOINT: http://state_server:50051
+      SC_DEFAULT_CONFIRMATIONS: 1
+      TX_PROVIDER_HTTP_ENDPOINT: http://hardhat:8545
+      TX_SIGNING_MNEMONIC: "test test test test test test test test test test test junk"
+      AUTH_MNEMONIC: "test test test test test test test test test test test junk"
+      TX_CHAIN_ID: 31337
+      TX_CHAIN_IS_LEGACY: ${TX_LEGACY:-false}
+      TX_DEFAULT_CONFIRMATIONS: 2
+      REDIS_ENDPOINT: redis://redis:6379
+    volumes:
+      - blockchain-data:/opt/cartesi/share/deployments:ro
+      - ./deployments:/deployments:ro

@@ -6,7 +6,7 @@ x-credentials:
 
 services:
   dispatcher:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-dispatcher
     restart: always
     depends_on:
@@ -31,7 +31,7 @@ services:
       - ./deployments:/deployments:ro
 
   state_server:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-state-server
     restart: always
     healthcheck:
@@ -48,7 +48,7 @@ services:
       BH_BLOCK_TIMEOUT: 120
 
   advance_runner:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-advance-runner
     restart: always
     healthcheck:
@@ -89,7 +89,7 @@ services:
       - REMOTE_CARTESI_MACHINE_LOG_LEVEL=info
 
   inspect_server:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-inspect-server
     restart: always
     ports:
@@ -104,7 +104,7 @@ services:
       SESSION_ID: default_rollups_id
 
   indexer:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-indexer
     restart: always
     depends_on:
@@ -122,7 +122,7 @@ services:
       - ./deployments:/deployments:ro
 
   graphql_server:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-graphql-server
     ports:
       - "4000:4000"

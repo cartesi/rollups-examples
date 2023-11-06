@@ -34,7 +34,7 @@ services:
       - ./deployments:/app/rollups/deployments
 
   dispatcher:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-dispatcher
     restart: always
     depends_on:
@@ -50,23 +50,19 @@ services:
         condition: service_healthy
     environment:
       RUST_LOG: info
-      RD_DAPP_DEPLOYMENT_FILE: /deployments/localhost/dapp.json
-      RD_ROLLUPS_DEPLOYMENT_FILE: /opt/cartesi/share/deployments/localhost.json
+      DAPP_DEPLOYMENT_FILE: /deployments/localhost/dapp.json
+      ROLLUPS_DEPLOYMENT_FILE: /opt/cartesi/share/deployments/localhost.json
       RD_EPOCH_DURATION: 86400
       SC_GRPC_ENDPOINT: http://state_server:50051
       SC_DEFAULT_CONFIRMATIONS: 1
-      TX_PROVIDER_HTTP_ENDPOINT: http://hardhat:8545
-      AUTH_MNEMONIC: "test test test test test test test test test test test junk"
-      TX_CHAIN_ID: 31337
-      TX_CHAIN_IS_LEGACY: ${TX_LEGACY:-false}
-      TX_DEFAULT_CONFIRMATIONS: 2
+      CHAIN_ID: 31337
       REDIS_ENDPOINT: redis://redis:6379
     volumes:
       - blockchain-data:/opt/cartesi/share/deployments:ro
       - ./deployments:/deployments:ro
 
   state_server:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-state-server
     restart: always
     healthcheck:
@@ -86,7 +82,7 @@ services:
       BH_BLOCK_TIMEOUT: 8
 
   advance_runner:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-advance-runner
     restart: always
     healthcheck:
@@ -188,7 +184,7 @@ services:
       ]
 
   inspect_server:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-inspect-server
     restart: always
     ports:
@@ -203,7 +199,7 @@ services:
       SESSION_ID: default_rollups_id
 
   indexer:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-indexer
     restart: always
     depends_on:
@@ -223,7 +219,7 @@ services:
       - ./deployments:/deployments:ro
 
   graphql_server:
-    image: cartesi/rollups-node:1.1.0
+    image: cartesi/rollups-node:1.2.0
     command: cartesi-rollups-graphql-server
     ports:
       - "4000:4000"
