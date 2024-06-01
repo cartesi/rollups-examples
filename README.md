@@ -57,6 +57,23 @@ docker buildx bake --load
 
 This will also build the example's Cartesi Machine containing the DApp's back-end logic.
 
+Note: if the example that you are running uses RISC-V architecture inside the Docker image, then you will also need QEMU dependencies.
+On linux Ubuntu these can be installed with:
+
+```shell
+sudo apt install -y qemu qemu-user-static
+```
+
+after which the supoprted buildkit platforms should include `linux/riscv64`.
+Confirm with:
+
+```shell
+docker buildx ls
+NAME/NODE DRIVER/ENDPOINT STATUS  BUILDKIT PLATFORMS
+default * docker                           
+  default default         running 23.0.5   linux/amd64, linux/amd64/v2, linux/amd64/v3, linux/amd64/v4, linux/386, linux/arm64, linux/riscv64, linux/ppc64le, linux/s390x, linux/mips64le, linux/mips64, linux/arm/v7, linux/arm/v6
+```
+
 ## Running
 
 Each application can be executed in Production and Host modes, as explained below.
