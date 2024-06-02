@@ -1,0 +1,49 @@
+{
+  "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+  "abi": [],
+  "transactionHash": "0xc6885a17a35d339e5d669b8beb485b75cfe164f192703a913fe371ee351eba5a",
+  "receipt": {
+    "to": null,
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "contractAddress": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    "transactionIndex": 0,
+    "gasUsed": "164134",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x2780cdc0c935fc9d320292c8c263afcc2ecb2ecc5ab1a156aeeba93f07a5f3f2",
+    "transactionHash": "0xc6885a17a35d339e5d669b8beb485b75cfe164f192703a913fe371ee351eba5a",
+    "logs": [],
+    "blockNumber": 2,
+    "cumulativeGasUsed": "164134",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "metadata": "{\"compiler\":{\"version\":\"0.8.4+commit.c7e474f2\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"author\":\"Stephen Chen\",\"kind\":\"dev\",\"methods\":{},\"title\":\"Bit Mask Library\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"getBit(mapping(uint256 => uint256) storage,uint256)\":{\"notice\":\"Get a bit in the bit mask\"},\"setBit(mapping(uint256 => uint256) storage,uint256,bool)\":{\"notice\":\"Set a bit in the bit mask\"}},\"notice\":\"Implements bit mask with dynamic array\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Bitmask.sol\":\"Bitmask\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/Bitmask.sol\":{\"content\":\"// Copyright 2021 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\npragma solidity ^0.8.0;\\n\\n/// @title Bit Mask Library\\n/// @author Stephen Chen\\n/// @notice Implements bit mask with dynamic array\\nlibrary Bitmask {\\n    /// @notice Set a bit in the bit mask\\n    function setBit(\\n        mapping(uint256 => uint256) storage bitmask,\\n        uint256 _bit,\\n        bool _value\\n    ) public {\\n        // calculate the number of bits has been store in bitmask now\\n        uint256 positionOfMask = uint256(_bit / 256);\\n        uint256 positionOfBit = _bit % 256;\\n\\n        if (_value) {\\n            bitmask[positionOfMask] =\\n                bitmask[positionOfMask] |\\n                (1 << positionOfBit);\\n        } else {\\n            bitmask[positionOfMask] =\\n                bitmask[positionOfMask] &\\n                ~(1 << positionOfBit);\\n        }\\n    }\\n\\n    /// @notice Get a bit in the bit mask\\n    function getBit(mapping(uint256 => uint256) storage bitmask, uint256 _bit)\\n        public\\n        view\\n        returns (bool)\\n    {\\n        // calculate the number of bits has been store in bitmask now\\n        uint256 positionOfMask = uint256(_bit / 256);\\n        uint256 positionOfBit = _bit % 256;\\n\\n        return ((bitmask[positionOfMask] & (1 << positionOfBit)) != 0);\\n    }\\n}\\n\",\"keccak256\":\"0xe35cf68672f5844589c0e56f36aa3813ca4ffb882a55a46d15adac7e3cc889bd\",\"license\":\"Apache-2.0\"}},\"version\":1}",
+  "bytecode": "0x61020161003a600b82828239805160001a60731461002d57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600436106100405760003560e01c806303fbaf73146100455780636449da101461006c575b600080fd5b610058610053366004610130565b61008e565b604051901515815260200160405180910390f35b81801561007857600080fd5b5061008c610087366004610151565b6100ce565b005b60008061009d6101008461018d565b905060006100ad610100856101a1565b6000928352602095909552506040902054600190931b909216151592915050565b60006100dc6101008461018d565b905060006100ec610100856101a1565b9050821561011057600082815260208690526040902080546001831b179055610129565b600082815260208690526040902080546001831b191690555b5050505050565b60008060408385031215610142578182fd5b50508035926020909101359150565b600080600060608486031215610165578081fd5b833592506020840135915060408401358015158114610182578182fd5b809150509250925092565b60008261019c5761019c6101b5565b500490565b6000826101b0576101b06101b5565b500690565b634e487b7160e01b600052601260045260246000fdfea26469706673582212200f8e0f4b82404ab41a0a463ebfd6ceb825dcf1eb840a650cbfc02d268876dbf464736f6c63430008040033",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600436106100405760003560e01c806303fbaf73146100455780636449da101461006c575b600080fd5b610058610053366004610130565b61008e565b604051901515815260200160405180910390f35b81801561007857600080fd5b5061008c610087366004610151565b6100ce565b005b60008061009d6101008461018d565b905060006100ad610100856101a1565b6000928352602095909552506040902054600190931b909216151592915050565b60006100dc6101008461018d565b905060006100ec610100856101a1565b9050821561011057600082815260208690526040902080546001831b179055610129565b600082815260208690526040902080546001831b191690555b5050505050565b60008060408385031215610142578182fd5b50508035926020909101359150565b600080600060608486031215610165578081fd5b833592506020840135915060408401358015158114610182578182fd5b809150509250925092565b60008261019c5761019c6101b5565b500490565b6000826101b0576101b06101b5565b500690565b634e487b7160e01b600052601260045260246000fdfea26469706673582212200f8e0f4b82404ab41a0a463ebfd6ceb825dcf1eb840a650cbfc02d268876dbf464736f6c63430008040033",
+  "devdoc": {
+    "author": "Stephen Chen",
+    "kind": "dev",
+    "methods": {},
+    "title": "Bit Mask Library",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "getBit(mapping(uint256 => uint256) storage,uint256)": {
+        "notice": "Get a bit in the bit mask"
+      },
+      "setBit(mapping(uint256 => uint256) storage,uint256,bool)": {
+        "notice": "Set a bit in the bit mask"
+      }
+    },
+    "notice": "Implements bit mask with dynamic array",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

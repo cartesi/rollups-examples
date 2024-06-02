@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  machine:
+    image: cartesi/dapp:${DAPP_NAME:?undefined DAPP_NAME}-devel-machine
+    command: xxd -c 256 -p hash; sleep 3
+    volumes:
+      - machine:/opt/cartesi/share/dapp-bin
+
+  deployer:
+    image: cartesi/rollups-cli:0.3.0
+    depends_on:
+      machine:
+        condition: service_started
+    command:
+      [
+        "create",
+        "--rpc",
+        "${RPC_URL:?undefined RPC_URL}",
+        "--mnemonic",
+        "${MNEMONIC:?undefined MNEMONIC}",
+        "--templateHashFile",
+        "/opt/cartesi/share/dapp-bin/hash",
+        "--outputFile",
+        "/deployments/${NETWORK:?undefined NETWORK}/${DAPP_NAME:?undefined DAPP_NAME}.address",
+      ]
+    volumes:
+      - machine:/opt/cartesi/share/dapp-bin:ro
+      - ./deployments:/deployments
+
+volumes:
+  machine: {}

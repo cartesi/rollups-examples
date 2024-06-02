@@ -1,0 +1,40 @@
+{
+  "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+  "abi": [],
+  "transactionHash": "0xa94802e992eb4780569bf38b9dde82c02bf6f4b88e64c4eb4991d2411f0e3bc6",
+  "receipt": {
+    "to": null,
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "contractAddress": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+    "transactionIndex": 0,
+    "gasUsed": "72217",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x9b5958f1a848c6c85e9ef17545687fbe72e1bce4534c85a8711cd83c04e7d0e0",
+    "transactionHash": "0xa94802e992eb4780569bf38b9dde82c02bf6f4b88e64c4eb4991d2411f0e3bc6",
+    "logs": [],
+    "blockNumber": 17,
+    "cumulativeGasUsed": "72217",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "853463bf44733f3d929a32fa4eacb9e6",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.13+commit.abaa5c0e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/libraries/LibOutput.sol\":\"LibOutput\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/libraries/LibOutput.sol\":{\"content\":\"// Copyright 2021 Cartesi Pte. Ltd.\\n\\n// SPDX-License-Identifier: Apache-2.0\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\"); you may not use\\n// this file except in compliance with the License. You may obtain a copy of the\\n// License at http://www.apache.org/licenses/LICENSE-2.0\\n\\n// Unless required by applicable law or agreed to in writing, software distributed\\n// under the License is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR\\n// CONDITIONS OF ANY KIND, either express or implied. See the License for the\\n// specific language governing permissions and limitations under the License.\\n\\n/// @title Output library\\npragma solidity ^0.8.0;\\n\\nlibrary LibOutput {\\n    bytes32 constant DIAMOND_STORAGE_POSITION =\\n        keccak256(\\\"Output.diamond.storage\\\");\\n\\n    struct DiamondStorage {\\n        mapping(uint256 => uint256) voucherBitmask;\\n        bytes32[] epochHashes;\\n        bool lock; //reentrancy lock\\n    }\\n\\n    function diamondStorage()\\n        internal\\n        pure\\n        returns (DiamondStorage storage ds)\\n    {\\n        bytes32 position = DIAMOND_STORAGE_POSITION;\\n        assembly {\\n            ds.slot := position\\n        }\\n    }\\n\\n    /// @notice to be called when an epoch is finalized\\n    /// @param ds diamond storage pointer\\n    /// @param epochHash hash of finalized epoch\\n    /// @dev an epoch being finalized means that its vouchers can be called\\n    function onNewEpoch(DiamondStorage storage ds, bytes32 epochHash) internal {\\n        ds.epochHashes.push(epochHash);\\n    }\\n\\n    /// @notice get number of finalized epochs\\n    /// @param ds diamond storage pointer\\n    function getNumberOfFinalizedEpochs(DiamondStorage storage ds)\\n        internal\\n        view\\n        returns (uint256)\\n    {\\n        return ds.epochHashes.length;\\n    }\\n}\\n\",\"keccak256\":\"0xd0f88e13210013e9d5bde03399bb76304d6ab4e1f06d01c7e3525adc87a2d65e\",\"license\":\"Apache-2.0\"}},\"version\":1}",
+  "bytecode": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220b9feb0adc702e3687bbb49b753bbb4f4a9adbe0e872b8403f87aa9130e9c38e764736f6c634300080d0033",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220b9feb0adc702e3687bbb49b753bbb4f4a9adbe0e872b8403f87aa9130e9c38e764736f6c634300080d0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

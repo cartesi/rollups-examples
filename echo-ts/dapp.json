@@ -1,0 +1,8 @@
+{
+  "fs": {
+    "files": [
+      "server",
+      "entrypoint.sh"
+    ]
+  }
+}
